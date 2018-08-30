@@ -137,7 +137,7 @@
         price: null,
 
         dictionary: {
-          fa: {
+          en: {
             attributes: {
               title: 'عنوان آگهی',
               city: 'شهر',
@@ -181,7 +181,7 @@
       }
     },
     mounted() {
-      this.$validator.localize('fa', this.dictionary)
+      this.$validator.localize('en', this.dictionary)
       // check if user has no access to create advert
       //let hasAccess = this.$store.state.accesses.loans ;
       let hasAccess = true;
@@ -197,7 +197,16 @@
         this.snack_color = color;
       },
       sendForm() {
-        let data = {};
+        let data = {
+          title: this.title,
+          city: this.city,
+          text: this.text,
+          price: this.price,
+          amount: this.amount,
+          payBackTime: this.payBackTime,
+          guaranteeTypeId: this.guaranteeTypeId,
+          image: this.image
+        };
         this.$axios.$post(path, data).then((result) => {
           let status = true;
           if (status) {
