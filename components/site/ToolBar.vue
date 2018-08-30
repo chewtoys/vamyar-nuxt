@@ -1,0 +1,69 @@
+<template>
+    <v-toolbar flat color="white" class="white grey--text">
+        <v-btn flat color="transparent" class="white--text" to="/">
+            <v-icon class="deep-purple--text font-16 pl-1">polymer</v-icon>
+            <v-toolbar-title>
+                <h1 class="deep-purple--text font-18 text-shadow-3">{{title}}</h1>
+            </v-toolbar-title>
+        </v-btn>
+        <v-divider vertical/>
+        <v-toolbar-items class="hidden-sm-and-down">
+            <v-menu :nudge-width="100">
+                <v-btn flat slot="activator">
+                    <span>دسته بندی ها</span>
+                    <v-icon dark>arrow_drop_down</v-icon>
+                </v-btn>
+                <v-list class="farsi">
+                    <v-list-tile
+                            v-for="item in items"
+                            :key="item.title"
+                            :to="item.link"
+                    >
+                        <v-list-tile-title v-text="item.title"></v-list-tile-title>
+                    </v-list-tile>
+                </v-list>
+            </v-menu>
+            <v-btn to="/how-it-works" flat>چگونه کار می کند؟</v-btn>
+            <v-btn to="/plans" flat>تعرفه ها</v-btn>
+        </v-toolbar-items>
+        <v-spacer></v-spacer>
+        <v-toolbar-items class="hidden-sm-and-down">
+            <v-btn flat to="/user" class="deep-orange--text font-14">حساب کابری</v-btn>
+        </v-toolbar-items>
+    </v-toolbar>
+</template>
+
+<script>
+    export default {
+        computed: {
+            title: function () {
+                return this.$store.state.site.title;
+            },
+            heading: function () {
+                return this.$store.state.site.heading;
+            },
+            subheading: function () {
+                return this.$store.state.site.subheading;
+            },
+            headingitems: function () {
+                return this.$store.state.site.headingitems;
+            },
+            items: function () {
+                return [
+                    {title: 'همه ی آگهی ها', hashtag: 'all', link: '/categories/'},
+                    {title: 'وام', hashtag: 'loan', link: '/categories/loans'},
+                    {title: 'درخواست وام', hashtag: 'loan-request', link: '/categories/loan-requests'},
+                    {title: 'ضامن', hashtag: 'co-signer', link: '/categories/co-signer'},
+                    {title: 'درخواست ضامن', hashtag: 'co-signer-request', link: '/categories/co-signer-request'},
+                    {title: 'سرمایه گذاری', hashtag: 'finances', link: '/categories/finances'},
+                    {title: 'درخواست سرمایه گذاری', hashtag: 'finance-requests', link: '/categories/finance-requests'},
+                ]
+            }
+        },
+        methods: {
+            go: function (item) {
+                this.$router.push(item.to)
+            }
+        }
+    }
+</script>
