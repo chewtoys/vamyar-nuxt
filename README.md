@@ -2,7 +2,7 @@
 # vamyar-nuxt 
 Vamyar official front-end project 
 
-# stck
+# stack
 NUXT (SSR) and Vuetify (UI kit)
 
 # author
