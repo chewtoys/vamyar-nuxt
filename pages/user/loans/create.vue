@@ -22,66 +22,68 @@
         <v-flex xs12 md12 sm12 lg12>
           <form>
             <v-text-field
-              box
+              v-validate
+              validate-on-blur
               required
               v-model="title"
-              data-vv-name="title"
               :error-messages="errors.collect('title')"
-              v-validate="'required'"
               label="عنوان"
+              data-vv-name="عنوان"
             >
             </v-text-field>
             <v-text-field box
+                          v-validate="'required'"
                           v-model="city"
+                          :error-messages="errors.collect('city')"
                           label="شهر"
-                          data-vv-name="city"
-                          :error-messages="errors.collect('city')"
-                          v-validate="'required'"
+                          data-vv-name="شهر"
                           required
             ></v-text-field>
-            <v-checkbox
-              box
-              v-model="allcities"
-              label="قابل انتقال به سایر شهر ها می باشد."
-            ></v-checkbox>
             <v-text-field box
+                          v-validate="'required|numeric'"
                           v-model="amount"
+                          :error-messages="errors.collect('amount')"
                           label="مبلغ"
-                          data-vv-name="city"
-                          :error-messages="errors.collect('city')"
-                          v-validate="'required'"
+                          data-vv-name="مبلغ"
                           required
             ></v-text-field>
             <v-text-field box
-                          v-model="payBackTime"
+                          v-validate="'required'"
+                          v-model="payback"
+                          :error-messages="errors.collect('payback')"
                           label="بازپرداخت"
-                          data-vv-name="payBackTime"
-                          :error-messages="errors.collect('payBackTime')"
-                          v-validate="'alpha'"
+                          data-vv-name="بازپرداخت"
                           required
             ></v-text-field>
+            <v-select
+              box
+              v-validate="'required'"
+              :items="guaranteeTypeListItems"
+              v-model="guaranteeTypeId"
+              :error-messages="errors.collect('guaranteeTypeId')"
+              label="نوع ضمانت"
+              :item-value="guaranteeTypeId"
+              data-vv-name="نوع ضمانت"
+              required
+            ></v-select>
             <v-textarea
               v-model="text"
               box
               label="توضیحات اضافه"
-              data-vv-name="text"
-              :error-messages="errors.collect('text')"
-              v-validate="'text'"
               auto-grow
             ></v-textarea>
             <v-combobox
-              box
+              boxeds4cmk3wdc.ee
               v-model="guaranteeTypeId"
               :items="guaranteeTypeListItems"
-              data-vv-name="guaranteeTypeId"
-              :error-messages="errors.collect('guaranteeTypeId')"
-              v-validate="'required'"
               label="نوع ضمانت را مشخص کنید"
+              data-vv-name="نوع ضمانت"
               required
+              v-validate="'required'"
               multiple
               chips
             ></v-combobox>
-            <v-btn type="submit" @click="submit" :loading="submit_loader">ثبت و بررسی</v-btn>
+            <v-btn @click="submit" :loading="submit_loader">ثبت و بررسی</v-btn>
           </form>
         </v-flex>
       </v-layout>
@@ -105,27 +107,23 @@
   </div>
 </template>
 <script>
-
   const path = "/user/loan/create", guaranteeTypeListPath = "/admin/guaranteeTypes", cityPath = "/admin/cities",
-    page_title = 'ثبت وام جدید', breadcrumb = "فرم درخواست وام";
-
+    page_title = 'ثبت وام جدید', breadcrumb = "فرم درخواست وام"
   export default {
-    $_veeValidate: {
-      validator: 'new'
-    },
     meta: {
       breadcrumb,
       title: page_title
     },
     layout: 'user',
-
-    data: () => ({
-
+    $_veeValidate: {
+      validator: 'new'
+    },
+    data() {
+      return {
 
         // advert
         title: null,
         city: null,
-        allcities: false,
         text: '',
         mobile: null,
         image: null,
@@ -139,17 +137,22 @@
         price: null,
 
         dictionary: {
-          attributes: {
-            title: 'عنوان آگهی',
-            city: 'شهر',
-            text: 'متن توضیحات آگهی',
-            image: 'تصویر آگهی',
-            amount: 'مبلغ وام',
-            price: 'قیمت فروش وام',
-            payBackTime: 'مدت زمان بازپرداخت',
-            guaranteeTypeId: 'نوع ضامن',
-            loanType: 'نوع وام',
-            // custom attributes
+          en: {
+            attributes: {
+              title: 'عنوان آگهی',
+              city: 'شهر',
+              text: 'متن توضیحات آگهی',
+              image: 'تصویر آگهی',
+              amount: 'مبلغ وام',
+              price: 'قیمت فروش وام',
+              payBackTime: 'مدت زمان بازپرداخت',
+              guaranteeType: 'نوع ضامن',
+              loanType: 'نوع وام',
+              // custom attributes
+            },
+            messages: {
+              required: () => 'این فیلد الزامی است'
+            }
           }
         },
         // info
@@ -163,7 +166,7 @@
         snack_text: null,
         snack_color: 'info',
       }
-    )
+    }
     ,
     computed: {
       guaranteeTypeListItems() {
@@ -176,10 +179,9 @@
         guaranteeTypeList: ['نوع اول', 'نوع دوم'],//await this.$axios.get(guaranteeTypeListPath),
         cities: ['تهران', 'قم'] //await this.$axios.get(cityPath)
       }
-    }
-    ,
+    },
     mounted() {
-      this.$validator.localize('fa', this.dictionary)
+      this.$validator.localize('en', this.dictionary)
       // check if user has no access to create advert
       //let hasAccess = this.$store.state.accesses.loans ;
       let hasAccess = true;
@@ -193,8 +195,7 @@
         this.snackbar = true;
         this.snack_text = msg;
         this.snack_color = color;
-      }
-      ,
+      },
       sendForm() {
         let data = {
           title: this.title,
@@ -225,10 +226,9 @@
         });
       }
       ,
-      async submit() {
+      submit() {
         this.submit_loader = true;
-        //let validation = await this.$validator.validateAll();
-        //this.submit_loader = false;
+        this.$validator.validateAll();
         this.$validator.validateAll().then((result) => {
           if (result) {
             this.sendForm()
