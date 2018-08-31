@@ -9,9 +9,6 @@ export default function ({store, route}) {
     } else {
         metadata = route.meta[0]
     }
-    console.log(metadata)
-
-    store.commit('setTest', metadata)
 
     if (metadata !== undefined && metadata.breadcrumb !== undefined) {
         breadcrumb = [{
