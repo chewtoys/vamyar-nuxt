@@ -1,7 +1,11 @@
 export default function ({$axios, store, redirect}) {
 
-  let token = store.state.auth;
-  if (token) $axios.setHeader('Authentication', `Bearer ${token}`)
+
+  // Authorization
+  if (store.state.auth) {
+    let accessToken = store.state.auth;
+    $axios.setHeader('Authorization', `Bearer ${accessToken}`)
+  }
 
   $axios.setHeader('Content-Type', ' application/json')
   //$axios.setHeader('Accept', 'application/json')
@@ -9,8 +13,12 @@ export default function ({$axios, store, redirect}) {
   //
   //'Access-Control-Allow-Origin': '*',
   //'Content-Type': 'application/json',
-  
+
+  $axios.onRequest(config => {
+    console.log({1: 'DEBUG ON AXIOS :  Request:', config})
+  })
   $axios.onResponse(response => {
-    console.log({1: 'DEBUG ON AXIOS :  onResponse:', 2: response})
+    let {code} = response;
+    console.log({2: 'DEBUG ON AXIOS :  onResponse:', 2: response})
   })
 }

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <v-continer grid-list-xs fluid>
     <v-card color="white" raised light class="py-5 px-4">
       <v-layout row>
         <v-flex xs12 md12 sm12 lg12>
@@ -17,7 +17,20 @@
       </v-layout>
     </v-card>
     <v-card color="white" raised light class="mt-5 py-5 px-4">
-      <v-layout row>
+      <v-layout row wrap>
+        <v-flex xs12>
+          <span>{{page_title}}</span>
+          <v-spacer></v-spacer>
+
+          <v-btn outline color="primary" round>
+            <v-icon class="px-1">arrow_right</v-icon>
+            بازگشت
+          </v-btn>
+          <v-btn type="submit" @click="submit" outline color="accent" :loading="submit_loader" round>
+            <v-icon class="px-1">save</v-icon>
+            ذخیره
+          </v-btn>
+        </v-flex>
         <v-divider class="my-3"></v-divider>
         <v-flex xs12 md12 sm12 lg12>
           <form>
@@ -81,7 +94,10 @@
               multiple
               chips
             ></v-combobox>
-            <v-btn type="submit" @click="submit" :loading="submit_loader">ثبت و بررسی</v-btn>
+            <v-btn type="submit" @click="submit" outline color="accent" :loading="submit_loader" round>
+              <v-icon class="px-1">save</v-icon>
+              ذخیره
+            </v-btn>
           </form>
         </v-flex>
       </v-layout>
@@ -102,7 +118,7 @@
         </v-btn>
       </v-snackbar>
     </v-card>
-  </div>
+  </v-continer>
 </template>
 <script>
 
@@ -117,10 +133,9 @@
       breadcrumb,
       title: page_title
     },
-    layout: 'user',
 
     data: () => ({
-
+        page_title,
 
         // advert
         title: null,

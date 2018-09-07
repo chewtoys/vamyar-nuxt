@@ -18,6 +18,7 @@
                         </v-btn>
                     </div>
                 </v-flex>
+
             </v-layout>
         </v-container>
     </v-jumbotron>

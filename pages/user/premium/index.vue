@@ -1,24 +1,100 @@
 <template>
-    <v-container>
-        <v-card pa-3 color="white">
-            <v-card-title>
-                لطفا یکی از بسته های زیر را انتخاب کنید.
-
-
-
-            </v-card-title>
+  <v-container fluid grid-list-xs>
+    <v-card class="py-5 px-4" color="white">
+      <div>
+        <div>
+          <h1
+            v-if="info.title"
+            class="font-14"
+          >
+            <v-icon class="px-1 grey-text pb-1 font-19">arrow_left</v-icon>
+            {{info.title}}
+          </h1>
+          <v-divider
+            v-if="info.title"
+            class="my-3"></v-divider>
+          <v-card
+            v-if="info.text"
+            dark color="green darken-1" class="pa-3 font-12">
+            <p class="font-14 text-justify">{{info.text}}</p>
+          </v-card>
+          <v-divider
+            v-if="info.text"
+            class="my-3"></v-divider>
+        </div>
+        <div>
+          <v-card v-if="!isPremium" flat>
+            <v-card-title><h3>یک حساب کاربری را انتخاب کنید:</h3></v-card-title>
             <v-card-text>
-                <v-layout row>
-                    <v-flex xs12 md4></v-flex>
-                    <v-flex xs12 md4></v-flex>
-                    <v-flex xs12 md4></v-flex>
-                </v-layout>
+              <v-layout row wrap>
+                <div>
+                  <p>
+                    {{benefits}}
+                  </p>
+                  <section>
+                    <div class="px-1" v-for="i in 12" :key="i">
+                      <v-icon class="red-text font-15 mb-1">check_circle_outline</v-icon>
+                      {{i}}
+                    </div>
+                  </section>
+                </div>
+              </v-layout>
             </v-card-text>
-        </v-card>
-    </v-container>
+            <v-card-actions center-align>
+              <v-btn color="red" dark>
+                <v-icon class="pl-1">shopping_cart</v-icon>
+                ارتقای حساب
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </div>
+      </div>
+    </v-card>
+  </v-container>
 </template>
 <script>
-    export default{
-        layout: 'user'
+
+
+  const gate_path = "/user/loan/create", plans = "/admin/cities", page_title = 'وضعیت اشتراک من',
+    breadcrumb = "اشتراک حساب کاربری";
+  const info = {
+    title: 'وضعیت اشتراک',
+    //text: "لورم ایپسوم یا طرح‌نما (به انگلیسی: Lorem ipsum) به متنی آزمایشی و بی‌معنی در صنعت چاپ، صفحه‌آرایی و طراحی گرافیک گفته می‌شود. طراح گرافیک از این متن به عنوان عنصری از ترکیب بندی برای پر کردن صفحه و ارایه اولیه شکل ظاهری و کلی طرح سفارش گرفته شده استفاده می نماید، تا از نظر گرافیکی نشانگر چگونگی نوع و اندازه فونت و ظاهر متن باشد. معمولا طراحان گرافیک برای صفحه‌آرایی، نخست از متن‌های آزمایشی و بی‌معنی استفاده می‌کنند تا صرفا به مشتری یا صاحب کار خود نشان دهند که صفحه طراحی یا صفحه بندی شده بعد از اینکه متن در آن قرار گیرد چگونه به نظر می‌رسد و قلم‌ها و اندازه‌بندی‌ها چگونه در نظر گرفته شده‌است. از آنجایی که طراحان عموما نویسنده متن نیستند و وظیفه رعایت حق تکثیر متون را ندارند و در همان حال کار آنها به نوعی وابسته به متن می‌باشد آنها با استفاده از محتویات ساختگی، صفحه گرافیکی خود را صفحه‌آرایی می‌کنند تا مرحله طراحی و صفحه‌بندی را به پایان برند.",
+    // heading: 'عنوان متن'
+  };
+  const benefits = 'با ارتقای حساب کاربری به حساب ویژه از مزایای زیر برخود از مزایای زیر برخوردار خواهید شد:'
+  export default {
+    $_veeValidate: {
+      validator: 'new'
+    },
+    meta: {
+      breadcrumb,
+      title: page_title
+    },
+    data: () => ({
+      info,
+    }),
+    async asyncData() {
+      return {
+        upgradePrice: 20000,
+        userCharge: 19000,
+        benefits
+      }
+    },
+    computed: {
+      isPremium() {
+        return false;
+      }
+    },
+    methods: {
+      upgrade() {
+        if (!isPremium) {
+          let data = this.$axios.get(gate_path);
+          // get code and redirect to gate
+        } else {
+          // alert message
+        }
+      },
     }
+  }
 </script>

@@ -6811,7 +6811,7 @@ vue2-siema@^0.2.0:
   dependencies:
     siema "^1.5.1"
 
-vue@^2.4.2, vue@^2.5.13, vue@^2.5.16, vue@^2.5.17, vue@latest:
+vue@^2.4.2, vue@^2.5.13, vue@^2.5.16, vue@^2.5.17:
   version "2.5.17"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.5.17.tgz#0f8789ad718be68ca1872629832ed533589c6ada"
 
