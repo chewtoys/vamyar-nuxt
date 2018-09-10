@@ -8,7 +8,7 @@ import VeeValidate, {Validator} from 'vee-validate';
 import farsi from 'vuetify/src/locale/fa.ts'
 
 import vueSmoothScroll from 'vue-smooth-scroll'
-// Localize takes the locale object as the second argument (optional) and merges it.
+//// Localize takes the locale object as the second argument (optional) and merges it.
 Validator.localize('fa', fa);
 
 // Install the Plugin.
@@ -19,7 +19,7 @@ Vue.use(VeeValidate);
 
 //Vue.component('tinymce', tinymce)
 //Vue.component('pdatepicker', PDatePicker)
-Vue.use(vueSmoothScroll)
+//Vue.use(vueSmoothScroll)
 
 Vue.use(VueClipboard);
 

@@ -112,17 +112,45 @@
       }
     )
     ,
-    async asyncData({$axios,store}) {
-      let data = [];
-      try {
-        let response = await $axios.get(path);
-        console.log(response);
-        let {data} = response;
-      } catch (error) {
-        // 404 not found;
-        store.commit('snackbar/setSnack', 'some message', 'success')
-      }
+    asyncData({app, error, store}) {
+      let msg;
+      return app.$axios.$get(path).then(res => {
+        console.log(res)
+        return {data: res.data};
+      }).catch(err => {
+        let code = err.statusCode || 404;
 
+        if (err.response.data.message) {
+          msg = err.response.data.message;
+        }
+        else if (code == 404) {
+          msg = 'هیچ آگهی یافت نشد.';
+        } else {
+          msg = 'مشکلی در گرفتن آگهی پیش آمد.' + `(${code})`
+        }
+        store.commit('snackbar/setSnack', msg)
+        return {data: []}
+      })
+      //  let {date, code} = response;
+
+      //  let msg = response.data.error.message;
+      //  this.$store.commit('snackbar/setSnack', msg)
+
+
+      //if (data && data.response) {
+      //  let {data} = response;
+//
+      //} else if (error.response.data.error.message) {
+      //  // 404 not found;
+//
+      //} else {
+      //  let msg = 'هیچ آگهی پیدا نشد';
+      //  this.$store.commit('snackbar/setSnack', msg)
+      //}
+
+
+    },
+    mounted() {
       return {
         rawHeaders: [
           {
@@ -137,22 +165,26 @@
           {text: 'مقدار وام', value: 'amount', align: 'left'},
           {text: 'عملیات', sortable: false, align: 'left'}
         ],
-        rawData: data,
+        rawData: this.data || [],
       }
-    },
+    }
+    ,
     computed: {
       headers() {
         return this.rawHeaders;
-      },
+      }
+      ,
       items() {
         return this.rawData;
-      },
+      }
+      ,
     }
     ,
     methods: {
       getLink(id) {
         return '/user/loans/' + id;
-      },
+      }
+      ,
       toast(msg, color) {
         this.snackbar = true;
         this.snack_text = msg;

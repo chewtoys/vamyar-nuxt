@@ -5,7 +5,10 @@
           app
         >
             <v-toolbar-side-icon v-if="isMobile" white--text @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-            <v-toolbar-title>داشبورد</v-toolbar-title>
+          <v-toolbar-title>
+            <v-btn to="/user" flat color="transparent"><span class="red--text"><v-icon
+              class="px-1">dashboard</v-icon>داشبورد</span></v-btn>
+          </v-toolbar-title>
             <v-spacer></v-spacer>
             <v-menu left :nudge-width="100" class="right-text">
                 <v-toolbar-title slot="activator">
@@ -31,14 +34,13 @@
           :temporary="isMobile"
           :hide-overlay="!isMobile"
           :permanent="!isMobile"
-          v-smooth-scroll
         >
             <v-list color="second">
               <v-list-tile class="pb-2" to="/">
                     <v-list-tile-avatar>
                         <img :src="site.logo">
                     </v-list-tile-avatar>
-                    <v-list-tile-title class="text-justify rtl">{{site.title}}</v-list-tile-title>
+                    <v-list-tile-title class="text-justify rtl">صفحه ی نخست</v-list-tile-title>
                 </v-list-tile>
                 <v-divider/>
 
@@ -159,7 +161,6 @@
     }
     ,
     computed: {
-
       isMobile() {
         return this.$vuetify.breakpoint.smAndDown;
       }

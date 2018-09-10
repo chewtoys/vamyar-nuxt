@@ -38,12 +38,13 @@
               :value="true"
               type="error"
             ><span class="px-1">{{error}}</span></v-alert>
-
             <v-card-text class="py-5 mb-4 px-4 text-center">
               <div v-if="showPanel=='login'">
                 <v-form>
                   <v-text-field prepend-icon="person" v-model="formUsername"
                                 name="formUsername"
+                                counter
+                                maxlength="11"
                                 label="نام کاربری"
                                 type="text"></v-text-field>
                   <v-text-field id="formPassword" v-model="formPassword" prepend-icon="lock"
@@ -52,7 +53,8 @@
                                 type="password"></v-text-field>
                   <br>
                   <div class="my-3">
-                    <v-btn color="primary" outline class="my-3" @click="login"><span>ورود</span>
+                    <v-btn color="primary" outline class="my-3" :disabled="loginBtn" :loading="loginLoader"
+                           @click="login"><span>ورود</span>
                       <v-icon class="px-1">lock_open</v-icon>
                     </v-btn>
                   </div>
@@ -159,6 +161,7 @@
       return {
         formUsername: null,
         formPassword: null,
+        loginLoader: false,
         formCode: null,
         formMobile: '',
         formNewPassword: '',
@@ -185,6 +188,9 @@
         set: (newValue) => {
           this.$store.dispatch('update', newValue)
         }
+      },
+      loginBtn() {
+        return (!this.formUsername || !this.formPassword);
       }
     },
     methods: {
@@ -265,6 +271,7 @@
         }
       },
       login: function () {
+        this.loginLoader = true;
         let resource = login_path;
         let username = this.formUsername;
         let password = this.formPassword;
@@ -291,9 +298,13 @@
         }).catch((error) => {
           if (error.response.data.error && error.response.data.error === "invalid_credentials") {
             this.msgError("مشخصات ورود صحیح نمی باشد.");
-          } else {
+          } else if (error.response.data.message) {
             this.msgError("مشکلی  پیش آمد:" + error.response.data.message)
+          } else {
+            this.msgError('مشکل در ارتباط با سرور');
           }
+        }).then(() => {
+          this.loginLoader = false;
         })
       }
     }

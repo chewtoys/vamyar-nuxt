@@ -217,6 +217,7 @@
         try {
           let {data} = await this.$axios.$get('/user/details');
           if (data && data.details.firstName) {
+            this.$store.commit('snackbar/setSnack', 'پروفایل با موفقیت بروز شد', 'success')
             this.$store.commit('updateUserInfo', data)
           }
         } catch (error) {

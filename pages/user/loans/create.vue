@@ -1,5 +1,5 @@
 <template>
-  <v-continer grid-list-xs fluid>
+  <v-container grid-list-xs fluid>
     <v-card color="white" raised light class="py-5 px-4">
       <v-layout row>
         <v-flex xs12 md12 sm12 lg12>
@@ -19,17 +19,25 @@
     <v-card color="white" raised light class="mt-5 py-5 px-4">
       <v-layout row wrap>
         <v-flex xs12>
-          <span>{{page_title}}</span>
-          <v-spacer></v-spacer>
+          <div>
+            <v-toolbar flat color="white">
+              <v-toolbar-title>
+                <v-icon class="pb-1 ml-1">create</v-icon>
+                {{page_title}}
+              </v-toolbar-title>
+              <v-spacer/>
+              <v-btn :to="list" outline color="primary" round>
+                <v-icon class="px-1">arrow_right</v-icon>
+                بازگشت
+              </v-btn>
+              <v-btn type="submit" @click="submit" outline color="accent" :loading="submit_loader" round>
+                <v-icon class="px-1">save</v-icon>
+                ذخیره
+              </v-btn>
+            </v-toolbar>
+          </div>
+          <v-divider class="mb-5 mt-1"/>
 
-          <v-btn outline color="primary" round>
-            <v-icon class="px-1">arrow_right</v-icon>
-            بازگشت
-          </v-btn>
-          <v-btn type="submit" @click="submit" outline color="accent" :loading="submit_loader" round>
-            <v-icon class="px-1">save</v-icon>
-            ذخیره
-          </v-btn>
         </v-flex>
         <v-divider class="my-3"></v-divider>
         <v-flex xs12 md12 sm12 lg12>
@@ -101,29 +109,18 @@
           </form>
         </v-flex>
       </v-layout>
-      <v-snackbar
-        v-model="snackbar"
-        :color="snack_color"
-        :multi-line="true"
-        :timeout="3000"
-        :vertical="true"
-      >
-        {{ snack_text }}
-        <v-btn
-          dark
-          flat
-          @click="snackbar = false"
-        >
-          بستن
-        </v-btn>
-      </v-snackbar>
     </v-card>
-  </v-continer>
+  </v-container>
 </template>
 <script>
 
-  const path = "/user/loan/create", guaranteeTypeListPath = "/admin/guaranteeTypes", cityPath = "/admin/cities",
-    page_title = 'ثبت وام جدید', breadcrumb = "فرم درخواست وام";
+  const
+    list = "/user/loans",
+    path = `/user/loan/create`,
+    guaranteeTypeListPath = "/admin/guaranteeTypes",
+    cityPath = "/admin/cities",
+    page_title = 'ثبت وام جدید',
+    breadcrumb = "فرم درخواست وام";
 
   export default {
     $_veeValidate: {
@@ -135,7 +132,7 @@
     },
 
     data: () => ({
-        page_title,
+        list, page_title,
 
         // advert
         title: null,
@@ -153,6 +150,7 @@
         payback: null,
         price: null,
 
+        // validator dictionary
         dictionary: {
           attributes: {
             title: 'عنوان آگهی',
@@ -205,9 +203,7 @@
     ,
     methods: {
       toast(msg, color) {
-        this.snackbar = true;
-        this.snack_text = msg;
-        this.snack_color = color;
+        this.$store.commit('snackbar/setSnack', msg, color)
       }
       ,
       sendForm() {
@@ -221,13 +217,13 @@
           guaranteeTypeId: this.guaranteeTypeId,
           image: this.image
         };
-        this.$axios.$post(path, data).then((result) => {
+        this.$axios.post(path, data).then((result) => {
           let status = true;
           if (status) {
             // show success and redirect
             this.toast('با موفقیت ثبت شد.', 'success');
-            this.$router.push('../')
             this.submit_loader = false;
+            this.$router.push('../');
           } else {
             this.toast(' خطایی رخ داد.', 'warning');
             this.submit_loader = false;
@@ -235,15 +231,12 @@
         }).catch((error) => {
           // catch and show error
           this.toast("لطفا خطا ها را بررسی کنید.", 'error')
-          this.toast(error, 'error')
           this.submit_loader = false;
         });
       }
       ,
       async submit() {
         this.submit_loader = true;
-        //let validation = await this.$validator.validateAll();
-        //this.submit_loader = false;
         this.$validator.validateAll().then((result) => {
           if (result) {
             this.sendForm()

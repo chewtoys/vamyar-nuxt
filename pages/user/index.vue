@@ -1,11 +1,14 @@
 <template>
-    <div>
-
-    </div>
+  <div>
+    <dashboard/>
+  </div>
 </template>
 
 <script>
-    export default {
-        layout: "user"
-    }
+  import Dashboard from '~/components/user/dashboard/dashboard.vue'
+
+  export default {
+    components: {Dashboard},
+    layout: "user"
+  }
 </script>
