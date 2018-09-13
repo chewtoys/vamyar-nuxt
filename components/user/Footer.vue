@@ -16,7 +16,7 @@
         color="white"
         flat
         round
-        @click="goTo(item.link)"
+        :to="item.link"
         wrap
         v-if="$vuetify.breakpoint.name != 'xs'"
       >
@@ -44,9 +44,9 @@
       links: [
         {title: 'خانه', link: '/'},
         {title: 'پنل کاربری', link: '/user'},
-        {title: 'شکایات و انتقادات', link: '/contact-us'},
+        {title: 'شکایات و انتقادات', link: '/pages/contact-us'},
         {title: 'آگهی ها', link: '/adverts'},
-        {title: 'درباره ی ما', link: '/about-us'},
+        {title: 'درباره ی ما', link: '/pages/about-us'},
       ]
     }),
     computed: {

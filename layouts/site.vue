@@ -1,20 +1,30 @@
 <template>
-    <v-app>
-        <ToolBar/>
+  <v-app>
+    <ToolBar/>
+    <v-content>
+      <v-container fluid>
+        <Breadcrumb/>
         <nuxt/>
-        <Footer/>
-    </v-app>
+        <Snackbar/>
+      </v-container>
+    </v-content>
+    <Footer/>
+  </v-app>
 </template>
 
+
 <script>
-    import ToolBar from '~/components/site/ToolBar.vue';
-    import Footer from '~/components/site/Footer.vue';
-    export default {
-        components: {
-            ToolBar,
-            Footer
-        }
+  import Snackbar from '~/components/Snackbar'
+  import ToolBar from '~/components/site/ToolBar.vue';
+  import Footer from '~/components/site/Footer.vue';
+
+  export default {
+    components: {
+      ToolBar,
+      Footer,
+      Snackbar
     }
+  }
 </script>
 <style>
 

@@ -285,8 +285,8 @@
             client_id: '1',
             client_secret: clientsecret
           }
-        this.$axios.post(resource, formData, {mode: 'no-cors'}).then((resp) => {
-          let {token_type, access_token} = resp.data;
+        this.$axios.$post(resource, formData, {mode: 'no-cors'}).then(({token_type, access_token}) => {
+
           if (access_token) {
             Cookie.set('auth', access_token)
             this.$store.commit('updateToken', access_token)
@@ -295,15 +295,15 @@
           } else {
             this.msgError('مشخصات صحیح نمی باشد.')
           }
+          this.loginLoader = false;
         }).catch((error) => {
-          if (error.response.data.error && error.response.data.error === "invalid_credentials") {
+          if (error && error.response && error.response.data.error === "invalid_credentials") {
             this.msgError("مشخصات ورود صحیح نمی باشد.");
-          } else if (error.response.data.message) {
+          } else if (error && error.response && error.response.data.message) {
             this.msgError("مشکلی  پیش آمد:" + error.response.data.message)
           } else {
             this.msgError('مشکل در ارتباط با سرور');
           }
-        }).then(() => {
           this.loginLoader = false;
         })
       }

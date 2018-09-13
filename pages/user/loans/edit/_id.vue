@@ -195,11 +195,25 @@
         //error({statusCode: 404, message: 'همچین آگهی یافت نشد.'})
         //data = [];
         data = {
-          cityId: 1,
-          "title": "test title",
-          "text": "test text",
-          "mobile": 9188412860,
-          "image": null,
+          "id": 21,
+          "guaranteeTypeId": 1,
+          "loanTypeId": 1,
+          "amount": 123423,
+          "paybackTime": 12,
+          "price": 1000000,
+          "advert": {
+            "id": 32,
+            "advertableType": "loan",
+            "advertableId": 21,
+            "userId": 27,
+            "cityId": 1,
+            "title": "test title",
+            "text": "test text",
+            "verified": true,
+            "instant": false,
+            "mobile": null,
+            "image": null,
+          }
         }
       }
       //let currentData = await
@@ -214,7 +228,25 @@
       if (this.data && this.data.length < 1) {
         this.$store.commit('snackbar/setSnack', 'آگهی مورد نظر وجود ندارد.', 'warning')
         return this.$router.push('../');
+      } else if (this.data) {
+
+        // advert
+        this.title = this.data.title
+        //this.city = this.data.city
+        //this.allcities = this.data.cities == 0 //?
+        this.text = this.data.text
+        this.mobile = this.data.mobile
+        this.image = this.data.image
+
+        // this type - loan
+        // this.guaranteeTypeId = this.data.guaranteeTypeId
+        //this.loanType = this.data.loanType
+        this.payBackTime = this.data.payBankTime
+        this.amount = this.data.amount
+        this.payback = this.data.payback
+        this.price = this.data.price
       }
+
       this.$validator.localize('fa', this.dictionary)
       // check if user has no access to create advert
       //let hasAccess = this.$store.state.accesses.loans ;
