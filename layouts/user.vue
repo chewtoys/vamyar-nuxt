@@ -18,7 +18,11 @@
   import Snackbar from '~/components/Snackbar.vue'
 
   export default {
-
+    head() {
+      return {
+        title: this.$store.state.navigation.title
+      }
+    },
     middleware: ["authenticated", "navigation"],
     components: {
       ToolBar, Footer, Breadcrumb, Snackbar

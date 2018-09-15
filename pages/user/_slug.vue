@@ -4,8 +4,8 @@
 <script>
   export default {
     meta: {
-      title: 'پروفایل من',
-      breadcrumb: 'پروفایل',
+      title: 'آگهی های من',
+      breadcrumb: 'آگهی ها',
     },
     layout: 'user'
   }

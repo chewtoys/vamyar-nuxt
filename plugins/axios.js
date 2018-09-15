@@ -2,8 +2,8 @@ export default function ({$axios, store, redirect}) {
 
 
   // Authorization
-  if (store.state.auth) {
-    let accessToken = store.state.auth;
+  if (store.state.admin.auth || store.state.user.auth) {
+    let accessToken = store.state.user.auth || store.state.admin.auth;
     $axios.setHeader('Authorization', `Bearer ${accessToken}`)
   }
 

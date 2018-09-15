@@ -1,11 +1,20 @@
 <template>
-    <div>
-        <nuxt-child/>
-    </div>
+  <div>
+    <nuxt/>
+  </div>
 </template>
 
 <script>
-    export default {
-        layout: 'site'
-    }
+  const title = 'صفحه نخست', breadcrumb = 'صفحه نخست'
+  export default {
+    meta: {
+      title,
+      breadcrumb,
+      link: this.link
+    },
+    mounted() {
+      this.link = window.location;
+    },
+    layout: 'site'
+  }
 </script>

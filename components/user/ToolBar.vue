@@ -168,7 +168,7 @@
         return this.$store.state.site
       },
       user: function () {
-        return this.$store.state.user;
+        return this.$store.state.user.info;
       },
       welcome: function () {
         return (this.user.details) ? this.user.details.firstName + ' خوش آمدید!' : 'ابتدا مشخصات خود را تکمیل کنید';

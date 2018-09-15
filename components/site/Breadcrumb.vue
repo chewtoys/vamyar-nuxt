@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-breadcrumbs v-if="meta.length > 0">
+    <v-breadcrumbs>
       <v-icon slot="divider">chevron_left</v-icon>
 
       <v-breadcrumbs-item

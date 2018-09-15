@@ -179,16 +179,6 @@
     },
     middleware: 'notAuthenticated',
     computed: {
-      access_token: {
-        // getter
-        get: () => {
-          return this.$store.state.auth
-        },
-        // setter
-        set: (newValue) => {
-          this.$store.dispatch('update', newValue)
-        }
-      },
       loginBtn() {
         return (!this.formUsername || !this.formPassword);
       }
@@ -204,9 +194,6 @@
       },
       backHome: function () {
         this.$router.push('/')
-      },
-      debug: function () {
-        console.log(this.$store.state.req);
       },
       sendForget: function () {
         this.forgetLoader = true;
@@ -286,11 +273,10 @@
             client_secret: clientsecret
           }
         this.$axios.$post(resource, formData, {mode: 'no-cors'}).then(({token_type, access_token}) => {
-
           if (access_token) {
             Cookie.set('auth', access_token)
-            this.$store.commit('updateToken', access_token)
-            window.location = '/user/'
+            this.$store.commit('user/updateToken', access_token)
+            window.location = '/user'
             //this.$router.push('/user/')
           } else {
             this.msgError('مشخصات صحیح نمی باشد.')

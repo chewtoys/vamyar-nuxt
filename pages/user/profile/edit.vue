@@ -157,12 +157,12 @@
       // check if user has no access to create advert
       //let hasAccess = this.$store.state.accesses.loans ;
 
-      this.firstName = this.$store.state.user.details.firstName || null;
-      this.lastName = this.$store.state.user.details.lastName || null;
-      this.email = this.$store.state.user.email || null;
-      this.address = this.$store.state.user.details.address || '';
+      this.firstName = this.$store.state.user.info.details.firstName || null;
+      this.lastName = this.$store.state.user.info.details.lastName || null;
+      this.email = this.$store.state.user.info.email || null;
+      this.address = this.$store.state.user.info.details.address || '';
       this.password = null;
-      this.put = (this.$store.state.user.details.firstName) ? true : false;
+      this.put = (this.$store.state.user.info.details.firstName) ? true : false;
 
     }
     ,
@@ -184,41 +184,21 @@
         };
         let request = null;
         try {
-          console.log('selected method:', this.put, data)
-          console.log('registered user', this.$store.state.user)
           if (this.put) request = await this.$axios.$put(path, data);
           if (!this.put) request = await this.$axios.$post(path, data);
-
         } catch (error) {
-          console.log('Some Error:', error, request);
         }
         this.updateUser();
         this.submit_loader = false;
         return true;
-        //request.then((result) => {
-        //  let status = true;
-        //  if (status) {
-        //    // show success and redirect
-        //    this.toast('با موفقیت ثبت شد.', 'success');
-        //    //this.$router.push('../')
-        //    this.submit_loader = false;
-        //  } else {
-        //    this.toast(' خطایی رخ داد.', 'warning');
-        //    this.submit_loader = false;
-        //  }
-        //}).catch((error) => {
-        //  // catch and show error
-        //  this.toast("لطفا خطا ها را بررسی کنید.", 'error')
-        //  this.toast('خطا در ارتباط: ' + error, 'error')
-        //  this.submit_loader = false;
-        //});
+
       },
       async updateUser() {
         try {
           let {data} = await this.$axios.$get('/user/details');
           if (data && data.details.firstName) {
             this.$store.commit('snackbar/setSnack', 'پروفایل با موفقیت بروز شد', 'success')
-            this.$store.commit('updateUserInfo', data)
+            this.$store.commit('user/updateUserInfo', data)
           }
         } catch (error) {
           //console.log('AUTH ERROR', error)
