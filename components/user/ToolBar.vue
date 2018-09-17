@@ -115,7 +115,7 @@
     </span>
 </template>
 <script>
-  import {mapGetters} from 'vuex'
+  import Helper from '~/assets/js/helper'
 
   export default {
     data: ({$store}) => ({
@@ -136,12 +136,12 @@
           {title: 'درخواست وام', icon: 'book', to: '/user/loan-requests'}
         ],
         coSigner: [
-          {title: 'ضامن هستم', icon: 'book', to: '/user/co-signer'},
+          {title: 'ضامن', icon: 'book', to: '/user/co-signers'},
           {title: 'درخواست ضامن', icon: 'book', to: '/user/co-signer-requests'},
         ],
         finances: [
-          {title: 'سرمایه گذاری', icon: 'book', to: '/user/finance-requests'},
-          {title: 'درخواست سرمایه', icon: 'book', to: '/user/finances'},
+          {title: 'سرمایه گذاری', icon: 'book', to: '/user/finances'},
+          {title: 'درخواست سرمایه', icon: 'book', to: '/user/finance-requests'},
         ],
         access: [
           {title: 'سایت', icon: 'book', to: '/user/adverts/vam'},

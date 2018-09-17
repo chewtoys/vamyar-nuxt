@@ -22,13 +22,13 @@
         <v-toolbar flat color="white">
           <v-toolbar-title>{{page_title}}</v-toolbar-title>
           <v-spacer/>
-          <v-btn color="cyan" outline light round class="mb-2" :to="'/create'">ثبت جدید</v-btn>
+          <v-btn color="cyan" outline light round class="mb-2" :to="slug + '/create'">ثبت جدید</v-btn>
         </v-toolbar>
         <v-data-table
           :headers="headers"
           :items="items"
           no-results-text="هیچ موردی ثبت نشده است."
-          :rows-per-page-items="[1,5,10,25,100]"
+          :rows-per-page-items="[5,10,25,100]"
           class="elevation-1"
         >
           <template slot="items" slot-scope="props">
@@ -133,7 +133,7 @@
     },
     mounted() {
       return {
-        rawHeaders: Helper.getRawHeaders(type.type),
+        rawHeaders: Helper.getRawHeaders(this.type.type),
         rawData: this.data || [],
       }
     },
@@ -143,7 +143,7 @@
       },
       info() {
         return {
-          title: 'لیست ' + this.type.title + '‌های ثبت شده',
+          title: 'لیست ' + this.type.title + '‌ها',
         }
       },
     },
