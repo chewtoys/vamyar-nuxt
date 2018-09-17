@@ -1,10 +1,10 @@
 export const state = () => ({
-  snack: '',
-  color: 'info'
+  snack: "",
+  color: "info"
 })
 
 export const mutations = {
-  setSnack(state, snack, color = 'info') {
+  setSnack(state, snack, color = "info") {
     state.snack = snack
     state.color = color
   }

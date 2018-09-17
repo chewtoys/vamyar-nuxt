@@ -9,21 +9,21 @@
 </template>
 
 <script>
-  import ToolBar from '~/components/site/ToolBar.vue';
-  import Snackbar from '~/components/Snackbar.vue'
+import ToolBar from "~/components/site/ToolBar.vue"
+import Snackbar from "~/components/Snackbar.vue"
 
-  export default {
-    data() {
-      return {
-        title: ""
-      }
-    },
-    components: {
-      ToolBar, Snackbar
-    },
-    computed: {}
-  }
+export default {
+  components: {
+    ToolBar,
+    Snackbar
+  },
+  data() {
+    return {
+      title: ""
+    }
+  },
+  computed: {}
+}
 </script>
 <style>
-
 </style>

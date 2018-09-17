@@ -5,10 +5,10 @@
 
       <v-breadcrumbs-item
         v-for="(item,i ) in meta"
+        v-if="item && item.breadcrumb"
         :disabled="!item.link"
         :to="item.link"
         :key="i"
-        v-if="item && item.breadcrumb"
       >
         {{ item.breadcrumb }}
       </v-breadcrumbs-item>
@@ -17,14 +17,12 @@
 </template>
 
 <script>
-  export default {
-    computed: {
-      meta() {
-        return this.$store.state.navigation.meta
-      }
-    },
-    mounted() {
-
+export default {
+  computed: {
+    meta() {
+      return this.$store.state.navigation.meta
     }
-  }
+  },
+  mounted() {}
+}
 </script>

@@ -1,10 +1,10 @@
 <template>
-    <div>users</div>
+  <div>users</div>
 </template>
 <script>
-    export default {
-        meta: {
-            breadcrumb: 'کاربران'
-        }
-    }
+export default {
+  meta: {
+    breadcrumb: "کاربران"
+  }
+}
 </script>

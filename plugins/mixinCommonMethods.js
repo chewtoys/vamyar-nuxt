@@ -1,32 +1,29 @@
-import Vue from "vue";
+import Vue from "vue"
 
 Vue.mixin({
-    methods: {
+  methods: {
+    async getLoanItems(number, cursor, must) {
+      // `api.vamyar.tk:808/site/adverts? cursor = 0 & number = 10 & must = advertableType = loan, verified = true`
 
-        async getLoanItems (number, cursor, must) {
+      let method = "/site/adverts"
+      let advertableType = "loan"
 
-            // `api.vamyar.tk:808/site/adverts? cursor = 0 & number = 10 & must = advertableType = loan, verified = true`
+      if (!number) number = 15
+      if (!cursor) cursor = 0
 
-            let method = '/site/adverts';
-            let advertableType = 'loan';
+      if (!must) {
+        must = "advertableType=" + advertableType + ",verified=true"
+      }
 
-            if (!number) number = 15;
-            if (!cursor) cursor = 0;
+      let query = {
+        number,
+        cursor,
+        must
+      }
 
-            if (!must) {
-                must = 'advertableType=' + advertableType + ',verified=true'
-            }
-
-            let query = {
-                number,
-                cursor,
-                must
-            };
-
-            return await this.$axios.get(method, {
-                params: query
-            });
-        }
-
+      return await this.$axios.get(method, {
+        params: query
+      })
     }
+  }
 })

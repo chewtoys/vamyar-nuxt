@@ -7,7 +7,7 @@
             خروج از پروفایل
           </v-card-title>
           <v-card-text>
-            <v-btn :loading="loading" @click="logout" outline round color="primary">
+            <v-btn :loading="loading" outline round color="primary" @click="logout">
               <v-icon>lock</v-icon>
               خروج
             </v-btn>
@@ -18,27 +18,27 @@
   </v-container>
 </template>
 <script>
-  const page = {title: 'خروج از مدیریت', icon: 'lock_open'}
-  export default {
-    meta: {
-      breadcrumb: 'خروج',
-      title: page.title
-    },
-    data() {
-      return {
-        loading: false,
-        page
-      }
-    },
-    layout: 'user',
-    methods: {
-      logout() {
-        this.loading = true;
-        setTimeout(() => {
-          this.$store.dispatch('logout')
-          this.$router.push('/')
-        }, 2000)
-      }
+const page = { title: "خروج از مدیریت", icon: "lock_open" }
+export default {
+  meta: {
+    breadcrumb: "خروج",
+    title: page.title
+  },
+  data() {
+    return {
+      loading: false,
+      page
+    }
+  },
+  layout: "user",
+  methods: {
+    logout() {
+      this.loading = true
+      setTimeout(() => {
+        this.$store.dispatch("logout")
+        this.$router.push("/")
+      }, 2000)
     }
   }
+}
 </script>

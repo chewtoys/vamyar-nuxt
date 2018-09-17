@@ -6,10 +6,10 @@
           <v-card-title>
             <h2>
               <v-icon class="pb-2">flag</v-icon>
-              <span>درباره‌ی ما</span></h2>
+            <span>درباره‌ی ما</span></h2>
           </v-card-title>
           <v-card-text>
-            <div>{{text}}</div>
+            <div>{{ text }}</div>
           </v-card-text>
         </v-card>
       </v-flex>
@@ -17,15 +17,15 @@
   </v-container>
 </template>
 <script>
-  export default {
-    meta: {
-      title: 'درباره‌ی ما'
-    },
-    layout: 'site',
-    computed: {
-      text() {
-        return this.$store.state.temp.lorem
-      }
+export default {
+  meta: {
+    title: "درباره‌ی ما"
+  },
+  layout: "site",
+  computed: {
+    text() {
+      return this.$store.state.temp.lorem
     }
   }
+}
 </script>
