@@ -1,8 +1,8 @@
 <template>
-    <nuxt/>
+  <nuxt/>
 </template>
 <script>
-    export default {
-        layout: 'site',
-    }
+export default {
+  layout: "site"
+}
 </script>

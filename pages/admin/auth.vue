@@ -20,12 +20,12 @@
               v-if="success !== null "
               :value="true"
               type="success"
-            ><span class="px-1">{{success}}</span></v-alert>
+            ><span class="px-1">{{ success }}</span></v-alert>
             <v-alert
               v-if="error !== null "
               :value="true"
               type="error"
-            ><span class="px-1">{{error}}</span></v-alert>
+            ><span class="px-1">{{ error }}</span></v-alert>
             <v-alert
               v-if="!showLogin"
               :value="true"
@@ -35,14 +35,14 @@
             <v-card-text class="py-5 mb-4 px-4 text-center">
               <div v-if="showLogin">
                 <v-form>
-                  <v-text-field prepend-icon="person" v-model="formUsername"
+                  <v-text-field v-model="formUsername" prepend-icon="person"
                                 name="formUsername"
                                 label="نام کاربری"
-                                type="text"></v-text-field>
+                                type="text"/>
                   <v-text-field id="formPassword" v-model="formPassword" prepend-icon="lock"
                                 name="formPassword"
                                 label="رمز عبور"
-                                type="password"></v-text-field>
+                                type="password"/>
                   <br>
                   <div class="my-3">
                     <v-btn color="primary" outline class="my-3" @click="login"><span>ورود</span>
@@ -55,20 +55,20 @@
               <div v-if="!showLogin">
                 <v-form>
                   <v-text-field
-                    prepend-icon="phone"
                     v-model="formMobile"
+                    prepend-icon="phone"
                     name="formMobile"
                     label="شماره همراه"
                     counter
                     maxlength="11"
                     minlength="11"
-                    type="text"></v-text-field>
+                    type="text"/>
 
 
-                  <v-text-field v-if="sms_sent" prepend-icon="textsms" v-model="formCode"
+                  <v-text-field v-if="sms_sent" v-model="formCode" prepend-icon="textsms"
                                 name="formCode"
                                 label="کد دریافت شده"
-                                type="text"></v-text-field>
+                                type="text"/>
                   <br>
                   <div class="my-3">
                     <v-btn v-if="!sms_sent" :disabled="formMobile.length!=11" color="primary"
@@ -76,7 +76,7 @@
                       <span>ارسال کد</span>
                       <v-icon class="px-1">sms</v-icon>
                     </v-btn>
-                    <v-btn v-if="sms_sent" color="primary" :disabled="pending" outline
+                    <v-btn v-if="sms_sent" :disabled="pending" color="primary" outline
                            @click="sendCode"><span>ارسال مجدد</span>
                       <v-icon class="px-1">autorenew</v-icon>
                     </v-btn>
@@ -111,118 +111,120 @@
   </v-card>
 </template>
 <script>
-  import Cookie from 'js-cookie'
-  //import axios from 'axios'
-  let register_path = '/user/register', login_path = '/oauth/token';
+import Cookie from "js-cookie"
+//import axios from 'axios'
+let register_path = "/user/register",
+  login_path = "/oauth/token"
 
-  export default {
-    layout: "auth",
-    data(){
-      return {
-        formUsername: '9379745572',
-        formPassword: 'secret',
-        formCode: null,
-        formMobile: '',
-        formNewPassword: '',
-        sms_sent: false,
-        auth: null,
-        activeBtn: 0,
-        showNav: true,
-        showLogin: true,
-        pending: true,
-        success: null,
-        error: null,
-      }
-    },
-    middleware: 'notAuthenticated',
-    computed: {
-      access_token: {
-        // getter
-        get: () => {
-          return this.$store.state.auth
-        },
-        // setter
-        set: (newValue) => {
-          this.$store.dispatch('update', newValue)
-        }
-      }
-    },
-    methods: {
-      msgError(msg){
-        this.error = msg;
-        this.success = null;
+export default {
+  layout: "auth",
+  data() {
+    return {
+      formUsername: "9379745572",
+      formPassword: "secret",
+      formCode: null,
+      formMobile: "",
+      formNewPassword: "",
+      sms_sent: false,
+      auth: null,
+      activeBtn: 0,
+      showNav: true,
+      showLogin: true,
+      pending: true,
+      success: null,
+      error: null
+    }
+  },
+  middleware: "notAuthenticated",
+  computed: {
+    access_token: {
+      // getter
+      get: () => {
+        return this.$store.state.auth
       },
-      msgSuccess(msg){
-        this.error = null;
-        this.success = msg;
-      },
-      backHome: function () {
-        this.$router.push('/')
-      },
-      debug: function () {
-        console.log(this.$store.state.req);
-      },
-      sendCode: function () {
-        let resource = register_path;
-        let username = this.formMobile;
-        let password = this.formNewPassword;
-        let client_secret = this.$store.state.secret;
-        let client_id = 1;
-        let formData =
-          {
-            username,
-            password,
-            password_confirmation: password,
-            client_secret
-          }
-
-        let response = this.$axios.post(resource, formData).then((resp) => {
-          let {message} = resp;
-          this.msgSuccess(message);
-        }).catch((resp) => {
-          let message = 'متاسفانه مشکلی در ارتباط با سرور پیش آمد.'
-          this.msgError(message);
-        })
-        console.log({response})
-
-
-        this.pending = true;
-        setTimeout(() => {
-          this.pending = false
-        }, 10000)
-        this.sms_sent = true;
-      },
-      checkCode: function () {
-
-      },
-      login: function () {
-        let resource = login_path;
-        let username = this.formUsername;
-        let password = this.formPassword;
-        let clientsecret = this.$store.state.secret
-        let formData =
-          {
-            username: username,
-            password: password,
-            grant_type: "password",
-            provider: "users",
-            client_id: '1',
-            client_secret: clientsecret
-          }
-        this.$axios.post(resource, formData,{mode:'no-cors'}).then((resp) => {
-          let {token_type, access_token} = resp;
-          if (access_token) {
-            Cookie.set('auth', access_token)
-            if (this.$store.state.debug)
-              this.$store.commit('updateToken', access_token)
-            this.$router.push('/user/')
-          } else {
-            this.msgError('مشخصات صحیح نمی باشد.')
-          }
-        }).catch((error) => {
-          this.msgError("مشکلی از طرف سرور پیش آمد." + error)
-        })
+      // setter
+      set: newValue => {
+        this.$store.dispatch("update", newValue)
       }
     }
+  },
+  methods: {
+    msgError(msg) {
+      this.error = msg
+      this.success = null
+    },
+    msgSuccess(msg) {
+      this.error = null
+      this.success = msg
+    },
+    backHome: function() {
+      this.$router.push("/")
+    },
+    debug: function() {
+      console.log(this.$store.state.req)
+    },
+    sendCode: function() {
+      let resource = register_path
+      let username = this.formMobile
+      let password = this.formNewPassword
+      let client_secret = this.$store.state.secret
+      let client_id = 1
+      let formData = {
+        username,
+        password,
+        password_confirmation: password,
+        client_secret
+      }
+
+      let response = this.$axios
+        .post(resource, formData)
+        .then(resp => {
+          let { message } = resp
+          this.msgSuccess(message)
+        })
+        .catch(resp => {
+          let message = "متاسفانه مشکلی در ارتباط با سرور پیش آمد."
+          this.msgError(message)
+        })
+      console.log({ response })
+
+      this.pending = true
+      setTimeout(() => {
+        this.pending = false
+      }, 10000)
+      this.sms_sent = true
+    },
+    checkCode: function() {},
+    login: function() {
+      let resource = login_path
+      let username = this.formUsername
+      let password = this.formPassword
+      let clientsecret = this.$store.state.secret
+      let formData = {
+        username: username,
+        password: password,
+        grant_type: "password",
+        provider: "users",
+        client_id: "1",
+        client_secret: clientsecret
+      }
+      this.$axios
+        .post(resource, formData, { mode: "no-cors" })
+        .then(resp => {
+          let { token_type, access_token } = resp
+          if (access_token) {
+            Cookie.set("auth", access_token)
+            if (this.$store.state.debug)
+              this.$store.commit("updateToken", access_token)
+            this.$router.push("/user/")
+          } else {
+            this.msgError("مشخصات صحیح نمی باشد.")
+          }
+        })
+        .catch(error => {
+          this.msgError("مشکلی از طرف سرور پیش آمد." + error)
+        })
+    }
   }
+}
 </script>

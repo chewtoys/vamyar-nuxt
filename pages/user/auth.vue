@@ -32,28 +32,28 @@
               v-if="success !== null "
               :value="true"
               type="success"
-            ><span class="px-1">{{success}}</span></v-alert>
+            ><span class="px-1">{{ success }}</span></v-alert>
             <v-alert
               v-if="error !== null "
               :value="true"
               type="error"
-            ><span class="px-1">{{error}}</span></v-alert>
+            ><span class="px-1">{{ error }}</span></v-alert>
             <v-card-text class="py-5 mb-4 px-4 text-center">
               <div v-if="showPanel=='login'">
                 <v-form>
-                  <v-text-field prepend-icon="person" v-model="formUsername"
+                  <v-text-field v-model="formUsername" prepend-icon="person"
                                 name="formUsername"
                                 counter
                                 maxlength="11"
                                 label="نام کاربری"
-                                type="text"></v-text-field>
+                                type="text"/>
                   <v-text-field id="formPassword" v-model="formPassword" prepend-icon="lock"
                                 name="formPassword"
                                 label="رمز عبور"
-                                type="password"></v-text-field>
+                                type="password"/>
                   <br>
                   <div class="my-3">
-                    <v-btn color="primary" outline class="my-3" :disabled="loginBtn" :loading="loginLoader"
+                    <v-btn :disabled="loginBtn" :loading="loginLoader" color="primary" outline class="my-3"
                            @click="login"><span>ورود</span>
                       <v-icon class="px-1">lock_open</v-icon>
                     </v-btn>
@@ -64,25 +64,25 @@
               <div v-if="showPanel=='register'">
                 <v-form>
                   <v-text-field
-                    prepend-icon="phone"
                     v-model="formMobile"
+                    prepend-icon="phone"
                     name="formMobile"
                     label="شماره همراه"
                     counter
                     maxlength="11"
                     minlength="11"
-                    type="text"></v-text-field>
+                    type="text"/>
                   <v-text-field id="formPassword"
                                 v-model="formNewPassword"
                                 prepend-icon="lock"
                                 name="formNewPassword"
                                 label="رمز عبور"
-                                type="password"></v-text-field>
+                                type="password"/>
 
-                  <v-text-field v-if="sms_sent" prepend-icon="textsms" v-model="formCode"
+                  <v-text-field v-if="sms_sent" v-model="formCode" prepend-icon="textsms"
                                 name="formCode"
                                 label="کد دریافت شده"
-                                type="text"></v-text-field>
+                                type="text"/>
                   <br>
                   <div class="my-3">
                     <v-btn v-if="!sms_sent" :disabled="formMobile.length!=11" color="primary"
@@ -90,7 +90,7 @@
                       <span>ارسال کد</span>
                       <v-icon class="px-1">sms</v-icon>
                     </v-btn>
-                    <v-btn v-if="sms_sent" color="primary" :disabled="pending" outline
+                    <v-btn v-if="sms_sent" :disabled="pending" color="primary" outline
                            @click="sendCode"><span>ارسال مجدد</span>
                       <v-icon class="px-1">autorenew</v-icon>
                     </v-btn>
@@ -105,14 +105,14 @@
               <div v-if="showPanel=='forget'">
                 <v-form>
                   <v-text-field
-                    prepend-icon="phone"
                     v-model="forgetForget"
+                    prepend-icon="phone"
                     name="forgetPhone"
                     label="شماره همراه"
                     counter
                     maxlength="11"
                     minlength="11"
-                    type="text"></v-text-field>
+                    type="text"/>
                   <br>
                   <div class="my-3">
                     <v-btn v-if="!sms_sent" :loading="forgetLoading" :disabled="forgetPhone.length!=11" color="primary"
@@ -151,148 +151,161 @@
   </v-card>
 </template>
 <script>
-  import Cookie from 'js-cookie'
-  //import axios from 'axios'
-  let register_path = '/user/register', verify_path = '/user/register/verify-mobile', login_path = '/oauth/token',
-    forget_path = '/user/password';
-  export default {
-    layout: "auth",
-    data() {
-      return {
-        formUsername: null,
-        formPassword: null,
-        loginLoader: false,
-        formCode: null,
-        formMobile: '',
-        formNewPassword: '',
-        sms_sent: false,
-        auth: null,
-        activeBtn: 0,
-        showNav: true,
-        showPanel: 'login',
-        pending: true,
-        success: null,
-        error: null,
-        forgetLoader: false,
-        forgetPhone: "",
-      }
+import Cookie from "js-cookie"
+//import axios from 'axios'
+let register_path = "/user/register",
+  verify_path = "/user/register/verify-mobile",
+  login_path = "/oauth/token",
+  forget_path = "/user/password"
+export default {
+  layout: "auth",
+  data() {
+    return {
+      formUsername: null,
+      formPassword: null,
+      loginLoader: false,
+      formCode: null,
+      formMobile: "",
+      formNewPassword: "",
+      sms_sent: false,
+      auth: null,
+      activeBtn: 0,
+      showNav: true,
+      showPanel: "login",
+      pending: true,
+      success: null,
+      error: null,
+      forgetLoader: false,
+      forgetPhone: ""
+    }
+  },
+  middleware: "notAuthenticated",
+  computed: {
+    loginBtn() {
+      return !this.formUsername || !this.formPassword
+    }
+  },
+  methods: {
+    msgError(msg) {
+      this.error = msg
+      this.success = null
     },
-    middleware: 'notAuthenticated',
-    computed: {
-      loginBtn() {
-        return (!this.formUsername || !this.formPassword);
-      }
+    msgSuccess(msg) {
+      this.error = null
+      this.success = msg
     },
-    methods: {
-      msgError(msg) {
-        this.error = msg;
-        this.success = null;
-      },
-      msgSuccess(msg) {
-        this.error = null;
-        this.success = msg;
-      },
-      backHome: function () {
-        this.$router.push('/')
-      },
-      sendForget: function () {
-        this.forgetLoader = true;
-        let data = {
-          mobile: this.forgetPhone
+    backHome: function() {
+      this.$router.push("/")
+    },
+    sendForget: function() {
+      this.forgetLoader = true
+      let data = {
+        mobile: this.forgetPhone
+      }
+      this.$axios.post(forget_path, data).then(result => {
+        let status = true
+        if (status) {
+          this.msgSuccess("برای شما ارسال شد.")
+          this.forgetLoader = false
+        } else {
+          this.msgError("مشکلی در ارسال پیش آمد. شماره‌ی خود را بررسی کنید.")
+          this.forgetLoader = false
         }
-        this.$axios.post(forget_path, data).then((result) => {
-          let status = true;
-          if (status) {
-            this.msgSuccess('برای شما ارسال شد.')
-            this.forgetLoader = false;
-          } else {
-            this.msgError('مشکلی در ارسال پیش آمد. شماره‌ی خود را بررسی کنید.')
-            this.forgetLoader = false;
-          }
+      })
+    },
+    sendCode: function() {
+      let resource = register_path
+      let username = this.formMobile
+      let password = this.formNewPassword
+      let client_secret = this.$store.state.secret
+      let client_id = 1
+      let formData = {
+        username,
+        password,
+        password_confirmation: password,
+        client_secret,
+        client_id
+      }
+      let response = this.$axios
+        .post(resource, formData)
+        .then(resp => {
+          let { message } = resp
+          this.msgSuccess(message)
         })
-      },
-      sendCode: function () {
-        let resource = register_path;
-        let username = this.formMobile;
-        let password = this.formNewPassword;
-        let client_secret = this.$store.state.secret;
-        let client_id = 1;
-        let formData =
-          {
-            username,
-            password,
-            password_confirmation: password,
-            client_secret,
-            client_id
-          };
-        let response = this.$axios.post(resource, formData).then((resp) => {
-          let {message} = resp;
-          this.msgSuccess(message);
-        }).catch((res) => {
-          let {statusCode, error} = res;
-          let message = 'متاسفانه مشکلی در ارتباط با سرور پیش آمد.'
+        .catch(res => {
+          let { statusCode, error } = res
+          let message = "متاسفانه مشکلی در ارتباط با سرور پیش آمد."
           if (statusCode == 422 && error.message.mobile) {
-            message = error.message.mobile;
+            message = error.message.mobile
           }
-          this.msgError(message);
-        });
-        console.log({response})
-        this.pending = true;
-        setTimeout(() => {
-          this.pending = false
-        }, 10000)
-        this.sms_sent = true;
-      },
-      checkCode: function () {
-        let verification_code = this.formCode;
-        if (verification_code.length > 3) {
-          this.$axios.post(verify_path, {verification_code}).then(res => {
-            let {statusCode} = res.data;
-            this.msgSuccess('کد شما بررسی شد')
-            this.formUsername = this.formMobile;
-            this.formPassword = this.formNewPassword;
-            return this.login();
-          }).catch(({data}) => {
-            this.msgError('مشکلی پیش آمد!' + data)
+          this.msgError(message)
+        })
+      console.log({ response })
+      this.pending = true
+      setTimeout(() => {
+        this.pending = false
+      }, 10000)
+      this.sms_sent = true
+    },
+    checkCode: function() {
+      let verification_code = this.formCode
+      if (verification_code.length > 3) {
+        this.$axios
+          .post(verify_path, { verification_code })
+          .then(res => {
+            let { statusCode } = res.data
+            this.msgSuccess("کد شما بررسی شد")
+            this.formUsername = this.formMobile
+            this.formPassword = this.formNewPassword
+            return this.login()
           })
-        }
-      },
-      login: function () {
-        this.loginLoader = true;
-        let resource = login_path;
-        let username = this.formUsername;
-        let password = this.formPassword;
-        let clientsecret = this.$store.state.secret
-        let formData =
-          {
-            username: username,
-            password: password,
-            grant_type: "password",
-            provider: "users",
-            client_id: '1',
-            client_secret: clientsecret
-          }
-        this.$axios.$post(resource, formData, {mode: 'no-cors'}).then(({token_type, access_token}) => {
+          .catch(({ data }) => {
+            this.msgError("مشکلی پیش آمد!" + data)
+          })
+      }
+    },
+    login: function() {
+      this.loginLoader = true
+      let resource = login_path
+      let username = this.formUsername
+      let password = this.formPassword
+      let clientsecret = this.$store.state.secret
+      let formData = {
+        username: username,
+        password: password,
+        grant_type: "password",
+        provider: "users",
+        client_id: "1",
+        client_secret: clientsecret
+      }
+      this.$axios
+        .$post(resource, formData, { mode: "no-cors" })
+        .then(({ token_type, access_token }) => {
           if (access_token) {
-            Cookie.set('auth', access_token)
-            this.$store.commit('user/updateToken', access_token)
-            window.location = '/user'
+            Cookie.set("auth", access_token)
+            this.$store.commit("user/updateToken", access_token)
+            window.location = "/user"
             //this.$router.push('/user/')
           } else {
-            this.msgError('مشخصات صحیح نمی باشد.')
+            this.msgError("مشخصات صحیح نمی باشد.")
           }
-          this.loginLoader = false;
-        }).catch((error) => {
-          if (error && error.response && error.response.data.error === "invalid_credentials") {
-            this.msgError("مشخصات ورود صحیح نمی باشد.");
+          this.loginLoader = false
+        })
+        .catch(error => {
+          if (
+            error &&
+            error.response &&
+            error.response.data.error === "invalid_credentials"
+          ) {
+            this.msgError("مشخصات ورود صحیح نمی باشد.")
           } else if (error && error.response && error.response.data.message) {
             this.msgError("مشکلی  پیش آمد:" + error.response.data.message)
           } else {
-            this.msgError('مشکل در ارتباط با سرور');
+            this.msgError("مشکل در ارتباط با سرور")
           }
-          this.loginLoader = false;
+          this.loginLoader = false
         })
-      }
     }
   }
+}
 </script>

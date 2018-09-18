@@ -5,18 +5,18 @@
         خطا
       </v-card-title>
       <v-card-text>
-        {{error}}
+        {{ error }}
       </v-card-text>
     </v-card>
   </div>
 </template>
 <script>
-  export default {
-    data() {
-      return {
-        error: 'متاسفانه مشکلی رخ داد :('
-      }
-    },
-    layout: 'site'
-  }
+export default {
+  data() {
+    return {
+      error: "متاسفانه مشکلی رخ داد :("
+    }
+  },
+  layout: "site"
+}
 </script>

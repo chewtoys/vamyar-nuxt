@@ -1,15 +1,15 @@
 <template>
   <v-container fluid grid-list-lg>
     <v-subheader>
-      {{title}}
+      {{ title }}
     </v-subheader>
-    <v-spacer></v-spacer>
+    <v-spacer/>
 
     <v-card color="transparent" flat>
       <v-card-text>
         <v-layout row wrap fluid>
-          <v-flex sm4 lg3 xs6 v-for="item in data" :key="item.id">
-            <AdvertCard :item="item"></AdvertCard>
+          <v-flex v-for="item in data" :key="item.id" sm4 lg3 xs6>
+            <AdvertCard :item="item"/>
           </v-flex>
         </v-layout>
       </v-card-text>
@@ -24,24 +24,31 @@
   </v-container>
 </template>
 <script>
-  import AdvertCard from '~/components/site/adverts/Advert.vue'
+import AdvertCard from "~/components/site/adverts/Advert.vue"
 
-  const path = '/site/adverts', title = "آخرین آگهی ها"
-  export default {
-    data() {
-      return {
-        title,
-        data: []
-      }
-    },
-    components: {AdvertCard},
-    async mounted() {
-      try {
-        this.data = await this.$axios.$get(path, {params: {include: 'advertable', number: 12}})
-      } catch (err) {
-        this.store.commit('snackbar/setSnack', 'مشکلی در گرفتن آگهی ها پیش آمد.', 'error')
-        this.data = [];
-      }
+const path = "/site/adverts",
+  title = "آخرین آگهی ها"
+export default {
+  components: { AdvertCard },
+  data() {
+    return {
+      title,
+      data: []
+    }
+  },
+  async mounted() {
+    try {
+      this.data = await this.$axios.$get(path, {
+        params: { include: "advertable", number: 12 }
+      })
+    } catch (err) {
+      this.store.commit(
+        "snackbar/setSnack",
+        "مشکلی در گرفتن آگهی ها پیش آمد.",
+        "error"
+      )
+      this.data = []
     }
   }
+}
 </script>

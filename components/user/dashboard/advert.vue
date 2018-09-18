@@ -3,9 +3,9 @@
     <template v-for="(item, index) in items">
       <v-list-tile
         :key="item.title"
+        :to="item.link"
         avatar
         ripple
-        :to="item.link"
       >
         <v-list-tile-content>
           <v-list-tile-title>{{ item.title }}</v-list-tile-title>
@@ -31,12 +31,12 @@
       <v-divider
         v-if="index + 1 < items.length"
         :key="index"
-      ></v-divider>
+      />
     </template>
   </v-list>
 </template>
 <script>
-  export default {
-    props: ['items']
-  }
+export default {
+  props: ["items"]
+}
 </script>

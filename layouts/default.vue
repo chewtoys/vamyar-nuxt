@@ -1,12 +1,10 @@
 <template>
-    <div>
-        <nuxt/>
-    </div>
+  <div>
+    <nuxt/>
+  </div>
 </template>
 
 <script>
-
 </script>
 <style>
-
 </style>

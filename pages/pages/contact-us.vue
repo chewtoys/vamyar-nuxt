@@ -7,44 +7,44 @@
             <v-card-title>
               <h2>
                 <v-icon class="pb-2 pl-1">email</v-icon>
-                <span>پیشنهادات، شکایات و انتقادات</span></h2>
+              <span>پیشنهادات، شکایات و انتقادات</span></h2>
             </v-card-title>
             <v-card-text>
-              <div>{{lorem}}</div>
+              <div>{{ lorem }}</div>
               <br>
               <v-divider/>
               <br>
               <form>
                 <v-text-field
-                  box
-                  light
                   v-validate="'required'"
                   v-model="name"
                   :error-messages="errors.collect('name')"
+                  box
+                  light
                   label="نام"
                   data-vv-name="name"
                   required
-                ></v-text-field>
+                />
                 <v-text-field
-                  box
-                  light
                   v-validate="'email'"
                   v-model="email"
                   :error-messages="errors.collect('email')"
+                  box
+                  light
                   label="پست الکترونیک"
                   data-vv-name="email"
                   required
-                ></v-text-field>
+                />
                 <v-textarea
+                  v-validate="'required'"
+                  v-model="text"
                   box
                   light
                   solo
                   required
-                  v-model="text"
                   label="متن خود را اینجا بنویسید"
                   data-vv-name="text"
-                  v-validate="'required'"
-                ></v-textarea>
+                />
                 <v-btn outline round color="blue" flat @click="submit">
                   ثبت
                   <v-icon class="pr-1 font-19 pb-1">save</v-icon>
@@ -62,7 +62,7 @@
               </h2>
             </v-card-title>
             <v-card-text>
-              <div>{{lorem}}</div>
+              <div>{{ lorem }}</div>
             </v-card-text>
           </v-card>
         </v-flex>
@@ -71,47 +71,47 @@
   </v-container>
 </template>
 <script>
-  export default {
-    meta: {
-      title: 'درباره‌ی ما'
-    },
-    layout: 'site',
-    computed: {
-      lorem() {
-        return this.$store.state.temp.lorem
-      }
-    },
-    $_veeValidate: {
-      validator: 'new'
-    },
-    data: () => ({
-      text: '',
-      name: '',
-      email: '',
-      checkbox: null,
-      dictionary: {
-        attributes: {
-          email: 'آدرس ایمیل',
-          name: 'نام',
-          text: 'متن',
-          // custom attributes
-        }
-      }
-    }),
-    mounted() {
-      this.$validator.localize('fa', this.dictionary)
-    },
-    methods: {
-      submit() {
-        this.$validator.validateAll()
-      },
-      clear() {
-        this.name = ''
-        this.email = ''
-        this.select = null
-        this.checkbox = null
-        this.$validator.reset()
+export default {
+  meta: {
+    title: "درباره‌ی ما"
+  },
+  layout: "site",
+  data: () => ({
+    text: "",
+    name: "",
+    email: "",
+    checkbox: null,
+    dictionary: {
+      attributes: {
+        email: "آدرس ایمیل",
+        name: "نام",
+        text: "متن"
+        // custom attributes
       }
     }
+  }),
+  computed: {
+    lorem() {
+      return this.$store.state.temp.lorem
+    }
+  },
+  $_veeValidate: {
+    validator: "new"
+  },
+  mounted() {
+    this.$validator.localize("fa", this.dictionary)
+  },
+  methods: {
+    submit() {
+      this.$validator.validateAll()
+    },
+    clear() {
+      this.name = ""
+      this.email = ""
+      this.select = null
+      this.checkbox = null
+      this.$validator.reset()
+    }
   }
+}
 </script>

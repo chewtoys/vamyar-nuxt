@@ -1,5 +1,5 @@
-module.exports = function API (moduleOptions) {
-    // Write your code here
+module.exports = function API(moduleOptions) {
+  // Write your code here
 }
 
 // REQUIRED if publishing as an npm package

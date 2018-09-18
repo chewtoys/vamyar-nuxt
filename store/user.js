@@ -1,6 +1,6 @@
 export const state = () => ({
   auth: null,
-  info: null,
+  info: null
 })
 
 export const mutations = {
@@ -12,20 +12,17 @@ export const mutations = {
   }
 }
 
-
 export const actions = {
-
   logout() {
-    this.commit('user/updateToken', null);
-  }
-  ,
-  updateAuth({req}) {
+    this.commit("user/updateToken", null)
+  },
+  updateAuth({ req }) {
     let accessToken = null
     if (req.headers.cookie) {
       let parsed = cookieparser.parse(req.headers.cookie)
       if (parsed.auth) {
         accessToken = parsed.auth
-        commit('user/updateToken', accessToken)
+        commit("user/updateToken", accessToken)
       }
     }
   }

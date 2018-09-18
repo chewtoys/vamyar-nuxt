@@ -1,34 +1,34 @@
 <template>
-    <v-carousel>
-        <v-carousel-item
-                delimiter-icon="stop"
-                v-for="(item,i) in items"
-                :key="i"
-                :src="item.src"
-                reverse-transition="fade"
-                transition="fade"
-        ></v-carousel-item>
-    </v-carousel>
+  <v-carousel>
+    <v-carousel-item
+      v-for="(item,i) in items"
+      :key="i"
+      :src="item.src"
+      delimiter-icon="stop"
+      reverse-transition="fade"
+      transition="fade"
+    />
+  </v-carousel>
 </template>
 <script>
-    export default {
-        data () {
-            return {
-                items: [
-                    {
-                        src: 'https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg'
-                    },
-                    {
-                        src: 'https://cdn.vuetifyjs.com/images/carousel/sky.jpg'
-                    },
-                    {
-                        src: 'https://cdn.vuetifyjs.com/images/carousel/bird.jpg'
-                    },
-                    {
-                        src: 'https://cdn.vuetifyjs.com/images/carousel/planet.jpg'
-                    }
-                ]
-            }
+export default {
+  data() {
+    return {
+      items: [
+        {
+          src: "https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg"
+        },
+        {
+          src: "https://cdn.vuetifyjs.com/images/carousel/sky.jpg"
+        },
+        {
+          src: "https://cdn.vuetifyjs.com/images/carousel/bird.jpg"
+        },
+        {
+          src: "https://cdn.vuetifyjs.com/images/carousel/planet.jpg"
         }
+      ]
     }
+  }
+}
 </script>
