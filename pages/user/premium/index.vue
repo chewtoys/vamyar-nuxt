@@ -53,8 +53,8 @@
   </v-container>
 </template>
 <script>
-const gate_path = "/user/loan/create",
-  plans = "/admin/cities",
+const gate_path = "/user/is-premium",
+  //plans = "/admin/cities",
   page_title = "وضعیت اشتراک من",
   breadcrumb = "اشتراک حساب کاربری"
 const info = {
@@ -89,7 +89,7 @@ export default {
   },
   methods: {
     upgrade() {
-      if (!isPremium) {
+      if (!this.isPremium) {
         let data = this.$axios.get(gate_path)
         // get code and redirect to gate
       } else {

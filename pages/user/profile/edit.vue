@@ -174,11 +174,13 @@ export default {
         password_confirmation: this.password,
         address: this.address
       }
-      let request = null
+      //let request = null
       try {
         if (this.put) request = await this.$axios.$put(path, data)
         if (!this.put) request = await this.$axios.$post(path, data)
-      } catch (error) {}
+      } catch (error) {
+        this.store.commit("snackbar/setSnack", "مشکلی در ارسال اطلاعات پیش آمد")
+      }
       this.updateUser()
       this.submit_loader = false
       return true

@@ -1,7 +1,7 @@
 {
-  "name": "public",
-  "version": "1.0.0",
-  "description": "Nuxt.js project",
+  "name": "Vamyar",
+  "version": "0.5.0",
+  "description": "Vamyar project",
   "author": "Ehsan Afshary",
   "private": true,
   "config": {
@@ -11,34 +11,18 @@
     }
   },
   "scripts": {
-	"prod": "pm2 start npm ecosystem.config.js --name nuxt -- start",
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt ",
     "generate": "nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
-    "lintfix": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
-    "precommit": "npm run lint",
-    "test": "ava"
-  },
-  "ava": {
-    "require": [
-      "babel-register"
-    ]
-  },
-  "babel": {
-    "presets": [
-      "env"
-    ]
+    "precommit": "npm run lint"
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.3.1",
     "cookieparser": "^0.1.0",
-    "eslint-config-prettier": "^3.0.1",
-    "eslint-plugin-prettier": "^2.6.2",
     "formidable": "^1.2.1",
     "js-cookie": "^2.2.0",
-    "npm": "^6.4.1",
     "nuxt": "v1.4.2",
     "restify": "^7.2.1",
     "vee-validate": "^2.1.0-beta.9",
@@ -53,13 +37,11 @@
     "vuetify-upload-button": "^1.0.0"
   },
   "devDependencies": {
-    "ava": "^0.25.0",
     "babel-eslint": "^8.2.1",
     "eslint": "^4.15.0",
     "eslint-friendly-formatter": "^3.0.0",
     "eslint-loader": "^1.7.1",
     "eslint-plugin-vue": "^4.0.0",
-    "jsdom": "^12.0.0",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2"
   }
