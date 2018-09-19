@@ -114,8 +114,8 @@
 <script>
 const list = "/user/loans",
   path = `/user/loan/create`,
-  guaranteeTypeListPath = "/admin/guaranteeTypes",
-  cityPath = "/admin/cities",
+  //guaranteeTypeListPath = "/admin/guaranteeTypes",
+  //cityPath = "/admin/cities",
   page_title = "ثبت وام جدید",
   breadcrumb = "فرم درخواست وام"
 
@@ -212,7 +212,7 @@ export default {
       }
       this.$axios
         .post(path, data)
-        .then(result => {
+        .then(() => {
           let status = true
           if (status) {
             // show success and redirect
@@ -224,7 +224,7 @@ export default {
             this.submit_loader = false
           }
         })
-        .catch(error => {
+        .catch(() => {
           // catch and show error
           this.toast("لطفا خطا ها را بررسی کنید.", "error")
           this.submit_loader = false

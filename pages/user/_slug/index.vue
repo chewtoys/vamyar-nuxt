@@ -94,7 +94,7 @@ export default {
     snack_text: null,
     snack_color: "info"
   }),
-  async asyncData({ params, app, error, store }) {
+  async asyncData({ params, app, store }) {
     let slug = params.slug
     let type = Helper.getTypeByAlias(slug)
     const breadcrumb = Helper.getBreadcrumb(type.title),
@@ -103,7 +103,7 @@ export default {
     store.commit("navigation/setTitle", page_title)
 
     let method = `/user/${slug}`
-    let cursor, must
+    let must
     cursor = 0
 
     if (!must) {
