@@ -202,7 +202,7 @@ export default {
       let data = {
         mobile: this.forgetPhone
       }
-      this.$axios.post(forget_path, data).then(result => {
+      this.$axios.post(forget_path, data).then(() => {
         let status = true
         if (status) {
           this.msgSuccess("برای شما ارسال شد.")
@@ -253,7 +253,6 @@ export default {
         this.$axios
           .post(verify_path, { verification_code })
           .then(res => {
-            let { statusCode } = res.data
             this.msgSuccess("کد شما بررسی شد")
             this.formUsername = this.formMobile
             this.formPassword = this.formNewPassword
@@ -280,7 +279,7 @@ export default {
       }
       this.$axios
         .$post(resource, formData, { mode: "no-cors" })
-        .then(({ token_type, access_token }) => {
+        .then(({ access_token }) => {
           if (access_token) {
             Cookie.set("auth", access_token)
             this.$store.commit("user/updateToken", access_token)
