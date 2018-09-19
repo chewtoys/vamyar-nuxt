@@ -11,6 +11,7 @@
     }
   },
   "scripts": {
+	"prod": "pm2 start npm ecosystem.config.js --name nuxt -- start",
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt ",
