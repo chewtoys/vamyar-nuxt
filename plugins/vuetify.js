@@ -7,7 +7,7 @@ import VeeValidate, { Validator } from "vee-validate"
 // Translation provided by Vuetify (typescript)
 import farsi from "vuetify/src/locale/fa.ts"
 
-import vueSmoothScroll from "vue-smooth-scroll"
+//import vueSmoothScroll from "vue-smooth-scroll"
 //// Localize takes the locale object as the second argument (optional) and merges it.
 Validator.localize("fa", fa)
 
