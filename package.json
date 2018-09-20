@@ -15,7 +15,7 @@
     "build": "nuxt build",
     "start": "nuxt ",
 	"prod": "pm2 start npm ecosystem.config.js --name nuxt -- start",
-	"prod2": "pm2 start /usr/local/bin/npm --name nuxt -- start",
+	"prod2": " \"/opt/rh/rh-nodejs8/root/usr/bin/pm2\" start \"/usr/local/bin/npm\" --name nuxt -- start",
     "generate": "nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "precommit": "npm run lint"
