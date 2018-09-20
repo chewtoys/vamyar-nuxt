@@ -1,4 +1,5 @@
 #!/bin/sh
+
 #sudo su -
 #rm -rf vamyar-nuxt 
 #git clone git@github.com:savyir/vamyar-nuxt.git
