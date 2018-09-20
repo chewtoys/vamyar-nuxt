@@ -16,6 +16,8 @@ export PATH=/usr/local/bin
 yarn
 #npm test
 #yarn run prod2 
-pm2 delete all && pm2 start npm --name nuxt -- start
+pm2 stop all  || true
+pm2 delete all  || true
+pm2 start npm --name nuxt -- start
 #pm2 start all
 #pm2 start "/usr/local/bin/npm" --name "server" -- start
