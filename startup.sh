@@ -5,13 +5,6 @@
 
 
 export PATH=/usr/local/bin
-cd /var/www/vamyar.tk/vamyar-nuxt
-
-git status
-git stash
-
-#git pull origin $BRANCH_NAME --force
-git pull origin develop --force
 npm i -g npm@latest
 npm i -g yarn@latest
 npm i -g pm2@latest
@@ -20,8 +13,8 @@ export PATH=/opt/rh/rh-nodejs8/root/usr/bin
 pm2 delete all
 export PATH=/usr/local/bin
 yarn
-
 #npm test
-yarn run prod2
+#yarn run prod2 
+pm2 delete all && pm2 start npm --name nuxt -- start
 #pm2 start all
 #pm2 start "/usr/local/bin/npm" --name "server" -- start
