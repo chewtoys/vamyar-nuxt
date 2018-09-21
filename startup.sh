@@ -20,7 +20,7 @@ pm2 delete all  || true
 
 yarn build
 
-forever start "/usr/local/bin/npm" start --prefix "/var/www/vamyar.tk/vamyar-nuxt"
+yarn run prod3
 forever list
 
 #pm2 start "/usr/local/bin/npm" --name "server" -- start
