@@ -1,7 +1,5 @@
 #!/bin/sh
 
-#sudo su -
-#rm -rf vamyar-nuxt 
 #git clone git@github.com:savyir/vamyar-nuxt.git
 
 
@@ -12,18 +10,13 @@ npm i -g pm2@latest
 npm i -g forever@latest
 npm i -g strongloop@latest
 
-export PATH=/opt/rh/rh-nodejs8/root/usr/bin
-pm2 delete all
 export PATH=/usr/local/bin
 yarn
-#npm test
-#yarn run prod2 
+
 pm2 stop all  || true
 pm2 delete all  || true
 yarn build
 forever stopall
 forever start "/usr/local/bin/npm"  start --prefix /var/www/vamyar.tk/vamyar-nuxt
-
-echo "pm2 start npm --name nuxt -- start"
-#pm2 start all
+forever list
 #pm2 start "/usr/local/bin/npm" --name "server" -- start
