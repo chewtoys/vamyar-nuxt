@@ -18,6 +18,7 @@ yarn
 #yarn run prod2 
 pm2 stop all  || true
 pm2 delete all  || true
+yarn build
 pm2 start npm --name nuxt -- start
 #pm2 start all
 #pm2 start "/usr/local/bin/npm" --name "server" -- start
