@@ -15,49 +15,19 @@
       <v-divider/>
 
       <v-list-tile>
-        <v-list-tile-title class="text-justify rtl">وام</v-list-tile-title>
+        <v-list-tile-title class="text-justify rtl">آگهی</v-list-tile-title>
       </v-list-tile>
       <v-list-tile
-        v-for="item in loans"
+        v-for="item in advertTypes"
         :key="item.title"
-        :to="item.to"
+        :to="`/user/adverts/${item.alias}`"
       >
         <v-list-tile-action>
-          <v-icon v-text="item.icon"/>
+          <v-icon></v-icon>
         </v-list-tile-action>
         <v-list-tile-title class="text-justify rtl" v-text="item.title"/>
-
       </v-list-tile>
       <v-divider/>
-      <v-list-tile>
-        <v-list-tile-title class="text-justify rtl">ضامن ها</v-list-tile-title>
-      </v-list-tile>
-      <v-list-tile
-        v-for="item in coSigner"
-        :key="item.title"
-        :to="item.to"
-      >
-        <v-list-tile-action>
-          <v-icon v-text="item.icon"/>
-        </v-list-tile-action>
-        <v-list-tile-title class="text-justify rtl" v-text="item.title"/>
-
-      </v-list-tile>
-      <v-divider/>
-      <v-list-tile>
-        <v-list-tile-title class="text-justify rtl">سرمایه گذاران</v-list-tile-title>
-      </v-list-tile>
-      <v-list-tile
-        v-for="item in finances"
-        :key="item.title"
-        :to="item.to"
-      >
-        <v-list-tile-action>
-          <v-icon v-text="item.icon"/>
-        </v-list-tile-action>
-        <v-list-tile-title class="text-justify rtl" v-text="item.title"/>
-
-      </v-list-tile>
       <v-list-group
         v-if="true"
         group
@@ -99,18 +69,6 @@
         {title: "کل فاکتورها", icon: "inbox", to: "/user/factors"}
         //{title: 'صندوق پیام ها', icon: 'inbox', to: '/user/settings'},
       ],
-      loans: [
-        {title: "وام برای فروش", icon: "book", to: "/user/loans"},
-        {title: "درخواست وام", icon: "book", to: "/user/loan-requests"}
-      ],
-      coSigner: [
-        {title: "ضامن", icon: "book", to: "/user/co-signers"},
-        {title: "درخواست ضامن", icon: "book", to: "/user/co-signer-requests"}
-      ],
-      finances: [
-        {title: "سرمایه گذاری", icon: "book", to: "/user/finances"},
-        {title: "درخواست سرمایه", icon: "book", to: "/user/finance-requests"}
-      ],
       access: [
         {title: "سایت", icon: "book", to: "/user/adverts/vam"},
         {title: "راهنما", icon: "book", to: "/user/adverts/zamen"},
@@ -118,6 +76,9 @@
       ]
     }),
     computed: {
+      advertTypes: function () {
+        return Helper.getTypes();
+      },
       drawer: {
         get() {
           return !!this.$store.state.navigation.drawer

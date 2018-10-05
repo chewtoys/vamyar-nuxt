@@ -90,7 +90,7 @@
           </v-list-tile-avatar>
           <v-list-tile-title class="text-justify rtl">آموزش ها</v-list-tile-title>
         </v-list-tile>
-        <v-list-tile class="pb-2" to="/">
+        <v-list-tile class="pb-2" to="/user">
           <v-list-tile-avatar>
             <v-icon v-text="'lock'"/>
           </v-list-tile-avatar>

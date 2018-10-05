@@ -112,141 +112,148 @@
   </v-container>
 </template>
 <script>
-const list = "/user/loans",
-  path = `/user/loan/create`,
-  //guaranteeTypeListPath = "/admin/guaranteeTypes",
-  //cityPath = "/admin/cities",
-  page_title = "ثبت وام جدید",
-  breadcrumb = "فرم درخواست وام"
+  import Helper from '~/assets/js/helper'
 
-export default {
-  $_veeValidate: {
-    validator: "new"
-  },
-  meta: {
-    breadcrumb,
-    title: page_title
-  },
+  const list = "/user/adverts",
+    path = `/user/loan/create`,
+    //guaranteeTypeListPath = "/admin/guaranteeTypes",
+    //cityPath = "/admin/cities",
+    page_title = "ثبت وام جدید",
+    breadcrumb = "فرم درخواست وام"
 
-  data: () => ({
-    list,
-    page_title,
+  export default {
+    $_veeValidate: {
+      validator: "new"
+    },
+    meta: {
+      breadcrumb,
+      title: page_title
+    },
 
-    // advert
-    title: null,
-    city: null,
-    allcities: false,
-    text: "",
-    mobile: null,
-    image: null,
+    data: () => ({
 
-    // this type - loan
-    guaranteeTypeId: null, // hasComputed
-    loanType: null,
-    payBackTime: null,
-    amount: null,
-    payback: null,
-    price: null,
+      page_title,
 
-    // validator dictionary
-    dictionary: {
-      attributes: {
-        title: "عنوان آگهی",
-        city: "شهر",
-        text: "متن توضیحات آگهی",
-        image: "تصویر آگهی",
-        amount: "مبلغ وام",
-        price: "قیمت فروش وام",
-        payBackTime: "مدت زمان بازپرداخت",
-        guaranteeTypeId: "نوع ضامن",
-        loanType: "نوع وام"
-        // custom attributes
+      // advert
+      title: null,
+      city: null,
+      allcities: false,
+      text: "",
+      mobile: null,
+      image: null,
+
+      // this type - loan
+      guaranteeTypeId: null, // hasComputed
+      loanType: null,
+      payBackTime: null,
+      amount: null,
+      payback: null,
+      price: null,
+
+      // validator dictionary
+      dictionary: {
+        attributes: {
+          title: "عنوان آگهی",
+          city: "شهر",
+          text: "متن توضیحات آگهی",
+          image: "تصویر آگهی",
+          amount: "مبلغ وام",
+          price: "قیمت فروش وام",
+          payBackTime: "مدت زمان بازپرداخت",
+          guaranteeTypeId: "نوع ضامن",
+          loanType: "نوع وام"
+          // custom attributes
+        }
+      },
+      // info
+      info: {
+        title: "لطفا قبل از پر کردن فرم نکات زیر را مد نظر داشته باشید:",
+        text:
+          "لورم ایپسوم یا طرح‌نما (به انگلیسی: Lorem ipsum) به متنی آزمایشی و بی‌معنی در صنعت چاپ، صفحه‌آرایی و طراحی گرافیک گفته می‌شود. طراح گرافیک از این متن به عنوان عنصری از ترکیب بندی برای پر کردن صفحه و ارایه اولیه شکل ظاهری و کلی طرح سفارش گرفته شده استفاده می نماید، تا از نظر گرافیکی نشانگر چگونگی نوع و اندازه فونت و ظاهر متن باشد. معمولا طراحان گرافیک برای صفحه‌آرایی، نخست از متن‌های آزمایشی و بی‌معنی استفاده می‌کنند تا صرفا به مشتری یا صاحب کار خود نشان دهند که صفحه طراحی یا صفحه بندی شده بعد از اینکه متن در آن قرار گیرد چگونه به نظر می‌رسد و قلم‌ها و اندازه‌بندی‌ها چگونه در نظر گرفته شده‌است. از آنجایی که طراحان عموما نویسنده متن نیستند و وظیفه رعایت حق تکثیر متون را ندارند و در همان حال کار آنها به نوعی وابسته به متن می‌باشد آنها با استفاده از محتویات ساختگی، صفحه گرافیکی خود را صفحه‌آرایی می‌کنند تا مرحله طراحی و صفحه‌بندی را به پایان برند.",
+        heading: "عنوان متن"
+      },
+      submit_loader: false,
+      snackbar: false,
+      snack_text: null,
+      snack_color: "info"
+    }),
+    computed: {
+      list: function () {
+        return `${list}/${this.slug}`;
+      },
+      guaranteeTypeListItems() {
+        return this.guaranteeTypeList
       }
     },
-    // info
-    info: {
-      title: "لطفا قبل از پر کردن فرم نکات زیر را مد نظر داشته باشید:",
-      text:
-        "لورم ایپسوم یا طرح‌نما (به انگلیسی: Lorem ipsum) به متنی آزمایشی و بی‌معنی در صنعت چاپ، صفحه‌آرایی و طراحی گرافیک گفته می‌شود. طراح گرافیک از این متن به عنوان عنصری از ترکیب بندی برای پر کردن صفحه و ارایه اولیه شکل ظاهری و کلی طرح سفارش گرفته شده استفاده می نماید، تا از نظر گرافیکی نشانگر چگونگی نوع و اندازه فونت و ظاهر متن باشد. معمولا طراحان گرافیک برای صفحه‌آرایی، نخست از متن‌های آزمایشی و بی‌معنی استفاده می‌کنند تا صرفا به مشتری یا صاحب کار خود نشان دهند که صفحه طراحی یا صفحه بندی شده بعد از اینکه متن در آن قرار گیرد چگونه به نظر می‌رسد و قلم‌ها و اندازه‌بندی‌ها چگونه در نظر گرفته شده‌است. از آنجایی که طراحان عموما نویسنده متن نیستند و وظیفه رعایت حق تکثیر متون را ندارند و در همان حال کار آنها به نوعی وابسته به متن می‌باشد آنها با استفاده از محتویات ساختگی، صفحه گرافیکی خود را صفحه‌آرایی می‌کنند تا مرحله طراحی و صفحه‌بندی را به پایان برند.",
-      heading: "عنوان متن"
-    },
-    submit_loader: false,
-    snackbar: false,
-    snack_text: null,
-    snack_color: "info"
-  }),
-  computed: {
-    guaranteeTypeListItems() {
-      return this.guaranteeTypeList
-    }
-  },
-  async asyncData() {
-    return {
-      guaranteeTypeList: ["نوع اول", "نوع دوم"], //await this.$axios.get(guaranteeTypeListPath),
-      cities: ["تهران", "قم"] //await this.$axios.get(cityPath)
-    }
-  },
-  mounted() {
-    this.$validator.localize("fa", this.dictionary)
-    // check if user has no access to create advert
-    //let hasAccess = this.$store.state.accesses.loans ;
-    let hasAccess = true
-    if (!hasAccess) {
-      this.$router.push("/user/premium")
-    }
-  },
-  methods: {
-    toast(msg, color) {
-      this.$store.commit("snackbar/setSnack", msg, color)
-    },
-    sendForm() {
-      let data = {
-        title: this.title,
-        city: this.city,
-        text: this.text,
-        price: this.price,
-        amount: this.amount,
-        payBackTime: this.payBackTime,
-        guaranteeTypeId: this.guaranteeTypeId,
-        image: this.image
+    async asyncData({params}) {
+      return {
+        type: Helper.getTypeByAlias(params.slug),
+        slug: params.slug,
+        guaranteeTypeList: ["نوع اول", "نوع دوم"], //await this.$axios.get(guaranteeTypeListPath),
+        cities: ["تهران", "قم"] //await this.$axios.get(cityPath)
       }
-      this.$axios
-        .post(path, data)
-        .then(() => {
-          let status = true
-          if (status) {
-            // show success and redirect
-            this.toast("با موفقیت ثبت شد.", "success")
-            this.submit_loader = false
-            this.$router.push("../")
-          } else {
-            this.toast(" خطایی رخ داد.", "warning")
-            this.submit_loader = false
-          }
-        })
-        .catch(() => {
-          // catch and show error
-          this.toast("لطفا خطا ها را بررسی کنید.", "error")
-          this.submit_loader = false
-        })
     },
-    async submit() {
-      this.submit_loader = true
-      this.$validator
-        .validateAll()
-        .then(result => {
-          if (result) {
-            this.sendForm()
-          } else {
-            this.toast("برخی فیلد ها مشکل دارند.", "warning")
+    mounted() {
+      this.$validator.localize("fa", this.dictionary)
+      // check if user has no access to create advert
+      //let hasAccess = this.$store.state.accesses.loans ;
+      let hasAccess = true
+      if (!hasAccess) {
+        this.$router.push("/user/premium")
+      }
+    },
+    methods: {
+      toast(msg, color) {
+        this.$store.commit("snackbar/setSnack", msg, color)
+      },
+      sendForm() {
+        let data = {
+          title: this.title,
+          city: this.city,
+          text: this.text,
+          price: this.price,
+          amount: this.amount,
+          payBackTime: this.payBackTime,
+          guaranteeTypeId: this.guaranteeTypeId,
+          image: this.image
+        }
+        this.$axios
+          .post(path, data)
+          .then(() => {
+            let status = true
+            if (status) {
+              // show success and redirect
+              this.toast("با موفقیت ثبت شد.", "success")
+              this.submit_loader = false
+              this.$router.push("../")
+            } else {
+              this.toast(" خطایی رخ داد.", "warning")
+              this.submit_loader = false
+            }
+          })
+          .catch(() => {
+            // catch and show error
+            this.toast("لطفا خطا ها را بررسی کنید.", "error")
             this.submit_loader = false
-            return null
-          }
-        })
-        .catch(err => {
-          this.toast(err, "error")
-        })
+          })
+      },
+      async submit() {
+        this.submit_loader = true
+        this.$validator
+          .validateAll()
+          .then(result => {
+            if (result) {
+              this.sendForm()
+            } else {
+              this.toast("برخی فیلد ها مشکل دارند.", "warning")
+              this.submit_loader = false
+              return null
+            }
+          })
+          .catch(err => {
+            this.toast(err, "error")
+          })
+      }
     }
   }
-}
 </script>

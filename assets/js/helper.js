@@ -1,6 +1,6 @@
 const Helper = {
   // useful methods
-  getTypes: function(name = null) {
+  getTypes: function (name = null) {
     let types = advertTypes
     if (name && types[name]) {
       return types[name]
@@ -8,21 +8,21 @@ const Helper = {
       return types
     }
   },
-  getBreadcrumb: function(title) {
+  getBreadcrumb: function (title) {
     return title
   },
-  getPageTitle: function(title) {
+  getPageTitle: function (title) {
     return "آگهی‌های " + title
   },
-  getTypeByAlias: function(name = null) {
+  getTypeByAlias: function (alias = null) {
     let types = advertAliases
-    if (name && types[name]) {
-      return types[name]
+    if (alias && types[alias]) {
+      return types[alias]
     } else {
       return types
     }
   },
-  getAdvertLink: function(item) {
+  getAdvertLink: function (item) {
     let type = this.getTypes(item.advertableType)
     if (type && type.alias) {
       return "/categories/" + type.alias + "/show/" + item.advertableId
@@ -30,7 +30,7 @@ const Helper = {
       return "#type-not-found"
     }
   },
-  getAdvertType: function(item) {
+  getAdvertType: function (item) {
     let type = this.getTypes(item.advertableType)
     if (type.title) {
       return type.title
@@ -60,11 +60,11 @@ const rawHeaders = {
         sortable: true,
         value: "id"
       },
-      { text: "عنوان", value: "title", align: "right" },
-      { text: "توضیحات", value: "description", align: "right" },
-      { text: "قیمت", value: "price", align: "left" },
-      { text: "مقدار وام", value: "amount", align: "left" },
-      { text: "عملیات", sortable: false, align: "left" }
+      {text: "عنوان", value: "title", align: "right"},
+      {text: "توضیحات", value: "description", align: "right"},
+      {text: "قیمت", value: "price", align: "left"},
+      {text: "مقدار وام", value: "amount", align: "left"},
+      {text: "عملیات", sortable: false, align: "left"}
     ],
     loanRequest: [
       {
@@ -73,11 +73,11 @@ const rawHeaders = {
         sortable: true,
         value: "id"
       },
-      { text: "عنوان", value: "title", align: "right" },
-      { text: "توضیحات", value: "description", align: "right" },
-      { text: "قیمت", value: "price", align: "left" },
-      { text: "مقدار وام", value: "amount", align: "left" },
-      { text: "عملیات", sortable: false, align: "left" }
+      {text: "عنوان", value: "title", align: "right"},
+      {text: "توضیحات", value: "description", align: "right"},
+      {text: "قیمت", value: "price", align: "left"},
+      {text: "مقدار وام", value: "amount", align: "left"},
+      {text: "عملیات", sortable: false, align: "left"}
     ]
   },
   advertAliases = {
@@ -86,13 +86,13 @@ const rawHeaders = {
       alias: "loan-requests",
       title: "درخواست وام"
     },
-    loans: { type: "loan", alias: "loans", title: "وام" },
-    finances: { type: "finance", alias: "finances", title: "سرمایه گذاری" },
+    loans: {type: "loan", alias: "loans", title: "وام"},
+    finances: {type: "finance", alias: "finances", title: "سرمایه گذاری"},
     "finance-requests": {
       type: "financeRequest",
       title: "درخواست سرمایه گذاری"
     },
-    "co-signers": { type: "coSigner", alias: "co-signers", title: "ضامن" },
+    "co-signers": {type: "coSigner", alias: "co-signers", title: "ضامن"},
     "co-signer-requests": {
       type: "coSignerRequest",
       alias: "co-signer-requests",
@@ -105,14 +105,26 @@ const rawHeaders = {
       alias: "loan-requests",
       title: "درخواست وام"
     },
-    loan: { type: "loan", alias: "loans", title: "وام" },
-    finance: { type: "finance", alias: "finances", title: "سرمایه گذاری" },
+    loan: {
+      type: "loan",
+      alias: "loans",
+      title: "وام"
+    },
+    finance: {
+      type: "finance",
+      alias: "finances",
+      title: "سرمایه گذاری"
+    },
     financeRequest: {
       type: "financeRequest",
       alias: "finance-requests",
       title: "درخواست سرمایه گذاری"
     },
-    coSigner: { type: "coSigner", alias: "co-signers", title: "ضامن" },
+    coSigner: {
+      type: "coSigner",
+      alias: "co-signers",
+      title: "ضامن"
+    },
     coSignerRequest: {
       type: "coSignerRequest",
       alias: "co-signer-requests",

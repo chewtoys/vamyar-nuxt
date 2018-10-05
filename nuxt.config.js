@@ -38,7 +38,7 @@ export default {
     ]
   },
 
-  loading: {color: '#fff'},
+  loading: {color: '#1BF'},
   css: ["~assets/app.styl", "~assets/helper.styl", "~assets/font.styl"],
 
   plugins: [

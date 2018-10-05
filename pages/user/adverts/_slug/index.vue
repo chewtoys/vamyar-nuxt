@@ -17,12 +17,11 @@
       </v-layout>
     </v-card>
     <v-card color="white" raised light class="mt-5 py-5 px-4">
-
       <div>
         <v-toolbar flat color="white">
           <v-toolbar-title>{{ page_title }}</v-toolbar-title>
           <v-spacer/>
-          <v-btn :to="slug + '/create'" color="cyan" outline light round class="mb-2">ثبت جدید</v-btn>
+          <v-btn :to="`${slug}/create`" color="cyan" outline light round class="mb-2">ثبت جدید</v-btn>
         </v-toolbar>
         <v-data-table
           :headers="headers"
@@ -82,91 +81,91 @@
   </div>
 </template>
 <script>
-import Helper from "~/assets/js/helper.js"
+  import Helper from "~/assets/js/helper.js"
 
-export default {
-  data: () => ({
-    // default
-    // info
+  export default {
+    data: () => ({
+      // default
+      // info
 
-    submit_loader: false,
-    snackbar: false,
-    snack_text: null,
-    snack_color: "info"
-  }),
-  async asyncData({ params, app, store }) {
-    let slug = params.slug
-    let type = Helper.getTypeByAlias(slug)
-    const breadcrumb = Helper.getBreadcrumb(type.title),
-      page_title = Helper.getPageTitle(type.title)
-    store.commit("navigation/pushMeta", { breadcrumb, title: page_title })
-    store.commit("navigation/setTitle", page_title)
+      submit_loader: false,
+      snackbar: false,
+      snack_text: null,
+      snack_color: "info"
+    }),
+    async asyncData({params, app, store}) {
+      let slug = params.slug
+      let type = Helper.getTypeByAlias(slug)
+      const breadcrumb = Helper.getBreadcrumb(type.title),
+        page_title = Helper.getPageTitle(type.title)
+      store.commit("navigation/pushMeta", {breadcrumb, title: page_title})
+      store.commit("navigation/setTitle", page_title)
 
-    let method = `/user/${slug}`
-    let must
-    let cursor = 0
+      let method = `/user/${slug}`
+      let must
+      let cursor = 0
 
-    if (!must) {
-      must = "advertableType=" + type.type + ",verified=true"
-    }
-
-    let query = {
-      number: store.state.settings.adverts.count,
-      include: "advertable",
-      must
-    }
-
-    try {
-      let { data, paginator } = await app.$axios.$get(method, {
-        params: query
-      })
-      let loading = false
-      return {
-        items: data,
-        breadcrumb,
-        page_title,
-        paginator,
-        loading,
-        type,
-        slug
+      if (!must) {
+        must = "advertableType=" + type.type + ",verified=true"
       }
-    } catch (err) {
-      //error({statusCode: 'این صفحه فعال نمی باشد.'})
-      return {
-        items: [],
-        breadcrumb,
-        page_title,
-        paginator: [],
-        loading: false,
-        type,
-        slug
+
+      let query = {
+        number: store.state.settings.adverts.count,
+        include: "advertable",
+        must
       }
-    }
-  },
-  computed: {
-    headers() {
-      return this.rawHeaders
+
+      try {
+        let {data, paginator} = await app.$axios.$get(method, {
+          params: query
+        })
+        let loading = false
+        return {
+          items: data,
+          breadcrumb,
+          page_title,
+          paginator,
+          loading,
+          type,
+          slug
+        }
+      } catch (err) {
+        //error({statusCode: 'این صفحه فعال نمی باشد.'})
+        return {
+          items: [],
+          breadcrumb,
+          page_title,
+          paginator: [],
+          loading: false,
+          type,
+          slug
+        }
+      }
     },
-    info() {
-      return {
-        title: "لیست " + this.type.title + "‌ها"
+    computed: {
+      headers() {
+        return this.rawHeaders
+      },
+      info() {
+        return {
+          title: "لیست " + this.type.title + "‌ها"
+        }
       }
-    }
-  },
-  mounted() {
-    return {
-      rawHeaders: Helper.getRawHeaders(this.type.type),
-      rawData: this.data || []
-    }
-  },
-  methods: {
-    getLink(id) {
-      return "/user/loans/" + id
-    }
-  },
+    },
+    mounted() {
+      return {
+        rawHeaders: Helper.getRawHeaders(this.type.type),
+        rawData: this.data || []
+      }
+    },
+    methods: {
+      getLink(id) {
+        return "/user/loans/" + id
+      }
+    },
 
-  $_veeValidate: {
-    validator: "new"
+    $_veeValidate: {
+      validator: "new"
+    }
   }
-}
 </script>

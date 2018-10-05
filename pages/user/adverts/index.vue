@@ -5,7 +5,7 @@
   export default {
     meta : {
       'title': 'تمام آگهی های من',
-      'breadcrumb': 'همه ی آگهی ها'
+      'breadcrumb': 'همه‌ی آگهی ها'
     }
   }
 </script>
