@@ -4,7 +4,7 @@
     fixed
     app
   >
-    <v-toolbar-side-icon @click.stop="toggleDrawer(!drawer)"></v-toolbar-side-icon>
+    <v-toolbar-side-icon @click="toggleDrawer"></v-toolbar-side-icon>
     <v-toolbar-title>
       <v-btn to="/user" flat color="transparent"><span class="red--text"><v-icon
         class="px-1">dashboard</v-icon>داشبورد</span></v-btn>

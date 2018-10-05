@@ -1,6 +1,6 @@
 <template>
   <v-navigation-drawer
-
+    v-model="drawer"
     fixed
     right
     app
@@ -10,7 +10,7 @@
         <v-list-tile-avatar>
           <img :src="site.logo">
         </v-list-tile-avatar>
-        <v-list-tile-title class="text-justify rtl">صفحه ی نخست</v-list-tile-title>
+        <v-list-tile-title class="text-justify rtl">صفحه‌ی نخست</v-list-tile-title>
       </v-list-tile>
       <v-divider/>
 
@@ -118,20 +118,16 @@
       ]
     }),
     computed: {
-      drawer: function () {
-        return this.$store.state.navigation.drawer
+      drawer: {
+        get() {
+          return !!this.$store.state.navigation.drawer
+        },
+        set(value) {
+          this.$store.commit('navigation/setDrawer', value)
+        }
       },
       site: function () {
         return this.$store.state.site
-      }
-    },
-    methods: {
-      toggleDrawer: function () {
-        this.$store.commit('navigation/setDrawer', !this.drawer);
-      },
-      goTo: function (to) {
-        //if (this.$store.state.debug) alert('go to:' + to)
-        this.$router.push(to)
       }
     }
   }

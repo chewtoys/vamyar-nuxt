@@ -1,7 +1,7 @@
 <template>
   <v-app>
-    <Drawer/>
     <ToolBar/>
+    <Drawer/>
     <v-content>
       <v-container fluid>
         <Breadcrumb/>
@@ -9,7 +9,6 @@
         <Snackbar/>
       </v-container>
     </v-content>
-    <Footer/>
   </v-app>
 </template>
 <script>
@@ -28,10 +27,10 @@
     middleware: ["authenticated", "navigation"],
     components: {
       ToolBar,
-      Drawer,
       Footer,
       Breadcrumb,
-      Snackbar
+      Snackbar,
+      Drawer
     }
   }
 </script>
