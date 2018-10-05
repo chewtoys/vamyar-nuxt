@@ -104,7 +104,7 @@ export default {
 
     let method = `/user/${slug}`
     let must
-    cursor = 0
+    let cursor = 0
 
     if (!must) {
       must = "advertableType=" + type.type + ",verified=true"

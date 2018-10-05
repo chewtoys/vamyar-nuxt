@@ -45,7 +45,7 @@ export default {
         params: { include: "advertable" }
       })
     } catch (err) {
-      this.store.commit(
+      this.$store.commit(
         "snackbar/setSnack",
         "مشکلی در گرفتن آگهی ها پیش آمد.",
         "error"

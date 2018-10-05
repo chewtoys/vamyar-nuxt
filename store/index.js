@@ -23,7 +23,7 @@ export const state = () => ({
     title: "بدون عنوان",
     breadcrumb: null
   },
-  secret: "pt1BQC1dxHU9taQQovJlpgZzmx0tUNMxlTVIUWk4"
+  secret: "hGhQI18YQESIEOw8nZAf4ZMywS9TtGxkfWVbmmt8"
 })
 
 export const mutations = {
@@ -35,7 +35,7 @@ export const mutations = {
   }
 }
 export const actions = {
-  async nuxtServerInit({ commit }, { $axios, route, redirect, req }) {
+  async nuxtServerInit({commit}, {$axios, route, redirect, req}) {
     // user
     let accessToken = null
     if (req.headers.cookie) {
@@ -44,17 +44,19 @@ export const actions = {
         accessToken = parsed.auth
         $axios.setHeader("Authorization", `Bearer ${accessToken}`)
         try {
-          let { data } = await $axios.$get("/user/details")
-          if (data && data.details.firstName) {
+          let {data} = await $axios.$get("/user/details")
+          if (data && data.details && data.details.firstName) {
             commit("user/updateUserInfo", data)
           } else if (data) {
             commit("user/updateUserInfo", data)
-            //console.log('Router', route);
             let path = "/user/profile/edit"
             if (route.path !== path) redirect(path)
+          } else {
+            return redirect('/user/auth');
           }
         } catch (error) {
           //console.log('AUTH ERROR', error)
+          //return  redirect('/user/auth');
         }
         commit("user/updateToken", accessToken)
       }

@@ -3,10 +3,11 @@ import Vuetify from "vuetify"
 import colors from "vuetify/es5/util/colors"
 import VueClipboard from "vue-clipboard2"
 import fa from "vee-validate/dist/locale/fa"
-import VeeValidate, { Validator } from "vee-validate"
+import VeeValidate, {Validator} from "vee-validate"
 // Translation provided by Vuetify (typescript)
-import farsi from "vuetify/src/locale/fa.ts"
+//import farsi from "vuetify/src/locale/fa.ts"
 
+//const farsi = require("vuetify/src/locale/fa");
 //import vueSmoothScroll from "vue-smooth-scroll"
 //// Localize takes the locale object as the second argument (optional) and merges it.
 Validator.localize("fa", fa)
@@ -26,8 +27,8 @@ Vue.use(VueClipboard)
 Vue.use(Vuetify, {
   rtl: true,
   lang: {
-    locales: { farsi },
-    current: "farsi"
+    locales: 'fa',
+    current: "fa"
   },
   theme: {
     primary: colors.cyan.darken1, // #E53935

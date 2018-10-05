@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <Drawer/>
     <ToolBar/>
     <v-content>
       <v-container fluid>
@@ -12,23 +13,25 @@
   </v-app>
 </template>
 <script>
-import Breadcrumb from "~/components/user/Breadcrumb.vue"
-import ToolBar from "~/components/user/ToolBar.vue"
-import Footer from "~/components/user/Footer.vue"
-import Snackbar from "~/components/Snackbar.vue"
+  import Breadcrumb from "~/components/user/Breadcrumb.vue"
+  import ToolBar from "~/components/user/ToolBar.vue"
+  import Drawer from "~/components/user/Drawer.vue"
+  import Footer from "~/components/user/Footer.vue"
+  import Snackbar from "~/components/Snackbar.vue"
 
-export default {
-  head() {
-    return {
-      title: this.$store.state.navigation.title
+  export default {
+    head() {
+      return {
+        title: this.$store.state.navigation.title
+      }
+    },
+    middleware: ["authenticated", "navigation"],
+    components: {
+      ToolBar,
+      Drawer,
+      Footer,
+      Breadcrumb,
+      Snackbar
     }
-  },
-  middleware: ["authenticated", "navigation"],
-  components: {
-    ToolBar,
-    Footer,
-    Breadcrumb,
-    Snackbar
   }
-}
 </script>

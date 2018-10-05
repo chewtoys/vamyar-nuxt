@@ -1,11 +1,15 @@
 export const state = () => ({
   meta: null,
   title: null,
-  path: null
+  path: null,
+  drawer: false,
+  isMobile: false
 })
 
 export const mutations = {
-  setMeta(state, items) {
+  setDrawer(state, val) {
+    state.drawer = val
+  }, setMeta(state, items) {
     state.meta = items
   },
   pushMeta(state, items) {
