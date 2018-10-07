@@ -60,23 +60,6 @@
           </template>
         </v-data-table>
       </div>
-
-      <v-snackbar
-        v-model="snackbar"
-        :color="snack_color"
-        :multi-line="true"
-        :timeout="3000"
-        :vertical="true"
-      >
-        {{ snack_text }}
-        <v-btn
-          dark
-          flat
-          @click="snackbar = false"
-        >
-          بستن
-        </v-btn>
-      </v-snackbar>
     </v-card>
   </div>
 </template>
@@ -89,21 +72,18 @@
       // info
 
       submit_loader: false,
-      snackbar: false,
-      snack_text: null,
-      snack_color: "info"
     }),
     async asyncData({params, app, store}) {
-      let slug = params.slug
-      let type = Helper.getTypeByAlias(slug)
+      let slug = params.slug;
+      let type = Helper.getTypeByAlias(slug);
       const breadcrumb = Helper.getBreadcrumb(type.title),
-        page_title = Helper.getPageTitle(type.title)
-      store.commit("navigation/pushMeta", {breadcrumb, title: page_title})
-      store.commit("navigation/setTitle", page_title)
+        page_title = Helper.getPageTitle(type.title);
+      store.commit("navigation/pushMeta", {breadcrumb, title: page_title});
+      store.commit("navigation/setTitle", page_title);
 
-      let method = `/user/${slug}`
-      let must
-      let cursor = 0
+      let method = `/user/${slug}`;
+      let must;
+      let cursor = 0;
 
       if (!must) {
         must = "advertableType=" + type.type + ",verified=true"
@@ -113,13 +93,13 @@
         number: store.state.settings.adverts.count,
         include: "advertable",
         must
-      }
+      };
 
       try {
         let {data, paginator} = await app.$axios.$get(method, {
           params: query
-        })
-        let loading = false
+        });
+        let loading = false;
         return {
           items: data,
           breadcrumb,

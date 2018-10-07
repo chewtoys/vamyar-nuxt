@@ -100,14 +100,15 @@
 <script>
   // for change
   import _ from 'lodash';
+
   const path = "/user/details",
     page_title = "ویرایش پروفایل",
-    breadcrumb = "ویرایش مشخصات حساب کاربری"
+    breadcrumb = "ویرایش مشخصات حساب کاربری";
   const info = {
     title: "ویرایش پروفایل"
     //text: "لورم ایپسوم یا طرح‌نما (به انگلیسی: Lorem ipsum) به متنی آزمایشی و بی‌معنی در صنعت چاپ، صفحه‌آرایی و طراحی گرافیک گفته می‌شود. طراح گرافیک از این متن به عنوان عنصری از ترکیب بندی برای پر کردن صفحه و ارایه اولیه شکل ظاهری و کلی طرح سفارش گرفته شده استفاده می نماید، تا از نظر گرافیکی نشانگر چگونگی نوع و اندازه فونت و ظاهر متن باشد. معمولا طراحان گرافیک برای صفحه‌آرایی، نخست از متن‌های آزمایشی و بی‌معنی استفاده می‌کنند تا صرفا به مشتری یا صاحب کار خود نشان دهند که صفحه طراحی یا صفحه بندی شده بعد از اینکه متن در آن قرار گیرد چگونه به نظر می‌رسد و قلم‌ها و اندازه‌بندی‌ها چگونه در نظر گرفته شده‌است. از آنجایی که طراحان عموما نویسنده متن نیستند و وظیفه رعایت حق تکثیر متون را ندارند و در همان حال کار آنها به نوعی وابسته به متن می‌باشد آنها با استفاده از محتویات ساختگی، صفحه گرافیکی خود را صفحه‌آرایی می‌کنند تا مرحله طراحی و صفحه‌بندی را به پایان برند.",
     // heading: 'عنوان متن'
-  }
+  };
 
   export default {
     $_veeValidate: {
@@ -149,21 +150,21 @@
       }
     },
     mounted() {
-      this.$validator.localize("fa", this.dictionary)
+      this.$validator.localize("fa", this.dictionary);
       // check if user has no access to create advert
       //let hasAccess = this.$store.state.accesses.loans ;
 
-      this.firstName = _.get(this.$store.state.user, 'info.details.firstName', null)
-      this.lastName = _.get(this.$store.state.user, 'info.details.lastName', null)
-      this.email = _.get(this.$store.state.user, 'email', null)
-      this.address = _.get(this.$store.state.user, 'info.details.address', "")
+
+      this.firstName = _.get(this.$store.state.user, 'info.details.firstName', null);
+      this.lastName = _.get(this.$store.state.user, 'info.details.lastName', null);
+      this.email = _.get(this.$store.state.user, 'info.email', null);
+      this.address = _.get(this.$store.state.user, 'info.details.address', "");
       this.password = null
-      this.put = _.has(this.$store.state.user, 'info.details.firstName');
     },
     methods: {
       toast(msg, color) {
-        this.snackbar = true
-        this.snack_text = msg
+        this.snackbar = true;
+        this.snack_text = msg;
         this.snack_color = color
       },
       async sendForm() {
@@ -174,27 +175,29 @@
           password: this.password,
           password_confirmation: this.password,
           address: this.address
-        }
+        };
         //let request = null
         try {
           if (this.put) request = await this.$axios.$put(path, data)
-          if (!this.put) request = await this.$axios.$post(path, data)
         } catch (error) {
-          this.store.commit("snackbar/setSnack", "مشکلی در ارسال اطلاعات پیش آمد")
+          this.$store.commit("snackbar/setSnack", "مشکلی در ارسال اطلاعات پیش آمد");
+          if (_.has('error', 'response.data.error.message')) {
+            this.$store.commit("snackbar/setSnack", error.response.data.error.message);
+          }
         }
-        this.updateUser()
-        this.submit_loader = false
+        this.updateUser();
+        this.submit_loader = false;
         return true
       },
       async updateUser() {
         try {
-          let {data} = await this.$axios.$get("/user/details")
+          let {data} = await this.$axios.$get("/user/details");
           if (data && data.details.firstName) {
             this.$store.commit(
               "snackbar/setSnack",
               "پروفایل با موفقیت بروز شد",
               "success"
-            )
+            );
             this.$store.commit("user/updateUserInfo", data)
           }
         } catch (error) {
@@ -202,7 +205,7 @@
         }
       },
       submit() {
-        this.submit_loader = true
+        this.submit_loader = true;
         //let validation = await this.$validator.validateAll();
         //this.submit_loader = false;
         this.$validator
@@ -211,14 +214,14 @@
             if (result) {
               return this.sendForm()
             } else {
-              this.toast("برخی فیلد ها مشکل دارند.", "warning")
-              this.submit_loader = false
+              this.toast("برخی فیلد ها مشکل دارند.", "warning");
+              this.submit_loader = false;
               return null
             }
           })
           .catch(err => {
             this.toast("خطایی رخ داد: " + err, "error")
-          })
+          });
         return false
       }
     }

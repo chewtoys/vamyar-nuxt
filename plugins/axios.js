@@ -1,11 +1,11 @@
 export default function ({$axios, store}) {
   // Authorization
   if (store.state.admin.auth || store.state.user.auth) {
-    let accessToken = store.state.user.auth || store.state.admin.auth
+    let accessToken = store.state.user.auth || store.state.admin.auth;
     $axios.setHeader("Authorization", `Bearer ${accessToken}`)
   }
 
-  $axios.setHeader("Content-Type", " application/json")
+  $axios.setHeader("Content-Type", " application/json");
   //$axios.setHeader('Accept', 'application/json')
   //$axios.setHeader('Access-Control-Allow-Origin', '*')
   //
@@ -14,13 +14,18 @@ export default function ({$axios, store}) {
 
   $axios.onRequest(config => {
     console.log({1: "DEBUG ON AXIOS :  Request:", config})
-  })
-  $axios.onResponse(response => {
+  });
+  $axios.onResponse(({response}) => {
     //let { code } = response
     //console.log({2: 'DEBUG ON AXIOS :  onResponse:', 2: response})
-  })
-  $axios.onError(response => {
+  });
+  $axios.onError(error => {
     //let { code } = response
-    console.log({2: 'DEBUG ON AXIOS :  onError:', 2: response})
+    if (_.has(error.response, 'data.error.message')) {
+      console.log({2: 'DEBUG ON AXIOS :  onError Message:', 3: error.response.data.error.message});
+      store.commit('snackbar/setSnack', error.response.data.error.message)
+    } else {
+      console.log({2: 'DEBUG ON AXIOS :  onError:', 3: error.response})
+    }
   })
 }

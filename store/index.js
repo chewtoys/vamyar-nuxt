@@ -24,7 +24,7 @@ export const state = () => ({
     breadcrumb: null
   },
   secret: "hGhQI18YQESIEOw8nZAf4ZMywS9TtGxkfWVbmmt8"
-})
+});
 
 export const mutations = {
   setPageData(state, data) {
@@ -33,23 +33,23 @@ export const mutations = {
   debug(state, data) {
     state.debug = data
   }
-}
+};
 export const actions = {
-  async nuxtServerInit({commit}, {$axios, route, redirect, req}) {
+  async nuxtServerInit({commit, dispatch}, {$axios, route, redirect, req}) {
     // user
-    let accessToken = null
+    let accessToken = null;
     if (req.headers.cookie) {
-      let parsed = cookieparser.parse(req.headers.cookie)
+      let parsed = cookieparser.parse(req.headers.cookie);
       if (parsed.auth) {
-        accessToken = parsed.auth
-        $axios.setHeader("Authorization", `Bearer ${accessToken}`)
+        accessToken = parsed.auth;
+        $axios.setHeader("Authorization", `Bearer ${accessToken}`);
         try {
-          let {data} = await $axios.$get("/user/details")
+          let {data} = await $axios.$get("/user/details");
           if (data && data.details && data.details.firstName) {
             commit("user/updateUserInfo", data)
           } else if (data) {
-            commit("user/updateUserInfo", data)
-            let path = "/user/profile/edit"
+            commit("user/updateUserInfo", data);
+            let path = "/user/profile/edit";
             if (route.path !== path) redirect(path)
           } else {
             return redirect('/user/auth');
@@ -63,13 +63,18 @@ export const actions = {
     }
 
     //admin
-    let adminAccessToken = null
+    let adminAccessToken = null;
     if (req.headers.cookie) {
-      let parsed = cookieparser.parse(req.headers.cookie)
+      let parsed = cookieparser.parse(req.headers.cookie);
       if (parsed.adminauth) {
-        adminAccessToken = parsed.adminauth
+        adminAccessToken = parsed.adminauth;
         commit("admin/updateAdminToken", adminAccessToken)
       }
     }
+
+    // other resources
+    dispatch('city/update');
+    dispatch('guaranteeType/update')
+
   }
-}
+};

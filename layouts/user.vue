@@ -24,7 +24,7 @@
         title: this.$store.state.navigation.title
       }
     },
-    middleware: ["authenticated", "navigation"],
+    middleware: ["authenticated", "navigation", "userEditProfile"],
     components: {
       ToolBar,
       Footer,
