@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-breadcrumbs v-if="meta.length > 0">
+    <v-breadcrumbs v-if="meta && meta.length > 0">
       <v-icon slot="divider">chevron_left</v-icon>
 
       <v-breadcrumbs-item
@@ -17,12 +17,13 @@
 </template>
 
 <script>
-export default {
-  computed: {
-    meta() {
-      return this.$store.state.navigation.meta
+  export default {
+    computed: {
+      meta() {
+        return this.$store.state.navigation.meta
+      }
+    },
+    mounted() {
     }
-  },
-  mounted() {}
-}
+  }
 </script>

@@ -35,8 +35,8 @@ export default {
     logout() {
       this.loading = true
       setTimeout(() => {
-        this.$store.dispatch("logout")
-        this.$router.push("/")
+        this.$store.dispatch("user/logout")
+        this.$router.push("/user")
       }, 2000)
     }
   }

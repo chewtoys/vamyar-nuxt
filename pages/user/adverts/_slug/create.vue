@@ -43,6 +43,7 @@
         <v-flex xs12 md12 sm12 lg12>
           <form>
             <v-text-field
+              v-if="isAllowed('title')"
               v-validate="'required'"
               v-model="title"
               :error-messages="errors.collect('title')"
@@ -51,36 +52,57 @@
               data-vv-name="title"
               label="عنوان"
             />
-            <v-text-field v-validate="'required'"
-                          v-model="city"
-                          :error-messages="errors.collect('city')"
-                          box
-                          label="شهر"
-                          data-vv-name="city"
-                          required
-            />
+            <v-autocomplete
+              v-if="isAllowed('city') && !allcities"
+              v-validate="'required'"
+              v-model="city"
+              :error-messages="errors.collect('city')"
+              box
+              label="شهر"
+              data-vv-name="city"
+              required
+              :items="cities"
+              persistent-hint
+            >
+            </v-autocomplete>
             <v-checkbox
+              v-if="isAllowed('city')"
               v-model="allcities"
               box
               label="قابل انتقال به سایر شهر ها می باشد."
             />
-            <v-text-field v-validate="'required'"
-                          v-model="amount"
-                          :error-messages="errors.collect('city')"
-                          box
-                          label="مبلغ"
-                          data-vv-name="city"
-                          required
+            <v-text-field
+              v-if="isAllowed('amount')"
+              v-validate="'required'"
+              v-model="amount"
+              :error-messages="errors.collect('amount')"
+              box
+              label="مقدار وام"
+              data-vv-name="amount"
+              required
             />
-            <v-text-field v-validate="'alpha'"
-                          v-model="payBackTime"
-                          :error-messages="errors.collect('payBackTime')"
-                          box
-                          label="بازپرداخت"
-                          data-vv-name="payBackTime"
-                          required
+            <v-text-field
+              v-if="isAllowed('price')"
+              v-validate="'required'"
+              v-model="price"
+              :error-messages="errors.collect('price')"
+              box
+              label="قیمت وام"
+              data-vv-name="price"
+              required
+            />
+            <v-text-field
+              v-if="isAllowed('paybackTime')"
+              v-validate="'alpha'"
+              v-model="paybackTime"
+              :error-messages="errors.collect('paybackTime')"
+              box
+              label="بازپرداخت"
+              data-vv-name="paybackTime"
+              required
             />
             <v-textarea
+              v-if="isAllowed('text')"
               v-validate="'text'"
               v-model="text"
               :error-messages="errors.collect('text')"
@@ -90,6 +112,7 @@
               auto-grow
             />
             <v-combobox
+              v-if="isAllowed('guaranteeType')"
               v-validate="'required'"
               v-model="guaranteeTypeId"
               :items="guaranteeTypeListItems"
@@ -145,7 +168,7 @@
       // this type - loan
       guaranteeTypeId: null, // hasComputed
       loanType: null,
-      payBackTime: null,
+      paybackTime: null,
       amount: null,
       payback: null,
       price: null,
@@ -159,7 +182,7 @@
           image: "تصویر آگهی",
           amount: "مبلغ وام",
           price: "قیمت فروش وام",
-          payBackTime: "مدت زمان بازپرداخت",
+          paybackTime: "مدت زمان بازپرداخت",
           guaranteeTypeId: "نوع ضامن",
           loanType: "نوع وام"
           // custom attributes
@@ -185,12 +208,12 @@
         return this.guaranteeTypeList
       }
     },
-    async asyncData({params}) {
+    async asyncData({params, store}) {
       return {
         type: Helper.getTypeByAlias(params.slug),
         slug: params.slug,
-        guaranteeTypeList: ["نوع اول", "نوع دوم"], //await this.$axios.get(guaranteeTypeListPath),
-        cities: ["تهران", "قم"] //await this.$axios.get(cityPath)
+        guaranteeTypeList: store.state.guaranteeType.data, //await this.$axios.get(guaranteeTypeListPath),
+        cities: store.state.city.data
       }
     },
     mounted() {
@@ -203,6 +226,10 @@
       }
     },
     methods: {
+      isAllowed(name, which = 'create') {
+        let slug = this.slug;
+        return Helper.isFiledAllowByAlias(slug, name, which);
+      },
       toast(msg, color) {
         this.$store.commit("snackbar/setSnack", msg, color)
       },
@@ -213,7 +240,7 @@
           text: this.text,
           price: this.price,
           amount: this.amount,
-          payBackTime: this.payBackTime,
+          paybackTime: this.paybackTime,
           guaranteeTypeId: this.guaranteeTypeId,
           image: this.image
         }

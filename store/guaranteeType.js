@@ -8,15 +8,3 @@ export const mutations = {
   }
 };
 
-export const actions = {
-  async update({commit}) {
-    let method = '/guaranteeTypes';
-    try {
-      let {data} = await this.$axios.$get(method);
-      //console.log('Fetched Data', data)
-      commit('setData', data)
-    } catch (error) {
-      //console.log(error)
-    }
-  }
-};

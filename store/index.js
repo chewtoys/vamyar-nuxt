@@ -1,5 +1,12 @@
 import cookieparser from "cookieparser"
 
+const guaranteeMethod = '/guaranteeTypes',
+  cityMethod = '/cities?number=1000',
+  loanTypeMethod = '/loanTypes',
+  settingsMethod = '/settings',
+  contactUsMethod = '/site/contact-us',
+  aboutUsMethod = '/site/about-us'
+
 export const state = () => ({
   temp: {
     lorem:
@@ -23,7 +30,8 @@ export const state = () => ({
     title: "بدون عنوان",
     breadcrumb: null
   },
-  secret: "hGhQI18YQESIEOw8nZAf4ZMywS9TtGxkfWVbmmt8"
+  client_secret: "CbrWpv5DqAnXiduZafBre9ZJHfT23OnDL1Mjur6f",
+  client_id: "3",
 });
 
 export const mutations = {
@@ -72,9 +80,51 @@ export const actions = {
       }
     }
 
-    // other resources
-    dispatch('city/update');
-    dispatch('guaranteeType/update')
+    // city resource
+    try {
+      let cityData = await this.$axios.$get(cityMethod);
+      commit('city/setData', cityData.data || []);
+    } catch (error) {
+      //console.log(error)
+    }
+
+    // guarantee resources
+    try {
+      let guaranteeData = await this.$axios.$get(guaranteeMethod);
+      commit('guaranteeType/setData', guaranteeData.data || []);
+    } catch (error) {
+      //console.log(error)
+    }
+
+    // loan types resources
+    try {
+      let loanTypeData = await this.$axios.$get(loanTypeMethod);
+      commit('loanType/setData', loanTypeData.data || []);
+    } catch (error) {
+      //console.log(error)
+    }
+
+    // settings resources
+    try {
+      let settingsData = await this.$axios.$get(settingsMethod);
+      commit('settings/setData', settingsData.data || []);
+    } catch (error) {
+      //console.log(error)
+    }
+    // about us resource
+    try {
+      let aboutUsData = await this.$axios.$get(aboutUsMethod);
+      commit('site/aboutUs/setData', aboutUsData.data || []);
+    } catch (error) {
+      //console.log(error)
+    }
+    // contact us resources
+    try {
+      let contactUsData = await this.$axios.$get(contactUsMethod);
+      commit('site/contactUs/setData', contactUsData.data || []);
+    } catch (error) {
+      //console.log(error)
+    }
 
   }
 };

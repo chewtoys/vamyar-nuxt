@@ -25,8 +25,8 @@
             <v-alert
               v-if="showPanel=='forget'"
               :value="true"
-              type="primary"
-            ><span class="px-1">لطفا شماره‌ی خود را وارد کنید تا رمز جدید را دریافت کنید.</span>
+              type="info"
+            ><span class="px-1">لطفا شماره‌ی خود را وارد کنید.</span>
             </v-alert>
             <v-alert
               v-if="success !== null "
@@ -105,20 +105,40 @@
               <div v-if="showPanel=='forget'">
                 <v-form>
                   <v-text-field
-                    v-model="forgetMobile"
+                    v-model="formForgetMobile"
                     prepend-icon="phone"
-                    name="forgetPhone"
                     label="شماره همراه"
                     counter
                     maxlength="11"
                     minlength="11"
                     type="text"/>
+                  <v-text-field
+                    v-if="forgetSmsSent"
+                    v-model="formForgetNewPassword"
+                    prepend-icon="lock"
+                    label="رمز عبور جدید"
+                    type="password"/>
+
+                  <v-text-field
+                    v-if="forgetSmsSent"
+                    v-model="formForgetCode"
+                    prepend-icon="textsms"
+                    label="کد دریافت شده"
+                    type="text"/>
                   <br>
                   <div class="my-3">
-                    <v-btn v-if="!sms_sent" :loading="forgetLoading" :disabled="forgetPhone.length!=11" color="primary"
-                           outline @click="sendForget">
-                      <span>ارسال رمز</span>
+                    <v-btn v-if="!forgetSmsSent" :disabled="formForgetMobile.length!=11" color="primary"
+                           outline @click="sendForgetCode">
+                      <span>ارسال کد</span>
                       <v-icon class="px-1">sms</v-icon>
+                    </v-btn>
+                    <v-btn v-if="forgetSmsSent" :disabled="forgetLoader" color="primary" outline
+                           @click="sendForgetCode"><span>ارسال مجدد</span>
+                      <v-icon class="px-1">autorenew</v-icon>
+                    </v-btn>
+                    <v-btn v-if="forgetSmsSent" color="primary" outline @click="checkForgetCode">
+                      <span>بررسی کد</span>
+                      <v-icon class="px-1">check</v-icon>
                     </v-btn>
                   </div>
                   <br>
@@ -156,7 +176,9 @@
   let register_path = "/user/register",
     verify_path = "/user/register/verify-mobile",
     login_path = "/oauth/token",
-    forget_path = "/user/password"
+    forget_path = "/user/password-reset-request",
+    resetPasswordPath = "/user/reset-password"
+
   export default {
     layout: "auth",
     data() {
@@ -164,10 +186,8 @@
         formUsername: null,
         formPassword: null,
         loginLoader: false,
-        forgetLoading: false,
         formCode: null,
         formMobile: "",
-        forgetMobile: "",
         formNewPassword: "",
         sms_sent: false,
         auth: null,
@@ -177,8 +197,13 @@
         pending: true,
         success: null,
         error: null,
+        formForgetNewPassword: '',
         forgetLoader: false,
-        forgetPhone: ""
+        forgetPending: false,
+        forgetSmsSent: false,
+        formForgetMobile: "",
+        formForgetCode: "",
+
       }
     },
     middleware: "notAuthenticated",
@@ -199,28 +224,12 @@
       backHome: function () {
         this.$router.push("/")
       },
-      sendForget: function () {
-        this.forgetLoader = true
-        let data = {
-          mobile: this.forgetPhone
-        }
-        this.$axios.post(forget_path, data).then(() => {
-          let status = true
-          if (status) {
-            this.msgSuccess("برای شما ارسال شد.")
-            this.forgetLoader = false
-          } else {
-            this.msgError("مشکلی در ارسال پیش آمد. شماره‌ی خود را بررسی کنید.")
-            this.forgetLoader = false
-          }
-        })
-      },
       sendCode: function () {
         let resource = register_path
         let username = this.formMobile
         let password = this.formNewPassword
-        let client_secret = this.$store.state.secret
-        let client_id = 1
+        let client_secret = this.$store.state.client_secret
+        let client_id = this.$store.state.client_id
         let formData = {
           username,
           password,
@@ -237,13 +246,7 @@
           .catch(res => {
             //console.log(res.response)
             let {status, error} = res.response
-            let message = "متاسفانه مشکلی در ارتباط با سرور پیش آمد."
-            if (res.response && res.response.data && res.response.data.error && res.response.data.error.message.mobile) {
-              message = res.response.data.error.message.mobile;
-            } else {
-              message = 'این شماره معتبر نمی باشد. ممکن است قبلا با این شماره ثبت نام کرده باشید.';
-            }
-            this.msgError(message)
+            this.msgError(_.get(res, 'response.data.error.message.mobile', 'این شماره معتبر نمی باشد. ممکن است قبلا با این شماره ثبت نام کرده باشید.'))
           })
 
         this.pending = true
@@ -251,6 +254,35 @@
           this.pending = false
         }, 10000)
         this.sms_sent = true
+      },
+      sendForgetCode: function () {
+        let resource = forget_path
+        let mobile = this.formForgetMobile
+        let client_secret = this.$store.state.client_secret
+        let client_id = this.$store.state.client_id
+        let formData = {
+          mobile,
+          client_secret,
+          client_id
+        };
+        let response = this.$axios
+          .post(resource, formData)
+          .then(resp => {
+            let message = 'کد با موفقیت برای شما ارسال شد.';
+            this.msgSuccess(message)
+          })
+          .catch(res => {
+            //console.log(res.response)
+            let {status, error} = res.response
+            let message = "متاسفانه مشکلی در ارتباط با سرور پیش آمد."
+            this.msgError(_.get(res, 'response.data.error.message.mobile', 'مشکلی در تایید شماره پیش آمد'))
+          })
+
+        this.forgetPending = true
+        setTimeout(() => {
+          this.forgetPending = false
+        }, 10000)
+        this.forgetSmsSent = true
       },
       checkCode: function () {
         let verification_code = this.formCode
@@ -266,8 +298,30 @@
               return this.login()
             })
             .catch((error) => {
+              this.msgError(_.get(error, 'response.data.error.message', "مشکلی پیش آمد!" + error))
+            })
+        }
+      },
+      checkForgetCode: function () {
+        let verification_code = this.formForgetCode
+        let password = password_confirmation = this.formForgetNewPassword
+        let password_confirmation = password
+        if (verification_code.length > 3) {
+          this.$axios
+            .post(resetPasswordPath, {
+              verificationCode: verification_code,
+              password,
+              password_confirmation
+            })
+            .then(res => {
+              this.msgSuccess("کد شما بررسی شد")
+              this.formUsername = this.formForgetMobile
+              this.formPassword = this.formForgetNewPassword
+              return this.login()
+            })
+            .catch((error) => {
               //console.log(error, error.response);
-              this.msgError((error.response.data.error.message || ( "مشکلی پیش آمد!" + error )))
+              this.msgError(_.get(error, 'response.data.error.message', _.get(error, 'response.data.error.message.verificationCode', "مشکلی پیش آمد!" + error)))
             })
         }
       },
@@ -276,14 +330,15 @@
         let resource = login_path
         let username = this.formUsername
         let password = this.formPassword
-        let clientsecret = this.$store.state.secret
+        let client_id = this.$store.state.client_id
+        let client_secret = this.$store.state.client_secret
         let formData = {
           username: username,
           password: password,
           grant_type: "password",
           provider: "users",
-          client_id: "2",
-          client_secret: clientsecret
+          client_id,
+          client_secret
         }
         this.$axios
           .$post(resource, formData, {mode: "no-cors"})
@@ -310,8 +365,8 @@
               } else {
                 this.msgError("مشخصات ورود صحیح نمی باشد.")
               }
-            } else if (error && error.response && error.response.data.message) {
-              this.msgError("مشکلی  پیش آمد:" + error.response.data.message)
+            } else if (_.has(error, 'response.data.message')) {
+              this.msgError("مشکلی  پیش آمد:" + _.get(error, 'response.data.message', ''))
             } else {
               this.msgError("مشکل در ارتباط با سرور")
             }
