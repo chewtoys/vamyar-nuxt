@@ -2,7 +2,7 @@
   <v-container>
     <v-card>
       <v-card-title>
-        <h3>تنظمیات عمومی سایت</h3>
+        <h3>لیست شهر ها</h3>
         <v-spacer/>
         <v-btn outline color="green" round @click="save" :loading="saveLoading" :pending="savePending">
           ذخیره سازی
@@ -27,50 +27,6 @@
           data-vv-name="siteDescription"
           auto-grow
         />
-        <v-checkbox
-          v-model="isSiteOpen"
-          box
-          label="سایت باز باشد؟"
-        />
-        <v-textarea
-          v-if="isSiteOpen"
-          validate="required"
-          v-model="closedSiteText"
-          :error-messages="errors.collect('closedSiteText')"
-          box
-          label="توضیحات در صورت بسته بودن سایت"
-          data-vv-name="closedSiteText"
-          auto-grow
-        />
-        <v-textarea
-          validate="required"
-          v-model="footerText"
-          :error-messages="errors.collect('footerText')"
-          box
-          label="توضیحات فوتر در صفحه ی نخست"
-          data-vv-name="footerText"
-          auto-grow
-        />
-        <v-textarea
-          validate="required"
-          v-model="headerText"
-          :error-messages="errors.collect('headerText')"
-          box
-          label="توضیحات فوتر در صفحه ی نخست"
-          data-vv-name="headerText"
-          auto-grow
-        />
-        <v-textarea
-          validate="required"
-          v-model="subHeaderText"
-          :error-messages="errors.collect('subHeaderText')"
-          box
-          label="توضیحات زیر هدر سایت"
-          data-vv-name="subHeaderText"
-          auto-grow
-        />
-
-
       </v-card-text>
       <v-card-actions>
 
@@ -80,9 +36,8 @@
 </template>
 <script>
   import Helper from '~/assets/js/helper'
-  import UploadInput from '~/components/elements/FileUploader.vue'
 
-  const SAVE_PATH = '/settings'
+  const SAVE_PATH = '/cities'
   export default {
     meta: {
       breadcrumb: 'تنظیمات عمومی',
@@ -94,40 +49,20 @@
         saveLoading: false,
 
         // settings
-        siteTitle: null,
-        siteDescription: null,
-        siteLogo: null,
-        isSiteOpen: null,
-        footerText: null,
-        headerText: null,
-        subHeaderText: null,
-        closedSiteText: null,
-        noticeOnAdvertShow: null,
-        noticeBeforeCreateAdvert: null,
-        isImageAllowed: null,
-        aboutUsText: null,
-        contactUsText: null,
-        educationText: null,
+        siteTitle: 'سایت وامیار',
+        siteDescription: 'توضیحات',
+        siteLogo: 'https://place-hold.it/40',
+        siteFavIcon: 'https://place-hold.it/90',
 
         // adverts
+
+        //
 
         // validator dictionary
         dictionary: {
           attributes: {
             siteTitle: "عنوان سایت",
             siteDescription: "توضیحات متا",
-            siteLogo: 'لوگوی سایت',
-            isSiteOpen: 'باز بودن سایت',
-            footerText: 'متن فوتر',
-            headerText: 'متن هدر',
-            subHeaderText: 'متن زیرهدر',
-            closedSiteText: 'متن بسته بودن سایت',
-            noticeOnAdvertShow: 'متن صفحه ی نمایش آگهی',
-            noticeBeforeCreateAdvert: 'پیام قبل از ایجاد آگهی',
-            isImageAllowed: 'امکان ثبت تصویر در آگهی',
-            aboutUsText: 'متن صفحه ی درباره ی ما',
-            contactUsText: 'متن صفحه ی تماس با ما',
-            educationText: 'متن بالای قسمت آموزش',
           }
         }
       }
@@ -154,6 +89,7 @@
           _.forEach(Keys, (name) => {
             data[name] = _.get(this, name, null);
           })
+          console.log(groupKey, data)
           this.$axios
             .post(SAVE_PATH,
               {key: groupKey, value: JSON.stringify(data)}
@@ -168,12 +104,12 @@
               }
               this.saveLoading = false
             }).catch((error) => {
+            console.log(error, error.response)
             this.saveLoading = false
           })
         })
       }
-    },
-    components: {UploadInput}
+    }
 
   }
 </script>

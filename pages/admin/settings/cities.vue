@@ -7,8 +7,8 @@
   export default {
     layout: "admin",
     meta: {
-      title: 'تنظیمات عمومی سایت',
-      breadcrumb: 'تنظیمات عمومی'
+      title: 'لیست شهرها سایت',
+      breadcrumb: 'لیست شهر ها'
     }
   }
 </script>

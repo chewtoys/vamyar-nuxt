@@ -8,7 +8,7 @@
     layout: "admin",
     meta: {
       title: 'تنظیمات عمومی سایت',
-      breadcrumb: 'تنظیمات عمومی'
+      breadcrumb: 'تنظیمات '
     }
   }
 </script>

@@ -21,4 +21,3 @@ export const mutations = {
     state.data = processed
   }
 };
-

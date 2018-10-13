@@ -344,7 +344,7 @@ export const rawHeaders = {
     ]
   },
   GENERAL_SETTINGS = {
-    site: ['isSiteOpen', 'siteTitle', 'siteDescription', 'siteLogo', 'siteFavIcon', 'footerText', 'headerText', 'subHeaderText'],
+    site: ['closedSiteText', 'isSiteOpen', 'siteTitle', 'siteDescription', 'siteLogo', 'siteFavIcon', 'footerText', 'headerText', 'subHeaderText'],
     adverts: ['noticeOnAdvertShow', 'noticeBeforeCreateAdvert', 'isImageAllowed'],
     pages: ['aboutUsText', 'contactUsText', 'educationText']
   }
