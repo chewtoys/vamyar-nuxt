@@ -57,7 +57,10 @@ const Helper = {
     return "تعیین نشده"
   },
   getRawHeaders(type) {
-    return rawHeaders && rawHeaders[type] ? rawHeaders[type] : []
+    return _.get(CONSTANTS.rawHeaders, type, []);
+  },
+  getGeneralSettingsGroup() {
+    return CONSTANTS.GENERAL_SETTINGS;
   }
 }
 

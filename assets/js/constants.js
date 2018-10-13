@@ -1,4 +1,3 @@
-
 // data structure
 export const rawHeaders = {
     loan: [
@@ -290,4 +289,62 @@ export const rawHeaders = {
       alias: "co-signer-requests",
       title: "درخواست ضامن"
     }
+  }, AdminMenu = {
+    tickets: [
+      {title: "کل تیکت های ثبت شده", icon: "inbox", link: "/admin/tickets"}
+    ],
+    accounts: [
+      {title: "کل کاربران", icon: "inbox", link: "/admin/users"},
+      {title: "ایجاد کاربر جدید", icon: "inbox", link: "/admin/users/create"},
+      {title: "کل مدیران", icon: "inbox", link: "/admin/admins"},
+      {title: "مدیر جدید", icon: "build", link: "/admin/admins/create"},
+      {title: "خروج", icon: "exit_to_app", link: "/admin/logout"}
+    ],
+    settings: [
+      {
+        title: "تنظیمات عمومی سایت",
+        icon: "keyboard_arrow_left",
+        link: "/admin/settings/general"
+      },
+      {
+        title: "صفحات سایت",
+        icon: "keyboard_arrow_left",
+        link: "/admin/settings/pages"
+      },
+      {
+        title: "انواع وام",
+        icon: "keyboard_arrow_left",
+        link: "/admin/settings/pages"
+      },
+      {
+        title: "انواع ضامن",
+        icon: "keyboard_arrow_left",
+        link: "/admin/settings/pages"
+      },
+      {
+        title: "تنظیمات وام",
+        icon: "keyboard_arrow_left",
+        link: "/admin/settings/pages"
+      },
+      {
+        title: "لیست شهر ها",
+        icon: "keyboard_arrow_left",
+        link: "/admin/settings/pages"
+      },
+      {
+        title: "تماس با ما",
+        icon: "keyboard_arrow_left",
+        link: "/admin/settings/contacts"
+      },
+      {
+        title: "آموزش ها",
+        icon: "keyboard_arrow_left",
+        link: "/admin/teaches"
+      }
+    ]
+  },
+  GENERAL_SETTINGS = {
+    site: ['isSiteOpen', 'siteTitle', 'siteDescription', 'siteLogo', 'siteFavIcon', 'footerText', 'headerText', 'subHeaderText'],
+    adverts: ['noticeOnAdvertShow', 'noticeBeforeCreateAdvert', 'isImageAllowed'],
+    pages: ['aboutUsText', 'contactUsText', 'educationText']
   }

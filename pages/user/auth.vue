@@ -5,7 +5,7 @@
     height="100%"
     flat
   >
-    <v-container grid-list-lg fill-height>
+    <v-container style="opacity: .9" grid-list-lg fill-height>
       <v-layout row wrap color="white" reverse>
         <v-flex xs12 md6 offset-md3>
           <v-card

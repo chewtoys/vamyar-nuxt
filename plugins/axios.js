@@ -1,7 +1,10 @@
-export default function ({$axios, store, redirect}) {
+export default function ({$axios, store, redirect, route}) {
   // Authorization
-  if (store.state.admin.auth || store.state.user.auth) {
-    let accessToken = store.state.user.auth || store.state.admin.auth;
+  if (store.state.admin.auth) {
+    let accessToken = store.state.admin.auth;
+    $axios.setHeader("Authorization", `Bearer ${accessToken}`)
+  } else if (store.state.user.auth) {
+    let accessToken = store.state.user.auth;
     $axios.setHeader("Authorization", `Bearer ${accessToken}`)
   }
 
@@ -21,15 +24,21 @@ export default function ({$axios, store, redirect}) {
   });
   $axios.onError(error => {
     let {status} = error.response
+
     if (status === 401) {
-      store.dispatch('user/logout')
-      redirect('/user')
+      if (_.startsWith(route.path, '/user')) {
+        store.dispatch('user/logout')
+        redirect('/user')
+      } else if (_.startsWith(route.path, '/admin')) {
+        store.dispatch('admin/logout')
+        redirect('/admin')
+      }
     }
-    if (_.has(error.response, 'data.error.message')) {
+    if (_.has(error, 'response.data.error.message')) {
       //console.log({1: 'DEBUG ON AXIOS :  onError Message:', 3: error.response.data.error.message});
       store.commit('snackbar/setSnack', _.get(error, 'response.data.error.message.mobile', error.response.data.error.message))
     } else {
-      console.log({1: 'DEBUG ON AXIOS :  onError:', 3: error.response})
+      console.log({1: 'DEBUG ON AXIOS :  onError:', 3: error.response, error})
     }
   })
 }

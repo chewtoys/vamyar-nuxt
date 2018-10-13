@@ -45,38 +45,39 @@ export const mutations = {
 export const actions = {
   async nuxtServerInit({commit, dispatch}, {$axios, route, redirect, req}) {
     // user
-    let accessToken = null;
-    if (req.headers.cookie) {
-      let parsed = cookieparser.parse(req.headers.cookie);
-      if (parsed.auth) {
-        accessToken = parsed.auth;
-        $axios.setHeader("Authorization", `Bearer ${accessToken}`);
-        try {
-          let {data} = await $axios.$get("/user/details");
-          if (data && data.details && data.details.firstName) {
-            commit("user/updateUserInfo", data)
-          } else if (data) {
-            commit("user/updateUserInfo", data);
-            let path = "/user/profile/edit";
-            if (route.path !== path) redirect(path)
-          } else {
-            return redirect('/user/auth');
+
+    if (!_.startsWith(route.path, '/admin')) {
+      let accessToken = null;
+      if (req.headers.cookie) {
+        let parsed = cookieparser.parse(req.headers.cookie);
+        if (parsed.auth) {
+          accessToken = parsed.auth;
+          $axios.setHeader("Authorization", `Bearer ${accessToken}`);
+          try {
+            let {data} = await $axios.$get("/user/details");
+            if (_.has(data, 'details')) {
+              commit("user/updateUserInfo", data)
+            }
+          } catch (error) {
+            //console.log('AUTH ERROR', error)
+            //return  redirect('/user/auth');
           }
-        } catch (error) {
-          //console.log('AUTH ERROR', error)
-          //return  redirect('/user/auth');
+          commit("user/updateToken", accessToken)
         }
-        commit("user/updateToken", accessToken)
       }
     }
 
+
     //admin
-    let adminAccessToken = null;
-    if (req.headers.cookie) {
-      let parsed = cookieparser.parse(req.headers.cookie);
-      if (parsed.adminauth) {
-        adminAccessToken = parsed.adminauth;
-        commit("admin/updateAdminToken", adminAccessToken)
+
+    if (!!_.startsWith(route.path, '/admin')) {
+      let adminAccessToken = null;
+      if (req.headers.cookie) {
+        let parsed = cookieparser.parse(req.headers.cookie);
+        if (parsed.adminauth) {
+          adminAccessToken = parsed.adminauth;
+          commit("admin/updateAdminToken", adminAccessToken)
+        }
       }
     }
 
@@ -107,7 +108,7 @@ export const actions = {
     // settings resources
     try {
       let settingsData = await this.$axios.$get(settingsMethod);
-      commit('settings/setData', settingsData.data || []);
+      commit('settings/setAndProcessData', settingsData.data || []);
     } catch (error) {
       //console.log(error)
     }
