@@ -33,7 +33,7 @@
           label="سایت باز باشد؟"
         />
         <v-textarea
-          v-if="isSiteOpen"
+          v-if="!isSiteOpen"
           validate="required"
           v-model="closedSiteText"
           :error-messages="errors.collect('closedSiteText')"
@@ -56,7 +56,7 @@
           v-model="headerText"
           :error-messages="errors.collect('headerText')"
           box
-          label="توضیحات فوتر در صفحه ی نخست"
+          label="توضیحات هدر در صفحه ی نخست"
           data-vv-name="headerText"
           auto-grow
         />
@@ -69,18 +69,68 @@
           data-vv-name="subHeaderText"
           auto-grow
         />
-
-
+        <v-textarea
+          validate="required"
+          v-model="noticeOnAdvertShow"
+          :error-messages="errors.collect('noticeOnAdvertShow')"
+          box
+          label="توضیحات در صفحه ی نمایش آگهی"
+          data-vv-name="noticeOnAdvertShow"
+          auto-grow
+        />
+        <v-textarea
+          validate="required"
+          v-model="noticeBeforeCreateAdvert"
+          :error-messages="errors.collect('noticeBeforeCreateAdvert')"
+          box
+          label="توضیحات در صفحه ی ایجاد آگهی"
+          data-vv-name="noticeBeforeCreateAdvert"
+          auto-grow
+        />
+        <v-checkbox
+          v-model="isImageAllowed"
+          box
+          label="افزودن تصویر برای آگهی ها مجاز است؟"
+        />
+        <v-textarea
+          validate="required"
+          v-model="aboutUsText"
+          :error-messages="errors.collect('aboutUsText')"
+          box
+          label="متن صفحه ی درباره ی ما"
+          data-vv-name="aboutUsText"
+          auto-grow
+        />
+        <v-textarea
+          validate="required"
+          v-model="contactUsText"
+          :error-messages="errors.collect('contactUsText')"
+          box
+          label="متن صفحه‌ي تماس با ما"
+          data-vv-name="contactUsText"
+          auto-grow
+        />
+        <v-textarea
+          validate="required"
+          v-model="educationText"
+          :error-messages="errors.collect('educationText')"
+          box
+          label="متن صفحه‌ي آموزش"
+          data-vv-name="educationText"
+          auto-grow
+        />
       </v-card-text>
       <v-card-actions>
-
+        <v-btn outline color="green" round @click="save" :loading="saveLoading" :pending="savePending">
+          ذخیره سازی
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-container>
 </template>
 <script>
   import Helper from '~/assets/js/helper'
-  import UploadInput from '~/components/elements/FileUploader.vue'
+
 
   const SAVE_PATH = '/settings'
   export default {
@@ -94,20 +144,20 @@
         saveLoading: false,
 
         // settings
-        siteTitle: null,
-        siteDescription: null,
-        siteLogo: null,
-        isSiteOpen: null,
-        footerText: null,
-        headerText: null,
-        subHeaderText: null,
-        closedSiteText: null,
-        noticeOnAdvertShow: null,
-        noticeBeforeCreateAdvert: null,
-        isImageAllowed: null,
-        aboutUsText: null,
-        contactUsText: null,
-        educationText: null,
+        siteTitle: '',
+        siteDescription: '',
+        siteLogo: '',
+        isSiteOpen: '',
+        footerText: '',
+        headerText: '',
+        subHeaderText: '',
+        closedSiteText: '',
+        noticeOnAdvertShow: '',
+        noticeBeforeCreateAdvert: '',
+        isImageAllowed: '',
+        aboutUsText: '',
+        contactUsText: '',
+        educationText: '',
 
         // adverts
 
@@ -154,26 +204,54 @@
           _.forEach(Keys, (name) => {
             data[name] = _.get(this, name, null);
           })
-          this.$axios
-            .post(SAVE_PATH,
-              {key: groupKey, value: JSON.stringify(data)}
-            )
-            .then((response) => {
-              let status = true
-              if (status) {
-                // show success and redirect
-                this.$store.commit('snackbar/setSnack', "با موفقیت ثبت شد.", "success")
-              } else {
-                this.$store.commit('snackbar/setSnack', " خطایی رخ داد.", "warning")
-              }
+          if (_.has(this.$store.state.settings.data, groupKey)) {
+            this.$axios
+              .put(SAVE_PATH + '/' + groupKey,
+                {key: groupKey, value: JSON.stringify(data)}
+              )
+              .then((response) => {
+                let status = true
+                if (status) {
+                  // show success and redirect
+                  let fetchData = this.$axios.$get('/settings');
+                  if (_.has(fetchData, 'data')) this.$store.commit('settings/setAndProcessData', fetchData.data)
+                  this.$store.commit('snackbar/setSnack', "با موفقیت ثبت شد.", "success")
+                } else {
+                  this.$store.commit('snackbar/setSnack', " خطایی رخ داد.", "warning")
+                }
+                this.saveLoading = false
+              }).catch((error) => {
               this.saveLoading = false
-            }).catch((error) => {
-            this.saveLoading = false
-          })
+            })
+          } else {
+            this.$axios
+              .post(SAVE_PATH,
+                {key: groupKey, value: JSON.stringify(data)}
+              )
+              .then((response) => {
+                let status = true
+                if (status) {
+                  // show success and redirect
+                  this.$store.commit('snackbar/setSnack', "با موفقیت ثبت شد.", "success")
+                } else {
+                  this.$store.commit('snackbar/setSnack', " خطایی رخ داد.", "warning")
+                }
+                this.saveLoading = false
+              }).catch((error) => {
+              this.saveLoading = false
+            })
+          }
         })
       }
     },
-    components: {UploadInput}
-
+    mounted() {
+      // set initial data
+      let groups = Helper.getGeneralSettingsGroup();
+      _.forEach(groups, (values, groupKey) => {
+        _.forEach(values, (name, value) => {
+          _.set(this, name, _.get(this.$store.state.settings.data, [groupKey, name], ''))
+        })
+      })
+    }
   }
 </script>

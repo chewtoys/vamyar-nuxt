@@ -17,7 +17,6 @@ export const mutations = {
     _.forEach(all, function (obj, key) {
       processed[obj.key] = JSON.parse(obj.value);
     })
-    console.log(processed)
     state.data = processed
   }
 };

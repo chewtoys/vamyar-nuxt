@@ -21,7 +21,13 @@
   export default {
     head() {
       return {
-        title: this.$store.state.navigation.title
+        title: this.$store.state.navigation.title,
+        titleTemplate: 'پنل کاربری ' + _.get(this.$store.state, 'settings.data.site.siteTitle', '') + '- %s ',
+        meta:
+          [
+            {name: 'keywords', content: "حساب کاربری, سایت وامیار, user"},
+            {name: 'description', content: "حساب کاربری سایت وامیار"},
+          ]
       }
     },
     middleware: ["authenticated", "navigation", "userEditProfile"],

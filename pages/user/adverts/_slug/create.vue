@@ -53,9 +53,9 @@
               label="عنوان"
             />
             <v-autocomplete
-              v-if="isAllowed('city') && !allcities"
+              v-if="isAllowed('city') && !allCities"
               v-validate="'required'"
-              v-model="city"
+              v-model="cityName"
               :error-messages="errors.collect('city')"
               box
               label="شهر"
@@ -67,7 +67,7 @@
             </v-autocomplete>
             <v-checkbox
               v-if="isAllowed('city')"
-              v-model="allcities"
+              v-model="allCities"
               box
               label="قابل انتقال به سایر شهر ها می باشد."
             />
@@ -93,12 +93,22 @@
             />
             <v-text-field
               v-if="isAllowed('paybackTime')"
-              v-validate="'alpha'"
+              v-validate="'required'"
               v-model="paybackTime"
               :error-messages="errors.collect('paybackTime')"
               box
               label="بازپرداخت"
               data-vv-name="paybackTime"
+              required
+            />
+            <v-text-field
+              v-if="isAllowed('mobile')"
+              v-validate="'required|digits:11'"
+              v-model="mobile"
+              :error-messages="errors.collect('mobile')"
+              box
+              label="شماره موبایل برای تماس"
+              data-vv-name="mobile"
               required
             />
             <v-textarea
@@ -114,16 +124,29 @@
             <v-combobox
               v-if="isAllowed('guaranteeType')"
               v-validate="'required'"
-              v-model="guaranteeTypeId"
-              :items="guaranteeTypeListItems"
-              :error-messages="errors.collect('guaranteeTypeId')"
+              v-model="guaranteeTypeName"
+              :items="guaranteeTypeList"
+              :error-messages="errors.collect('guaranteeType')"
               box
-              data-vv-name="guaranteeTypeId"
+              data-vv-name="guaranteeType"
               label="نوع ضمانت را مشخص کنید"
               required
               multiple
               chips
             />
+
+            <v-autocomplete
+              v-if="isAllowed('loanType')"
+              v-validate="'required'"
+              v-model="loanTypeName"
+              :error-messages="errors.collect('loanType')"
+              box
+              label="نوع وام را مشخص کنید"
+              data-vv-name="loanType"
+              required
+              :items="loanTypeList"
+              persistent-hint
+            ></v-autocomplete>
             <v-btn :loading="submit_loader" type="submit" outline color="accent" round @click="submit">
               <v-icon class="px-1">save</v-icon>
               ذخیره
@@ -142,7 +165,10 @@
     //guaranteeTypeListPath = "/admin/guaranteeTypes",
     //cityPath = "/admin/cities",
     page_title = "ثبت وام جدید",
-    breadcrumb = "فرم درخواست وام"
+    breadcrumb = "فرم درخواست وام",
+    cityMethod = '/cities?number=3000',
+    guaranteeMethod = '/guaranteeTypes',
+    loanTypeMethod = '/loanTypes'
 
   export default {
     $_veeValidate: {
@@ -159,15 +185,15 @@
 
       // advert
       title: null,
-      city: null,
-      allcities: false,
+      cityName: null,
+      allCities: false,
       text: "",
-      mobile: null,
+      mobile: '',
       image: null,
 
       // this type - loan
-      guaranteeTypeId: null, // hasComputed
-      loanType: null,
+      guaranteeTypeNmae: null, // hasComputed
+      loanTypeName: null,
       paybackTime: null,
       amount: null,
       payback: null,
@@ -183,8 +209,9 @@
           amount: "مبلغ وام",
           price: "قیمت فروش وام",
           paybackTime: "مدت زمان بازپرداخت",
-          guaranteeTypeId: "نوع ضامن",
-          loanType: "نوع وام"
+          guaranteeType: "نوع ضامن",
+          loanType: "نوع وام",
+          mobile: 'شماره تماس'
           // custom attributes
         }
       },
@@ -204,16 +231,58 @@
       list: function () {
         return `${list}/${this.slug}`;
       },
-      guaranteeTypeListItems() {
-        return this.guaranteeTypeList
-      }
+      city: function () {
+        if (this.allCities) return 0;
+        let list = this.$store.state.city.data;
+        let index = _.findIndex(list, {'name': this.cityName});
+        let item = list[index];
+        console.log(item);
+        return _.get(item, 'id', 0);
+      },
+      loanType() {
+        let list = this.$store.state.loanType.data;
+        let index = _.findIndex(list, {'name': this.loanTypeName});
+        let item = list[index];
+        console.log(item);
+        return _.get(item, 'id', 0);
+      },
+      guaranteeType() {
+        console.log('Name', this.guaranteeTypeName);
+        let items = [];
+        let list = this.$store.state.guaranteeType.data;
+        _.forEach(this.guaranteeTypeName, (name) => {
+          let index = _.findIndex(list, {'name': name});
+          let item = list[index];
+          items.push(item.id)
+        })
+        console.log(items);
+        return items || 0;
+      },
     },
-    async asyncData({params, store}) {
+    async asyncData({params, store, $axios}) {
+      try {
+        // city
+        let cityData = await $axios.$get(cityMethod);
+        store.commit('city/setAndProcessData', cityData.data || []);
+
+        // guarantee
+        let guaranteeData = await $axios.$get(guaranteeMethod);
+        store.commit('guaranteeType/setAndProcessData', guaranteeData.data || []);
+
+        // loan types
+        let loanTypeData = await $axios.$get(loanTypeMethod);
+        store.commit('loanType/setAndProcessData', loanTypeData.data || []);
+
+      } catch (error) {
+        console.log('error', error)
+      }
+
       return {
         type: Helper.getTypeByAlias(params.slug),
         slug: params.slug,
-        guaranteeTypeList: store.state.guaranteeType.data, //await this.$axios.get(guaranteeTypeListPath),
-        cities: store.state.city.data
+        guaranteeTypeList: _.get(store.state, 'guaranteeType.arrayList', []),
+        loanTypeList: _.get(store.state, 'loanType.arrayList', []),
+        cities: _.get(store.state, 'city.arrayList', [])
       }
     },
     mounted() {
@@ -234,6 +303,7 @@
         this.$store.commit("snackbar/setSnack", msg, color)
       },
       sendForm() {
+
         let data = {
           title: this.title,
           city: this.city,
@@ -241,7 +311,7 @@
           price: this.price,
           amount: this.amount,
           paybackTime: this.paybackTime,
-          guaranteeTypeId: this.guaranteeTypeId,
+          guaranteeType: this.guaranteeType,
           image: this.image
         }
         this.$axios
@@ -266,6 +336,9 @@
       },
       async submit() {
         this.submit_loader = true
+        let data = Helper.selectDataForSend(this.type.type, this);
+        console.log('Data', this.type.type, data);
+
         this.$validator
           .validateAll()
           .then(result => {

@@ -61,8 +61,16 @@ const Helper = {
   },
   getGeneralSettingsGroup() {
     return CONSTANTS.GENERAL_SETTINGS;
+  },
+  selectDataForSend(type, that) {
+    let fields = _.map(CONSTANTS.filedByType[type]['create'], 'name');
+    //console.log('Fields:', {fields})
+    let all = {};
+    _.forEach(fields, (name) => {
+      _.set(all, name, _.get(that, name, ''))
+    })
+    return all;
   }
 }
-
 
 export default Helper

@@ -1,8 +1,8 @@
 import cookieparser from "cookieparser"
 
 const guaranteeMethod = '/guaranteeTypes',
-  cityMethod = '/cities?number=1000',
   loanTypeMethod = '/loanTypes',
+  cityMethod = '/cities?number=3000',
   settingsMethod = '/settings',
   contactUsMethod = '/site/contact-us',
   aboutUsMethod = '/site/about-us'
@@ -30,8 +30,8 @@ export const state = () => ({
     title: "بدون عنوان",
     breadcrumb: null
   },
-  client_secret: "CbrWpv5DqAnXiduZafBre9ZJHfT23OnDL1Mjur6f",
-  client_id: "3",
+  client_secret: "JrVewPYbCpZU7f4BeMHimyQmMjRSHpiXZJNHSrKi",
+  client_id: 1,
 });
 
 export const mutations = {
@@ -82,17 +82,22 @@ export const actions = {
     }
 
     // city resource
+    /*
+    // used in advert creation
     try {
       let cityData = await this.$axios.$get(cityMethod);
-      commit('city/setData', cityData.data || []);
+      commit('city/setAndProcessData', cityData.data || []);
+      //dispatch('city/makeArrayList');
     } catch (error) {
       //console.log(error)
     }
 
+
     // guarantee resources
+    // used in advert creation
     try {
       let guaranteeData = await this.$axios.$get(guaranteeMethod);
-      commit('guaranteeType/setData', guaranteeData.data || []);
+      commit('guaranteeType/setAndProcessData', guaranteeData.data || []);
     } catch (error) {
       //console.log(error)
     }
@@ -104,7 +109,7 @@ export const actions = {
     } catch (error) {
       //console.log(error)
     }
-
+  */
     // settings resources
     try {
       let settingsData = await this.$axios.$get(settingsMethod);
@@ -112,6 +117,7 @@ export const actions = {
     } catch (error) {
       //console.log(error)
     }
+    /*
     // about us resource
     try {
       let aboutUsData = await this.$axios.$get(aboutUsMethod);
@@ -126,6 +132,7 @@ export const actions = {
     } catch (error) {
       //console.log(error)
     }
+    */
 
   }
 };
