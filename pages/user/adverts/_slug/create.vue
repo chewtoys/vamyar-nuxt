@@ -48,7 +48,6 @@
               v-model="title"
               :error-messages="errors.collect('title')"
               box
-              required
               data-vv-name="title"
               label="عنوان"
             />
@@ -60,7 +59,6 @@
               box
               label="شهر"
               data-vv-name="city"
-              required
               :items="cities"
               persistent-hint
             >
@@ -79,7 +77,6 @@
               box
               label="مقدار وام"
               data-vv-name="amount"
-              required
             />
             <v-text-field
               v-if="isAllowed('price')"
@@ -89,7 +86,7 @@
               box
               label="قیمت وام"
               data-vv-name="price"
-              required
+
             />
             <v-text-field
               v-if="isAllowed('paybackTime')"
@@ -99,7 +96,7 @@
               box
               label="بازپرداخت"
               data-vv-name="paybackTime"
-              required
+
             />
             <v-text-field
               v-if="isAllowed('mobile')"
@@ -109,11 +106,10 @@
               box
               label="شماره موبایل برای تماس"
               data-vv-name="mobile"
-              required
+
             />
             <v-textarea
               v-if="isAllowed('text')"
-              v-validate="'text'"
               v-model="text"
               :error-messages="errors.collect('text')"
               box
@@ -130,7 +126,6 @@
               box
               data-vv-name="guaranteeType"
               label="نوع ضمانت را مشخص کنید"
-              required
               multiple
               chips
             />
@@ -143,7 +138,6 @@
               box
               label="نوع وام را مشخص کنید"
               data-vv-name="loanType"
-              required
               :items="loanTypeList"
               persistent-hint
             ></v-autocomplete>
@@ -161,7 +155,6 @@
   import Helper from '~/assets/js/helper'
 
   const list = "/user/adverts",
-    path = `/user/loan/create`,
     //guaranteeTypeListPath = "/admin/guaranteeTypes",
     //cityPath = "/admin/cities",
     page_title = "ثبت وام جدید",
@@ -192,7 +185,7 @@
       image: null,
 
       // this type - loan
-      guaranteeTypeNmae: null, // hasComputed
+      guaranteeTypeName: null, // hasComputed
       loanTypeName: null,
       paybackTime: null,
       amount: null,
@@ -231,23 +224,23 @@
       list: function () {
         return `${list}/${this.slug}`;
       },
+      createPath: function () {
+        return `/user/${this.slug}`;
+      },
       city: function () {
         if (this.allCities) return 0;
         let list = this.$store.state.city.data;
         let index = _.findIndex(list, {'name': this.cityName});
         let item = list[index];
-        console.log(item);
         return _.get(item, 'id', 0);
       },
       loanType() {
         let list = this.$store.state.loanType.data;
         let index = _.findIndex(list, {'name': this.loanTypeName});
         let item = list[index];
-        console.log(item);
         return _.get(item, 'id', 0);
       },
       guaranteeType() {
-        console.log('Name', this.guaranteeTypeName);
         let items = [];
         let list = this.$store.state.guaranteeType.data;
         _.forEach(this.guaranteeTypeName, (name) => {
@@ -255,7 +248,6 @@
           let item = list[index];
           items.push(item.id)
         })
-        console.log(items);
         return items || 0;
       },
     },
@@ -303,34 +295,24 @@
         this.$store.commit("snackbar/setSnack", msg, color)
       },
       sendForm() {
-
-        let data = {
-          title: this.title,
-          city: this.city,
-          text: this.text,
-          price: this.price,
-          amount: this.amount,
-          paybackTime: this.paybackTime,
-          guaranteeType: this.guaranteeType,
-          image: this.image
-        }
+        let data = Helper.selectDataForSend(this.type.type, this);
         this.$axios
-          .post(path, data)
+          .$post(this.createPath, data)
           .then(() => {
             let status = true
             if (status) {
               // show success and redirect
               this.toast("با موفقیت ثبت شد.", "success")
               this.submit_loader = false
-              this.$router.push("../")
+              //this.$router.push("../")
             } else {
               this.toast(" خطایی رخ داد.", "warning")
               this.submit_loader = false
             }
           })
-          .catch(() => {
+          .catch((error) => {
             // catch and show error
-            this.toast("لطفا خطا ها را بررسی کنید.", "error")
+            this.toast(_.get(error, 'response', {error}), "error")
             this.submit_loader = false
           })
       },
