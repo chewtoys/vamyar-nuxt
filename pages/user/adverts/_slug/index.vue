@@ -21,23 +21,77 @@
         <v-toolbar flat color="white">
           <v-toolbar-title>{{ page_title }}</v-toolbar-title>
           <v-spacer/>
-          <v-btn :to="`${slug}/create`" color="cyan" outline light round class="mb-2">ثبت جدید</v-btn>
+          <v-btn
+            color="red" outline light round class="mb-2"
+            @click="deleteItems">
+            <v-icon
+              class="mx-1"
+              small
+            >delete
+            </v-icon>
+            حذف انتخاب شده ها
+
+          </v-btn>
+          <v-btn :to="uri+`/create`" color="green" outline light round class="mb-2">
+            <v-icon class="mx-1" small>create</v-icon>
+            ثبت جدید
+          </v-btn>
         </v-toolbar>
+        <v-card-title>
+          جست‌و‌جو
+          <v-spacer></v-spacer>
+          <v-text-field
+            v-model="search"
+            append-icon="search"
+            label="چیزی بنویسید"
+            single-line
+            hide-details
+          ></v-text-field>
+        </v-card-title>
+
         <v-data-table
+          v-model="selected"
+          item-key="id"
+          select-all
           :headers="headers"
-          :items="items"
-          :rows-per-page-items="[5,10,25,100]"
+          :items="list"
+          :search="search"
+          :rows-per-page-items="[10,25,100]"
           no-results-text="هیچ موردی ثبت نشده است."
           class="elevation-1"
         >
+          <template slot="headerCell" slot-scope="props">
+            <v-tooltip bottom>
+        <span slot="activator">
+          {{ props.header.text }}
+        </span>
+              <span>
+          {{ props.header.text }}
+        </span>
+            </v-tooltip>
+          </template>
           <template slot="items" slot-scope="props">
+            <td>
+              <v-checkbox
+                v-model="props.selected"
+                primary
+                hide-details
+              ></v-checkbox>
+            </td>
             <td class="text-xs-right">{{ props.item.id }}</td>
-            <td class="text-xs-right">{{ props.item.title }}</td>
-            <td class="text-xs-right">{{ props.item.description }}</td>
+            <td class="text-xs-right">{{ props.item.advert.title }}</td>
+            <td class="text-xs-right">{{ props.item.advert.text }}</td>
             <td class="text-xs-left">{{ props.item.price }}</td>
             <td class="text-xs-left">{{ props.item.amount }}</td>
             <td class="text-xs-left">
-              <a :href=" '/edit/' + props.item.id" class="mx-1">
+              <a title="مشاهده" :href=" uri + '/' + props.item.id" class="mx-1">
+                <v-icon
+                  small
+                >
+                  pageview
+                </v-icon>
+              </a>
+              <a title="ویرایش" :href=" uri + '/edit/' + props.item.id" class="mx-1">
                 <v-icon
                   small
                 >
@@ -47,12 +101,15 @@
               <v-icon
                 class="mx-1"
                 small
-                @click="delete(props.item.id)"
+                @click="deleteItem(props.item.id)"
               >
                 delete
               </v-icon>
             </td>
           </template>
+          <v-alert slot="no-results" :value="true" color="error" icon="warning">
+            نتیجه ای برای "{{ search }}" یافت نشد.
+          </v-alert>
           <template slot="no-data">
             <v-alert type="info">
               <p>هنوز موردی اضافه نشده است. برای افزودن از بالا بر روی جدید کلیک کنید.</p>
@@ -68,9 +125,9 @@
 
   export default {
     data: () => ({
-      // default
-      // info
-
+      slug: '',
+      selected: [],
+      search: '',
       submit_loader: false,
     }),
     async asyncData({params, app, store}) {
@@ -91,7 +148,7 @@
 
       let query = {
         number: store.state.settings.adverts.count,
-        include: "advertable",
+        include: "advert.user.details",
         must
       };
 
@@ -101,7 +158,8 @@
         });
         let loading = false;
         return {
-          items: data,
+          list: data,
+          data,
           breadcrumb,
           page_title,
           paginator,
@@ -112,7 +170,8 @@
       } catch (err) {
         //error({statusCode: 'این صفحه فعال نمی باشد.'})
         return {
-          items: [],
+          list: [],
+          data: [],
           breadcrumb,
           page_title,
           paginator: [],
@@ -123,8 +182,11 @@
       }
     },
     computed: {
+      uri() {
+        return `/user/adverts/${this.slug}`;
+      },
       headers() {
-        return this.rawHeaders
+        return Helper.getRawHeaders(this.type.type);
       },
       info() {
         return {
@@ -134,16 +196,39 @@
     },
     mounted() {
       return {
-        rawHeaders: Helper.getRawHeaders(this.type.type),
         rawData: this.data || []
       }
     },
     methods: {
+      deleteItems() {
+        if (confirm('آیا مطمئن هستید که می خواهید این موارد را حذف کنید؟')) {
+          _.forEach(this.selected, (obj, key) => {
+            this.deleteById(_.get(obj, 'id', ''));
+          })
+        }
+      },
+      deleteItem(id) {
+        if (confirm('آیا مطمئن هستید که می خواهید این مورد را حذف کنید؟')) {
+          this.deleteById(id)
+        }
+      },
+      deleteById: function (id) {
+        let deletePath = `/user/${this.type.type}/${id}`;
+        console.log(deletePath)
+        _.remove(this.data, function (obj) {
+          return _.get(obj, 'id', '') === id;
+        });
+
+        this.$axios.$delete(deletePath).then(() => {
+          this.$store.commit('snackbar/setSnack', 'با موفقیت حذف شد', 'success')
+        }).catch((err) => {
+          this.$store.commit('snackbar/setSnack', _.get(err, 'response.data.error.message', 'مشکلی در حذف کردن پیش آمد'), 'error')
+        })
+      },
       getLink(id) {
         return "/user/loans/" + id
       }
     },
-
     $_veeValidate: {
       validator: "new"
     }

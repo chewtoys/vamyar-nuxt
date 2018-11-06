@@ -25,10 +25,7 @@ export default {
         href:
           "https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"
       },
-      {
-        rel: "stylesheet",
-        href: "https://use.fontawesome.com/releases/v5.0.13/css/all.css"
-      }
+      //{        rel: "stylesheet",        href: "https://use.fontawesome.com/releases/v5.0.13/css/all.css"      }
       // {rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css'},
       // {rel: 'stylesheet', href: 'http://kenwheeler.github.io/slick/slick/slick-theme.css'}
     ],

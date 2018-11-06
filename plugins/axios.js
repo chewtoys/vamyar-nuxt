@@ -9,7 +9,7 @@ export default function ({$axios, store, redirect, route}) {
   }
 
   $axios.setHeader("Content-Type", " application/json");
-  //$axios.setHeader('Accept', 'application/json')
+  $axios.setHeader('Accept', 'application/json')
   //$axios.setHeader('Access-Control-Allow-Origin', '*')
   //
   //'Access-Control-Allow-Origin': '*',

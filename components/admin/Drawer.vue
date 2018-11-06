@@ -60,9 +60,8 @@
   export default {
     data: ({$store}) => ({
       settings: [
-        {title: "اشتراک من", icon: "inbox", to: "/user/premium"},
-        {title: "ویرایش پروفایل", icon: "build", to: "/user/profile/edit"},
-        {title: "خروج", icon: "exit_to_app", to: "/user/logout"}
+        {title: "تنظیمات سایت", icon: "inbox", to: "/settings"},
+        {title: "خروج", icon: "exit_to_app", to: "/admin/logout"}
       ],
       panel: [
         {title: "تیکت ها", icon: "inbox", to: "/user/tickets"},

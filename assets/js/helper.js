@@ -16,13 +16,17 @@ const Helper = {
   getPageTitle: function (title) {
     return "آگهی‌های " + title
   },
-  isFiledAllowByType(type, field, which = 'create') {
-    let fileds = CONSTANTS.filedByType;
-    return _.has(fileds, `${type}.${which}`) ? !!(_.find(fileds[type][which], {'name': field})) : false;
+  isFieldAllowByType(type, field, which = 'create') {
+    let fields = CONSTANTS.fieldByType;
+    return _.has(fields, `${type}.${which}`) ? !!(_.find(fields[type][which], {'name': field})) : false;
   },
-  isFiledAllowByAlias(slug, field, which = 'create') {
+  getFieldByType(type, field, which = 'create') {
+    let fields = CONSTANTS.fieldByType;
+    return _.find(_.get(fields, `${type}.${which}`, {}), {'name': field});
+  },
+  isFieldAllowByAlias(slug, field, which = 'create') {
     let type = this.getTypeByAlias(slug).type;
-    return this.isFiledAllowByType(type, field);
+    return this.isFieldAllowByType(type, field);
   },
   getTypeByAlias: function (alias = null) {
     let types = CONSTANTS.advertAliases
@@ -57,13 +61,13 @@ const Helper = {
     return "تعیین نشده"
   },
   getRawHeaders(type) {
-    return _.get(CONSTANTS.rawHeaders, type, []);
+    return _.get(CONSTANTS.rawHeaders, `${type}`, [{text: 'id'}]);
   },
   getGeneralSettingsGroup() {
     return CONSTANTS.GENERAL_SETTINGS;
   },
   selectDataForSend(type, that) {
-    let fields = _.map(CONSTANTS.filedByType[type]['create'], 'name');
+    let fields = _.map(CONSTANTS.fieldByType[type]['create'], 'name');
     //console.log('Fields:', {fields})
     let all = {};
     _.forEach(fields, (name) => {

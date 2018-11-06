@@ -1,19 +1,19 @@
 // data structure
 export const rawHeaders = {
-    loan: [
+    loans: [
       {
         text: "شناسه",
         align: "right",
         sortable: true,
         value: "id"
       },
-      {text: "عنوان", value: "title", align: "right"},
-      {text: "توضیحات", value: "description", align: "right"},
+      {text: "عنوان", align: "right", value: 'advert.title'},
+      {text: "توضیحات", align: "right", value: 'advert.text'},
       {text: "قیمت", value: "price", align: "left"},
       {text: "مقدار وام", value: "amount", align: "left"},
-      {text: "عملیات", sortable: false, align: "left"}
+      {text: "عملیات", align: "left", value: 'loanTypeId', width: '140px', sortable: false}
     ],
-    loanRequest: [
+    loanRequests: [
       {
         text: "شناسه",
         align: "right",
@@ -29,25 +29,25 @@ export const rawHeaders = {
   },
   advertAliases = {
     "loan-requests": {
-      type: "loanRequest",
+      type: "loanRequests",
       alias: "loan-requests",
       title: "درخواست وام"
     },
-    loans: {type: "loan", alias: "loans", title: "وام"},
+    loans: {type: "loans", alias: "loans", title: "وام"},
     finances: {type: "finance", alias: "finances", title: "سرمایه گذاری"},
     "finance-requests": {
-      type: "financeRequest",
+      type: "financeRequests",
       title: "درخواست سرمایه گذاری"
     },
-    "co-signers": {type: "coSigner", alias: "co-signers", title: "ضامن"},
+    "co-signers": {type: "coSigners", alias: "co-signers", title: "ضامن"},
     "co-signer-requests": {
-      type: "coSignerRequest",
+      type: "coSignerRequests",
       alias: "co-signer-requests",
       title: "درخواست ضامن"
     }
   },
-  filedByType = {
-    loan: {
+  fieldByType = {
+    loans: {
       create: [
         {
           name: 'title',
@@ -65,7 +65,7 @@ export const rawHeaders = {
           name: 'image',
           title: 'تصویر آگهی'
         }, {
-          name: 'guaranteeType',
+          name: 'guaranteeTypes',
           title: 'نوع ضمانت'
         }, {
           name: 'amount',
@@ -82,7 +82,7 @@ export const rawHeaders = {
         },
       ],
     },
-    loanRequest: {
+    loanRequests: {
       create: [
         {
           name: 'title',
@@ -106,18 +106,35 @@ export const rawHeaders = {
           name: 'amount',
           title: 'مقدار وام'
         }, {
-          name: 'price',
-          title: 'مبلغ وام'
-        }, {
           name: 'paybackTime',
           title: 'مدت بازپرداخت'
+        }
+      ],
+    },
+    finances: {
+      create: [
+        {
+          name: 'title',
+          title: 'عنوان'
         }, {
-          name: 'loanType',
-          title: 'نوع وام'
+          name: 'city',
+          title: 'شهر'
+        }, {
+          name: 'text',
+          title: 'توضیح آگهی'
+        }, {
+          name: 'mobile',
+          title: 'موبایل'
+        }, {
+          name: 'image',
+          title: 'تصویر آگهی'
+        }, {
+          name: 'maxAmount',
+          title: 'بیشترین مقدار'
         },
       ],
     },
-    finance: {
+    financeRequests: {
       create: [
         {
           name: 'title',
@@ -135,24 +152,15 @@ export const rawHeaders = {
           name: 'image',
           title: 'تصویر آگهی'
         }, {
-          name: 'guaranteeType',
-          title: 'نوع ضمانت'
+          name: 'job',
+          title: 'شغل'
         }, {
           name: 'amount',
-          title: 'مقدار وام'
-        }, {
-          name: 'price',
-          title: 'مبلغ وام'
-        }, {
-          name: 'paybackTime',
-          title: 'مدت بازپرداخت'
-        }, {
-          name: 'loanType',
-          title: 'نوع وام'
+          title: 'مقدار'
         },
       ],
     },
-    financeRequest: {
+    coSigners: {
       create: [
         {
           name: 'title',
@@ -173,21 +181,12 @@ export const rawHeaders = {
           name: 'guaranteeType',
           title: 'نوع ضمانت'
         }, {
-          name: 'amount',
-          title: 'مقدار وام'
-        }, {
-          name: 'price',
-          title: 'مبلغ وام'
-        }, {
-          name: 'paybackTime',
-          title: 'مدت بازپرداخت'
-        }, {
-          name: 'loanType',
-          title: 'نوع وام'
+          name: 'type',
+          title: 'نوع'
         },
       ],
     },
-    coSigner: {
+    coSignerRequests: {
       create: [
         {
           name: 'title',
@@ -214,78 +213,43 @@ export const rawHeaders = {
           name: 'price',
           title: 'مبلغ وام'
         }, {
-          name: 'paybackTime',
-          title: 'مدت بازپرداخت'
+          name: 'type',
+          title: 'نوع'
         }, {
-          name: 'loanType',
-          title: 'نوع وام'
-        },
-      ],
-    },
-    coSignerRequest: {
-      create: [
-        {
-          name: 'title',
-          title: 'عنوان'
-        }, {
-          name: 'city',
-          title: 'شهر'
-        }, {
-          name: 'text',
-          title: 'توضیح آگهی'
-        }, {
-          name: 'mobile',
-          title: 'موبایل'
-        }, {
-          name: 'image',
-          title: 'تصویر آگهی'
-        }, {
-          name: 'guaranteeType',
-          title: 'نوع ضمانت'
-        }, {
-          name: 'amount',
-          title: 'مقدار وام'
-        }, {
-          name: 'price',
-          title: 'مبلغ وام'
-        }, {
-          name: 'paybackTime',
-          title: 'مدت بازپرداخت'
-        }, {
-          name: 'loanType',
-          title: 'نوع وام'
+          name: 'interestRate',
+          title: ''
         },
       ],
     }
   },
   advertTypes = {
-    loanRequest: {
-      type: "loanRequest",
+    loanRequests: {
+      type: "loanRequests",
       alias: "loan-requests",
       title: "درخواست وام"
     },
-    loan: {
-      type: "loan",
+    loans: {
+      type: "loans",
       alias: "loans",
       title: "وام"
     },
-    finance: {
-      type: "finance",
+    finances: {
+      type: "finances",
       alias: "finances",
       title: "سرمایه گذاری"
     },
-    financeRequest: {
-      type: "financeRequest",
+    financeRequests: {
+      type: "financeRequests",
       alias: "finance-requests",
       title: "درخواست سرمایه گذاری"
     },
-    coSigner: {
-      type: "coSigner",
+    coSigners: {
+      type: "coSigners",
       alias: "co-signers",
       title: "ضامن"
     },
-    coSignerRequest: {
-      type: "coSignerRequest",
+    coSignerRequests: {
+      type: "coSignerRequests",
       alias: "co-signer-requests",
       title: "درخواست ضامن"
     }

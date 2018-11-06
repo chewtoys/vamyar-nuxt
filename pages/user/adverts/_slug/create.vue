@@ -30,7 +30,7 @@
                 <v-icon class="px-1">arrow_right</v-icon>
                 بازگشت
               </v-btn>
-              <v-btn :loading="submit_loader" type="submit" outline color="accent" round @click="submit">
+              <v-btn :loading="submit_loader" outline color="accent" round @click="processSubmit">
                 <v-icon class="px-1">save</v-icon>
                 ذخیره
               </v-btn>
@@ -49,7 +49,7 @@
               :error-messages="errors.collect('title')"
               box
               data-vv-name="title"
-              label="عنوان"
+              :label="getTitle('title')"
             />
             <v-autocomplete
               v-if="isAllowed('city') && !allCities"
@@ -57,7 +57,7 @@
               v-model="cityName"
               :error-messages="errors.collect('city')"
               box
-              label="شهر"
+              :label="getTitle('city')"
               data-vv-name="city"
               :items="cities"
               persistent-hint
@@ -71,30 +71,30 @@
             />
             <v-text-field
               v-if="isAllowed('amount')"
-              v-validate="'required'"
+              v-validate="'required|numeric'"
               v-model="amount"
               :error-messages="errors.collect('amount')"
               box
-              label="مقدار وام"
+              :label="getTitle('amount')"
               data-vv-name="amount"
             />
             <v-text-field
               v-if="isAllowed('price')"
-              v-validate="'required'"
+              v-validate="'required|numeric'"
               v-model="price"
               :error-messages="errors.collect('price')"
               box
-              label="قیمت وام"
+              :label="getTitle('price')"
               data-vv-name="price"
 
             />
             <v-text-field
               v-if="isAllowed('paybackTime')"
-              v-validate="'required'"
+              v-validate="'required|numeric'"
               v-model="paybackTime"
               :error-messages="errors.collect('paybackTime')"
               box
-              label="بازپرداخت"
+              :label="getTitle('paybackTime')"
               data-vv-name="paybackTime"
 
             />
@@ -104,7 +104,7 @@
               v-model="mobile"
               :error-messages="errors.collect('mobile')"
               box
-              label="شماره موبایل برای تماس"
+              :label="getTitle('mobile')"
               data-vv-name="mobile"
 
             />
@@ -113,19 +113,19 @@
               v-model="text"
               :error-messages="errors.collect('text')"
               box
-              label="توضیحات اضافه"
+              :label="getTitle('text')"
               data-vv-name="text"
               auto-grow
             />
             <v-combobox
-              v-if="isAllowed('guaranteeType')"
+              v-if="isAllowed('guaranteeTypes')"
               v-validate="'required'"
-              v-model="guaranteeTypeName"
-              :items="guaranteeTypeList"
-              :error-messages="errors.collect('guaranteeType')"
+              v-model="guaranteeTypesName"
+              :items="guaranteeTypesList"
+              :error-messages="errors.collect('guaranteeTypes')"
               box
-              data-vv-name="guaranteeType"
-              label="نوع ضمانت را مشخص کنید"
+              data-vv-name="guaranteeTypes"
+              :label="getTitle('guaranteeTypes')"
               multiple
               chips
             />
@@ -136,12 +136,12 @@
               v-model="loanTypeName"
               :error-messages="errors.collect('loanType')"
               box
-              label="نوع وام را مشخص کنید"
+              :label="getTitle('loanType')"
               data-vv-name="loanType"
               :items="loanTypeList"
               persistent-hint
             ></v-autocomplete>
-            <v-btn :loading="submit_loader" type="submit" outline color="accent" round @click="submit">
+            <v-btn :loading="submit_loader" outline color="accent" round @click="processSubmit">
               <v-icon class="px-1">save</v-icon>
               ذخیره
             </v-btn>
@@ -157,8 +157,7 @@
   const list = "/user/adverts",
     //guaranteeTypeListPath = "/admin/guaranteeTypes",
     //cityPath = "/admin/cities",
-    page_title = "ثبت وام جدید",
-    breadcrumb = "فرم درخواست وام",
+
     cityMethod = '/cities?number=3000',
     guaranteeMethod = '/guaranteeTypes',
     loanTypeMethod = '/loanTypes'
@@ -167,15 +166,9 @@
     $_veeValidate: {
       validator: "new"
     },
-    meta: {
-      breadcrumb,
-      title: page_title
-    },
 
     data: () => ({
-
-      page_title,
-
+      page_title: 'ثبت جدید',
       // advert
       title: null,
       cityName: null,
@@ -185,7 +178,7 @@
       image: null,
 
       // this type - loan
-      guaranteeTypeName: null, // hasComputed
+      guaranteeTypesName: null, // hasComputed
       loanTypeName: null,
       paybackTime: null,
       amount: null,
@@ -202,7 +195,7 @@
           amount: "مبلغ وام",
           price: "قیمت فروش وام",
           paybackTime: "مدت زمان بازپرداخت",
-          guaranteeType: "نوع ضامن",
+          guaranteeTypes: "نوع ضامن",
           loanType: "نوع وام",
           mobile: 'شماره تماس'
           // custom attributes
@@ -221,11 +214,12 @@
       snack_color: "info"
     }),
     computed: {
+
       list: function () {
         return `${list}/${this.slug}`;
       },
       createPath: function () {
-        return `/user/${this.slug}`;
+        return `/user/${this.type.type}`;
       },
       city: function () {
         if (this.allCities) return 0;
@@ -240,10 +234,10 @@
         let item = list[index];
         return _.get(item, 'id', 0);
       },
-      guaranteeType() {
+      guaranteeTypes() {
         let items = [];
         let list = this.$store.state.guaranteeType.data;
-        _.forEach(this.guaranteeTypeName, (name) => {
+        _.forEach(this.guaranteeTypesName, (name) => {
           let index = _.findIndex(list, {'name': name});
           let item = list[index];
           items.push(item.id)
@@ -252,6 +246,13 @@
       },
     },
     async asyncData({params, store, $axios}) {
+      let slug = params.slug;
+      let type = Helper.getTypeByAlias(slug);
+      const breadcrumb = Helper.getBreadcrumb(type.title),
+        page_title = Helper.getPageTitle(type.title);
+      store.commit("navigation/pushMeta", {breadcrumb, title: page_title});
+      store.commit("navigation/setTitle", page_title);
+
       try {
         // city
         let cityData = await $axios.$get(cityMethod);
@@ -265,14 +266,16 @@
         let loanTypeData = await $axios.$get(loanTypeMethod);
         store.commit('loanType/setAndProcessData', loanTypeData.data || []);
 
+
       } catch (error) {
         console.log('error', error)
       }
 
       return {
-        type: Helper.getTypeByAlias(params.slug),
-        slug: params.slug,
-        guaranteeTypeList: _.get(store.state, 'guaranteeType.arrayList', []),
+        page_title,
+        type,
+        slug,
+        guaranteeTypesList: _.get(store.state, 'guaranteeType.arrayList', []),
         loanTypeList: _.get(store.state, 'loanType.arrayList', []),
         cities: _.get(store.state, 'city.arrayList', [])
       }
@@ -287,9 +290,12 @@
       }
     },
     methods: {
+      getTitle(name, which = 'create') {
+        return _.get(Helper.getFieldByType(this.type.type, name, which), 'title', '-');
+      },
       isAllowed(name, which = 'create') {
         let slug = this.slug;
-        return Helper.isFiledAllowByAlias(slug, name, which);
+        return Helper.isFieldAllowByAlias(slug, name, which);
       },
       toast(msg, color) {
         this.$store.commit("snackbar/setSnack", msg, color)
@@ -313,14 +319,18 @@
           .catch((error) => {
             // catch and show error
             this.toast(_.get(error, 'response', {error}), "error")
+            console.log(1, _.get(error, 'response.data.error', 'no res.data'), 3, _.get(error, 'response.data.error.message', 'no data'))
+            _.forEach(_.get(error, 'response.data.error.message', []), (value, key) => {
+              this.toast(key + '->' + value, "error")
+            })
+
             this.submit_loader = false
           })
       },
-      async submit() {
+      processSubmit() {
         this.submit_loader = true
         let data = Helper.selectDataForSend(this.type.type, this);
         console.log('Data', this.type.type, data);
-
         this.$validator
           .validateAll()
           .then(result => {
