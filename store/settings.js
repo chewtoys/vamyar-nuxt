@@ -1,7 +1,16 @@
 export const state = () => ({
   data: null,
   adverts: {
-    count: 10
+    count: 99999,
+  },
+  tickets: {
+    count: 15,
+    prioritiesArray: ['زیاد','متوسط','کم'],
+    priorities: [
+      {id: 0, name: 'زیاد'},
+      {id: 1, name: 'متوسط'},
+      {id: 2, name: 'کم'},
+    ],
   }
 });
 

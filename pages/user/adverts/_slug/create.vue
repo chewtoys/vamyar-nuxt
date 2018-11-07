@@ -69,6 +69,17 @@
               box
               label="قابل انتقال به سایر شهر ها می باشد."
             />
+
+            <v-text-field
+              v-if="isAllowed('mobile')"
+              v-validate="'required|digits:11'"
+              v-model="mobile"
+              :error-messages="errors.collect('mobile')"
+              box
+              :label="getTitle('mobile')"
+              data-vv-name="mobile"
+
+            />
             <v-text-field
               v-if="isAllowed('amount')"
               v-validate="'required|numeric'"
@@ -98,25 +109,6 @@
               data-vv-name="paybackTime"
 
             />
-            <v-text-field
-              v-if="isAllowed('mobile')"
-              v-validate="'required|digits:11'"
-              v-model="mobile"
-              :error-messages="errors.collect('mobile')"
-              box
-              :label="getTitle('mobile')"
-              data-vv-name="mobile"
-
-            />
-            <v-textarea
-              v-if="isAllowed('text')"
-              v-model="text"
-              :error-messages="errors.collect('text')"
-              box
-              :label="getTitle('text')"
-              data-vv-name="text"
-              auto-grow
-            />
             <v-combobox
               v-if="isAllowed('guaranteeTypes')"
               v-validate="'required'"
@@ -129,7 +121,33 @@
               multiple
               chips
             />
-
+            <v-text-field
+              v-if="isAllowed('interestRate')"
+              v-validate="'required|numeric'"
+              v-model="interestRate"
+              :error-messages="errors.collect('interestRate')"
+              box
+              :label="getTitle('interestRate')"
+              data-vv-name="interestRate"
+            />
+            <v-text-field
+              v-if="isAllowed('maxAmount')"
+              v-validate="'required|numeric'"
+              v-model="maxAmount"
+              :error-messages="errors.collect('maxAmount')"
+              box
+              :label="getTitle('maxAmount')"
+              data-vv-name="maxAmount"
+            />
+            <v-text-field
+              v-if="isAllowed('job')"
+              v-validate="'required'"
+              v-model="job"
+              :error-messages="errors.collect('job')"
+              box
+              :label="getTitle('job')"
+              data-vv-name="job"
+            />
             <v-autocomplete
               v-if="isAllowed('loanType')"
               v-validate="'required'"
@@ -141,6 +159,27 @@
               :items="loanTypeList"
               persistent-hint
             ></v-autocomplete>
+            <v-autocomplete
+              v-if="isAllowed('type')"
+              v-validate="'required'"
+              v-model="type"
+              :error-messages="errors.collect('type')"
+              box
+              :label="getTitle('type')"
+              data-vv-name="type"
+              :items="['بانک','دادگاه']"
+              persistent-hint
+            ></v-autocomplete>
+
+            <v-textarea
+              v-if="isAllowed('text')"
+              v-model="text"
+              :error-messages="errors.collect('text')"
+              box
+              :label="getTitle('text')"
+              data-vv-name="text"
+              auto-grow
+            />
             <v-btn :loading="submit_loader" outline color="accent" round @click="processSubmit">
               <v-icon class="px-1">save</v-icon>
               ذخیره
@@ -184,6 +223,10 @@
       amount: null,
       payback: null,
       price: null,
+      type: null,
+      interestRate: null,
+      maxAmount: null,
+      job: null,
 
       // validator dictionary
       dictionary: {
@@ -219,7 +262,7 @@
         return `${list}/${this.slug}`;
       },
       createPath: function () {
-        return `/user/${this.type.type}`;
+        return `/user/${this.formType.type}`;
       },
       city: function () {
         if (this.allCities) return 0;
@@ -247,9 +290,9 @@
     },
     async asyncData({params, store, $axios}) {
       let slug = params.slug;
-      let type = Helper.getTypeByAlias(slug);
-      const breadcrumb = Helper.getBreadcrumb(type.title),
-        page_title = Helper.getPageTitle(type.title);
+      let formType = Helper.getTypeByAlias(slug);
+      const breadcrumb = Helper.getBreadcrumb(formType.title),
+        page_title = Helper.getPageTitle(formType.title);
       store.commit("navigation/pushMeta", {breadcrumb, title: page_title});
       store.commit("navigation/setTitle", page_title);
 
@@ -273,7 +316,7 @@
 
       return {
         page_title,
-        type,
+        formType,
         slug,
         guaranteeTypesList: _.get(store.state, 'guaranteeType.arrayList', []),
         loanTypeList: _.get(store.state, 'loanType.arrayList', []),
@@ -291,7 +334,7 @@
     },
     methods: {
       getTitle(name, which = 'create') {
-        return _.get(Helper.getFieldByType(this.type.type, name, which), 'title', '-');
+        return _.get(Helper.getFieldByType(this.formType.type, name, which), 'title', '-');
       },
       isAllowed(name, which = 'create') {
         let slug = this.slug;
@@ -301,7 +344,7 @@
         this.$store.commit("snackbar/setSnack", msg, color)
       },
       sendForm() {
-        let data = Helper.selectDataForSend(this.type.type, this);
+        let data = Helper.selectDataForSend(this.formType.type, this);
         this.$axios
           .$post(this.createPath, data)
           .then(() => {
@@ -310,7 +353,7 @@
               // show success and redirect
               this.toast("با موفقیت ثبت شد.", "success")
               this.submit_loader = false
-              //this.$router.push("../")
+              this.$router.push(this.list)
             } else {
               this.toast(" خطایی رخ داد.", "warning")
               this.submit_loader = false
@@ -318,19 +361,20 @@
           })
           .catch((error) => {
             // catch and show error
-            this.toast(_.get(error, 'response', {error}), "error")
-            console.log(1, _.get(error, 'response.data.error', 'no res.data'), 3, _.get(error, 'response.data.error.message', 'no data'))
-            _.forEach(_.get(error, 'response.data.error.message', []), (value, key) => {
-              this.toast(key + '->' + value, "error")
-            })
-
+            this.toast(_.get(error, 'response.data.error.message', {error}), "error")
+            //console.log(1, _.get(error, 'response.data.error', 'no res.data'), 3, _.get(error, 'response.data.error.message', 'no data'))
+            if (_.isArray(_.get(error, 'response.data.error.message', ''))) {
+              _.forEach(_.get(error, 'response.data.error.message', []), (value, key) => {
+                this.toast(value, "error")
+              })
+            }
             this.submit_loader = false
           })
       },
       processSubmit() {
         this.submit_loader = true
-        let data = Helper.selectDataForSend(this.type.type, this);
-        console.log('Data', this.type.type, data);
+        let data = Helper.selectDataForSend(this.formType.type, this);
+        console.log('Data', this.formType.type, data);
         this.$validator
           .validateAll()
           .then(result => {

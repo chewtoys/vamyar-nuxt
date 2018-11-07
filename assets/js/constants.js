@@ -1,12 +1,6 @@
 // data structure
 export const rawHeaders = {
     loans: [
-      {
-        text: "شناسه",
-        align: "right",
-        sortable: true,
-        value: "id"
-      },
       {text: "عنوان", align: "right", value: 'advert.title'},
       {text: "توضیحات", align: "right", value: 'advert.text'},
       {text: "قیمت", value: "price", align: "left"},
@@ -25,7 +19,19 @@ export const rawHeaders = {
       {text: "قیمت", value: "price", align: "left"},
       {text: "مقدار وام", value: "amount", align: "left"},
       {text: "عملیات", sortable: false, align: "left"}
-    ]
+    ],
+    finances: [
+      {
+        text: "شناسه",
+        align: "right",
+        sortable: true,
+        value: "id"
+      },
+      {text: "عنوان", align: "right", value: 'advert.title'},
+      {text: "حداکثر سرمایه", value: "maxAmount", align: "left"},
+      {text: "توضیحات", align: "right", value: 'advert.text'},
+      {text: "عملیات", align: "left", value: 'loanTypeId', width: '140px', sortable: false}
+    ],
   },
   advertAliases = {
     "loan-requests": {
@@ -34,7 +40,7 @@ export const rawHeaders = {
       title: "درخواست وام"
     },
     loans: {type: "loans", alias: "loans", title: "وام"},
-    finances: {type: "finance", alias: "finances", title: "سرمایه گذاری"},
+    finances: {type: "finances", alias: "finances", title: "سرمایه گذاری"},
     "finance-requests": {
       type: "financeRequests",
       title: "درخواست سرمایه گذاری"
@@ -100,7 +106,7 @@ export const rawHeaders = {
           name: 'image',
           title: 'تصویر آگهی'
         }, {
-          name: 'guaranteeType',
+          name: 'guaranteeTypes',
           title: 'نوع ضمانت'
         }, {
           name: 'amount',
@@ -130,7 +136,7 @@ export const rawHeaders = {
           title: 'تصویر آگهی'
         }, {
           name: 'maxAmount',
-          title: 'بیشترین مقدار'
+          title: 'سقف پرداخت سرمایه'
         },
       ],
     },
@@ -156,7 +162,7 @@ export const rawHeaders = {
           title: 'شغل'
         }, {
           name: 'amount',
-          title: 'مقدار'
+          title: 'مقدار سرمایه درخواستی'
         },
       ],
     },
@@ -178,11 +184,11 @@ export const rawHeaders = {
           name: 'image',
           title: 'تصویر آگهی'
         }, {
-          name: 'guaranteeType',
-          title: 'نوع ضمانت'
+          name: 'guaranteeTypes',
+          title: 'نوع ضامن'
         }, {
           name: 'type',
-          title: 'نوع'
+          title: 'نوع ضمانت'
         },
       ],
     },
@@ -204,8 +210,8 @@ export const rawHeaders = {
           name: 'image',
           title: 'تصویر آگهی'
         }, {
-          name: 'guaranteeType',
-          title: 'نوع ضمانت'
+          name: 'guaranteeTypes',
+          title: 'نوع ضامن'
         }, {
           name: 'amount',
           title: 'مقدار وام'
@@ -214,10 +220,10 @@ export const rawHeaders = {
           title: 'مبلغ وام'
         }, {
           name: 'type',
-          title: 'نوع'
+          title: 'نوع ضمانت'
         }, {
           name: 'interestRate',
-          title: ''
+          title: 'سود'
         },
       ],
     }

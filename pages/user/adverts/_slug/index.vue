@@ -30,7 +30,6 @@
             >delete
             </v-icon>
             حذف انتخاب شده ها
-
           </v-btn>
           <v-btn :to="uri+`/create`" color="green" outline light round class="mb-2">
             <v-icon class="mx-1" small>create</v-icon>
@@ -57,19 +56,9 @@
           :items="list"
           :search="search"
           :rows-per-page-items="[10,25,100]"
-          no-results-text="هیچ موردی ثبت نشده است."
           class="elevation-1"
         >
-          <template slot="headerCell" slot-scope="props">
-            <v-tooltip bottom>
-        <span slot="activator">
-          {{ props.header.text }}
-        </span>
-              <span>
-          {{ props.header.text }}
-        </span>
-            </v-tooltip>
-          </template>
+
           <template slot="items" slot-scope="props">
             <td>
               <v-checkbox
@@ -78,13 +67,12 @@
                 hide-details
               ></v-checkbox>
             </td>
-            <td class="text-xs-right">{{ props.item.id }}</td>
             <td class="text-xs-right">{{ props.item.advert.title }}</td>
             <td class="text-xs-right">{{ props.item.advert.text }}</td>
             <td class="text-xs-left">{{ props.item.price }}</td>
             <td class="text-xs-left">{{ props.item.amount }}</td>
             <td class="text-xs-left">
-              <a title="مشاهده" :href=" uri + '/' + props.item.id" class="mx-1">
+              <a title="مشاهده" :href=" uri + '/show/' + props.item.id" class="mx-1">
                 <v-icon
                   small
                 >
@@ -107,9 +95,6 @@
               </v-icon>
             </td>
           </template>
-          <v-alert slot="no-results" :value="true" color="error" icon="warning">
-            نتیجه ای برای "{{ search }}" یافت نشد.
-          </v-alert>
           <template slot="no-data">
             <v-alert type="info">
               <p>هنوز موردی اضافه نشده است. برای افزودن از بالا بر روی جدید کلیک کنید.</p>
@@ -221,6 +206,7 @@
 
         this.$axios.$delete(deletePath).then(() => {
           this.$store.commit('snackbar/setSnack', 'با موفقیت حذف شد', 'success')
+          this.selected = [];
         }).catch((err) => {
           this.$store.commit('snackbar/setSnack', _.get(err, 'response.data.error.message', 'مشکلی در حذف کردن پیش آمد'), 'error')
         })
