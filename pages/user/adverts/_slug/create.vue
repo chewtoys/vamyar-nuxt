@@ -72,7 +72,7 @@
 
             <v-text-field
               v-if="isAllowed('mobile')"
-              v-validate="'required|digits:11'"
+              v-validate="'numeric'"
               v-model="mobile"
               :error-messages="errors.collect('mobile')"
               box
@@ -162,12 +162,12 @@
             <v-autocomplete
               v-if="isAllowed('type')"
               v-validate="'required'"
-              v-model="type"
+              v-model="typeName"
               :error-messages="errors.collect('type')"
               box
               :label="getTitle('type')"
               data-vv-name="type"
-              :items="['بانک','دادگاه']"
+              :items="typeList"
               persistent-hint
             ></v-autocomplete>
 
@@ -223,7 +223,7 @@
       amount: null,
       payback: null,
       price: null,
-      type: null,
+      typeName: null,
       interestRate: null,
       maxAmount: null,
       job: null,
@@ -277,6 +277,12 @@
         let item = list[index];
         return _.get(item, 'id', 0);
       },
+      type() {
+        let list = this.$store.state.settings.coSigner.types;
+        let index = _.findIndex(list, {'name': this.typeName});
+        let item = list[index];
+        return _.get(item, 'id', 0);
+      },
       guaranteeTypes() {
         let items = [];
         let list = this.$store.state.guaranteeType.data;
@@ -311,7 +317,7 @@
 
 
       } catch (error) {
-        console.log('error', error)
+        //console.log('error', error)
       }
 
       return {
@@ -320,6 +326,7 @@
         slug,
         guaranteeTypesList: _.get(store.state, 'guaranteeType.arrayList', []),
         loanTypeList: _.get(store.state, 'loanType.arrayList', []),
+        typeList: _.get(store.state, 'settings.coSigner.typeArray', []),
         cities: _.get(store.state, 'city.arrayList', [])
       }
     },
@@ -361,12 +368,14 @@
           })
           .catch((error) => {
             // catch and show error
-            this.toast(_.get(error, 'response.data.error.message', {error}), "error")
+
             //console.log(1, _.get(error, 'response.data.error', 'no res.data'), 3, _.get(error, 'response.data.error.message', 'no data'))
-            if (_.isArray(_.get(error, 'response.data.error.message', ''))) {
+            if (_.isObject(_.get(error, 'response.data.error.message', ''))) {
               _.forEach(_.get(error, 'response.data.error.message', []), (value, key) => {
                 this.toast(value, "error")
               })
+            } else {
+              this.toast(_.get(error, 'response.data.error.message', {error}), "error")
             }
             this.submit_loader = false
           })
@@ -374,7 +383,7 @@
       processSubmit() {
         this.submit_loader = true
         let data = Helper.selectDataForSend(this.formType.type, this);
-        console.log('Data', this.formType.type, data);
+        //console.log('Data', this.formType.type, data);
         this.$validator
           .validateAll()
           .then(result => {

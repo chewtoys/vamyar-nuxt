@@ -201,7 +201,7 @@
               // show success and redirect
               this.toast("با موفقیت ثبت شد.", "success")
               this.submit_loader = false
-              //this.$router.push("../")
+              this.$router.push(indexPath)
             } else {
               this.toast(" خطایی رخ داد.", "warning")
               this.submit_loader = false

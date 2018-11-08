@@ -1,10 +1,11 @@
 <template>
-  <div>
-    <h2>LIST</h2>
-  </div>
+  <div>all</div>
 </template>
 <script>
-export default {
-  layout: "admin"
-}
+  export default {
+    meta: {
+      'title': 'تمام آگهی هاي ثبت شده',
+      'breadcrumb': 'همه‌ی آگهی ها'
+    }
+  }
 </script>

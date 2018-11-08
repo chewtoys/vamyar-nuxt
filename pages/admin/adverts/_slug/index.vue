@@ -54,6 +54,8 @@
           select-all
           :headers="headers"
           :items="list"
+          :pagination.sync="pagination"
+          :total-items="totalData"
           :search="search"
           :rows-per-page-items="[10,25,100]"
           class="elevation-1"
@@ -119,6 +121,9 @@
             </v-alert>
           </template>
         </v-data-table>
+        <div class="text-xs-center pt-2">
+          <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
+        </div>
       </div>
     </v-card>
   </div>
@@ -133,82 +138,45 @@
 
   export default {
     data: () => ({
+      list: [],
+      totalData: 10,
+      pagination: {page: 1}, //pagination is for vuetify - paginator is for API
+      paginator: {totalPages: 1}, //pagination is for vuetify - paginator is for API
       slug: '',
       selected: [],
       search: '',
       submit_loader: false,
     }),
-    async asyncData({params, app, store,$axios}) {
-
-      // guarantee
-      let guaranteeData = await $axios.$get(guaranteeMethod);
-      store.commit('guaranteeType/setAndProcessData', guaranteeData.data || []);
-
-      // loan types
-      let loanTypeData = await $axios.$get(loanTypeMethod);
-      store.commit('loanType/setAndProcessData', loanTypeData.data || []);
-
-
+    async asyncData({params, app, store, $axios}) {
       let slug = params.slug;
       let type = Helper.getTypeByAlias(slug);
       const breadcrumb = Helper.getBreadcrumb(type.title),
         page_title = Helper.getPageTitle(type.title);
       store.commit("navigation/pushMeta", {breadcrumb, title: page_title});
       store.commit("navigation/setTitle", page_title);
-
-      let method = `/user/${type.type}`;
-      let advertableType;
-      let filter;
-      let orderBy = 'id:desc';
-      let cursor = 0;
-
-      if (!advertableType) {
-        advertableType = type.advertType
-      }
-      if (!filter) {
-        filter = "verified=true"
-      }
-
-      let query = {
-        number: store.state.settings.adverts.count,
-        include: "advert.user.details",
-        //filter,
-        advertableType,
-        orderBy
-      };
-
       try {
-        let {data, paginator} = await app.$axios.$get(method, {
-          params: query
-        });
-        let loading = false;
-        return {
-          list: data,
-          data,
-          breadcrumb,
-          page_title,
-          paginator,
-          loading,
-          type,
-          slug
-        }
+        // guarantee
+        let guaranteeData = await $axios.$get(guaranteeMethod);
+        store.commit('guaranteeType/setAndProcessData', guaranteeData.data || []);
+        // loan types
+        let loanTypeData = await $axios.$get(loanTypeMethod);
+        store.commit('loanType/setAndProcessData', loanTypeData.data || []);
       } catch (err) {
         //error({statusCode: 'این صفحه فعال نمی باشد.'})
-        return {
-          list: [],
-          data: [],
-          breadcrumb,
-          page_title,
-          paginator: [],
-          loading: false,
-          type,
-          slug
-        }
+      }
+      return {
+        breadcrumb,
+        page_title,
+        type,
+        slug
       }
     },
     computed: {
+      pages() {
+        return _.get(this, 'paginator.totalPages', 1)
+      },
       uri() {
-        return `/user/adverts/${this.slug}`;
+        return `/admin/adverts/${this.slug}`;
       },
       headers() {
         return Helper.getRawHeaders(this.type.type);
@@ -220,9 +188,42 @@
       }
     },
     mounted() {
-      return {
-        rawData: this.data || []
+      this.pagination = {
+        sortBy: 'id',
+        descending: true,
+        rowsPerPage: 25,
       }
+    },
+    watch: {
+      pagination: {
+        handler() {
+          this.loading = true;
+          let method = this.uri;
+          let {sortBy, descending, page, rowsPerPage} = this.pagination;
+          let query = {
+            page,
+            orderBy: `${sortBy || 'id'}:${descending ? 'desc' : 'asc'}`,
+            number: rowsPerPage
+          }
+          //console.log({method, query, paginator: this.paginator}, {sortBy, descending, page, rowsPerPage});
+          this.$axios.$get(method, {
+            params: query
+          }).then((response) => {
+
+            this.paginator = _.get(response, 'paginator', {})
+            this.list = _.get(response, 'data', [])
+            this.totalData = _.get(response, 'paginator.totalCount', 0)
+
+            //  console.log('on response: ', this.totalData, this.paginator, this.data, {response})
+          }).catch((error) => {
+            //console.log(error, method, query, this.paginator);
+
+          }).then(() => {
+            this.loading = false;
+          })
+        },
+        deep: true
+      },
     },
     methods: {
       getGuaranteeTypes(key) {
@@ -254,7 +255,7 @@
         }
       },
       deleteById: function (id) {
-        let deletePath = `/user/${this.type.type}/${id}`;
+        let deletePath = `/admin/${this.type.type}/${id}`;
         _.remove(this.data, function (obj) {
           return _.get(obj, 'id', '') === id;
         });
@@ -265,9 +266,6 @@
         }).catch((err) => {
           this.$store.commit('snackbar/setSnack', _.get(err, 'response.data.error.message', 'مشکلی در حذف کردن پیش آمد'), 'error')
         })
-      },
-      getLink(id) {
-        return "/user/loans/" + id
       }
     },
     $_veeValidate: {

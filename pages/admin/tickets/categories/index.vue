@@ -50,9 +50,11 @@
             ></v-text-field>
           </div>
         </v-card-title>
+
         <v-data-table
           v-model="selected"
           item-key="id"
+
           select-all
           :headers="headers"
           :items="data"
@@ -60,7 +62,7 @@
           :search="search"
           :pagination.sync="pagination"
           :total-items="totalData"
-          :rows-per-page-items="[10,25,100]"
+          :rows-per-page-items="[5,10,25,100]"
           no-results-text="هیچ موردی ثبت نشده است."
           class="elevation-1"
         >
@@ -84,20 +86,16 @@
             </td>
             <td class="text-xs-right">{{ props.item.id }}</td>
             <td class="text-xs-right">
-              <nuxt-link :to="uri + '/show/' + props.item.id">{{ props.item.title || '-' }}</nuxt-link>
+              <nuxt-link :to="uri + '/edit/' + props.item.id">{{ props.item.name || '-' }}</nuxt-link>
             </td>
-            <td class="text-xs-right">{{ priority(props.item.priority) }}</td>
-            <td class="text-xs-right">{{ category(props.item.categoryId) }}</td>
-            <td class="text-xs-right">{{ status(props.item.status) }}</td>
-            <td class="text-xs-right">{{ props.item.jUpdatedAt }}</td>
             <td class="text-xs-left">
-              <a title="مشاهده و پاسخ" :href=" uri + '/show/' + props.item.id" class="mx-1">
+              <nuxt-link title="مشاهده و پاسخ" :to=" uri + '/edit/' + props.item.id" class="mx-1">
                 <v-icon
                   small
                 >
-                  reply
+                  edit
                 </v-icon>
-              </a>
+              </nuxt-link>
               <v-icon
                 class="mx-1"
                 small
@@ -121,19 +119,15 @@
 <script>
   import Helper from "~/assets/js/helper.js"
 
-  const page_title = 'تیکت های من',
+  const page_title = 'دسته بندی های تیکت',
     ticketCategoriesMethod = '/ticketCategories',
-    breadcrumb = 'لیست',
-    indexPath = '/user/tickets',
-    createPath = '/user/tickets/create',
+    breadcrumb = 'لیست دسته بندی ها',
+    indexPath = '/admin/ticketCategories',
+    createPath = '/admin/tickets/categories/create',
     headers = [
-      {text: 'شناسه', value: 'id', align: 'right'},
-      {text: 'عنوان', value: 'title', align: 'right'},
-      {text: 'اهمیت', value: 'priority', align: 'right'},
-      {text: 'دسته بندی', sortable: false, align: 'right'},
-      {text: 'وضعیت', value: 'status', sortable: true, align: 'right'},
-      {text: 'بروزرسانی', value: 'jUpdatedAt', sortable: true, align: 'right'},
-      {text: 'عملیات', sortable: false, align: 'left'},
+      {text: '‌شناسه', value: 'id', align: 'right'},
+      {text: 'عنوان', value: 'name', align: 'right'},
+      {text: 'عملیات', sortable: false, align: 'left', width: '140px'},
     ]
 
   export default {
@@ -142,9 +136,8 @@
       breadcrumb: breadcrumb
     },
     data: () => ({
-
       data: [],
-      totalData: 0,
+      totalData: 10,
       loading: true,
       pagination: {page: 1}, //pagination is for vuetify - paginator is for API
       paginator: {totalPages: 1}, //pagination is for vuetify - paginator is for API
@@ -157,17 +150,17 @@
         return _.get(this.paginator, 'totalPages', 1)
       },
       uri() {
-        return `/user/tickets`;
+        return `/admin/tickets/categories`;
       },
       headers() {
         return headers;
       }
     },
     mounted() {
-      return this.pagination = {
+      this.pagination = {
         sortBy: 'id',
         descending: true,
-        rowsPerPage: _.get(this.$store.state.settings, 'tickets.count', 10)
+        rowsPerPage: 25,
       }
     },
     watch: {
@@ -200,7 +193,6 @@
         },
         deep: true
       },
-
     },
     async asyncData({params, store, $axios}) {
       try {
@@ -214,18 +206,10 @@
     }
     ,
     methods: {
-      priority(id) {
-        return _.get(this.$store.state.settings.tickets.prioritiesArray, id, '')
-      },
+
       category(id) {
         let list = this.$store.state.ticketCategory.data;
         let index = _.findIndex(list, {id});
-        let item = list[index];
-        return _.get(item, 'name', '');
-      },
-      status(key) {
-        let list = this.$store.state.settings.tickets.ticketStatus;
-        let index = _.findIndex(list, {id: key});
         let item = list[index];
         return _.get(item, 'name', '');
       },
@@ -242,7 +226,7 @@
         }
       },
       deleteById: function (id) {
-        let deletePath = `/user/tickets/${id}`;
+        let deletePath = `/admin/ticketCategories/${id}`;
         //console.log(deletePath)
         _.remove(this.data, function (obj) {
           return _.get(obj, 'id', '') === id;
@@ -254,9 +238,6 @@
         }).catch((err) => {
           this.$store.commit('snackbar/setSnack', _.get(err, 'response.data.error.message', 'مشکلی در حذف کردن پیش آمد'), 'error')
         })
-      },
-      getLink(id) {
-        return "/user/tickets/" + id
       }
     }
   }

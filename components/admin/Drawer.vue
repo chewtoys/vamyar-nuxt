@@ -50,6 +50,27 @@
 
         </v-list-tile>
       </v-list-group>
+      <v-divider/>
+      <v-list-group
+        v-if="true"
+        group
+        value="false"
+        no-action
+      >
+        <v-list-tile slot="activator">
+          <v-list-tile-title class="text-justify rtl">مدیریت</v-list-tile-title>
+        </v-list-tile>
+        <v-list-tile
+          v-for="item in adminSection"
+          :key="item.title"
+          :to="item.to"
+        >
+          <v-list-tile-action>
+            <v-icon v-text="item.icon"/>
+          </v-list-tile-action>
+          <v-list-tile-title class="text-justify rtl" v-text="item.title"/>
+        </v-list-tile>
+      </v-list-group>
     </v-list>
   </v-navigation-drawer>
 
@@ -64,8 +85,15 @@
         {title: "خروج", icon: "exit_to_app", to: "/admin/logout"}
       ],
       panel: [
-        {title: "تیکت ها", icon: "inbox", to: "/user/tickets"},
+        {title: "تیکت ها", icon: "inbox", to: "/admin/tickets"},
+        {title: "دسته بندی تیکت ها", icon: "inbox", to: "/admin/tickets/categories"},
+        {title: "لاگ کاربران", icon: "inbox", to: "/user/logs"},
         {title: "کل فاکتورها", icon: "inbox", to: "/user/factors"}
+        //{title: 'صندوق پیام ها', icon: 'inbox', to: '/user/settings'},
+      ],
+      adminSection: [
+        {title: "مدیرها", icon: "inbox", to: "/admin/admins"},
+        {title: "دسته بندی تیکت ها", icon: "inbox", to: "/admin/tickets/categories"},
         //{title: 'صندوق پیام ها', icon: 'inbox', to: '/user/settings'},
       ],
       access: [

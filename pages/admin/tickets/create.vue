@@ -1,71 +1,22 @@
 <template>
   <v-container grid-list-xs fluid>
     <v-card color="white" raised light class="py-5 px-4">
-      <v-card-title>
-
-        <h4>
-          <v-icon small class="pb-1 px-1">reply</v-icon>
-          مشاهده و پاسخ به تیکت
-        </h4>
-        <v-spacer></v-spacer>
-        <v-btn :to="indexPath" outline color="primary" round>
-          <v-icon class="px-1">arrow_right</v-icon>
-          بازگشت
-        </v-btn>
-      </v-card-title>
-      <v-divider class="my-3"/>
-      <v-card-text>
-        <v-toolbar flat>
-          <h3>
-            <v-icon small class="mx-1 pb-2 px-1">help</v-icon>
-            {{list.title || 'بدون عنوان' }}
-          </h3>
-          <v-spacer></v-spacer>
-          <small>
-            <v-icon small>
-              arrow_left
-            </v-icon>
-            {{list.jCreatedAt }}
-            <br/>
-            <v-icon small>
-              arrow_left
-            </v-icon>
-            درجه اهمیت: {{priority}}
-            <br/>
-            <v-icon small>
-              arrow_left
-            </v-icon>
-            دسته بندی: {{category}}
-          </small>
-        </v-toolbar>
-        <div class="py-4 px-3 font-14 text-justify">{{ list.message }}</div>
-
-      </v-card-text>
-    </v-card>
-
-    <v-card color="white" v-for="item in list.comments" :key="item.id" raised light class="my-3 py-5 px-4">
       <v-layout row>
         <v-flex xs12 md12 sm12 lg12>
-          <v-toolbar flat :color="item.adminId ? 'success lighten-4' : 'info lighten-2'">
-            <h5>
-              <v-icon small class=" pb-1  px-1">{{item.adminId ? 'star' : 'account_circle'}}</v-icon>
-              {{item.adminId ? 'پاسخ پشتیبان' : 'پاسخ شما'}}
-            </h5>
-            <v-spacer></v-spacer>
-            <small>
-              <v-icon class="pb-1" small>
-                date_range
-              </v-icon>
-              {{item.jCreatedAt }}
-            </small>
-          </v-toolbar>
+          <v-alert
+            :value="true"
+            color="info"
+            icon="info"
+          >{{ info.title }}
+          </v-alert>
           <v-divider class="my-3"/>
-          <div class="font-14 text-justify">{{ item.text }}</div>
+          <v-card dark color="green darken-1" class="pa-3 font-12">
+            <p class="font-14 text-justify">{{ info.text }}</p>
+          </v-card>
         </v-flex>
       </v-layout>
     </v-card>
-
-    <v-card v-if="list.status<2" color="white" raised light class="my-5 py-5 px-4">
+    <v-card color="white" raised light class="mt-5 py-5 px-4">
       <v-layout row wrap>
         <v-flex xs12>
           <div>
@@ -75,10 +26,13 @@
                 {{ page_title }}
               </v-toolbar-title>
               <v-spacer/>
-
+              <v-btn :to="list" outline color="primary" round>
+                <v-icon class="px-1">arrow_right</v-icon>
+                بازگشت
+              </v-btn>
               <v-btn :loading="submit_loader" outline color="accent" round @click="processSubmit">
                 <v-icon class="px-1">save</v-icon>
-                ارسال پاسخ
+                ذخیره
               </v-btn>
             </v-toolbar>
           </div>
@@ -88,31 +42,59 @@
         <v-divider class="my-3"/>
         <v-flex xs12 md12 sm12 lg12>
           <form>
+            <v-text-field
+              v-validate="'required'"
+              v-model="title"
+              :error-messages="errors.collect('title')"
+              box
+              data-vv-name="title"
+              label="عنوان"
+            />
+            <v-autocomplete
+              v-validate="'required'"
+              v-model="ticketCategoryName"
+              :error-messages="errors.collect('ticketCategory')"
+              box
+              label="دسته بندی"
+              data-vv-name="ticketCategory"
+              :items="ticketCategoryList"
+              persistent-hint
+            ></v-autocomplete>
+            <v-autocomplete
+              v-validate="'required'"
+              v-model="priorityName"
+              :error-messages="errors.collect('priority')"
+              box
+              label="اهمیت"
+              data-vv-name="priority"
+              :items="priorityList"
+              persistent-hint
+            ></v-autocomplete>
             <v-textarea
-              v-model="text"
-              :error-messages="errors.collect('text')"
+              v-model="message"
+              :error-messages="errors.collect('message')"
               box
               label="پیام"
-              data-vv-name="text"
+              data-vv-name="message"
               auto-grow
             />
             <v-btn :loading="submit_loader" outline color="accent" round @click="processSubmit">
               <v-icon class="px-1">save</v-icon>
-              ارسال پاسخ
+              ذخیره
             </v-btn>
           </form>
         </v-flex>
       </v-layout>
     </v-card>
-
   </v-container>
 </template>
 <script>
   import Helper from '~/assets/js/helper'
 
-  const page_title = 'مشاهده و پاسخ به تیکت',
-    breadcrumb = 'مشاهده',
+  const page_title = 'ثبت تیکت جدید',
+    breadcrumb = 'تیکت جدید',
     indexPath = '/user/tickets',
+    createPath = '/user/tickets',
     ticketCategoriesMethod = '/ticketCategories'
 
   export default {
@@ -125,15 +107,20 @@
       breadcrumb: breadcrumb
     },
     data: () => ({
-      indexPath,
       page_title,
       // ticket
-      text: "",
+      title: null,
+      message: "",
+      ticketCategoryName: '',
+      priorityName:0,
 
       // validator dictionary
       dictionary: {
         attributes: {
-          text: "پیام",
+          title: "عنوان تیکت",
+          message: "پیام",
+          priority: "فوریت",
+          ticketCategory: 'دسته بندی تیکت'
           // custom attributes
         }
       },
@@ -145,47 +132,49 @@
         heading: "عنوان متن"
       },
       submit_loader: false,
+      snackbar: false,
+      snack_text: null,
+      snack_color: "info"
     }),
     computed:
       {
-
-        createPath() {
-          return `/user/tickets/${this.id}/comment`;
+        list: function () {
+          return indexPath;
+        }
+        ,
+        createPath: function () {
+          return createPath;
+        },
+        ticketCategory() {
+          let list = this.$store.state.ticketCategory.data;
+          let index = _.findIndex(list, {'name': this.ticketCategoryName});
+          let item = list[index];
+          return _.get(item, 'id', 0);
         },
         priority() {
-          return _.get(this.$store.state.settings.tickets.prioritiesArray, this.list.priority, '')
-        },
-        category() {
-          let list = this.$store.state.ticketCategory.data;
-          let index = _.findIndex(list, {'id': this.list.category.id});
+          let list = this.$store.state.settings.tickets.priorities;
+          let index = _.findIndex(list, {'name': this.priorityName});
           let item = list[index];
-          return _.get(item, 'name', '');
+          return _.get(item, 'id', 0);
+        },
+        priorityList() {
+          return this.$store.state.settings.tickets.prioritiesArray;
         }
+        ,
       }
     ,
     async asyncData({params, store, $axios}) {
-      let id = params.id;
-      let method = `/user/tickets/${id}`
-
       try {
+        // loan types
         let ticketCategories = await
           $axios.$get(ticketCategoriesMethod);
         store.commit('ticketCategory/setAndProcessData', ticketCategories.data || []);
-
-        let {data} = await
-          $axios.$get(method);
-        return {
-          id,
-          list: data || []
-        }
       } catch (error) {
         console.log('error', error)
-        return {
-          id,
-          list: []
-        }
       }
-
+      return {
+        ticketCategoryList: _.get(store.state, 'ticketCategory.arrayList', []),
+      }
     }
     ,
     mounted() {
@@ -199,10 +188,13 @@
       ,
       sendForm() {
         let data = {
-          text: this.text,
+          title: this.title,
+          message: this.message,
+          priority: this.priority,
+          category: this.ticketCategory
         }
         this.$axios
-          .$put(this.createPath, data)
+          .$post(createPath, data)
           .then(() => {
             let status = true
             if (status) {
@@ -225,22 +217,14 @@
               })
             }
             this.submit_loader = false
-          }).then(() => {
-          let method = `/user/tickets/${this.id}`
-          this.$axios.$get(method).then((response) => {
-            this.list = response.data;
-            this.text = '';
           })
-        })
       }
       ,
       processSubmit() {
         this.submit_loader = true
-
         this.$validator
           .validateAll()
           .then(result => {
-
             if (result) {
               this.sendForm()
             } else {

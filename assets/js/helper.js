@@ -24,6 +24,14 @@ const Helper = {
     let fields = CONSTANTS.fieldByType;
     return _.find(_.get(fields, `${type}.${which}`, {}), {'name': field});
   },
+  getFieldPath(type, field, which = 'edit') {
+    let fields = CONSTANTS.fieldByType;
+    return _.get(_.find(_.get(fields, `${type}.${which}`, {}), {'name': field}), 'path', field);
+  },
+  getTypeFields(type, which = 'create') {
+    let fields = CONSTANTS.fieldByType;
+    return _.get(fields, `${type}.${which}`, {})
+  },
   isFieldAllowByAlias(slug, field, which = 'create') {
     let type = this.getTypeByAlias(slug).type;
     return this.isFieldAllowByType(type, field);
@@ -66,8 +74,8 @@ const Helper = {
   getGeneralSettingsGroup() {
     return CONSTANTS.GENERAL_SETTINGS;
   },
-  selectDataForSend(type, that) {
-    let fields = _.map(CONSTANTS.fieldByType[type]['create'], 'name');
+  selectDataForSend(type, that, which = 'create') {
+    let fields = _.map(CONSTANTS.fieldByType[type][which], 'name');
     //console.log('Fields:', {fields})
     let all = {};
     _.forEach(fields, (name) => {

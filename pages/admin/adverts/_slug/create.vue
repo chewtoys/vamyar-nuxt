@@ -162,12 +162,12 @@
             <v-autocomplete
               v-if="isAllowed('type')"
               v-validate="'required'"
-              v-model="type"
+              v-model="typeName"
               :error-messages="errors.collect('type')"
               box
               :label="getTitle('type')"
               data-vv-name="type"
-              :items="['بانک','دادگاه']"
+              :items="typeList"
               persistent-hint
             ></v-autocomplete>
 
@@ -193,7 +193,7 @@
 <script>
   import Helper from '~/assets/js/helper'
 
-  const list = "/user/adverts",
+  const list = "/admin/adverts",
     //guaranteeTypeListPath = "/admin/guaranteeTypes",
     //cityPath = "/admin/cities",
 
@@ -207,7 +207,7 @@
     },
 
     data: () => ({
-      page_title: 'ویرایش آگهی',
+      page_title: 'ثبت جدید',
       // advert
       title: null,
       cityName: null,
@@ -223,7 +223,7 @@
       amount: null,
       payback: null,
       price: null,
-      type: null,
+      typeName: null,
       interestRate: null,
       maxAmount: null,
       job: null,
@@ -261,62 +261,40 @@
       list: function () {
         return `${list}/${this.slug}`;
       },
-      editPath: function () {
-        return `/user/${this.formType.type}/${this.id}`;
+      createPath: function () {
+        return `/admin/${this.formType.type}`;
       },
-      city: {
-        get: function () {
-          if (this.allCities) return 0;
-          let list = this.$store.state.city.data;
-          let index = _.findIndex(list, {'name': this.cityName});
-          let item = list[index];
-          return _.get(item, 'id', 0);
-        },
-        set: function (val) {
-          if (this.allCities) return 0;
-          let list = this.$store.state.city.data;
-          let index = _.findIndex(list, {'id': val});
-          let item = list[index];
-          this.cityName = item.name;
-        }
+      city: function () {
+        if (this.allCities) return 0;
+        let list = this.$store.state.city.data;
+        let index = _.findIndex(list, {'name': this.cityName});
+        let item = list[index];
+        return _.get(item, 'id', 0);
       },
-      loanType: {
-        get: function () {
-          let list = this.$store.state.loanType.data;
-          let index = _.findIndex(list, {'name': this.loanTypeName});
-          let item = list[index];
-          return _.get(item, 'id', 0);
-        },
-        set: function (val) {
-          let list = this.$store.state.loanType.data;
-          let index = _.findIndex(list, {'id': val});
-          let item = list[index];
-          this.loanTypeName = item.name;
-        }
+      loanType() {
+        let list = this.$store.state.loanType.data;
+        let index = _.findIndex(list, {'name': this.loanTypeName});
+        let item = list[index];
+        return _.get(item, 'id', 0);
       },
-      guaranteeTypes: {
-        get: function () {
-          let items = [];
-          let list = this.$store.state.guaranteeType.data;
-          _.forEach(this.guaranteeTypesName, (name) => {
-            let index = _.findIndex(list, {'name': name});
-            let item = list[index];
-            items.push(item.id)
-          })
-          return items || 0;
-        },
-        set: function (objectArrayList) {
-          let list = this.$store.state.guaranteeType.data;
-          let items = [];
-          _.forEach(objectArrayList, (obj) => {
-            items.push(obj.name)
-          })
-          this.guaranteeTypesName = items || [];
-        }
+      type() {
+        let list = this.$store.state.settings.coSigner.types;
+        let index = _.findIndex(list, {'name': this.typeName});
+        let item = list[index];
+        return _.get(item, 'id', 0);
+      },
+      guaranteeTypes() {
+        let items = [];
+        let list = this.$store.state.guaranteeType.data;
+        _.forEach(this.guaranteeTypesName, (name) => {
+          let index = _.findIndex(list, {'name': name});
+          let item = list[index];
+          items.push(item.id)
+        })
+        return items || 0;
       },
     },
-    async asyncData({params, store, $axios, error}) {
-      let id = params.id;
+    async asyncData({params, store, $axios}) {
       let slug = params.slug;
       let formType = Helper.getTypeByAlias(slug);
       const breadcrumb = Helper.getBreadcrumb(formType.title),
@@ -337,43 +315,23 @@
         let loanTypeData = await $axios.$get(loanTypeMethod);
         store.commit('loanType/setAndProcessData', loanTypeData.data || []);
 
-        // get advert data
-        let getPath = `/user/${formType.type}/${id}`;
-        let query = {
-          include: 'guaranteeTypes'
-        }
-        let {data} = await $axios.$get(getPath, {params: query});
-        console.log('get:',getPath, {params: query}, data)
-        return {
-          page_title,
-          formType,
-          data,
-          slug,
-          id,
-          guaranteeTypesList: _.get(store.state, 'guaranteeType.arrayList', []),
-          loanTypeList: _.get(store.state, 'loanType.arrayList', []),
-          cities: _.get(store.state, 'city.arrayList', [])
-        }
 
-      } catch (err) {
+      } catch (error) {
         //console.log('error', error)
-        return error({statusCode: 404, message: 'آگهی یافت نشد :('})
+      }
+
+      return {
+        page_title,
+        formType,
+        slug,
+        guaranteeTypesList: _.get(store.state, 'guaranteeType.arrayList', []),
+        loanTypeList: _.get(store.state, 'loanType.arrayList', []),
+        typeList: _.get(store.state, 'settings.coSigner.typeArray', []),
+        cities: _.get(store.state, 'city.arrayList', [])
       }
     },
     mounted() {
       this.$validator.localize("fa", this.dictionary)
-      // check if user has no access to create advert
-      //let hasAccess = this.$store.state.accesses.loans ;
-      let hasAccess = true
-      if (!hasAccess) {
-        this.$router.push("/user/premium")
-      }
-      let editableFields = Helper.getTypeFields(this.formType.type, 'edit');
-      _.forEach(editableFields, (value) => {
-        //console.log({value}, value.name, value.path)
-        _.set(this, [value.name], _.get(this.data, `${value.path}`, ''));
-      })
-
     },
     methods: {
       getTitle(name, which = 'create') {
@@ -387,9 +345,9 @@
         this.$store.commit("snackbar/setSnack", msg, color)
       },
       sendForm() {
-        let data = Helper.selectDataForSend(this.formType.type, this, 'edit');
+        let data = Helper.selectDataForSend(this.formType.type, this);
         this.$axios
-          .$put(this.editPath, data)
+          .$post(this.createPath, data)
           .then(() => {
             let status = true
             if (status) {
@@ -404,12 +362,14 @@
           })
           .catch((error) => {
             // catch and show error
-            this.toast(_.get(error, 'response.data.error.message', {error}), "error")
+
             //console.log(1, _.get(error, 'response.data.error', 'no res.data'), 3, _.get(error, 'response.data.error.message', 'no data'))
-            if (_.isArray(_.get(error, 'response.data.error.message', ''))) {
+            if (_.isObject(_.get(error, 'response.data.error.message', ''))) {
               _.forEach(_.get(error, 'response.data.error.message', []), (value, key) => {
                 this.toast(value, "error")
               })
+            } else {
+              this.toast(_.get(error, 'response.data.error.message', {error}), "error")
             }
             this.submit_loader = false
           })

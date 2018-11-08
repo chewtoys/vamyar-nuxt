@@ -37,28 +37,6 @@
         {title: "ویرایش پروفایل", icon: "build", to: "/user/profile/edit"},
         {title: "خروج", icon: "exit_to_app", to: "/user/logout"}
       ],
-      panel: [
-        {title: "تیکت ها", icon: "inbox", to: "/user/tickets"},
-        {title: "کل فاکتورها", icon: "inbox", to: "/user/factors"}
-        //{title: 'صندوق پیام ها', icon: 'inbox', to: '/user/settings'},
-      ],
-      loans: [
-        {title: "وام برای فروش", icon: "book", to: "/user/loans"},
-        {title: "درخواست وام", icon: "book", to: "/user/loan-requests"}
-      ],
-      coSigner: [
-        {title: "ضامن", icon: "book", to: "/user/co-signers"},
-        {title: "درخواست ضامن", icon: "book", to: "/user/co-signer-requests"}
-      ],
-      finances: [
-        {title: "سرمایه گذاری", icon: "book", to: "/user/finances"},
-        {title: "درخواست سرمایه", icon: "book", to: "/user/finance-requests"}
-      ],
-      access: [
-        {title: "سایت", icon: "book", to: "/user/adverts/vam"},
-        {title: "راهنما", icon: "book", to: "/user/adverts/zamen"},
-        {title: "سوالات متداول", icon: "book", to: "/user/adverts/sarmaye"}
-      ]
     }),
     computed: {
       isMobile() {

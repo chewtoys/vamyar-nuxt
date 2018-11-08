@@ -193,7 +193,7 @@
 <script>
   import Helper from '~/assets/js/helper'
 
-  const list = "/user/adverts",
+  const list = "/admin/adverts",
     //guaranteeTypeListPath = "/admin/guaranteeTypes",
     //cityPath = "/admin/cities",
 
@@ -262,7 +262,7 @@
         return `${list}/${this.slug}`;
       },
       editPath: function () {
-        return `/user/${this.formType.type}/${this.id}`;
+        return `/admin/${this.formType.type}/${this.id}`;
       },
       city: {
         get: function () {
@@ -338,12 +338,12 @@
         store.commit('loanType/setAndProcessData', loanTypeData.data || []);
 
         // get advert data
-        let getPath = `/user/${formType.type}/${id}`;
+        let getPath = `/admin/${formType.type}/${id}`;
         let query = {
           include: 'guaranteeTypes'
         }
         let {data} = await $axios.$get(getPath, {params: query});
-        console.log('get:',getPath, {params: query}, data)
+        console.log('get:', getPath, {params: query}, data)
         return {
           page_title,
           formType,
@@ -361,19 +361,12 @@
       }
     },
     mounted() {
-      this.$validator.localize("fa", this.dictionary)
-      // check if user has no access to create advert
-      //let hasAccess = this.$store.state.accesses.loans ;
-      let hasAccess = true
-      if (!hasAccess) {
-        this.$router.push("/user/premium")
-      }
+      this.$validator.localize("fa", this.dictionary);
       let editableFields = Helper.getTypeFields(this.formType.type, 'edit');
       _.forEach(editableFields, (value) => {
         //console.log({value}, value.name, value.path)
         _.set(this, [value.name], _.get(this.data, `${value.path}`, ''));
       })
-
     },
     methods: {
       getTitle(name, which = 'create') {

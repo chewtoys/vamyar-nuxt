@@ -22,8 +22,8 @@ export default function ({$axios, store, redirect, route}) {
     //let { code } = response
     //console.log({2: 'DEBUG ON AXIOS :  onResponse:', 2: response})
   });
-  $axios.onError(error => {
-    let {status} = error.response
+  $axios.onError(err => {
+    let {status} = err.response
 
     if (status === 401) {
       if (_.startsWith(route.path, '/user')) {
@@ -34,11 +34,12 @@ export default function ({$axios, store, redirect, route}) {
         redirect('/admin')
       }
     }
-    if (_.has(error, 'response.data.error.message')) {
+
+    if (_.has(err, 'response.data.error.message')) {
       //console.log({1: 'DEBUG ON AXIOS :  onError Message:', 3: error.response.data.error.message});
-      store.commit('snackbar/setSnack', _.get(error, 'response.data.error.message.mobile', error.response.data.error.message))
+      store.commit('snackbar/setSnack', _.get(err, 'response.data.error.message.mobile', err.response.data.error.message))
     } else {
-      console.log({1: 'DEBUG ON AXIOS :  onError:', 3: error.response, error})
+      console.log({1: 'DEBUG ON AXIOS :  onError:', 3: err.response, err})
     }
   })
 }

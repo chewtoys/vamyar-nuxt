@@ -46,10 +46,10 @@
     <v-card color="white" v-for="item in list.comments" :key="item.id" raised light class="my-3 py-5 px-4">
       <v-layout row>
         <v-flex xs12 md12 sm12 lg12>
-          <v-toolbar flat :color="item.adminId ? 'success lighten-4' : 'info lighten-2'">
+          <v-toolbar flat :color="!!item.adminId ? 'success lighten-4' : 'info lighten-2'">
             <h5>
-              <v-icon small class=" pb-1  px-1">{{item.adminId ? 'star' : 'account_circle'}}</v-icon>
-              {{item.adminId ? 'پاسخ پشتیبان' : 'پاسخ شما'}}
+              <v-icon small class=" pb-1  px-1">{{!!item.adminId ? 'star' : 'account_circle'}}</v-icon>
+              {{!item.adminId ? 'پاسخ کاربر' : 'پاسخ شما'}}
             </h5>
             <v-spacer></v-spacer>
             <small>
@@ -64,8 +64,7 @@
         </v-flex>
       </v-layout>
     </v-card>
-
-    <v-card v-if="list.status<2" color="white" raised light class="my-5 py-5 px-4">
+    <v-card color="white" raised light class="my-5 py-5 px-4">
       <v-layout row wrap>
         <v-flex xs12>
           <div>
@@ -76,7 +75,7 @@
               </v-toolbar-title>
               <v-spacer/>
 
-              <v-btn :loading="submit_loader" outline color="accent" round @click="processSubmit">
+              <v-btn :loading="submit_loader" outline color="accent" round @click="processSubmit(false)">
                 <v-icon class="px-1">save</v-icon>
                 ارسال پاسخ
               </v-btn>
@@ -96,9 +95,13 @@
               data-vv-name="text"
               auto-grow
             />
-            <v-btn :loading="submit_loader" outline color="accent" round @click="processSubmit">
+            <v-btn :loading="submit_loader" outline color="accent" round @click="processSubmit(false)">
               <v-icon class="px-1">save</v-icon>
               ارسال پاسخ
+            </v-btn>
+            <v-btn :loading="submit_loader" outline color="danger" round @click="processSubmit(true)">
+              <v-icon class="px-1">lock</v-icon>
+              بستن
             </v-btn>
           </form>
         </v-flex>
@@ -112,7 +115,7 @@
 
   const page_title = 'مشاهده و پاسخ به تیکت',
     breadcrumb = 'مشاهده',
-    indexPath = '/user/tickets',
+    indexPath = '/admin/tickets',
     ticketCategoriesMethod = '/ticketCategories'
 
   export default {
@@ -148,48 +151,46 @@
     }),
     computed:
       {
-
-        createPath() {
-          return `/user/tickets/${this.id}/comment`;
+        answerPath() {
+          return `/admin/tickets/${this.id}/answer`;
+        },
+        closePath() {
+          return `/admin/tickets/${this.id}/close`;
         },
         priority() {
           return _.get(this.$store.state.settings.tickets.prioritiesArray, this.list.priority, '')
         },
         category() {
           let list = this.$store.state.ticketCategory.data;
-          let index = _.findIndex(list, {'id': this.list.category.id});
+          let index = _.findIndex(list, {'id': this.list.categoryId});
           let item = list[index];
           return _.get(item, 'name', '');
         }
       }
     ,
-    async asyncData({params, store, $axios}) {
-      let id = params.id;
-      let method = `/user/tickets/${id}`
-
-      try {
-        let ticketCategories = await
-          $axios.$get(ticketCategoriesMethod);
-        store.commit('ticketCategory/setAndProcessData', ticketCategories.data || []);
-
-        let {data} = await
-          $axios.$get(method);
-        return {
-          id,
-          list: data || []
-        }
-      } catch (error) {
-        console.log('error', error)
-        return {
-          id,
-          list: []
-        }
-      }
-
-    }
-    ,
     mounted() {
       this.$validator.localize("fa", this.dictionary)
+      let method = `/admin/tickets/${this.id}`
+      this.$axios.$get(method).then(resp => {
+        this.list = _.get(resp, 'data', []);
+      });
+    },
+    async asyncData({params, store, $axios}) {
+      let id = params.id;
+      let query = {
+        include: 'user.detail,admin'
+      }
+      try {
+        let ticketCategories = await $axios.$get(ticketCategoriesMethod);
+        store.commit('ticketCategory/setAndProcessData', ticketCategories.data || []);
+      } catch (error) {
+        console.log('error', error)
+
+      }
+      return {
+        id,
+        list: []
+      }
     }
     ,
     methods: {
@@ -197,23 +198,30 @@
         this.$store.commit("snackbar/setSnack", msg, color)
       }
       ,
-      sendForm() {
+      sendForm(close = false) {
         let data = {
           text: this.text,
         }
+        let method = close ? this.closePath : this.answerPath;
         this.$axios
-          .$put(this.createPath, data)
+          .$put(method, close ? {} : data)
           .then(() => {
             let status = true
             if (status) {
               // show success and redirect
-              this.toast("با موفقیت ثبت شد.", "success")
+              if (!close) this.toast("با موفقیت ثبت شد.", "success")
+              if (close) this.toast("با موفقیت انجام شد.", "success")
               this.submit_loader = false
-              //this.$router.push("../")
+              if (close) this.$router.push(indexPath)
             } else {
               this.toast(" خطایی رخ داد.", "warning")
               this.submit_loader = false
             }
+            let method = `/admin/tickets/${this.id}`
+            this.$axios.$get(method).then((response) => {
+              this.list = response.data;
+              this.text = '';
+            })
           })
           .catch((error) => {
             // catch and show error
@@ -225,16 +233,10 @@
               })
             }
             this.submit_loader = false
-          }).then(() => {
-          let method = `/user/tickets/${this.id}`
-          this.$axios.$get(method).then((response) => {
-            this.list = response.data;
-            this.text = '';
           })
-        })
       }
       ,
-      processSubmit() {
+      processSubmit(close = false) {
         this.submit_loader = true
 
         this.$validator
@@ -242,7 +244,7 @@
           .then(result => {
 
             if (result) {
-              this.sendForm()
+              this.sendForm(close)
             } else {
               this.toast("برخی فیلد ها مشکل دارند.", "warning")
               this.submit_loader = false
