@@ -4,9 +4,13 @@
   </v-container>
 </template>
 <script>
-import Helper from "~/assets/js/helper.js"
+  import Helper from "~/assets/js/helper.js"
 
-export default {
-  computed: {}
-}
+  export default {
+    meta: {
+      title: 'آگهی ها',
+      breadcrumb: 'آگهی ها'
+    },
+    computed: {}
+  }
 </script>

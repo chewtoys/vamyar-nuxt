@@ -63,93 +63,113 @@
   </div>
 </template>
 <script>
-import AdvertCard from "~/components/site/adverts/Advert.vue"
+  import AdvertCard from "~/components/site/adverts/Advert.vue"
 
-const path = "/site/adverts"
-const title = "لیست آگهی ها",
-  breadcrumb = "کل آگهی ها"
+  const path = "/site/adverts"
+  const title = "لیست آگهی ها",
+    breadcrumb = "کل آگهی ها"
 
-export default {
-  head() {
-    return {
-      title
-    }
-  },
-  meta: {
-    title,
-    breadcrumb,
-    link: this.link
-  },
-  components: { AdvertCard },
-  data() {
-    return {
-      adverts: [],
-      paginator: [],
-      btnLoading: false
-    }
-  },
-  computed: {
-    link() {
-      return this.$route.path
+  export default {
+
+    meta: {
+      title,
+      breadcrumb,
+      link: ''
     },
-    categories() {
-      return [
-        {
-          id: 1,
-          title: "وام ها",
-          count: 10,
-          to: "/categories/loans",
-          image: null,
-          text: this.$store.state.temp.lorem
-        },
-        {
-          id: 2,
-          title: "درخواست وام ها",
-          count: 6,
-          to: "/categories/loan-requests",
-          image: null,
-          text: this.$store.state.temp.lorem
-        },
-        {
-          id: 3,
-          title: "سرمایه ها",
-          count: 7,
-          to: "/categories/finances",
-          image: null,
-          text: this.$store.state.temp.lorem
+    components: {AdvertCard},
+    data() {
+      return {
+        adverts: [],
+        paginator: [],
+        btnLoading: false
+      }
+    },
+    computed: {
+      link() {
+        return this.$route.path
+      },
+      categories() {
+        return [
+          {
+            id: 1,
+            title: "وام",
+            count: 10,
+            to: "/categories/loans",
+            image: null,
+            text: this.$store.state.temp.lorem
+          },
+          {
+            id: 2,
+            title: "درخواست وام",
+            count: 6,
+            to: "/categories/loan-requests",
+            image: null,
+            text: this.$store.state.temp.lorem
+          },
+          {
+            id: 3,
+            title: "سرمایه",
+            count: 7,
+            to: "/categories/finances",
+            image: null,
+            text: this.$store.state.temp.lorem
+          },
+          {
+            id: 4,
+            title: "درخواست سرمایه",
+            count: 7,
+            to: "/categories/finance-requests",
+            image: null,
+            text: this.$store.state.temp.lorem
+          },
+          {
+            id: 5,
+            title: "ضامن",
+            count: 7,
+            to: "/categories/co-signers",
+            image: null,
+            text: this.$store.state.temp.lorem
+          },
+          {
+            id: 6,
+            title: "درخواست ضامن",
+            count: 7,
+            to: "/categories/co-signer-requests",
+            image: null,
+            text: this.$store.state.temp.lorem
+          }
+        ]
+      }
+    },
+    methods: {
+      // load more items
+      async loadMore() {
+        this.btnLoading = true
+        try {
+          let method = this.paginator.cursor.nextURL
+          let {data, paginator} = await this.$axios.$get(method)
+          data.forEach((e, i) => {
+            this.adverts.push(e)
+          })
+          this.paginator = paginator
+        } catch (err) {
+          this.paginator.cursor = {}
+          this.paginator.cursor.nextURL = false
+          this.$store.commit("snackbar/setSnack", "آگهی بیشتری وجود ندارد.")
         }
-      ]
-    }
-  },
-  methods: {
-    // load more items
-    async loadMore() {
-      this.btnLoading = true
+        this.btnLoading = false
+      }
+    },
+    async asyncData({app}) {
       try {
-        let method = this.paginator.cursor.nextURL
-        let { data, paginator } = await this.$axios.$get(method)
-        data.forEach((e, i) => {
-          this.adverts.push(e)
-        })
-        this.paginator = paginator
+        let params = {
+          include: "advertable"
+        }
+        let {data, paginator} = await app.$axios.$get(path, {params})
+        return {adverts: data, paginator}
       } catch (err) {
-        this.paginator.cursor = {}
-        this.paginator.cursor.nextURL = false
-        this.$store.commit("snackbar/setSnack", "آگهی بیشتری وجود ندارد.")
+        return {adverts: [], paginator: []}
       }
-      this.btnLoading = false
-    }
-  },
-  async asyncData({ app }) {
-    try {
-      let params = {
-        include: "advertable"
-      }
-      let { data, paginator } = await app.$axios.$get(path, { params })
-      return { adverts: data, paginator }
-    } catch (err) {
-      return { adverts: [], paginator: [] }
     }
   }
-}
 </script>

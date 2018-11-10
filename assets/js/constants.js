@@ -27,6 +27,42 @@ export const rawHeaders = {
       {text: "عملیات", align: "left", value: 'loanTypeId', width: '140px', sortable: false}
     ],
   },
+  adminRawHeaders = {
+    loans: [
+      {text: "شناسه", align: "right", value: 'id'},
+      {text: "ثبت شده توسط", align: "right", value: 'advert.user.id'},
+      {text: "عنوان", align: "right", value: 'advert.title'},
+      {text: "توضیحات", align: "right", value: 'advert.text'},
+      {text: "قیمت", value: "price", align: "left"},
+      {text: "مقدار وام", value: "amount", align: "left"},
+      {text: "عملیات", align: "left", value: 'loanTypeId', width: '140px', sortable: false}
+    ],
+    loanRequests: [
+      {text: "شناسه", align: "right", value: 'id'},
+      {text: "ثبت شده توسط", align: "right", value: 'advert.user.id'},
+      {text: "عنوان", value: "title", align: "right"},
+      {text: "توضیحات", value: "description", align: "right"},
+      {text: "مقدار وام", value: "amount", align: "left"},
+      {text: "عملیات", sortable: false, align: "left"}
+    ],
+    finances: [
+      {text: "شناسه", align: "right", value: 'id'},
+      {text: "ثبت شده توسط", align: "right", value: 'advert.user.id'},
+      {text: "عنوان", align: "right", value: 'advert.title'},
+      {text: "حداکثر سرمایه", value: "maxAmount", align: "left"},
+      {text: "توضیحات", align: "right", value: 'advert.text'},
+      {text: "عملیات", align: "left", value: 'loanTypeId', width: '140px', sortable: false}
+    ],
+    coSigners: [
+      {text: "شناسه", align: "right", value: 'id'},
+      {text: "ثبت شده توسط", align: "right", value: 'advert.user.id'},
+      {text: "عنوان", align: "right", value: 'advert.title'},
+      {text: "نوع ضمانت", value: "type", align: "left"},
+      {text: "نوع ضامن", value: "guaranteeTypes", align: "left"},
+      {text: "توضیحات", align: "right", value: 'advert.text'},
+      {text: "عملیات", align: "left", value: 'loanTypeId', width: '140px', sortable: false}
+    ],
+  },
   advertAliases = {
     "loan-requests": {
       type: "loanRequests",

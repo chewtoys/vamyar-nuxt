@@ -88,13 +88,10 @@
         {title: "تیکت ها", icon: "inbox", to: "/admin/tickets"},
         {title: "دسته بندی تیکت ها", icon: "inbox", to: "/admin/tickets/categories"},
         {title: "لاگ کاربران", icon: "inbox", to: "/user/logs"},
-        {title: "کل فاکتورها", icon: "inbox", to: "/user/factors"}
         //{title: 'صندوق پیام ها', icon: 'inbox', to: '/user/settings'},
       ],
       adminSection: [
-        {title: "مدیرها", icon: "inbox", to: "/admin/admins"},
-        {title: "دسته بندی تیکت ها", icon: "inbox", to: "/admin/tickets/categories"},
-        //{title: 'صندوق پیام ها', icon: 'inbox', to: '/user/settings'},
+        {title: "مدیرها", icon: "inbox", to: "/admin/moderators"},
       ],
       access: [
         {title: "سایت", icon: "book", to: "/user/adverts/vam"},

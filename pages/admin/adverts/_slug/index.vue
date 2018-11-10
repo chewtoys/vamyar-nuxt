@@ -69,43 +69,50 @@
                 hide-details
               ></v-checkbox>
             </td>
+
+            <td class="text-xs-right">
+              <nuxt-link title="مشاهده" :to=" uri + '/show/' + props.item.id" class="mx-1">
+                {{ props.item.id }}
+              </nuxt-link>
+            </td>
+            <td class="text-xs-right">
+              <nuxt-link title="مشاهده" target="_blank"
+                 :to=" '/admin/users/show/' + getProperty(props.item, 'advert.user.id') "
+                 class="mx-1">
+                {{ sender(props) }}
+              </nuxt-link>
+            </td>
+            <td class="text-xs-right">{{ getProperty(props.item, 'advert.title', 'بدون عنوان') }}</td>
+            <td class="text-xs-right">{{ getProperty(props.item, 'advert.text') }}</td>
             <template v-if="type.type=='loans'">
-              <td class="text-xs-right">{{ props.item.advert.title }}</td>
-              <td class="text-xs-right">{{ props.item.advert.text }}</td>
               <td class="text-xs-left">{{ props.item.price }}</td>
               <td class="text-xs-left">{{ props.item.amount }}</td>
             </template>
             <template v-if="type.type=='loanRequests'">
-              <td class="text-xs-right">{{ props.item.advert.title }}</td>
-              <td class="text-xs-right">{{ props.item.advert.text }}</td>
               <td class="text-xs-left">{{ props.item.amount }}</td>
             </template>
             <template v-if="type.type=='finances'">
-              <td class="text-xs-right">{{ props.item.advert.title }}</td>
               <td class="text-xs-left">{{ props.item.maxAmount }}</td>
-              <td class="text-xs-right">{{ props.item.advert.text }}</td>
             </template>
             <template v-if="type.type=='coSigners'">
-              <td class="text-xs-right">{{ props.item.advert.title }}</td>
               <td class="text-xs-left">{{ getType(props.item.type) }}</td>
               <td class="text-xs-left">{{ getGuaranteeTypes(props.item.guaranteeTypes) }}</td>
-              <td class="text-xs-right">{{ props.item.advert.text }}</td>
             </template>
             <td class="text-xs-left">
-              <a title="مشاهده" :href=" uri + '/show/' + props.item.id" class="mx-1">
+              <nuxt-link title="مشاهده" :to=" uri + '/show/' + props.item.id" class="mx-1">
                 <v-icon
                   small
                 >
                   pageview
                 </v-icon>
-              </a>
-              <a title="ویرایش" :href=" uri + '/edit/' + props.item.id" class="mx-1">
+              </nuxt-link>
+              <nuxt-link title="ویرایش" :to=" uri + '/edit/' + props.item.id" class="mx-1">
                 <v-icon
                   small
                 >
                   edit
                 </v-icon>
-              </a>
+              </nuxt-link>
               <v-icon
                 class="mx-1"
                 small
@@ -179,7 +186,7 @@
         return `/admin/adverts/${this.slug}`;
       },
       headers() {
-        return Helper.getRawHeaders(this.type.type);
+        return Helper.getAdminRawHeaders(this.type.type);
       },
       info() {
         return {
@@ -198,10 +205,14 @@
       pagination: {
         handler() {
           this.loading = true;
-          let method = this.uri;
+          let method = `/admin/${this.type.type}`;
+          let advertableType = this.type.advertType;
+          let include = 'advert.user.details';
           let {sortBy, descending, page, rowsPerPage} = this.pagination;
           let query = {
             page,
+            advertableType,
+            include,
             orderBy: `${sortBy || 'id'}:${descending ? 'desc' : 'asc'}`,
             number: rowsPerPage
           }
@@ -226,6 +237,15 @@
       },
     },
     methods: {
+      getProperty(item = [], path = '', alias = '-') {
+        return _.get(item, path, alias)
+      },
+      sender(props) {
+        return _.get(props.item, 'advert.user.details.firstName',
+          _.get(props.item, 'advert.user.mobile',
+            _.get(props.item, 'advert.user.email',
+              _.get(props.item, 'advert.user.id', 'بدون مشخصات'))))
+      },
       getGuaranteeTypes(key) {
         let items = [];
         let list = this.$store.state.guaranteeType.data;

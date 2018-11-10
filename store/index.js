@@ -30,7 +30,7 @@ export const state = () => ({
     title: "بدون عنوان",
     breadcrumb: null
   },
-  client_secret: "Bm6go1M5c2VUts9Jq6k6h8pfQhZmWrXbR4BgavES",
+  client_secret: "bV2bIuzdZT3PQANds71AxCfJf5hUzHhQhpSBWgff",
   client_id: 1,
 });
 
@@ -66,7 +66,6 @@ export const actions = {
         }
       }
     }
-
 
     //admin
 

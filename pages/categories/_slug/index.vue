@@ -93,7 +93,6 @@
       </v-card>
     </v-flex>
     <v-flex xs12 sm12>
-
       <v-subheader>
         لیست آگهی ها
         {{ type.title }}
@@ -127,203 +126,215 @@
   </v-layout>
 </template>
 <script>
-//import axios from 'axios'
-// /site/adverts?advertableType=loan&include=advertable
+  //import axios from 'axios'
+  // /site/adverts?advertableType=loan&include=advertable
 
-import ItemCard from "~/components/site/adverts/Loan.vue"
-import AdvertCard from "~/components/site/adverts/Advert.vue"
-import Helper from "~/assets/js/helper.js"
+  import ItemCard from "~/components/site/adverts/Loan.vue"
+  import AdvertCard from "~/components/site/adverts/Advert.vue"
+  import Helper from "~/assets/js/helper.js"
 
-const number = 4,
-  include = "advertable"
+  const number = 4
 
-export default {
-  meta: function() {
-    return {
-      title: this.title,
-      breadcrumb: this.breadcrumb
+
+  export default {
+
+    components: {
+      ItemCard,
+      AdvertCard
     }
-  },
-  components: {
-    ItemCard,
-    AdvertCard
-  },
-  data() {
-    return {
-      // meta
-      title: "Ti",
-      breadcrumb: "Br",
-      page: 1,
-      size: "sm",
-      paginator: {},
-      loading: true,
-      btn_loading: false,
-      city_items: [],
-      range_loading: false,
-      range_search_min: 0,
-      category_items: [
-        "همه",
-        "دسته بندی اول",
-        "دسته بندی دوم",
-        "دسته بندی سوم",
-        "دسته بندی چهارم"
-      ],
-      category_search: null,
-      range_labels: [
-        "کمترین",
-        "تا 10 میلیون ",
-        "تا 50 میلیون",
-        "تا 500 میلیون",
-        "بیشتر از 500 میلیون"
-      ],
-      range_search_max: 4,
-      range_search: [0, 4],
-      range_values: [0, 10e7, 50 * 10e7, 500 * 10e7, 10e15],
-      city_loading: false,
-      city_search: null,
-      city_select: null,
-      title_loading: false,
-      title_search: null,
-      city_states: ["قم", "تهران"]
-    }
-  },
-  // loading the first items from server
-  async asyncData({ app, params, error }) {
-    let slug = params.slug
-    let type = Helper.getTypeByAlias(slug)
-
-    let method = `/site/${slug}`
-    let cursor, must
-    cursor = 0
-
-    if (!must) {
-      must = "advertableType=" + type.type + ",verified=true"
-    }
-
-    let query = {
-      number,
-      include,
-      must
-    }
-
-    try {
-      let { data, paginator } = await app.$axios.$get(method, {
-        params: query
-      })
-      let loading = false
-      return { items: data, paginator, loading, type, slug }
-    } catch (err) {
-      error({ statusCode: 404, message: "این صفحه فعال نمی باشد." })
-      return { items: [], paginator: [], loading: false, type, slug }
-    }
-  },
-  computed: {
-    // meta
-    ttitle: function() {
-      return "مشاهده‌ی آگهی‌‌های" + this.type.title
-    },
-    bbreadcrumb: function() {
-      return "مشاهده‌ی " + this.type.title
-    }
-  },
-  // watch if city changed
-  watch: {
-    city_search(val) {
-      val && val !== this.city_select && this.querySelections(val)
-    },
-    title_search(val) {
-      this.title_loading = true
-      setTimeout(() => {
-        this.title_loading = false
-      }, 3000)
-    }
-  },
-  // method used in page
-  methods: {
-    // select the proper city
-    querySelections(v) {
-      this.city_loading = true
-      // Simulated ajax query
-      setTimeout(() => {
-        this.city_items = this.city_states.filter(e => {
-          return (e || "").toLowerCase().indexOf((v || "").toLowerCase()) > -1
-        })
-        this.city_loading = false
-      }, 200)
-    },
-    rangeLabels(val) {
-      return this.range_labels[val]
-    },
-    // load more items
-    loadMore: async function() {
-      this.btn_loading = true
-      try {
-        let method = this.paginator.cursor.nextURL
-        let { data, paginator } = await this.$axios.$get(method, {
-          params: { number }
-        })
-        data.forEach((e, i) => {
-          this.items.push(e)
-        })
-
-        this.btn_loading = false
-
-        this.paginator = paginator
-      } catch (err) {
-        this.paginator.cursor.nextURL = false
-        this.$store.commit("snackbar/setSnack", "آگهی بیشتری وجود ندارد.")
+    ,
+    data() {
+      return {
+        // meta
+        page: 1,
+        size: "sm",
+        paginator: {},
+        loading: true,
+        btn_loading: false,
+        city_items: [],
+        range_loading: false,
+        range_search_min: 0,
+        category_items: [
+          "همه",
+          "دسته بندی اول",
+          "دسته بندی دوم",
+          "دسته بندی سوم",
+          "دسته بندی چهارم"
+        ],
+        category_search: null,
+        range_labels: [
+          "کمترین",
+          "تا 10 میلیون ",
+          "تا 50 میلیون",
+          "تا 500 میلیون",
+          "بیشتر از 500 میلیون"
+        ],
+        range_search_max: 4,
+        range_search: [0, 4],
+        range_values: [0, 10e7, 50 * 10e7, 500 * 10e7, 10e15],
+        city_loading: false,
+        city_search: null,
+        city_select: null,
+        title_loading: false,
+        title_search: null,
+        city_states: ["قم", "تهران"]
       }
-      this.btn_loading = false
-    },
-    // reload as filter changed
+    }
+    ,
+    // loading the first items from server
+    async asyncData({app, store, params, error}) {
+      let slug = params.slug
+      let type = Helper.getTypeByAlias(slug)
 
-    async loadAgain() {
-      this.loading = true
-      this.items = []
-
-      let range = this.range_search
-      let min = this.range_values[range[1]],
-        max = this.range_values[range[0]]
-      let city = this.city_search
-      let city_key = this.city_search
-      let title = this.title_search
-
-      let method = `/site/${this.slug}`
-      let advertableType = this.type.type
+      let method = `/site/${slug}`
       let cursor, must
       cursor = 0
 
+      const breadcrumb = Helper.getBreadcrumb(type.title),
+        page_title = Helper.getPageTitle(type.title);
+      store.commit("navigation/pushMeta", {breadcrumb, title: page_title});
+      store.commit("navigation/setTitle", page_title);
+
       if (!must) {
-        must =
-          "city=" + advertableType + ",amount>" + min - 1 + ",amount<" + max + 1
+        must = "advertableType=" + type.advertType + ",verified=true"
       }
+      let include = "advertable"
 
       let query = {
         number,
+        include,
         must
       }
-      //if (this.$store.state.debug) console.log(query)
 
       try {
-        let { data, paginator } = await this.$axios.$get(method, {
-          params: query
-        })
+        let {data, paginator} = await
+          app.$axios.$get(method, {
+            params: query
+          })
+        let loading = false
+        return {items: data, paginator, loading, type, slug}
       } catch (err) {
-        let data = [],
-          paginator = []
-        this.store.commit(
-          "snackbar/setSnack",
-          "مشکلی در گرفتن آگهی ها پیش آمد."
-        )
+        console.log(err);
+        //error({statusCode: 404, message: "این صفحه فعال نمی باشد."})
+        return {items: [], paginator: [], loading: false, type, slug}
       }
+    }
+    ,
+    computed: {
+      // meta
+      title: function () {
+        return "مشاهده‌ی آگهی‌‌های" + this.type.title
+      }
+      ,
+      breadcrumb: function () {
+        return "مشاهده‌ی " + this.type.title
+      }
+    }
+    ,
+    // watch if city changed
+    watch: {
+      city_search(val) {
+        val && val !== this.city_select && this.querySelections(val)
+      }
+      ,
+      title_search(val) {
+        this.title_loading = true
+        setTimeout(() => {
+          this.title_loading = false
+        }, 3000)
+      }
+    }
+    ,
+    // method used in page
+    methods: {
+      // select the proper city
+      querySelections(v) {
+        this.city_loading = true
+        // Simulated ajax query
+        setTimeout(() => {
+          this.city_items = this.city_states.filter(e => {
+            return (e || "").toLowerCase().indexOf((v || "").toLowerCase()) > -1
+          })
+          this.city_loading = false
+        }, 200)
+      }
+      ,
+      rangeLabels(val) {
+        return this.range_labels[val]
+      }
+      ,
+      // load more items
+      loadMore: async function () {
+        this.btn_loading = true
+        try {
+          let method = this.paginator.cursor.nextURL
+          let {data, paginator} = await this.$axios.$get(method, {
+            params: {number}
+          })
+          data.forEach((e, i) => {
+            this.items.push(e)
+          })
 
-      this.items.push(data)
-      //this.items = data;
-      this.loading = false
+          this.btn_loading = false
 
-      this.paginator = paginator
-      return true
+          this.paginator = paginator
+        } catch (err) {
+          this.paginator.cursor.nextURL = false
+          this.$store.commit("snackbar/setSnack", "آگهی بیشتری وجود ندارد.")
+        }
+        this.btn_loading = false
+      }
+      ,
+      // reload as filter changed
+
+      async loadAgain() {
+        this.loading = true
+        this.items = []
+
+        let range = this.range_search
+        let min = this.range_values[range[1]],
+          max = this.range_values[range[0]]
+        let city = this.city_search
+        let city_key = this.city_search
+        let title = this.title_search
+
+        let method = `/site/${this.slug}`
+        let advertableType = this.type.type
+        let cursor, must
+        cursor = 0
+
+        if (!must) {
+          must =
+            "city=" + advertableType + ",amount>" + min - 1 + ",amount<" + max + 1
+        }
+
+        let query = {
+          number,
+          must
+        }
+        //if (this.$store.state.debug) console.log(query)
+
+        try {
+          let {data, paginator} = await
+            this.$axios.$get(method, {
+              params: query
+            })
+        } catch (err) {
+          let data = [],
+            paginator = []
+          this.store.commit(
+            "snackbar/setSnack",
+            "مشکلی در گرفتن آگهی ها پیش آمد."
+          )
+        }
+
+        this.items.push(data)
+        //this.items = data;
+        this.loading = false
+
+        this.paginator = paginator
+        return true
+      }
     }
   }
-}
 </script>

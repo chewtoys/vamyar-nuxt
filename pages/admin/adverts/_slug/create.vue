@@ -180,6 +180,14 @@
               data-vv-name="text"
               auto-grow
             />
+            <v-textarea
+              v-model="description"
+              :error-messages="errors.collect('description')"
+              box
+              label="یادداشت آگهی"
+              data-vv-name="description"
+              auto-grow
+            />
             <v-btn :loading="submit_loader" outline color="accent" round @click="processSubmit">
               <v-icon class="px-1">save</v-icon>
               ذخیره
@@ -207,8 +215,10 @@
     },
 
     data: () => ({
+
       page_title: 'ثبت جدید',
       // advert
+      description: '',
       title: null,
       cityName: null,
       allCities: false,
@@ -231,6 +241,7 @@
       // validator dictionary
       dictionary: {
         attributes: {
+          description: 'یادداشت آگهی',
           title: "عنوان آگهی",
           city: "شهر",
           text: "متن توضیحات آگهی",
@@ -346,6 +357,7 @@
       },
       sendForm() {
         let data = Helper.selectDataForSend(this.formType.type, this);
+        _.set(data, 'description', this.description || '');
         this.$axios
           .$post(this.createPath, data)
           .then(() => {

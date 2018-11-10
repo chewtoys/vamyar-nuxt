@@ -180,6 +180,14 @@
               data-vv-name="text"
               auto-grow
             />
+            <v-textarea
+              v-model="description"
+              :error-messages="errors.collect('description')"
+              box
+              label="یادداشت آگهی"
+              data-vv-name="description"
+              auto-grow
+            />
             <v-btn :loading="submit_loader" outline color="accent" round @click="processSubmit">
               <v-icon class="px-1">save</v-icon>
               ذخیره
@@ -207,8 +215,10 @@
     },
 
     data: () => ({
+      data: [],
       page_title: 'ویرایش آگهی',
       // advert
+      description: '',
       title: null,
       cityName: null,
       allCities: false,
@@ -231,6 +241,7 @@
       // validator dictionary
       dictionary: {
         attributes: {
+          description: 'یادداشت آگهی',
           title: "عنوان آگهی",
           city: "شهر",
           text: "متن توضیحات آگهی",
@@ -269,15 +280,15 @@
           if (this.allCities) return 0;
           let list = this.$store.state.city.data;
           let index = _.findIndex(list, {'name': this.cityName});
-          let item = list[index];
+          let item = _.get(list, [index], []);
           return _.get(item, 'id', 0);
         },
         set: function (val) {
           if (this.allCities) return 0;
           let list = this.$store.state.city.data;
           let index = _.findIndex(list, {'id': val});
-          let item = list[index];
-          this.cityName = item.name;
+          let item = _.get(list, [index], []);
+          this.cityName = _.get(item, 'name', '');
         }
       },
       loanType: {
@@ -337,17 +348,9 @@
         let loanTypeData = await $axios.$get(loanTypeMethod);
         store.commit('loanType/setAndProcessData', loanTypeData.data || []);
 
-        // get advert data
-        let getPath = `/admin/${formType.type}/${id}`;
-        let query = {
-          include: 'guaranteeTypes'
-        }
-        let {data} = await $axios.$get(getPath, {params: query});
-        console.log('get:', getPath, {params: query}, data)
         return {
           page_title,
           formType,
-          data,
           slug,
           id,
           guaranteeTypesList: _.get(store.state, 'guaranteeType.arrayList', []),
@@ -361,12 +364,29 @@
       }
     },
     mounted() {
+
       this.$validator.localize("fa", this.dictionary);
-      let editableFields = Helper.getTypeFields(this.formType.type, 'edit');
-      _.forEach(editableFields, (value) => {
-        //console.log({value}, value.name, value.path)
-        _.set(this, [value.name], _.get(this.data, `${value.path}`, ''));
+      // get advert data
+      let getPath = `/admin/${this.formType.type}/${this.id}`;
+      let query = {
+        include: 'guaranteeTypes,user.advert.details',
+        advertableType: this.formType.advertType
+      }
+
+      this.$axios.$get(getPath, {params: query}).then(res => {
+        this.data = res.data || [];
+        console.log(this.data)
+        let editableFields = Helper.getTypeFields(this.formType.type, 'edit');
+        _.forEach(editableFields, (value) => {
+          //console.log({value}, value.name, value.path)
+          _.set(this, [value.name], _.get(this.data, `${value.path}`, ''));
+        })
+        this.description = _.get(this, 'data.advert.description')
+        console.log('get:', getPath, {params: query}, this.data)
+      }).catch(err => {
+        console.log(err)
       })
+
     },
     methods: {
       getTitle(name, which = 'create') {
@@ -381,6 +401,7 @@
       },
       sendForm() {
         let data = Helper.selectDataForSend(this.formType.type, this, 'edit');
+        _.set(data, 'description', this.description || '');
         this.$axios
           .$put(this.editPath, data)
           .then(() => {

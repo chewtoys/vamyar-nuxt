@@ -37,24 +37,9 @@
             ثبت جدید
           </v-btn>
         </v-toolbar>
-        <v-card-title>
-          <div v-if="false">
-            جست‌و‌جو
-            <v-spacer></v-spacer>
-            <v-text-field
-              v-model="search"
-              append-icon="search"
-              label="چیزی بنویسید"
-              single-line
-              hide-details
-            ></v-text-field>
-          </div>
-        </v-card-title>
-
         <v-data-table
           v-model="selected"
           item-key="id"
-
           select-all
           :headers="headers"
           :items="data"
@@ -84,9 +69,25 @@
                 hide-details
               ></v-checkbox>
             </td>
-            <td class="text-xs-right">{{ props.item.id }}</td>
             <td class="text-xs-right">
-              <nuxt-link :to="uri + '/edit/' + props.item.id">{{ props.item.name || '-' }}</nuxt-link>
+              <nuxt-link :to="uri + '/edit/' + props.item.id">
+                {{ props.item.id }}
+              </nuxt-link>
+            </td>
+            <td class="text-xs-right">
+              {{ props.item.email }}
+            </td>
+            <td class="text-xs-right">
+              {{ props.item.mobile }}
+            </td>
+            <td class="text-xs-right">
+              {{ (props.item.firstName || '-') + ' ' + (props.item.lastName || '')}}
+            </td>
+            <td class="text-xs-right">
+              {{ props.item.jUpdatedAt }}
+            </td>
+            <td class="text-xs-right">
+              {{ props.item.jCreatedAt }}
             </td>
             <td class="text-xs-left">
               <nuxt-link title="مشاهده و پاسخ" :to=" uri + '/edit/' + props.item.id" class="mx-1">
@@ -119,14 +120,17 @@
 <script>
   import Helper from "~/assets/js/helper.js"
 
-  const page_title = 'دسته بندی های تیکت',
-    ticketCategoriesMethod = '/ticketCategories',
-    breadcrumb = 'لیست دسته بندی ها',
-    indexPath = '/admin/ticketCategories',
-    createPath = '/admin/tickets/categories/create',
+  const page_title = 'لیست مدیران',
+    breadcrumb = 'مدیران',
+    indexPath = '/admin/moderators',
+    createPath = '/admin/moderators/create',
     headers = [
       {text: '‌شناسه', value: 'id', align: 'right'},
-      {text: 'عنوان', value: 'name', align: 'right'},
+      {text: 'ایمیل', value: 'email', align: 'right'},
+      {text: 'موبایل', value: 'mobile', align: 'right'},
+      {text: 'نام و نام خانوادگی', value: 'lastName', align: 'right'},
+      {text: 'آخرین ویرایش', value: 'jUpdatedAt', align: 'right'},
+      {text: 'ثبت حساب', value: 'jCreatedAt', align: 'right'},
       {text: 'عملیات', sortable: false, align: 'left', width: '140px'},
     ]
 
@@ -150,7 +154,7 @@
         return _.get(this.paginator, 'totalPages', 1)
       },
       uri() {
-        return `/admin/tickets/categories`;
+        return `/admin/moderators`;
       },
       headers() {
         return headers;
@@ -195,24 +199,11 @@
       },
     },
     async asyncData({params, store, $axios}) {
-      try {
-        // loan types
-        let ticketCategories = await
-          $axios.$get(ticketCategoriesMethod);
-        store.commit('ticketCategory/setAndProcessData', ticketCategories.data || []);
-      } catch (error) {
-        //console.log('error', error)
-      }
+
     }
     ,
     methods: {
 
-      category(id) {
-        let list = this.$store.state.ticketCategory.data;
-        let index = _.findIndex(list, {id});
-        let item = list[index];
-        return _.get(item, 'name', '');
-      },
       deleteItems() {
         if (confirm('آیا مطمئن هستید که می خواهید این موارد را حذف کنید؟')) {
           _.forEach(this.selected, (obj, key) => {
@@ -224,9 +215,10 @@
         if (confirm('آیا مطمئن هستید که می خواهید این مورد را حذف کنید؟')) {
           this.deleteById(id)
         }
-      },
+      }
+      ,
       deleteById: function (id) {
-        let deletePath = `/admin/ticketCategories/${id}`;
+        let deletePath = `${this.uri}/${id}`;
         //console.log(deletePath)
         _.remove(this.data, function (obj) {
           return _.get(obj, 'id', '') === id;

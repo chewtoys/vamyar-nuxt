@@ -136,6 +136,7 @@
       breadcrumb: breadcrumb
     },
     data: () => ({
+      description: '',
       data: [],
       totalData: 10,
       loading: true,

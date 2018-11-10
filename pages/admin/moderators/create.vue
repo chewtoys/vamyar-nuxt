@@ -28,11 +28,54 @@
           <form>
             <v-text-field
               v-validate="'required'"
-              v-model="name"
-              :error-messages="errors.collect('name')"
+              v-model="firstName"
+              :error-messages="errors.collect('firstName')"
               box
-              data-vv-name="name"
-              label="عنوان"
+              data-vv-name="firstName"
+              label="نام"
+            />
+            <v-text-field
+              v-validate="''"
+              v-model="lastName"
+              :error-messages="errors.collect('lastName')"
+              box
+              data-vv-name="lastName"
+              label="نام خانوادگی"
+            />
+            <v-text-field
+              v-validate="'required|min:10|numeric'"
+              v-model="mobile"
+              :error-messages="errors.collect('mobile')"
+              box
+              data-vv-name="mobile"
+              label="موبایل"
+            />
+            <v-text-field
+              v-validate="'required|email'"
+              v-model="email"
+              :error-messages="errors.collect('email')"
+              box
+              type="email"
+              data-vv-name="email"
+              label="ایمیل"
+            />
+            <v-text-field
+              v-validate="'required|min:6'"
+              v-model="password"
+              :error-messages="errors.collect('password')"
+              box
+              type="password"
+              data-vv-name="password"
+              label="رمز عبور"
+            />
+            <v-text-field
+              v-validate="'required|min:6'"
+              v-model="password_confirmation"
+              :error-messages="errors.collect('password_confirmation')"
+              box
+              type="password"
+              data-vv-name="password_confirmation"
+              label="تایید رمز عبور"
             />
             <v-btn :loading="submit_loader" outline color="accent" round @click="processSubmit">
               <v-icon class="px-1">save</v-icon>
@@ -47,10 +90,10 @@
 <script>
   import Helper from '~/assets/js/helper'
 
-  const page_title = 'ثبت دسته بندی جدید',
-    breadcrumb = 'ایجاد دسته بندی',
-    indexPath = '/admin/tickets/categories',
-    createPath = '/admin/ticketCategories'
+  const page_title = 'ساخت حساب جدید',
+    breadcrumb = 'مدیر جدید',
+    indexPath = '/admin/moderators',
+    resourcePath = '/admin/moderators'
 
   export default {
     $_veeValidate: {
@@ -64,36 +107,47 @@
     data: () => ({
       page_title,
       // ticket
-      name: null,
+      firstName: null,
+      lastName: null,
+      mobile: null,
+      email: null,
+      image: null,
+      password: null,
+      password_confirmation: null,
 
       // validator dictionary
       dictionary: {
         attributes: {
-          name: "عنوان دسته بندی",
+          firstName: "نام",
+          lastName: "نام خانوادگی",
+          mobile: "موبایل",
+          email: "ایمیل",
+          image: "عکس",
+          password: "رمز عبور",
+          password_confirmation: "تکرار رمز عبور",
           // custom attributes
         }
       },
       submit_loader: false
     }),
+    mounted() {
+      this.$validator.localize("fa", this.dictionary);
+    },
     computed:
       {
+        uri() {
+          return `${resourcePath}`;
+        },
         list: function () {
           return indexPath;
         }
-        ,
-        createPath: function () {
-          return createPath;
-        },
       }
     ,
-    async asyncData({params, store, $axios}) {
-
-    }
-    ,
-    mounted() {
-      this.$validator.localize("fa", this.dictionary)
-    }
-    ,
+    async asyncData({params}) {
+      return {
+        id: params.id
+      }
+    },
     methods: {
       toast(msg, color) {
         this.$store.commit("snackbar/setSnack", msg, color)
@@ -101,10 +155,16 @@
       ,
       sendForm() {
         let data = {
-          name: this.name
+          firstName: this.firstName,
+          lastName: this.lastName,
+          email: this.email,
+          image: this.image,
+          mobile: this.mobile,
+          password: this.password,
+          password_confirmation: this.password_confirmation
         }
         this.$axios
-          .$post(createPath, data)
+          .$post(this.uri, data)
           .then(() => {
             let status = true
             if (status) {
