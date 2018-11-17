@@ -7,6 +7,7 @@ import VeeValidate, {Validator} from "vee-validate"
 //import tinymce from "vue-tinymce-editor"
 //import TinyMCE from 'tinymce-vue-2';
 import farsi from 'vuetify/es5/locale/fa'
+
 //import PDatePicker from "vue2-persian-datepicker";
 //import farsi from "vuetify/src/locale/fa.ts"
 // const farsi = required("~/assets/lang/fa");

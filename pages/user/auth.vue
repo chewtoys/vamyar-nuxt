@@ -183,6 +183,7 @@
     layout: "auth",
     data() {
       return {
+        path: null,
         formUsername: null,
         formPassword: null,
         loginLoader: false,
@@ -206,13 +207,26 @@
 
       }
     },
+    asyncData({route}) {
+      let path = _.get(route, 'query.path', '');
+      return {
+        path
+      };
+    },
+    mounted() {
+      //alert(this.path)
+    },
     middleware: "notAuthenticated",
     computed: {
       loginBtn() {
         return !this.formUsername || !this.formPassword
+      },
+      redirectPath() {
+        return decodeURI(this.path || "/user");
       }
     },
     methods: {
+
       msgError(msg) {
         this.error = msg
         this.success = null
@@ -325,7 +339,7 @@
             })
         }
       },
-      login: function () {
+      login() {
         this.loginLoader = true
         let resource = login_path
         let username = this.formUsername
@@ -346,7 +360,7 @@
             if (access_token) {
               Cookie.set("auth", access_token)
               this.$store.commit("user/updateToken", access_token)
-              window.location = "/user"
+              window.location = this.redirectPath
               //this.$router.push('/user/')
             } else {
               this.msgError("مشخصات صحیح نمی باشد.")

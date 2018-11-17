@@ -58,6 +58,29 @@
         no-action
       >
         <v-list-tile slot="activator">
+          <v-list-tile-title class="text-justify rtl">مطالب</v-list-tile-title>
+        </v-list-tile>
+
+        <v-list-tile
+          v-for="item in content"
+          :key="item.title"
+          :to="item.to"
+        >
+          <v-list-tile-action>
+            <v-icon v-text="item.icon"/>
+          </v-list-tile-action>
+          <v-list-tile-title class="text-justify rtl" v-text="item.title"/>
+
+        </v-list-tile>
+      </v-list-group>
+      <v-divider/>
+      <v-list-group
+        v-if="true"
+        group
+        value="false"
+        no-action
+      >
+        <v-list-tile slot="activator">
           <v-list-tile-title class="text-justify rtl">مدیریت</v-list-tile-title>
         </v-list-tile>
         <v-list-tile
@@ -87,8 +110,13 @@
       panel: [
         {title: "تیکت ها", icon: "inbox", to: "/admin/tickets"},
         {title: "دسته بندی تیکت ها", icon: "inbox", to: "/admin/tickets/categories"},
-        {title: "لاگ کاربران", icon: "inbox", to: "/user/logs"},
-        //{title: 'صندوق پیام ها', icon: 'inbox', to: '/user/settings'},
+        {title: "لاگ کاربران", icon: "inbox", to: "/users/logs"},
+        {title: "لیست کاربران", icon: "inbox", to: "/users"},
+      ],
+      content: [
+        {title: "دسته بندی مطالب", icon: "inbox", to: "/admin/posts/categories"},
+        {title: "لیست مطالب", icon: "inbox", to: "/admin/posts"},
+        {title: "آموزش ها", icon: "inbox", to: "/user/education"},
       ],
       adminSection: [
         {title: "مدیرها", icon: "inbox", to: "/admin/moderators"},

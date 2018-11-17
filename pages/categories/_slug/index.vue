@@ -186,7 +186,7 @@
       let slug = params.slug
       let type = Helper.getTypeByAlias(slug)
 
-      let method = `/site/${slug}`
+      let method = `/site/${type.type}`
       let cursor, must
       cursor = 0
 
@@ -298,7 +298,7 @@
         let city_key = this.city_search
         let title = this.title_search
 
-        let method = `/site/${this.slug}`
+        let method = `/site/${this.type.type}`
         let advertableType = this.type.type
         let cursor, must
         cursor = 0
