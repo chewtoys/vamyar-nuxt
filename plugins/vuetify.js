@@ -8,6 +8,11 @@ import VeeValidate, {Validator} from "vee-validate"
 //import TinyMCE from 'tinymce-vue-2';
 import farsi from 'vuetify/es5/locale/fa'
 
+
+// Import and use Vue Froala lib.
+//import VueFroala from 'vue-froala-wysiwyg'
+//Vue.use(VueFroala)
+
 //import PDatePicker from "vue2-persian-datepicker";
 //import farsi from "vuetify/src/locale/fa.ts"
 // const farsi = required("~/assets/lang/fa");

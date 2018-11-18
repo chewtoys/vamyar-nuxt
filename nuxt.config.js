@@ -3,6 +3,7 @@ const nodeExternals = require('webpack-node-externals')
 import webpack from 'webpack'
 
 export default {
+
   mode: 'universal',
 
   head: {
@@ -14,6 +15,10 @@ export default {
       {hid: "description", name: "description", content: "Vamyar project"}
     ],
     link: [
+      {
+        rel: 'stylesheet',
+        href: 'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'
+      },
       {rel: "icon", type: "image/x-icon", href: "/favicon.ico"},
       {
         rel: "stylesheet",
@@ -36,9 +41,17 @@ export default {
   },
 
   loading: {color: '#1BF'},
-  css: ["~assets/app.styl", "~assets/helper.styl", "~assets/font.styl"],
+  css: ["~assets/app.styl", "~assets/helper.styl", "~assets/font.styl",
+    //'~/node_modules/vue-wysiwyg/dist/vueWysiwyg.css',
+    '~/node_modules/froala-editor/css/froala_editor.pkgd.min.css',
+    '~/node_modules/froala-editor/css/froala_style.min.css'
+  ],
 
   plugins: [
+    {
+      src: '~/plugins/editor',
+      ssr: false
+    },
     "~/plugins/vuetify.js",
     {
       src: "~/plugins/siema.js",
@@ -68,7 +81,9 @@ export default {
   build: {
     plugins: [
       new webpack.ProvidePlugin({
-        '_': 'lodash'
+        '_': 'lodash',
+        '$': 'jquery',
+        jQuery: 'jquery'
       })
     ],
     extend(config, ctx) {

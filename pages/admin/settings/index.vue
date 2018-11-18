@@ -137,6 +137,9 @@
           data-vv-name="educationText"
           auto-grow
         />
+
+        <Editor v-model="content"/>
+
       </v-card-text>
       <v-card-actions>
         <v-btn outline color="green" round @click="save" :loading="saveLoading" :pending="savePending">
@@ -148,7 +151,7 @@
 </template>
 <script>
   import Helper from '~/assets/js/helper'
-
+  import Editor from '~/components/elements/Editor'
 
   const SAVE_PATH = '/settings'
   export default {
@@ -156,8 +159,16 @@
       breadcrumb: 'تنظیمات عمومی',
       title: 'تنظیمات عمومی سایت'
     },
+    components: {Editor},
     data() {
       return {
+        content: '',
+        config: {
+          toolbar: [
+            ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript']
+          ],
+          height: 300
+        },
         savePending: false,
         saveLoading: false,
 
