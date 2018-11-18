@@ -39,19 +39,18 @@ export default {
       }
     }
   },
-  async mounted() {
-    try {
-      this.data = await this.$axios.$get(path, {
-        params: { include: "advertable" }
-      })
-    } catch (err) {
-      this.$store.commit(
-        "snackbar/setSnack",
-        "مشکلی در گرفتن آگهی ها پیش آمد.",
-        "error"
-      )
-      this.data = []
-    }
+   mounted() {
+     this.$axios.$get(path, {
+       params: {include: "advertable", number: 12}
+     }).then(res => {
+       this.data = _.get(res, 'data', [])
+     }).catch((err) => {
+       this.$store.commit(
+         "snackbar/setSnack",
+         "مشکلی در گرفتن آگهی ها پیش آمد.",
+         "error"
+       )
+     })
   }
 }
 </script>
