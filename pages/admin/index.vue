@@ -3,8 +3,12 @@
 </template>
 
 <script>
-export default {
-  components: {},
-  layout: "admin"
-}
+  export default {
+    meta: {
+      title: 'عنوان',
+      breadcrumb: 'داشبورد مدیریت'
+    },
+    components: {},
+    layout: "admin"
+  }
 </script>

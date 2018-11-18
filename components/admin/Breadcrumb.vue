@@ -1,46 +1,29 @@
 <template>
   <div>
-    <v-breadcrumbs>
+    <v-breadcrumbs v-if="meta && meta.length > 0">
       <v-icon slot="divider">chevron_left</v-icon>
+
       <v-breadcrumbs-item
-        v-for="_item in _items"
-        :disabled="_item.disabled"
-        :key="_item.text"
-        :href="_item.to"
+        v-for="(item,i ) in meta"
+        v-if="item && item.breadcrumb"
+        :disabled="!item.link"
+        :to="item.link"
+        :key="i"
       >
-        {{ _item.text }}
-
-
-
-      </v-breadcrumbs-item>
-      <v-breadcrumbs-item
-        v-for="item in items"
-        :disabled="item.disabled"
-        :key="item.text"
-        href="./"
-
-      >
-        {{ item.text }}
-
+        {{ item.breadcrumb }}
       </v-breadcrumbs-item>
     </v-breadcrumbs>
   </div>
 </template>
+
 <script>
-export default {
-  computed: {
-    _items() {
-      return [
-        {
-          text: "پنل مدیریت",
-          disabled: false,
-          to: "/admin"
-        }
-      ]
+  export default {
+    computed: {
+      meta() {
+        return this.$store.state.navigation.meta
+      }
     },
-    items() {
-      return this.$store.state.page.breadcrumb
+    mounted() {
     }
   }
-}
 </script>

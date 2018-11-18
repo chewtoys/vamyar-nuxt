@@ -27,6 +27,8 @@
         </v-container>
       </v-card-text>
 
+      <br/>
+      <p>{{settings('site.footerText')}}</p>
       <v-divider/>
 
       <v-card-text class="white--text">
@@ -36,19 +38,23 @@
   </v-footer>
 </template>
 <script>
-export default {
-  data: () => ({}),
-  computed: {
-    access() {
-      return [
-        { id: 0, title: "صفحه ی نخست", icon: "home", to: "/" },
-        { id: 1, title: "تماس با ما", icon: "phone", to: "/pages/contact-us" },
-        { id: 2, title: "درباره ما", icon: "subject", to: "/pages/about-us" },
-        { id: 3, title: "قوانین", icon: "event_note", to: "/pages/rules" },
-        { id: 4, title: "آموزش ها", icon: "local_library", to: "/education" },
-        { id: 5, title: "اخبار", icon: "whatshot", to: "/news" }
-      ]
+  export default {
+    data: () => ({}),
+    computed: {
+      access() {
+        return [
+          {id: 0, title: "صفحه ی نخست", icon: "home", to: "/"},
+          {id: 1, title: "تماس با ما", icon: "phone", to: "/pages/contact-us"},
+          {id: 2, title: "درباره ما", icon: "subject", to: "/pages/about-us"},
+          {id: 3, title: "قوانین", icon: "event_note", to: "/pages/rules"},
+          {id: 4, title: "آموزش ها", icon: "local_library", to: "/education"},
+          {id: 5, title: "اخبار", icon: "whatshot", to: "/news"}
+        ]
+      }
+    }, methods: {
+      settings(key) {
+        return _.get(this.$store.state.settings.data, key, '')
+      }
     }
   }
-}
 </script>

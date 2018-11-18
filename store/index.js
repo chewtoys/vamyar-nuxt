@@ -1,5 +1,12 @@
 import cookieparser from "cookieparser"
 
+const guaranteeMethod = '/guaranteeTypes',
+  loanTypeMethod = '/loanTypes',
+  cityMethod = '/cities?number=3000',
+  settingsMethod = '/settings',
+  contactUsMethod = '/site/contact-us',
+  aboutUsMethod = '/site/about-us'
+
 export const state = () => ({
   temp: {
     lorem:
@@ -23,8 +30,9 @@ export const state = () => ({
     title: "بدون عنوان",
     breadcrumb: null
   },
-  secret: "pt1BQC1dxHU9taQQovJlpgZzmx0tUNMxlTVIUWk4"
-})
+  client_secret: "zNHQAQZf88ixn2ufHXVukKz2in2tFfPfnqNkBTtD",
+  client_id: 1,
+});
 
 export const mutations = {
   setPageData(state, data) {
@@ -33,41 +41,97 @@ export const mutations = {
   debug(state, data) {
     state.debug = data
   }
-}
+};
 export const actions = {
-  async nuxtServerInit({ commit }, { $axios, route, redirect, req }) {
+  async nuxtServerInit({commit, dispatch}, {$axios, route, redirect, req}) {
     // user
-    let accessToken = null
-    if (req.headers.cookie) {
-      let parsed = cookieparser.parse(req.headers.cookie)
-      if (parsed.auth) {
-        accessToken = parsed.auth
-        $axios.setHeader("Authorization", `Bearer ${accessToken}`)
-        try {
-          let { data } = await $axios.$get("/user/details")
-          if (data && data.details.firstName) {
-            commit("user/updateUserInfo", data)
-          } else if (data) {
-            commit("user/updateUserInfo", data)
-            //console.log('Router', route);
-            let path = "/user/profile/edit"
-            if (route.path !== path) redirect(path)
+
+    if (!_.startsWith(route.path, '/admin')) {
+      let accessToken = null;
+      if (req.headers.cookie) {
+        let parsed = cookieparser.parse(req.headers.cookie);
+        if (parsed.auth) {
+          accessToken = parsed.auth;
+          $axios.setHeader("Authorization", `Bearer ${accessToken}`);
+          try {
+            let {data} = await $axios.$get("/user/details");
+            if (_.has(data, 'details')) {
+              commit("user/updateUserInfo", data)
+            }
+          } catch (error) {
+            //console.log('AUTH ERROR', error)
+            //return  redirect('/user/auth');
           }
-        } catch (error) {
-          //console.log('AUTH ERROR', error)
+          commit("user/updateToken", accessToken)
         }
-        commit("user/updateToken", accessToken)
       }
     }
 
     //admin
-    let adminAccessToken = null
-    if (req.headers.cookie) {
-      let parsed = cookieparser.parse(req.headers.cookie)
-      if (parsed.adminauth) {
-        adminAccessToken = parsed.adminauth
-        commit("admin/updateAdminToken", adminAccessToken)
+
+    if (!!_.startsWith(route.path, '/admin')) {
+      let adminAccessToken = null;
+      if (req.headers.cookie) {
+        let parsed = cookieparser.parse(req.headers.cookie);
+        if (parsed.adminauth) {
+          adminAccessToken = parsed.adminauth;
+          commit("admin/updateAdminToken", adminAccessToken)
+        }
       }
     }
+
+    // city resource
+    /*
+    // used in advert creation
+    try {
+      let cityData = await this.$axios.$get(cityMethod);
+      commit('city/setAndProcessData', cityData.data || []);
+      //dispatch('city/makeArrayList');
+    } catch (error) {
+      //console.log(error)
+    }
+
+
+    // guarantee resources
+    // used in advert creation
+    try {
+      let guaranteeData = await this.$axios.$get(guaranteeMethod);
+      commit('guaranteeType/setAndProcessData', guaranteeData.data || []);
+    } catch (error) {
+      //console.log(error)
+    }
+
+    // loan types resources
+    try {
+      let loanTypeData = await this.$axios.$get(loanTypeMethod);
+      commit('loanType/setData', loanTypeData.data || []);
+    } catch (error) {
+      //console.log(error)
+    }
+  */
+    // settings resources
+    try {
+      let settingsData = await this.$axios.$get(settingsMethod);
+      commit('settings/setAndProcessData', settingsData.data || []);
+    } catch (error) {
+      //console.log(error)
+    }
+    /*
+    // about us resource
+    try {
+      let aboutUsData = await this.$axios.$get(aboutUsMethod);
+      commit('site/aboutUs/setData', aboutUsData.data || []);
+    } catch (error) {
+      //console.log(error)
+    }
+    // contact us resources
+    try {
+      let contactUsData = await this.$axios.$get(contactUsMethod);
+      commit('site/contactUs/setData', contactUsData.data || []);
+    } catch (error) {
+      //console.log(error)
+    }
+    */
+
   }
-}
+};

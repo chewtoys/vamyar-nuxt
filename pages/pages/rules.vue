@@ -4,10 +4,12 @@
       <v-flex xs12>
         <v-card>
           <v-card-title>
-            <h2><v-icon class="pb-2">flag</v-icon><span>قوانین</span></h2>
+            <h2>
+              <v-icon class="pb-2">flag</v-icon>
+              <span>قوانین</span></h2>
           </v-card-title>
           <v-card-text>
-            <div>{{ text }}</div>
+            <div>{{ settings('pages.rulesText') }}</div>
           </v-card-text>
         </v-card>
       </v-flex>
@@ -15,15 +17,19 @@
   </v-container>
 </template>
 <script>
-export default {
-  meta: {
-    title: "قوانین"
-  },
-  layout: "site",
-  computed: {
-    text() {
-      return this.$store.state.temp.lorem
+  export default {
+    meta: {
+      title: "قوانین"
+    },
+    layout: "site",
+    computed: {
+      text() {
+        return this.$store.state.temp.lorem
+      }
+    }, methods: {
+      settings(key) {
+        return _.get(this.$store.state.settings.data, key, '')
+      }
     }
   }
-}
 </script>

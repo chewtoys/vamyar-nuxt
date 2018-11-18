@@ -1,6 +1,6 @@
 <template>
   <span>
-    <v-toolbar flat color="white" class="white grey--text" app>
+    <v-toolbar v-scroll="onScroll" flat color="white" class="white grey--text" app>
       <v-btn flat color="transparent" class="white--text" to="/">
         <v-icon class="deep-purple--text font-16 pl-1">polymer</v-icon>
         <v-toolbar-title>
@@ -8,7 +8,12 @@
         </v-toolbar-title>
       </v-btn>
       <v-divider vertical/>
-      <v-toolbar-items class="hidden-sm-and-down">
+      <v-toolbar-items v-if="showQuickAccess">
+        <v-btn to="/categories/loans" flat>وام ها</v-btn>
+        <v-btn to="/categories/co-signers" flat>ضامن ها</v-btn>
+        <v-btn to="/categories/finances" flat>سرمایه گذاری ها</v-btn>
+      </v-toolbar-items>
+      <v-toolbar-items v-if="!showQuickAccess && !isMobile">
         <v-menu :nudge-width="100">
           <v-btn slot="activator" flat>
             <span>دسته بندی ها</span>
@@ -24,13 +29,17 @@
             </v-list-tile>
           </v-list>
         </v-menu>
-        <v-btn to="/how-it-works" flat>چگونه کار می کند؟</v-btn>
-        <v-btn to="/plans" flat>تعرفه ها</v-btn>
+        <v-btn to="/pages/plans" flat>تعرفه ها</v-btn>
+        <v-btn to="/posts" flat>اخبار</v-btn>
+        <v-btn to="/user/councils/create" flat>مشاوره</v-btn>
+        <v-btn to="/user" flat>حساب من</v-btn>
       </v-toolbar-items>
+      <v-spacer/>
+        <searchBar/>
       <v-spacer/>
       <v-toolbar-side-icon v-if="isMobile" white--text @click.stop="drawer = !drawer"/>
       <v-toolbar-items class="hidden-sm-and-down">
-        <v-btn flat to="/user" class="deep-orange--text font-14">حساب کاربری</v-btn>
+        <v-btn flat to="/user/adverts/loans/create" class="deep-orange--text font-14">ثبت رایگان آگهی</v-btn>
       </v-toolbar-items>
     </v-toolbar>
 
@@ -90,7 +99,13 @@
           </v-list-tile-avatar>
           <v-list-tile-title class="text-justify rtl">آموزش ها</v-list-tile-title>
         </v-list-tile>
-        <v-list-tile class="pb-2" to="/">
+        <v-list-tile class="pb-2" to="/user/councils/create">
+          <v-list-tile-avatar>
+            <v-icon v-text="'lock'"/>
+          </v-list-tile-avatar>
+          <v-list-tile-title class="text-justify rtl">مشاوره</v-list-tile-title>
+        </v-list-tile>
+        <v-list-tile class="pb-2" to="/user">
           <v-list-tile-avatar>
             <v-icon v-text="'lock'"/>
           </v-list-tile-avatar>
@@ -101,64 +116,77 @@
   </span>
 </template>
 <script>
-export default {
-  data() {
-    return {
-      drawer: false
-    }
-  },
-  computed: {
-    isMobile() {
-      return this.$vuetify.breakpoint.smAndDown
-    },
-    title: function() {
-      return this.$store.state.site.title
-    },
-    heading: function() {
-      return this.$store.state.site.heading
-    },
-    subheading: function() {
-      return this.$store.state.site.subheading
-    },
-    headingitems: function() {
-      return this.$store.state.site.headingitems
-    },
-    items: function() {
-      return [
-        { title: "همه ی آگهی ها", hashtag: "all", link: "/categories/" },
-        { title: "وام", hashtag: "loan", link: "/categories/loans" },
-        {
-          title: "درخواست وام",
-          hashtag: "loan-request",
-          link: "/categories/loan-requests"
-        },
-        { title: "ضامن", hashtag: "co-signer", link: "/categories/co-signer" },
-        {
-          title: "درخواست ضامن",
-          hashtag: "co-signer-request",
-          link: "/categories/co-signer-request"
-        },
-        {
-          title: "سرمایه گذاری",
-          hashtag: "finances",
-          link: "/categories/finances"
-        },
-        {
-          title: "درخواست سرمایه گذاری",
-          hashtag: "finance-requests",
-          link: "/categories/finance-requests"
-        }
-      ]
-    }
-  },
-  mounted() {
-    this.drawer = !this.isMobile
-  },
 
-  methods: {
-    go: function(item) {
-      this.$router.push(item.to)
+  import searchBar from '~/components/site/searchBar.vue'
+
+  export default {
+    data() {
+      return {
+        drawer: false,
+        offsetTop: null,
+        showQuickAccess: false
+      }
+    },
+    computed: {
+      isMobile() {
+        return this.$vuetify.breakpoint.smAndDown
+      },
+      title: function () {
+        return this.$store.state.site.title
+      },
+      heading: function () {
+        return this.$store.state.site.heading
+      },
+      subheading: function () {
+        return this.$store.state.site.subheading
+      },
+      headingitems: function () {
+        return this.$store.state.site.headingitems
+      },
+      items: function () {
+        return [
+          {title: "همه ی آگهی ها", hashtag: "all", link: "/categories"},
+          {title: "وام", hashtag: "loan", link: "/categories/loans"},
+          {
+            title: "درخواست وام",
+            hashtag: "loan-request",
+            link: "/categories/loan-requests"
+          },
+          {title: "ضامن", hashtag: "co-signer", link: "/categories/co-signers"},
+          {
+            title: "درخواست ضامن",
+            hashtag: "co-signer-request",
+            link: "/categories/co-signer-requests"
+          },
+          {
+            title: "سرمایه گذاری",
+            hashtag: "finances",
+            link: "/categories/finances"
+          },
+          {
+            title: "درخواست سرمایه گذاری",
+            hashtag: "finance-requests",
+            link: "/categories/finance-requests"
+          }
+        ]
+      }
+    },
+    mounted() {
+      this.drawer = !this.isMobile
+    },
+    methods: {
+
+      onScroll(e) {
+        let top = this.offsetTop = window.pageYOffset || document.documentElement.scrollTop
+        this.showQuickAccess = this.offsetTop > 200;
+      },
+      go: function (item) {
+        this.$router.push(item.to)
+      }
+    },
+
+    components: {
+      searchBar
     }
   }
-}
 </script>

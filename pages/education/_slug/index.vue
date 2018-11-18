@@ -31,8 +31,9 @@
                 </v-card-text>
                 <v-card-actions>
                   <v-btn color="info" outline round>
-                    <v-icon class="pl-1">keyboard_arrow_left</v-icon>
-                  <span>مشاهده ی مطالب</span></v-btn>
+                  <span>مشاهده ی مطالب</span>
+                  <v-icon class="pr-1">keyboard_arrow_left</v-icon>
+                  </v-btn>
                 </v-card-actions>
               </v-card>
             </v-flex>

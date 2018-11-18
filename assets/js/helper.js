@@ -1,42 +1,66 @@
+import * as CONSTANTS from '~/assets/js/constants.js'
+
 const Helper = {
   // useful methods
-  getTypes: function(name = null) {
-    let types = advertTypes
+  getTypes: function (name = null) {
+    let types = CONSTANTS.advertTypes
     if (name && types[name]) {
       return types[name]
     } else {
       return types
     }
   },
-  getBreadcrumb: function(title) {
+  getBreadcrumb: function (title) {
     return title
   },
-  getPageTitle: function(title) {
+  getPageTitle: function (title) {
     return "آگهی‌های " + title
   },
-  getTypeByAlias: function(name = null) {
-    let types = advertAliases
-    if (name && types[name]) {
-      return types[name]
+  getFiltersByType(type) {
+    return _.get(CONSTANTS.filtersByField, type, []);
+  },
+  isFieldAllowByType(type, field, which = 'create') {
+    let fields = CONSTANTS.fieldByType;
+    return _.has(fields, `${type}.${which}`) ? !!(_.find(fields[type][which], {'name': field})) : false;
+  },
+  getFieldByType(type, field, which = 'create') {
+    let fields = CONSTANTS.fieldByType;
+    return _.find(_.get(fields, `${type}.${which}`, {}), {'name': field});
+  },
+  getFieldPath(type, field, which = 'edit') {
+    let fields = CONSTANTS.fieldByType;
+    return _.get(_.find(_.get(fields, `${type}.${which}`, {}), {'name': field}), 'path', field);
+  },
+  getTypeFields(type, which = 'create') {
+    let fields = CONSTANTS.fieldByType;
+    return _.get(fields, `${type}.${which}`, {})
+  },
+  isFieldAllowByAlias(slug, field, which = 'create') {
+    let type = this.getTypeByAlias(slug).type;
+    return this.isFieldAllowByType(type, field);
+  },
+  getTypeByAlias: function (alias = null) {
+    let types = CONSTANTS.advertAliases
+    if (alias && types[alias]) {
+      return types[alias]
     } else {
       return types
     }
   },
-  getAdvertLink: function(item) {
-    let type = this.getTypes(item.advertableType)
+  getAdvertLink: function (item) {
+    let types = CONSTANTS.advertTypes
+    let advertType = item.advertableType
+    let type = _.find(types, {'advertType': advertType})
     if (type && type.alias) {
-      return "/categories/" + type.alias + "/show/" + item.advertableId
+      return "/categories/" + type.alias + "/show/" + item.id
     } else {
       return "#type-not-found"
     }
   },
-  getAdvertType: function(item) {
-    let type = this.getTypes(item.advertableType)
-    if (type.title) {
-      return type.title
-    } else {
-      return "بدون نوع"
-    }
+  getAdvertType: function (item) {
+    let types = CONSTANTS.advertTypes
+    let advertType = item.advertableType
+    return _.get(_.find(types, {'advertType': advertType}), 'title', advertType || 'نامشخص');
   },
   limitStr(text = "", limit = 30, end = " ...") {
     return text.slice(0, limit) + end
@@ -47,77 +71,23 @@ const Helper = {
     return "تعیین نشده"
   },
   getRawHeaders(type) {
-    return rawHeaders && rawHeaders[type] ? rawHeaders[type] : []
+    return _.get(CONSTANTS.rawHeaders, `${type}`, [{text: 'id'}]);
+  },
+  getAdminRawHeaders(type) {
+    return _.get(CONSTANTS.adminRawHeaders, `${type}`, [{text: 'id'}]);
+  },
+  getGeneralSettingsGroup() {
+    return CONSTANTS.GENERAL_SETTINGS;
+  },
+  selectDataForSend(type, that, which = 'create') {
+    let fields = _.map(CONSTANTS.fieldByType[type][which], 'name');
+    //console.log('Fields:', {fields})
+    let all = {};
+    _.forEach(fields, (name) => {
+      _.set(all, name, _.get(that, name, ''))
+    })
+    return all;
   }
 }
-
-// data structure
-const rawHeaders = {
-    loan: [
-      {
-        text: "شناسه",
-        align: "right",
-        sortable: true,
-        value: "id"
-      },
-      { text: "عنوان", value: "title", align: "right" },
-      { text: "توضیحات", value: "description", align: "right" },
-      { text: "قیمت", value: "price", align: "left" },
-      { text: "مقدار وام", value: "amount", align: "left" },
-      { text: "عملیات", sortable: false, align: "left" }
-    ],
-    loanRequest: [
-      {
-        text: "شناسه",
-        align: "right",
-        sortable: true,
-        value: "id"
-      },
-      { text: "عنوان", value: "title", align: "right" },
-      { text: "توضیحات", value: "description", align: "right" },
-      { text: "قیمت", value: "price", align: "left" },
-      { text: "مقدار وام", value: "amount", align: "left" },
-      { text: "عملیات", sortable: false, align: "left" }
-    ]
-  },
-  advertAliases = {
-    "loan-requests": {
-      type: "loanRequest",
-      alias: "loan-requests",
-      title: "درخواست وام"
-    },
-    loans: { type: "loan", alias: "loans", title: "وام" },
-    finances: { type: "finance", alias: "finances", title: "سرمایه گذاری" },
-    "finance-requests": {
-      type: "financeRequest",
-      title: "درخواست سرمایه گذاری"
-    },
-    "co-signers": { type: "coSigner", alias: "co-signers", title: "ضامن" },
-    "co-signer-requests": {
-      type: "coSignerRequest",
-      alias: "co-signer-requests",
-      title: "درخواست ضامن"
-    }
-  },
-  advertTypes = {
-    loanRequest: {
-      type: "loanRequest",
-      alias: "loan-requests",
-      title: "درخواست وام"
-    },
-    loan: { type: "loan", alias: "loans", title: "وام" },
-    finance: { type: "finance", alias: "finances", title: "سرمایه گذاری" },
-    financeRequest: {
-      type: "financeRequest",
-      alias: "finance-requests",
-      title: "درخواست سرمایه گذاری"
-    },
-    coSigner: { type: "coSigner", alias: "co-signers", title: "ضامن" },
-    coSignerRequest: {
-      type: "coSignerRequest",
-      alias: "co-signer-requests",
-      title: "درخواست ضامن"
-    }
-  }
 
 export default Helper

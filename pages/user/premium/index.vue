@@ -46,6 +46,9 @@
                 ارتقای حساب
               </v-btn>
             </v-card-actions>
+            <h2>form</h2>
+            <div v-html="form">
+            </div>
           </v-card>
         </div>
       </div>
@@ -53,49 +56,73 @@
   </v-container>
 </template>
 <script>
-const gate_path = "/user/is-premium",
-  //plans = "/admin/cities",
-  page_title = "وضعیت اشتراک من",
-  breadcrumb = "اشتراک حساب کاربری"
-const info = {
-  title: "وضعیت اشتراک"
-  //text: "لورم ایپسوم یا طرح‌نما (به انگلیسی: Lorem ipsum) به متنی آزمایشی و بی‌معنی در صنعت چاپ، صفحه‌آرایی و طراحی گرافیک گفته می‌شود. طراح گرافیک از این متن به عنوان عنصری از ترکیب بندی برای پر کردن صفحه و ارایه اولیه شکل ظاهری و کلی طرح سفارش گرفته شده استفاده می نماید، تا از نظر گرافیکی نشانگر چگونگی نوع و اندازه فونت و ظاهر متن باشد. معمولا طراحان گرافیک برای صفحه‌آرایی، نخست از متن‌های آزمایشی و بی‌معنی استفاده می‌کنند تا صرفا به مشتری یا صاحب کار خود نشان دهند که صفحه طراحی یا صفحه بندی شده بعد از اینکه متن در آن قرار گیرد چگونه به نظر می‌رسد و قلم‌ها و اندازه‌بندی‌ها چگونه در نظر گرفته شده‌است. از آنجایی که طراحان عموما نویسنده متن نیستند و وظیفه رعایت حق تکثیر متون را ندارند و در همان حال کار آنها به نوعی وابسته به متن می‌باشد آنها با استفاده از محتویات ساختگی، صفحه گرافیکی خود را صفحه‌آرایی می‌کنند تا مرحله طراحی و صفحه‌بندی را به پایان برند.",
-  // heading: 'عنوان متن'
-}
-const benefits =
-  "با ارتقای حساب کاربری به حساب ویژه از مزایای زیر برخود از مزایای زیر برخوردار خواهید شد:"
-export default {
-  $_veeValidate: {
-    validator: "new"
-  },
-  meta: {
-    breadcrumb,
-    title: page_title
-  },
-  data: () => ({
-    info
-  }),
-  async asyncData() {
-    return {
-      upgradePrice: 20000,
-      userCharge: 19000,
-      benefits
-    }
-  },
-  computed: {
-    isPremium() {
-      return false
-    }
-  },
-  methods: {
-    upgrade() {
-      if (!this.isPremium) {
-        let data = this.$axios.get(gate_path)
-        // get code and redirect to gate
-      } else {
-        // alert message
+  const gate_path = "/user/is-premium",
+    //plans = "/admin/cities",
+    page_title = "وضعیت اشتراک من",
+    breadcrumb = "اشتراک حساب کاربری"
+  const info = {
+    title: "وضعیت اشتراک"
+    //text: "لورم ایپسوم یا طرح‌نما (به انگلیسی: Lorem ipsum) به متنی آزمایشی و بی‌معنی در صنعت چاپ، صفحه‌آرایی و طراحی گرافیک گفته می‌شود. طراح گرافیک از این متن به عنوان عنصری از ترکیب بندی برای پر کردن صفحه و ارایه اولیه شکل ظاهری و کلی طرح سفارش گرفته شده استفاده می نماید، تا از نظر گرافیکی نشانگر چگونگی نوع و اندازه فونت و ظاهر متن باشد. معمولا طراحان گرافیک برای صفحه‌آرایی، نخست از متن‌های آزمایشی و بی‌معنی استفاده می‌کنند تا صرفا به مشتری یا صاحب کار خود نشان دهند که صفحه طراحی یا صفحه بندی شده بعد از اینکه متن در آن قرار گیرد چگونه به نظر می‌رسد و قلم‌ها و اندازه‌بندی‌ها چگونه در نظر گرفته شده‌است. از آنجایی که طراحان عموما نویسنده متن نیستند و وظیفه رعایت حق تکثیر متون را ندارند و در همان حال کار آنها به نوعی وابسته به متن می‌باشد آنها با استفاده از محتویات ساختگی، صفحه گرافیکی خود را صفحه‌آرایی می‌کنند تا مرحله طراحی و صفحه‌بندی را به پایان برند.",
+    // heading: 'عنوان متن'
+  }
+  const benefits =
+    "با ارتقای حساب کاربری به حساب ویژه از مزایای زیر برخود از مزایای زیر برخوردار خواهید شد:"
+  export default {
+    $_veeValidate: {
+      validator: "new"
+    },
+    meta: {
+      breadcrumb,
+      title: page_title
+    },
+    data() {
+      return {
+        info,
+        form: '<p>hi</p>'
+      }
+    },
+    async asyncData({$axios, store}) {
+      let query = {
+        port: 'zarinpal',
+        coupon: '123123',
+        subscription: '1',
+      }
+      try {
+        let form = await $axios.$post('/user/subscriptions', query);
+        return {
+          form,
+          upgradePrice: 20000,
+          userCharge: 19000,
+          benefits
+        }
+      } catch (err) {
+        let form = err;
+        return {
+          form,
+          upgradePrice: 20000,
+          userCharge: 19000,
+          benefits
+        }
+        store.commit('snackbar/setSnack', err)
+      }
+
+
+
+    },
+    computed: {
+      isPremium() {
+        return false
+      }
+    },
+    methods: {
+      upgrade() {
+        if (!this.isPremium) {
+          let data = this.$axios.get(gate_path)
+          // get code and redirect to gate
+        } else {
+          // alert message
+        }
       }
     }
   }
-}
 </script>

@@ -4,100 +4,9 @@
       <v-subheader>
         فیلتر کنید
       </v-subheader>
-      <v-card class="pa-5" light color="grey lighten-4">
-        <div class="text-xs-right">
-          <v-layout row wrap inverse>
-            <v-flex xs12 md12>
-              <v-card class="elevation-0 pa-2" color="transparent" light>
-                <v-layout rwo wrap>
-                  <v-flex xs12 sm4 class="pa-1">
-                    <div>
-                      <v-select
-                        :items="category_items"
-                        v-model="category_search"
-                        :loading="city_loading"
-                        :menu-props="{contentClass:'farsi mx-3'}"
-                        label="نوع وام"
-                        light
-                        flat
-                        hide-details
-                        solo-inverted
-                        append-icon="list"
-                      />
-                    </div>
-                  </v-flex>
-                  <v-flex xs12 sm4 class="pa-1">
-                    <div>
-                      <v-autocomplete
-                        :menu-props="{contentClass:'farsi mx-3'}"
-                        :loading="city_loading"
-                        :items="city_items"
-                        :search-input.sync="city_search"
-                        v-model="city_select"
-                        append-icon="location_on"
-                        clearable
-                        light
-                        no-data-text="شهری یافت نشد"
-                        label="جست و جوی شهر"
-                        flat
-                        hide-no-data
-                        hide-details
-                        solo-inverted
-                      />
-                    </div>
-                  </v-flex>
-                  <v-flex xs12 sm4 class="pr-1 pt-1 pb-1 pl-0">
-                    <div>
-                      <v-text-field
-                        v-model="title_search"
-                        :loading="title_loading"
-                        solo-inverted
-                        label="عنوان"
-                        append-icon="label"
-                        light
-                        flat
-                        clearable
-                        @change="loadAgain()"
-                      />
-                    </div>
-                  </v-flex>
-                </v-layout>
-              </v-card>
-            </v-flex>
-            <v-flex xs12 sm12>
-              <div class="ltr">
-                <v-range-slider
-                  :tick-labels="range_labels"
-                  v-model="range_search"
-                  :min="range_search_min"
-                  :max="range_search_max"
-                  thumb-label
-                  class="ltr"
-                  light
-                  thumb-size="100"
-                  @change="loadAgain()"
-                >
-                  <template
-                    slot="thumb-label"
-                    slot-scope="props"
-                  >
-                    <span>
-                      {{ rangeLabels(4 - props.value) }}
-                    </span>
-                  </template>
-                </v-range-slider>
-              </div>
-            </v-flex>
-          </v-layout>
-        </div>
-      </v-card>
+      <Filters v-model="filter"/>
     </v-flex>
     <v-flex xs12 sm12>
-
-      <v-subheader>
-        لیست آگهی ها
-        {{ type.title }}
-      </v-subheader>
       <v-card color="transparent" flat>
         <v-container grid-list-lg fluid>
           <div v-if="loading">
@@ -107,7 +16,8 @@
             <v-flex
               v-for="item in items"
               :key="item.id"
-              sm6
+              :sm6="!!settings('adverts.isImageAllowed')"
+              :sm4="!settings('adverts.isImageAllowed')"
               lg4
               xl2
             >
@@ -127,203 +37,163 @@
   </v-layout>
 </template>
 <script>
-//import axios from 'axios'
-// /site/adverts?advertableType=loan&include=advertable
+  //import axios from 'axios'
+  // /site/adverts?advertableType=loan&include=advertable
 
-import ItemCard from "~/components/site/adverts/Loan.vue"
-import AdvertCard from "~/components/site/adverts/Advert.vue"
-import Helper from "~/assets/js/helper.js"
+  import ItemCard from "~/components/site/adverts/Loan.vue"
+  import AdvertCard from "~/components/site/adverts/Advert.vue"
+  import Filters from "~/components/site/adverts/Filters.vue"
+  import Helper from "~/assets/js/helper.js"
 
-const number = 4,
-  include = "advertable"
+  const number = 4
 
-export default {
-  meta: function() {
-    return {
-      title: this.title,
-      breadcrumb: this.breadcrumb
-    }
-  },
-  components: {
-    ItemCard,
-    AdvertCard
-  },
-  data() {
-    return {
-      // meta
-      title: "Ti",
-      breadcrumb: "Br",
-      page: 1,
-      size: "sm",
-      paginator: {},
-      loading: true,
-      btn_loading: false,
-      city_items: [],
-      range_loading: false,
-      range_search_min: 0,
-      category_items: [
-        "همه",
-        "دسته بندی اول",
-        "دسته بندی دوم",
-        "دسته بندی سوم",
-        "دسته بندی چهارم"
-      ],
-      category_search: null,
-      range_labels: [
-        "کمترین",
-        "تا 10 میلیون ",
-        "تا 50 میلیون",
-        "تا 500 میلیون",
-        "بیشتر از 500 میلیون"
-      ],
-      range_search_max: 4,
-      range_search: [0, 4],
-      range_values: [0, 10e7, 50 * 10e7, 500 * 10e7, 10e15],
-      city_loading: false,
-      city_search: null,
-      city_select: null,
-      title_loading: false,
-      title_search: null,
-      city_states: ["قم", "تهران"]
-    }
-  },
-  // loading the first items from server
-  async asyncData({ app, params, error }) {
-    let slug = params.slug
-    let type = Helper.getTypeByAlias(slug)
+  export default {
 
-    let method = `/site/${slug}`
-    let cursor, must
-    cursor = 0
 
-    if (!must) {
-      must = "advertableType=" + type.type + ",verified=true"
-    }
-
-    let query = {
-      number,
-      include,
-      must
-    }
-
-    try {
-      let { data, paginator } = await app.$axios.$get(method, {
-        params: query
-      })
-      let loading = false
-      return { items: data, paginator, loading, type, slug }
-    } catch (err) {
-      error({ statusCode: 404, message: "این صفحه فعال نمی باشد." })
-      return { items: [], paginator: [], loading: false, type, slug }
-    }
-  },
-  computed: {
-    // meta
-    ttitle: function() {
-      return "مشاهده‌ی آگهی‌‌های" + this.type.title
-    },
-    bbreadcrumb: function() {
-      return "مشاهده‌ی " + this.type.title
-    }
-  },
-  // watch if city changed
-  watch: {
-    city_search(val) {
-      val && val !== this.city_select && this.querySelections(val)
-    },
-    title_search(val) {
-      this.title_loading = true
-      setTimeout(() => {
-        this.title_loading = false
-      }, 3000)
-    }
-  },
-  // method used in page
-  methods: {
-    // select the proper city
-    querySelections(v) {
-      this.city_loading = true
-      // Simulated ajax query
-      setTimeout(() => {
-        this.city_items = this.city_states.filter(e => {
-          return (e || "").toLowerCase().indexOf((v || "").toLowerCase()) > -1
-        })
-        this.city_loading = false
-      }, 200)
-    },
-    rangeLabels(val) {
-      return this.range_labels[val]
-    },
-    // load more items
-    loadMore: async function() {
-      this.btn_loading = true
-      try {
-        let method = this.paginator.cursor.nextURL
-        let { data, paginator } = await this.$axios.$get(method, {
-          params: { number }
-        })
-        data.forEach((e, i) => {
-          this.items.push(e)
-        })
-
-        this.btn_loading = false
-
-        this.paginator = paginator
-      } catch (err) {
-        this.paginator.cursor.nextURL = false
-        this.$store.commit("snackbar/setSnack", "آگهی بیشتری وجود ندارد.")
+    data() {
+      return {
+        filter: {},
+        page: 1,
+        size: "sm",
+        paginator: {},
+        loading: true,
+        btn_loading: false,
       }
-      this.btn_loading = false
+    }
+    ,
+    watch: {
+      filter() {
+        this.loadAgain(this.filter)
+      }
     },
-    // reload as filter changed
+    // loading the first items from server
+    async asyncData({app, store, params, error, $axios}) {
+      let slug = params.slug
+      let type = Helper.getTypeByAlias(slug)
 
-    async loadAgain() {
-      this.loading = true
-      this.items = []
-
-      let range = this.range_search
-      let min = this.range_values[range[1]],
-        max = this.range_values[range[0]]
-      let city = this.city_search
-      let city_key = this.city_search
-      let title = this.title_search
-
-      let method = `/site/${this.slug}`
-      let advertableType = this.type.type
-      let cursor, must
+      let method = `/site/adverts`
+      let cursor
       cursor = 0
 
-      if (!must) {
-        must =
-          "city=" + advertableType + ",amount>" + min - 1 + ",amount<" + max + 1
-      }
+      const breadcrumb = Helper.getBreadcrumb(type.title),
+        page_title = Helper.getPageTitle(type.title);
+      store.commit("navigation/pushMeta", {breadcrumb, title: page_title});
+      store.commit("navigation/setTitle", page_title);
+
+      let include = 'advertable,city,user.details';
+      let filter = `advertableType=${type.advertType}`;
 
       let query = {
         number,
-        must
+        include,
+        filter
       }
-      //if (this.$store.state.debug) console.log(query)
+      //console.log({query})
 
       try {
-        let { data, paginator } = await this.$axios.$get(method, {
-          params: query
-        })
+        // city
+        let cityData = await $axios.$get(cityMethod);
+        store.commit('city/setAndProcessData', cityData.data || []);
+
+
+        let {data, paginator} = await
+          app.$axios.$get(method, {
+            params: query
+          })
+        let loading = false
+        return {items: data, paginator, loading, type, slug}
       } catch (err) {
-        let data = [],
-          paginator = []
-        this.store.commit(
-          "snackbar/setSnack",
-          "مشکلی در گرفتن آگهی ها پیش آمد."
-        )
+        console.log(err);
+        //error({statusCode: 404, message: "این صفحه فعال نمی باشد."})
+        return {items: [], paginator: [], loading: false, type, slug}
       }
+    }
+    ,
+    computed: {
 
-      this.items.push(data)
-      //this.items = data;
-      this.loading = false
+      // meta
+      title: function () {
+        return "مشاهده‌ی آگهی‌‌های" + this.type.title
+      }
+      ,
+      breadcrumb: function () {
+        return "مشاهده‌ی " + this.type.title
+      }
+    }
 
-      this.paginator = paginator
-      return true
+    ,
+    // method used in page
+    methods: {
+
+      settings(key) {
+        return _.get(this.$store.state.settings.data, key, '')
+      }
+      ,
+      // load more items
+      loadMore: async function () {
+        this.btn_loading = true
+        try {
+
+          let method = this.paginator.cursor.nextURL
+          let {data, paginator} = await this.$axios.$get(method, {
+            params: {number}
+          })
+          data.forEach((e, i) => {
+            this.items.push(e)
+          })
+
+          this.btn_loading = false
+
+          this.paginator = paginator
+        } catch (err) {
+          this.paginator.cursor.nextURL = false
+          this.$store.commit("snackbar/setSnack", "آگهی بیشتری وجود ندارد.")
+        }
+        this.btn_loading = false
+      }
+      ,
+      // reload as filter changed
+
+      loadAgain(filters = {}) {
+
+        this.loading = true
+        this.items = []
+
+        let method = `/site/adverts`
+        let include = 'advertable,city,user.details';
+        let filterArray = [`advertableType=${this.type.advertType}`]
+        _.forEach(filters, function (value, key) {
+          filterArray.push(`${key}=${value}`)
+        })
+        let filter = _.split(filterArray, '`');
+        let query = {
+          include,
+          number,
+          filter
+        }
+        console.log({query})
+        this.$axios.$get(method, {
+          params: query
+        }).then(response => {
+          console.log(response)
+          this.items.push(_.get(response, 'data', []))
+          this.paginator = _.get(response, 'paginator', [])
+        }).catch((err) => {
+          console.log(err)
+          this.$store.commit(
+            "snackbar/setSnack",
+            "مشکلی در گرفتن آگهی ها پیش آمد."
+          )
+        })
+        //this.items = data;
+        this.loading = false
+        return true
+      }
+    },
+    components: {
+      Filters,
+      ItemCard,
+      AdvertCard
     }
   }
-}
 </script>
