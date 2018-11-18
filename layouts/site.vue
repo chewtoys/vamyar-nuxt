@@ -14,7 +14,7 @@
 
 
 <script>
-  import Snackbar from "~/components/Snackbar"
+  import Snackbar from "~/components/Snackbar.vue"
   import ToolBar from "~/components/site/ToolBar.vue"
   import Footer from "~/components/site/Footer.vue"
   import Breadcrumb from "~/components/site/Breadcrumb.vue"
@@ -23,26 +23,21 @@
     head() {
       return {
         title: this.$store.state.navigation.title,
-        titleTemplate: this.settings('site.siteTitle') + '- %s ',
+        titleTemplate: _.get(this.$store.state, 'settings.data.site.siteTitle', '') + '- %s ',
         meta:
           [
             {
               name: 'keywords',
-              content: this.settings('site.siteKeywords') || " سایت وامیار, vamyar,وام,loan,درخواست ضامن آنلاین,فروش وام , درخواست سرمایه"
+              content: _.get(this.$store.state, 'settings.data.site.siteKeywords', '') || " سایت وامیار, vamyar,وام,loan,درخواست ضامن آنلاین,فروش وام , درخواست سرمایه"
             },
             {
               name: 'description',
-              content: this.settings('site.siteDescription') || "سایت وامیار پلتفرم جامع خرید و فروش وام و ضامن و سرمایه"
+              content: _.get(this.$store.state, 'settings.data.site.siteDescription', '') || "سایت وامیار پلتفرم جامع خرید و فروش وام و ضامن و سرمایه"
             }
           ]
       }
     },
     middleware: "navigation",
-    methods: {
-      settings(key) {
-        return _.get(this.$store.state.settings.data, key, '')
-      }
-    },
     components: {
       Breadcrumb,
       ToolBar,
