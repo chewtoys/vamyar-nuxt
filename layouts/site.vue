@@ -32,7 +32,7 @@
             },
             {
               name: 'description',
-              content: this.settings('site.siteDescription') || "سایت وامیار پلتفرم جامعه خرید و فروش وام و خدمات جانبی"
+              content: this.settings('site.siteDescription') || "سایت وامیار پلتفرم جامع خرید و فروش وام و ضامن و سرمایه"
             }
           ]
       }
