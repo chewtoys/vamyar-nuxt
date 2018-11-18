@@ -23,6 +23,17 @@
             >
               <AdvertCard :item="item"/>
             </v-flex>
+            <v-alert :value="!!msg" type="warning">
+              <span class="p-b--2">خطا: {{msg}}</span>
+            </v-alert>
+            <div class="text-xs-center">
+              <v-progress-circular
+                v-if="loading"
+                :size="50"
+                color="primary"
+                indeterminate
+              ></v-progress-circular>
+            </div>
           </v-layout>
         </v-container>
       </v-card>
@@ -54,6 +65,7 @@
       return {
         filter: {},
         page: 1,
+        msg: null,
         size: "sm",
         paginator: {},
         loading: true,
@@ -105,7 +117,7 @@
       } catch (err) {
         console.log(err);
         //error({statusCode: 404, message: "این صفحه فعال نمی باشد."})
-        return {items: [], paginator: [], loading: false, type, slug}
+        return {items: [], paginator: [],msg:'مشکلی در گرفتن آگهی ها پیش آمد.', loading: false, type, slug}
       }
     }
     ,
@@ -131,6 +143,7 @@
       ,
       // load more items
       loadMore: async function () {
+        this.msg=null;
         this.btn_loading = true
         try {
 
@@ -155,7 +168,7 @@
       // reload as filter changed
 
       loadAgain(filters = {}) {
-
+        this.msg=null;
         this.loading = true
         this.items = []
 
