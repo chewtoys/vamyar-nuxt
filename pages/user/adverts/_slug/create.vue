@@ -3,15 +3,8 @@
     <v-card color="white" raised light class="py-5 px-4">
       <v-layout row>
         <v-flex xs12 md12 sm12 lg12>
-          <v-alert
-            :value="true"
-            color="info"
-            icon="info"
-          >{{ info.title }}
-          </v-alert>
-          <v-divider class="my-3"/>
           <v-card dark color="green darken-1" class="pa-3 font-12">
-            <p class="font-14 text-justify">{{ info.text }}</p>
+            <p class="font-14 text-justify">{{ settings('adverts.noticeBeforeCreateAdvert') }}</p>
           </v-card>
         </v-flex>
       </v-layout>
@@ -245,12 +238,7 @@
         }
       },
       // info
-      info: {
-        title: "لطفا قبل از پر کردن فرم نکات زیر را مد نظر داشته باشید:",
-        text:
-          "لورم ایپسوم یا طرح‌نما (به انگلیسی: Lorem ipsum) به متنی آزمایشی و بی‌معنی در صنعت چاپ، صفحه‌آرایی و طراحی گرافیک گفته می‌شود. طراح گرافیک از این متن به عنوان عنصری از ترکیب بندی برای پر کردن صفحه و ارایه اولیه شکل ظاهری و کلی طرح سفارش گرفته شده استفاده می نماید، تا از نظر گرافیکی نشانگر چگونگی نوع و اندازه فونت و ظاهر متن باشد. معمولا طراحان گرافیک برای صفحه‌آرایی، نخست از متن‌های آزمایشی و بی‌معنی استفاده می‌کنند تا صرفا به مشتری یا صاحب کار خود نشان دهند که صفحه طراحی یا صفحه بندی شده بعد از اینکه متن در آن قرار گیرد چگونه به نظر می‌رسد و قلم‌ها و اندازه‌بندی‌ها چگونه در نظر گرفته شده‌است. از آنجایی که طراحان عموما نویسنده متن نیستند و وظیفه رعایت حق تکثیر متون را ندارند و در همان حال کار آنها به نوعی وابسته به متن می‌باشد آنها با استفاده از محتویات ساختگی، صفحه گرافیکی خود را صفحه‌آرایی می‌کنند تا مرحله طراحی و صفحه‌بندی را به پایان برند.",
-        heading: "عنوان متن"
-      },
+
       submit_loader: false,
       snackbar: false,
       snack_text: null,
@@ -266,22 +254,33 @@
       },
       city: function () {
         if (this.allCities) return 0;
-        let list = this.$store.state.city.data;
+        let list = _.get(this.$store.state.city, 'data', []);
         let index = _.findIndex(list, {'name': this.cityName});
-        let item = list[index];
-        return _.get(item, 'id', 0);
+        if (index > 0) {
+          let item = list[index];
+          return _.get(item, 'id', 0);
+        }
+        return 0;
       },
       loanType() {
         let list = this.$store.state.loanType.data;
         let index = _.findIndex(list, {'name': this.loanTypeName});
         let item = list[index];
-        return _.get(item, 'id', 0);
+        if (index > 0) {
+          let item = list[index];
+          return _.get(item, 'id', 0);
+        }
+        return 0;
       },
       type() {
         let list = this.$store.state.settings.coSigner.types;
         let index = _.findIndex(list, {'name': this.typeName});
         let item = list[index];
-        return _.get(item, 'id', 0);
+        if (index > 0) {
+          let item = list[index];
+          return _.get(item, 'id', 0);
+        }
+        return 0;
       },
       guaranteeTypes() {
         let items = [];
@@ -340,6 +339,9 @@
       }
     },
     methods: {
+      settings(key) {
+        return _.get(this.$store.state.settings.data, key, '')
+      },
       getTitle(name, which = 'create') {
         return _.get(Helper.getFieldByType(this.formType.type, name, which), 'title', '-');
       },

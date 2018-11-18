@@ -1,21 +1,5 @@
 <template xmlns:v-quill="http://www.w3.org/1999/xhtml">
   <v-container grid-list-xs fluid>
-    <v-card color="white" raised light class="py-5 px-4">
-      <v-layout row>
-        <v-flex xs12 md12 sm12 lg12>
-          <v-alert
-            :value="true"
-            color="info"
-            icon="info"
-          >{{ info.title }}
-          </v-alert>
-          <v-divider class="my-3"/>
-          <v-card dark color="green darken-1" class="pa-3 font-12">
-            <p class="font-14 text-justify">{{ info.text }}</p>
-          </v-card>
-        </v-flex>
-      </v-layout>
-    </v-card>
     <v-card color="white" raised light class="mt-5 py-5 px-4">
       <v-layout row wrap>
         <v-flex xs12>
