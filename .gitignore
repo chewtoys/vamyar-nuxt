@@ -11,3 +11,6 @@ package-lock.json
 # Nuxt generate
 dist
 .idea
+
+yarn.lock
+package-lock.json
