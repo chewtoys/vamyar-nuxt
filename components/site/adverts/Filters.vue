@@ -136,10 +136,13 @@
       city: {
         get() {
           if (this.allCities) return 0;
-          let list = _.get(this.$store.state, 'city.data', '');
-          let index = _.findIndex(list, {'name': this.cityName});
-          let item = list[index];
-          return _.get(item, 'id', 0);
+          let list = _.get(this.$store.state, 'city.data', []);
+          let index = _.findIndex(list, {'name': this.cityName}) || 0;
+          if (index > 0) {
+            let item = list[index];
+            return _.get(item, 'id', 0);
+          }
+          return 0;
         },
         set(val) {
 
