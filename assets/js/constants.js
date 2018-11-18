@@ -85,6 +85,30 @@ export const rawHeaders = {
       title: "درخواست ضامن"
     }
   },
+  filtersByField = {
+    loans: {
+      amount: [0, 100000, 100000000, 500000000],
+      city: true,
+      loanTypes: true,
+      guaranteeTypes: true,
+      paybackTime: [1, 4, 12, 24, 36, 48],
+    }, loanRequests: {
+      amount: [0, 100000, 100000000, 500000000],
+      city: true,
+      paybackTime: [1, 4, 12, 24, 36, 48],
+      guaranteeTypes: true,
+    }, coSigners: {
+      guaranteeTypes: true,
+      type: true
+    }, coSignerRequests: {
+      guaranteeTypes: true,
+
+    }, finances: {
+      maxAmount: [100000, 10000000, 1000000000]
+    }, financeRequests: {
+      amount: [0, 100000, 100000000, 500000000],
+    }
+  },
   fieldByType = {
     loans: {
       create: [

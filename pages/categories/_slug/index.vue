@@ -8,63 +8,9 @@
         <div class="text-xs-right">
           <v-layout row wrap inverse>
             <v-flex xs12 md12>
-              <v-card class="elevation-0 pa-2" color="transparent" light>
-                <v-layout rwo wrap>
-                  <v-flex xs12 sm4 class="pa-1">
-                    <div>
-                      <v-select
-                        :items="category_items"
-                        v-model="category_search"
-                        :loading="city_loading"
-                        :menu-props="{contentClass:'farsi mx-3'}"
-                        label="نوع وام"
-                        light
-                        flat
-                        hide-details
-                        solo-inverted
-                        append-icon="list"
-                      />
-                    </div>
-                  </v-flex>
-                  <v-flex xs12 sm4 class="pa-1">
-                    <div>
-                      <v-autocomplete
-                        :menu-props="{contentClass:'farsi mx-3'}"
-                        :loading="city_loading"
-                        :items="city_items"
-                        :search-input.sync="city_search"
-                        v-model="city_select"
-                        append-icon="location_on"
-                        clearable
-                        light
-                        no-data-text="شهری یافت نشد"
-                        label="جست و جوی شهر"
-                        flat
-                        hide-no-data
-                        hide-details
-                        solo-inverted
-                      />
-                    </div>
-                  </v-flex>
-                  <v-flex xs12 sm4 class="pr-1 pt-1 pb-1 pl-0">
-                    <div>
-                      <v-text-field
-                        v-model="title_search"
-                        :loading="title_loading"
-                        solo-inverted
-                        label="عنوان"
-                        append-icon="label"
-                        light
-                        flat
-                        clearable
-                        @change="loadAgain()"
-                      />
-                    </div>
-                  </v-flex>
-                </v-layout>
-              </v-card>
+              <Filters/>
             </v-flex>
-            <v-flex xs12 sm12>
+            <v-flex xs12 sm12 v-if="getFilter('amount')">
               <div class="ltr">
                 <v-range-slider
                   :tick-labels="range_labels"
@@ -93,10 +39,6 @@
       </v-card>
     </v-flex>
     <v-flex xs12 sm12>
-      <v-subheader>
-        لیست آگهی ها
-        {{ type.title }}
-      </v-subheader>
       <v-card color="transparent" flat>
         <v-container grid-list-lg fluid>
           <div v-if="loading">
@@ -132,6 +74,7 @@
 
   import ItemCard from "~/components/site/adverts/Loan.vue"
   import AdvertCard from "~/components/site/adverts/Advert.vue"
+  import Filters from "~/components/site/adverts/Filters.vue"
   import Helper from "~/assets/js/helper.js"
 
   const number = 4,
@@ -142,14 +85,11 @@
 
   export default {
 
-    components: {
-      ItemCard,
-      AdvertCard
-    }
-    ,
+
     data() {
       return {
-        // meta
+
+
         page: 1,
         size: "sm",
         paginator: {},
@@ -238,8 +178,7 @@
     computed: {
       city_states() {
         let states = _.get(this.$store.state, 'city.arrayList')
-        return states;
-        return ['تهران']
+        return states
       },
 
       // meta
@@ -263,11 +202,19 @@
         setTimeout(() => {
           this.title_loading = false
         }, 3000)
+      }, instant(val) {
+        this.instantLoading = true
+        setTimeout(() => {
+          this.instantLoading = false
+        }, 3000)
       }
     }
     ,
     // method used in page
     methods: {
+      getFilter(type, filter = null) {
+        return _.get(Helper.getFiltersByType, [type, filter], false);
+      },
       settings(key) {
         return _.get(this.$store.state.settings.data, key, '')
       },
@@ -319,7 +266,7 @@
       ,
       // reload as filter changed
 
-      async loadAgain() {
+      loadAgain() {
         this.loading = true
         this.items = []
 
@@ -329,45 +276,38 @@
         let city = this.city_search
         let city_key = this.city_search
         let title = this.title_search
-
         let method = `/site/adverts`
-
         let cursor = 0
         let include = 'advertable,city,user.details';
         let filter = `advertableType=${this.type.advertType}`;
-
         let query = {
           include,
           number,
           filter
         }
         //console.log({query})
-
-        //if (this.$store.state.debug) console.log(query)
-
-        try {
-
-
-          let {data, paginator} = await
-            this.$axios.$get(method, {
-              params: query
-            })
-        } catch (err) {
-          let data = [],
-            paginator = []
-          this.store.commit(
+        this.$axios.$get(method, {
+          params: query
+        }).then(response => {
+          console.log(response)
+          this.items.push(_.get(response, 'data', []))
+          this.paginator = _.get(response, 'paginator', [])
+        }).catch((err) => {
+          console.log(err)
+          this.$store.commit(
             "snackbar/setSnack",
             "مشکلی در گرفتن آگهی ها پیش آمد."
           )
-        }
-
-        this.items.push(data)
+        })
         //this.items = data;
         this.loading = false
-
-        this.paginator = paginator
         return true
       }
+    },
+    components: {
+      Filters,
+      ItemCard,
+      AdvertCard
     }
   }
 </script>

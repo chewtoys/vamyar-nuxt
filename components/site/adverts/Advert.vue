@@ -124,7 +124,6 @@
       limitStr(text, limit, end) {
         return Helper.limitStr(text, limit, end)
       },
-
       price(number) {
         return Helper.priceFormat(number)
       }

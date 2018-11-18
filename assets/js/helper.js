@@ -16,6 +16,9 @@ const Helper = {
   getPageTitle: function (title) {
     return "آگهی‌های " + title
   },
+  getFiltersByType(type) {
+    return _.get(CONSTANTS.filtersByField, type, []);
+  },
   isFieldAllowByType(type, field, which = 'create') {
     let fields = CONSTANTS.fieldByType;
     return _.has(fields, `${type}.${which}`) ? !!(_.find(fields[type][which], {'name': field})) : false;

@@ -44,12 +44,12 @@
               <v-layout row wrap class="black--text font-15 full" reverse>
                 <v-flex xs12 md6 class="py-2">
                   <div>
-                    <span v-if=" hasImage">
+                    <span v-if="hasImage">
                       <img :src="getProperty(item, 'advert.image','')" class="full">
                       <v-divider/>
                     </span>
                     <div class="full text-justify py-3">
-                      <h3>نکته و یا هشدار سایت</h3>
+                      <h3>توجه داشته باشید:</h3>
                       <div class="font-13">{{ settings('adverts.noticeOnAdvertShow') }}</div>
                     </div>
                     <v-divider/>
@@ -61,45 +61,45 @@
                       <h2>جزئیات آگهی</h2>
                     </div>
                     <div class="">
-                      <div class="pa-2 mx-1 red--text">
+                      <div class="pa-2 mx-1 red--text" v-if="isAllowed('amount')">
                         <v-icon class="pb-1 pl-1 red--text">monetization_on</v-icon>
                         <span><small class="font-14">مبلغ</small>
                           <b class="left">{{ getProperty(item, 'amount', '').toLocaleString('fa-IR') }} ريال</b>
                         </span>
                       </div>
                       <v-divider/>
-                      <div class="pa-2 mx-1">
+                      <div class="pa-2 mx-1" v-if="isAllowed('price')">
                         <v-icon class="pb-1 pl-1">shopping_cart</v-icon>
-                        <span><small class="font-14">قیمت</small>
+                        <span><small class="font-14">{{getTitle('price')}}</small>
                           <b class="left">{{ getProperty(item, 'price', '').toLocaleString('fa-IR') }} ريال</b>
                         </span>
                       </div>
                       <v-divider/>
-                      <div class="pa-2 mx-1">
+                      <div class="pa-2 mx-1" v-if="isAllowed('city')">
                         <v-icon class="pb-1 pl-1">location_on</v-icon>
                         <span><small class="font-14">شهر</small>
                           <b class="left">{{ getProperty(item, 'advert.city.name', '') }}</b>
                         </span>
                       </div>
                       <v-divider/>
-                      <div class="pa-2 mx-1">
+                      <div class="pa-2 mx-1" v-if="isAllowed('paybackTime')">
                         <v-icon class="pb-1 pl-1">keyboard_arrow_left</v-icon>
                         <span> <small class="font-14">بازپرداخت</small>
                           <b class="left">{{ getProperty(item, 'paybackTime', '') }} ماه</b>
                         </span>
                       </div>
                       <v-divider/>
-                      <div class="pa-2 mx-1">
+                      <div class="pa-2 mx-1" v-if="isAllowed('guaranteeTypes')">
                         <v-icon class="pb-1 pl-1">how_to_reg</v-icon>
                         <span><small class="font-14">ضمانت</small><b
-                          class="left">{{ getProperty(item, 'security', '') }}</b></span>
+                          class="left">{{ getProperty(item, 'guaranteeType', '') }}</b></span>
                       </div>
                       <v-divider/>
-                      <div class="pa-2 mx-1">
+                      <div class="pa-2 mx-1" v-if="isAllowed('type')">
                         <v-icon class="pb-1 pl-1">how_to_reg</v-icon>
                         <span>
-                          <small class="font-14">فیلد دیگر</small>
-                          <b class="left">{{ getProperty(item, 'other', '') }}</b>
+                          <small class="font-14">نوع وام</small>
+                          <b class="left">{{ getProperty(item, 'loanTypeId', '') }}</b>
                         </span>
                       </div>
                       <v-divider/>
@@ -248,6 +248,12 @@
       }
     },
     methods: {
+      isAllowed(key) {
+        return Helper.isFieldAllowByType(this.type.type, key)
+      },
+      getTitle(key) {
+        return _.get(Helper.isFieldAllowByType(this.type.type, key), 'title', '')
+      },
       settings(key) {
         return _.get(this.$store.state.settings.data, key, '')
       },
