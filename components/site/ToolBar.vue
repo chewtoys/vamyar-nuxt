@@ -129,7 +129,7 @@
     },
     computed: {
       menuColor() {
-        return this.showQuickAccess ? 'lime lighten-4' : 'white'
+        return this.showQuickAccess ? 'yellow lighten-5' : 'white'
       },
       isMobile() {
         return this.$vuetify.breakpoint.smAndDown
