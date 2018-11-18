@@ -36,6 +36,7 @@
       </v-toolbar-items>
       <v-spacer/>
         <searchBar/>
+      <v-spacer/>
       <v-toolbar-side-icon v-if="isMobile" white--text @click.stop="drawer = !drawer"/>
       <v-toolbar-items class="hidden-sm-and-down">
         <v-btn flat to="/user/adverts/loans/create" class="deep-orange--text font-14">ثبت رایگان آگهی</v-btn>

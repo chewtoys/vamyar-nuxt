@@ -106,7 +106,8 @@
             <v-flex
               v-for="item in items"
               :key="item.id"
-              sm6
+              :sm6="!!settings('adverts.isImageAllowed')"
+              :sm4="!settings('adverts.isImageAllowed')"
               lg4
               xl2
             >
@@ -133,7 +134,10 @@
   import AdvertCard from "~/components/site/adverts/Advert.vue"
   import Helper from "~/assets/js/helper.js"
 
-  const number = 4
+  const number = 4,
+    cityMethod = '/cities?number=3000',
+    guaranteeMethod = '/guaranteeTypes',
+    loanTypeMethod = '/loanTypes'
 
 
   export default {
@@ -177,17 +181,17 @@
         city_select: null,
         title_loading: false,
         title_search: null,
-        city_states: ["قم", "تهران"]
+
       }
     }
     ,
     // loading the first items from server
-    async asyncData({app, store, params, error}) {
+    async asyncData({app, store, params, error, $axios}) {
       let slug = params.slug
       let type = Helper.getTypeByAlias(slug)
 
-      let method = `/site/${type.type}`
-      let cursor, must
+      let method = `/site/adverts`
+      let cursor
       cursor = 0
 
       const breadcrumb = Helper.getBreadcrumb(type.title),
@@ -195,18 +199,29 @@
       store.commit("navigation/pushMeta", {breadcrumb, title: page_title});
       store.commit("navigation/setTitle", page_title);
 
-      if (!must) {
-        must = "advertableType=" + type.advertType + ",verified=true"
-      }
-      let include = "advertable"
+      let include = 'advertable,city,user.details';
+      let filter = `advertableType=${type.advertType}`;
 
       let query = {
         number,
         include,
-        must
+        filter
       }
+      //console.log({query})
 
       try {
+        // city
+        let cityData = await $axios.$get(cityMethod);
+        store.commit('city/setAndProcessData', cityData.data || []);
+
+        // guarantee
+        let guaranteeData = await $axios.$get(guaranteeMethod);
+        store.commit('guaranteeType/setAndProcessData', guaranteeData.data || []);
+
+        // loan types
+        let loanTypeData = await $axios.$get(loanTypeMethod);
+        store.commit('loanType/setAndProcessData', loanTypeData.data || []);
+
         let {data, paginator} = await
           app.$axios.$get(method, {
             params: query
@@ -221,6 +236,12 @@
     }
     ,
     computed: {
+      city_states() {
+        let states = _.get(this.$store.state, 'city.arrayList')
+        return states;
+        return ['تهران']
+      },
+
       // meta
       title: function () {
         return "مشاهده‌ی آگهی‌‌های" + this.type.title
@@ -247,6 +268,16 @@
     ,
     // method used in page
     methods: {
+      settings(key) {
+        return _.get(this.$store.state.settings.data, key, '')
+      },
+      city: function () {
+        if (this.allCities) return 0;
+        let list = this.$store.state.city.data;
+        let index = _.findIndex(list, {'name': this.cityName});
+        let item = list[index];
+        return _.get(item, 'id', 0);
+      },
       // select the proper city
       querySelections(v) {
         this.city_loading = true
@@ -267,6 +298,7 @@
       loadMore: async function () {
         this.btn_loading = true
         try {
+
           let method = this.paginator.cursor.nextURL
           let {data, paginator} = await this.$axios.$get(method, {
             params: {number}
@@ -298,23 +330,24 @@
         let city_key = this.city_search
         let title = this.title_search
 
-        let method = `/site/${this.type.type}`
-        let advertableType = this.type.type
-        let cursor, must
-        cursor = 0
+        let method = `/site/adverts`
 
-        if (!must) {
-          must =
-            "city=" + advertableType + ",amount>" + min - 1 + ",amount<" + max + 1
-        }
+        let cursor = 0
+        let include = 'advertable,city,user.details';
+        let filter = `advertableType=${this.type.advertType}`;
 
         let query = {
+          include,
           number,
-          must
+          filter
         }
+        //console.log({query})
+
         //if (this.$store.state.debug) console.log(query)
 
         try {
+
+
           let {data, paginator} = await
             this.$axios.$get(method, {
               params: query

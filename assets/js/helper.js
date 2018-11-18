@@ -45,20 +45,19 @@ const Helper = {
     }
   },
   getAdvertLink: function (item) {
-    let type = this.getTypes(item.advertableType)
+    let types = CONSTANTS.advertTypes
+    let advertType = item.advertableType
+    let type = _.find(types, {'advertType': advertType})
     if (type && type.alias) {
-      return "/categories/" + type.alias + "/show/" + item.advertableId
+      return "/categories/" + type.alias + "/show/" + item.advertable.id
     } else {
       return "#type-not-found"
     }
   },
   getAdvertType: function (item) {
-    let type = this.getTypes(item.advertableType)
-    if (type.title) {
-      return type.title
-    } else {
-      return "بدون نوع"
-    }
+    let types = CONSTANTS.advertTypes
+    let advertType = item.advertableType
+    return _.get(_.find(types, {'advertType': advertType}), 'title', advertType || 'نامشخص');
   },
   limitStr(text = "", limit = 30, end = " ...") {
     return text.slice(0, limit) + end

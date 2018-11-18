@@ -3,6 +3,7 @@
     v-model="drawer"
     fixed
     right
+    dark
     app
   >
     <v-list color="second">

@@ -1,12 +1,12 @@
 <template>
   <v-toolbar
-    color="grey lighten-5"
+    dark
     fixed
     app
   >
     <v-toolbar-side-icon @click="toggleDrawer"></v-toolbar-side-icon>
     <v-toolbar-title>
-      <v-btn to="/admin" flat color="transparent"><span class="red--text"><v-icon
+      <v-btn to="/admin" flat color="transparent"><span class="orange--text "><v-icon
         class="px-1">dashboard</v-icon>پنل مدیریت</span></v-btn>
     </v-toolbar-title>
     <v-spacer/>
@@ -33,9 +33,8 @@
   export default {
     data: ({$store}) => ({
       settings: [
-        {title: "اشتراک من", icon: "inbox", to: "/user/premium"},
-        {title: "ویرایش پروفایل", icon: "build", to: "/user/profile/edit"},
-        {title: "خروج", icon: "exit_to_app", to: "/user/logout"}
+        {title: "تنظیمات عمومی سایت", icon: "build", to: "/admin/settings"},
+        {title: "خروج", icon: "exit_to_app", to: "/admin/logout"}
       ],
     }),
     computed: {

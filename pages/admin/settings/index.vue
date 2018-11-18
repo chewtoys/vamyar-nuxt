@@ -112,6 +112,24 @@
         />
         <v-textarea
           validate="required"
+          v-model="contactUsSuggestionText"
+          :error-messages="errors.collect('contactUsSuggestionText')"
+          box
+          label="متن قسمت پیشنهادات و انتقادات"
+          data-vv-name="contactUsSuggestionText"
+          auto-grow
+        />
+        <v-textarea
+          validate="required"
+          v-model="rulesText"
+          :error-messages="errors.collect('rulesText')"
+          box
+          label="متن قوانین"
+          data-vv-name="rulesText"
+          auto-grow
+        />
+        <v-textarea
+          validate="required"
           v-model="educationText"
           :error-messages="errors.collect('educationText')"
           box
@@ -149,6 +167,7 @@
         siteLogo: '',
         isSiteOpen: '',
         footerText: '',
+        contactUsSuggestionText: '',
         headerText: '',
         subHeaderText: '',
         closedSiteText: '',
@@ -158,6 +177,7 @@
         aboutUsText: '',
         contactUsText: '',
         educationText: '',
+        rulesText: '',
 
         // adverts
 
@@ -177,7 +197,9 @@
             isImageAllowed: 'امکان ثبت تصویر در آگهی',
             aboutUsText: 'متن صفحه ی درباره ی ما',
             contactUsText: 'متن صفحه ی تماس با ما',
+            contactUsSuggestionText: 'متن صفحه ی تماس با ما',
             educationText: 'متن بالای قسمت آموزش',
+            rulesText: 'متن قسمت قوانین',
           }
         }
       }

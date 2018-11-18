@@ -10,6 +10,7 @@
     hide-details
     hide-selected
     flat
+    dark
     color="info"
     item-text="name"
     item-value="symbol"

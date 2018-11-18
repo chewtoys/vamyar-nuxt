@@ -2,16 +2,16 @@
   <div class="rtl __nuxt-error-page">
     <div class="error ">
       <div v-if="statusCode === 404" class="title iransans">
-        {{(error && error.message ) ? error.message : 'آدرس مورد نظر یافت نشد!'}}
+        {{(false && error && error.message ) ? error.message : 'آدرس مورد نظر یافت نشد!'}}
       </div>
       <div v-else-if="statusCode === 401" class="title iransans">
-        {{(error && error.message ) ? error.message : 'شما به این صفحه دسترسی ندارید!'}}
+        {{(false &&  error && error.message ) ? error.message : 'شما به این صفحه دسترسی ندارید!'}}
       </div>
       <div v-else-if="statusCode === 403" class="title iransans">
-        {{ (error && error.message ) ? error.message : 'آیپی شما مجاز نیست. در صورت استفاده از آیپی ایران با پشتیبانی تماس بگیرید.'}}
+        {{ (false &&  error && error.message ) ? error.message : 'آیپی شما مجاز نیست. در صورت استفاده از آیپی ایران با پشتیبانی تماس بگیرید.'}}
       </div>
       <div v-else-if="statusCode === 500" class="title iransans">
-        {{ (error && error.message ) ? error.message : 'مشکلی از طرف سرور رخ داد!'}}
+        {{ (false &&  error && error.message ) ? error.message : 'مشکلی از طرف سرور رخ داد!'}}
       </div>
       <div v-else="" class="title iransans">{{ message }}</div>
       <p class="description">
