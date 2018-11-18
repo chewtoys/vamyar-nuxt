@@ -10,17 +10,17 @@
     hide-details
     hide-selected
     flat
-    dark
-    color="info"
+    :dark="isDark"
+    :color="getColor"
     item-text="name"
     item-value="symbol"
-    label="جست و جو..."
+    :label="label"
     solo
   >
     <template slot="no-data">
       <v-list-tile>
         <v-list-tile-title>
-          جست و جو برای آگهی ها و مطالب
+{{desc}}
         </v-list-tile-title>
       </v-list-tile>
     </template>
@@ -64,13 +64,28 @@
   import axios from 'axios'
 
   export default {
+    props: ['placeholder', 'subtext','dark','color'],
     data: () => ({
       isLoading: false,
       items: [],
       model: null,
       search: null
     }),
-
+    computed: {
+      label() {
+        return _.get(this, 'placeholder', 'جست و جو...')
+      },
+      desc() {
+        return _.get(this, 'subtext', 'جست و جو برای آگهی ها و مطالب')
+      },
+      isDark() {
+        return _.get(this, 'dark', true)
+      },
+      getColor() {
+        return _.get(this, 'color', '')
+      }
+    }
+    ,
     watch: {
       search(val) {
 // Items have already been loaded

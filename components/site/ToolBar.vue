@@ -1,6 +1,6 @@
 <template>
   <span>
-    <v-toolbar v-scroll="onScroll" flat color="white" class="white grey--text" app>
+    <v-toolbar v-scroll="onScroll" flat :color="menuColor" class="white grey--text" app>
       <v-btn flat color="transparent" class="white--text" to="/">
         <v-icon class="deep-purple--text font-16 pl-1">polymer</v-icon>
         <v-toolbar-title>
@@ -35,10 +35,10 @@
         <v-btn to="/user" flat>حساب من</v-btn>
       </v-toolbar-items>
       <v-spacer/>
-        <searchBar/>
+        <searchBar v-if="showQuickAccess"/>
       <v-spacer/>
       <v-toolbar-side-icon v-if="isMobile" white--text @click.stop="drawer = !drawer"/>
-      <v-toolbar-items class="hidden-sm-and-down">
+      <v-toolbar-items v-if="!showQuickAccess" class="hidden-sm-and-down">
         <v-btn flat to="/user/adverts/loans/create" class="deep-orange--text font-14">ثبت رایگان آگهی</v-btn>
       </v-toolbar-items>
     </v-toolbar>
@@ -128,6 +128,9 @@
       }
     },
     computed: {
+      menuColor() {
+        return this.showQuickAccess ? 'lime lighten-5' : 'white'
+      },
       isMobile() {
         return this.$vuetify.breakpoint.smAndDown
       },
@@ -178,7 +181,7 @@
 
       onScroll(e) {
         let top = this.offsetTop = window.pageYOffset || document.documentElement.scrollTop
-        this.showQuickAccess = this.offsetTop > 200;
+        this.showQuickAccess = this.offsetTop > 500;
       },
       go: function (item) {
         this.$router.push(item.to)
