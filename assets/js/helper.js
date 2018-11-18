@@ -49,7 +49,7 @@ const Helper = {
     let advertType = item.advertableType
     let type = _.find(types, {'advertType': advertType})
     if (type && type.alias) {
-      return "/categories/" + type.alias + "/show/" + item.advertable.id
+      return "/categories/" + type.alias + "/show/" + item.id
     } else {
       return "#type-not-found"
     }

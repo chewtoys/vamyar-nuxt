@@ -20,7 +20,7 @@
               <v-chip outline label class="black--text">
                 <v-icon right>verified_user</v-icon>
                 <span>ثبت شده توسط
-                {{getProperty(item, 'user.name', '-')}}
+                {{getProperty(item, 'advert.user.details.lastName', '-')}}
                 </span>
               </v-chip>
             </span>
@@ -64,7 +64,7 @@
                       <div class="pa-2 mx-1 red--text">
                         <v-icon class="pb-1 pl-1 red--text">monetization_on</v-icon>
                         <span><small class="font-14">مبلغ</small>
-                          <b class="left">{{ getProperty(item, amount, '').toLocaleString('fa-IR') }} ريال</b>
+                          <b class="left">{{ getProperty(item, 'amount', '').toLocaleString('fa-IR') }} ريال</b>
                         </span>
                       </div>
                       <v-divider/>
@@ -78,7 +78,7 @@
                       <div class="pa-2 mx-1">
                         <v-icon class="pb-1 pl-1">location_on</v-icon>
                         <span><small class="font-14">شهر</small>
-                          <b class="left">{{ getProperty(item, 'city.name', '') }}</b>
+                          <b class="left">{{ getProperty(item, 'advert.city.name', '') }}</b>
                         </span>
                       </div>
                       <v-divider/>
@@ -206,7 +206,7 @@
       let slug = params.slug
       let method = `/site/${type.type}/${id}`
       let query = {
-        include: 'user.details,city'
+        include: 'advert.user.details,advert.city'
       }
       try {
 
