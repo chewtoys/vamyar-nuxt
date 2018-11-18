@@ -136,7 +136,7 @@
       city: {
         get() {
           if (this.allCities) return 0;
-          let list = this.$store.state.city.data;
+          let list = _.get(this.$store.state, 'city.data', '');
           let index = _.findIndex(list, {'name': this.cityName});
           let item = list[index];
           return _.get(item, 'id', 0);
@@ -155,7 +155,7 @@
         let filedList = ['title', 'city'];
         let filterList = {}
         _.forEach(filedList, (key) => {
-          _set(filterList, key, _.get(this, key))
+          _.set(filterList, key, _.get(this, key))
         })
         this.value = filterList;
       },
