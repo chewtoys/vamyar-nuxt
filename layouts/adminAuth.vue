@@ -5,18 +5,29 @@
 </template>
 
 <script>
-import ToolBar from "~/components/admin/ToolBar.vue"
-export default {
-  components: {
-    ToolBar
-  },
-  data() {
-    return {
-      title: ""
-    }
-  },
-  computed: {}
-}
+  import ToolBar from "~/components/admin/ToolBar.vue"
+
+  export default {
+    head() {
+      return {
+        title: this.$store.state.navigation.title,
+        titleTemplate: 'پنل مدیریت ' + _.get(this.$store.state, 'settings.data.site.siteTitle', '') + '- %s ',
+        meta:
+          [
+            {name: 'keywords', content: "content"}
+          ]
+      }
+    },
+    components: {
+      ToolBar
+    },
+    data() {
+      return {
+        title: ""
+      }
+    },
+    computed: {}
+  }
 </script>
 <style>
 </style>
