@@ -42,6 +42,9 @@ export default {
 
   loading: {color: '#1BF'},
   css: ["~assets/app.styl", "~assets/helper.styl", "~assets/font.styl",
+    'quill/dist/quill.snow.css',
+    'quill/dist/quill.bubble.css',
+    'quill/dist/quill.core.css',
     //'~/node_modules/vue-wysiwyg/dist/vueWysiwyg.css',
     '~/node_modules/froala-editor/css/froala_editor.pkgd.min.css',
     '~/node_modules/froala-editor/css/froala_style.min.css'

@@ -8109,7 +8109,14 @@ quill-delta@^3.6.2:
     extend "^3.0.2"
     fast-diff "1.1.2"
 
-quill@^1.3.4, quill@^1.3.6:
+quill-image-upload@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/quill-image-upload/-/quill-image-upload-0.1.2.tgz#6150c6844871eb0a272d07c4f4f1c5453752179b"
+  integrity sha512-SgLdx5ueH2yya5dtdGOoX8QFPfu4P1DDN3dNiDAf2Cu8sA5mz+zFr9SFSuCh3PV5QwmYljOGrwKK4dq4o33HDg==
+  dependencies:
+    quill "^1.2.2"
+
+quill@^1.2.2, quill@^1.3.4, quill@^1.3.6:
   version "1.3.6"
   resolved "https://registry.yarnpkg.com/quill/-/quill-1.3.6.tgz#99f4de1fee85925a0d7d4163b6d8328f23317a4d"
   integrity sha512-K0mvhimWZN6s+9OQ249CH2IEPZ9JmkFuCQeHAOQax3EZ2nDJ3wfGh59mnlQaZV2i7u8eFarx6wAtvQKgShojug==

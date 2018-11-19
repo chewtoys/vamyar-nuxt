@@ -32,7 +32,8 @@
           box
           label="سایت باز باشد؟"
         />
-        <v-textarea
+
+        <Editor
           v-if="!isSiteOpen"
           validate="required"
           v-model="closedSiteText"
@@ -42,7 +43,8 @@
           data-vv-name="closedSiteText"
           auto-grow
         />
-        <v-textarea
+
+        <Editor
           validate="required"
           v-model="footerText"
           :error-messages="errors.collect('footerText')"
@@ -69,7 +71,7 @@
           data-vv-name="subHeaderText"
           auto-grow
         />
-        <v-textarea
+        <Editor
           validate="required"
           v-model="noticeOnAdvertShow"
           :error-messages="errors.collect('noticeOnAdvertShow')"
@@ -78,7 +80,7 @@
           data-vv-name="noticeOnAdvertShow"
           auto-grow
         />
-        <v-textarea
+        <Editor
           validate="required"
           v-model="noticeBeforeCreateAdvert"
           :error-messages="errors.collect('noticeBeforeCreateAdvert')"
@@ -92,7 +94,7 @@
           box
           label="افزودن تصویر برای آگهی ها مجاز است؟"
         />
-        <v-textarea
+        <Editor
           validate="required"
           v-model="aboutUsText"
           :error-messages="errors.collect('aboutUsText')"
@@ -101,7 +103,7 @@
           data-vv-name="aboutUsText"
           auto-grow
         />
-        <v-textarea
+        <Editor
           validate="required"
           v-model="contactUsText"
           :error-messages="errors.collect('contactUsText')"
@@ -110,7 +112,7 @@
           data-vv-name="contactUsText"
           auto-grow
         />
-        <v-textarea
+        <Editor
           validate="required"
           v-model="contactUsSuggestionText"
           :error-messages="errors.collect('contactUsSuggestionText')"
@@ -119,7 +121,7 @@
           data-vv-name="contactUsSuggestionText"
           auto-grow
         />
-        <v-textarea
+        <Editor
           validate="required"
           v-model="rulesText"
           :error-messages="errors.collect('rulesText')"
@@ -128,7 +130,7 @@
           data-vv-name="rulesText"
           auto-grow
         />
-        <v-textarea
+        <Editor
           validate="required"
           v-model="educationText"
           :error-messages="errors.collect('educationText')"
@@ -138,7 +140,6 @@
           auto-grow
         />
 
-        <Editor v-model="content"/>
 
       </v-card-text>
       <v-card-actions>
@@ -162,7 +163,7 @@
     components: {Editor},
     data() {
       return {
-        content: '',
+        content: 'سلام و احترام',
         config: {
           toolbar: [
             ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript']
@@ -277,14 +278,17 @@
         })
       }
     },
-    mounted() {
+    asyncData({store}) {
       // set initial data
       let groups = Helper.getGeneralSettingsGroup();
+      let list = {};
       _.forEach(groups, (values, groupKey) => {
         _.forEach(values, (name, value) => {
-          _.set(this, name, _.get(this.$store.state.settings.data, [groupKey, name], ''))
+          //console.log(name, value, _.get(store.state.settings.data, [groupKey, name]))
+          _.set(list, name, _.get(store.state.settings.data, [groupKey, name], ''))
         })
       })
+      return list
     }
   }
 </script>

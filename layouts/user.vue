@@ -30,7 +30,7 @@
           ]
       }
     },
-    middleware: ["authenticated", "navigation", "userEditProfile"],
+    middleware: ["authenticated", "navigation", "userEditProfile", 'isSiteOpen'],
     components: {
       ToolBar,
       Footer,
