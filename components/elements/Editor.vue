@@ -68,11 +68,11 @@
     },
     watch: {
       content(val) {
-        this.$emit("input", val)
+        this.$emit("input", Helper.nl2br(val))
       }
     },
     mounted() {
-      this.content = Helper.nl2br(this.value);
+      this.content = this.value;
     }
   }
 </script>
