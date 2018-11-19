@@ -100,10 +100,7 @@
           this.loader = false;
         }).catch((err) => {
           console.log(err)
-          return {
-            form: ''
-          }
-          store.commit('snackbar/setSnack', err)
+          this.$store.commit('snackbar/setSnack', err)
           this.loader = false;
         })
       },
