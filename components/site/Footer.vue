@@ -28,7 +28,7 @@
       </v-card-text>
 
       <br/>
-      <p>{{settings('site.footerText')}}</p>
+      <div -html="settings('site.footerText')" ></div>
       <v-divider/>
 
       <v-card-text class="white--text">
