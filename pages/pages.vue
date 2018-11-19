@@ -7,7 +7,7 @@
   export default {
     meta: {
       title: 'صفحات سایت',
-      breadcrumb: 'صفحه ها'
+      breadcrumb: 'صفحات'
     },
     layout: 'site',
   }

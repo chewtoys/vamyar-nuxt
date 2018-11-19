@@ -6,7 +6,6 @@
     <v-card-text>
       <div v-html=" text ">
       </div>
-
       <table>
         <tr>
           <th>عنوان پلن ها</th>

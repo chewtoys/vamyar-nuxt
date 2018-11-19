@@ -24,19 +24,10 @@
         </div>
         <div>
           <v-card v-if="!isPremium" flat>
-            <v-card-title><h3>یک حساب کاربری را انتخاب کنید:</h3></v-card-title>
+            <v-card-title><h3>ارتقای حساب کاربری</h3></v-card-title>
             <v-card-text>
               <v-layout row wrap>
-                <div>
-                  <p>
-                    {{ benefits }}
-                  </p>
-                  <section>
-                    <div v-for="i in 12" :key="i" class="px-1">
-                      <v-icon class="red-text font-15 mb-1">check_circle_outline</v-icon>
-                      {{ i }}
-                    </div>
-                  </section>
+                <div v-html="settings('pages.premiumText')">
                 </div>
               </v-layout>
             </v-card-text>
@@ -83,11 +74,24 @@
       }
     },
     computed: {
+      user() {
+        return _.get(this.$store.state, 'user', [])
+      },
+      isUserPremium() {
+        return !!_.get(this.$store.state, 'user.info.details', false)
+      },
+      redirectPath() {
+        let path = _.get(this.$route, 'query.redirect', '');
+        return decodeURI(path || "/user");
+      },
       isPremium() {
         return false
       }
     },
     methods: {
+      settings(key) {
+        return _.get(this.$store.state.settings.data, key, '')
+      },
       getForm() {
         this.loader = true;
         let query = {

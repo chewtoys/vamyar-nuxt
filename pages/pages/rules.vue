@@ -19,9 +19,9 @@
 <script>
   export default {
     meta: {
-      title: "قوانین"
+      title: "قوانین",
+      breadcrumb: "قوانین"
     },
-    layout: "site",
     computed: {
       text() {
         return this.$store.state.temp.lorem

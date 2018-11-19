@@ -30,7 +30,7 @@
           </v-list>
         </v-menu>
         <v-btn to="/pages/plans" flat>تعرفه ها</v-btn>
-        <v-btn to="/posts" flat>اخبار</v-btn>
+        <v-btn to="/news" flat>اخبار</v-btn>
         <v-btn to="/user/councils/create" flat>مشاوره</v-btn>
         <v-btn to="/user" flat>حساب من</v-btn>
       </v-toolbar-items>

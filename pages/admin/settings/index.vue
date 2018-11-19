@@ -73,6 +73,15 @@
         />
         <Editor
           validate="required"
+          v-model="premiumText"
+          :error-messages="errors.collect('premiumText')"
+          box
+          label="توضیحات در صفحه ی ارتقا حساب"
+          data-vv-name="premiumText"
+          auto-grow
+        />
+        <Editor
+          validate="required"
           v-model="noticeOnAdvertShow"
           :error-messages="errors.collect('noticeOnAdvertShow')"
           box
@@ -184,6 +193,7 @@
         subHeaderText: '',
         closedSiteText: '',
         noticeOnAdvertShow: '',
+        premiumText: '',
         noticeBeforeCreateAdvert: '',
         isImageAllowed: '',
         aboutUsText: '',
@@ -204,6 +214,7 @@
             headerText: 'متن هدر',
             subHeaderText: 'متن زیرهدر',
             closedSiteText: 'متن بسته بودن سایت',
+            premiumText: 'متن صفحه ی ارتقای حساب',
             noticeOnAdvertShow: 'متن صفحه ی نمایش آگهی',
             noticeBeforeCreateAdvert: 'پیام قبل از ایجاد آگهی',
             isImageAllowed: 'امکان ثبت تصویر در آگهی',

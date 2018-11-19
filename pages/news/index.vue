@@ -37,7 +37,7 @@
 <script>
   export default {
     meta: {
-      title: "آموزش ها"
+      title: "خبر ها"
     },
     data() {
       return {

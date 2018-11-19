@@ -126,7 +126,6 @@
       lastName: null,
       address: null,
       email: null,
-      put: true,
       // validation
       dictionary: {
         attributes: {
@@ -176,23 +175,19 @@
           password_confirmation: this.password,
           address: this.address
         };
-        //let request = null
         try {
-          if (this.put) request = await this.$axios.$put(path, data)
+          await this.$axios.$put(path, data)
         } catch (error) {
-          this.$store.commit("snackbar/setSnack", "مشکلی در ارسال اطلاعات پیش آمد");
-          if (_.has('error', 'response.data.error.message')) {
-            this.$store.commit("snackbar/setSnack", error.response.data.error.message);
-          }
+          this.$store.commit("snackbar/setSnack", _.get(error, 'response.data.error.message', "مشکلی در ارسال اطلاعات پیش آمد"));
         }
+
         this.updateUser();
         this.submit_loader = false;
-        return true
       },
       async updateUser() {
         try {
           let {data} = await this.$axios.$get("/user/details");
-          if (data && data.details.firstName) {
+          if (_.has(data, 'details')) {
             this.$store.commit(
               "snackbar/setSnack",
               "پروفایل با موفقیت بروز شد",

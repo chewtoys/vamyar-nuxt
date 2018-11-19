@@ -22,7 +22,6 @@
       title: "درباره‌ی ما",
       breadcrumb: "درباره‌ی ما",
     },
-    layout: "site",
     computed: {
       text() {
         return this.$store.state.temp.lorem
