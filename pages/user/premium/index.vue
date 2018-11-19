@@ -41,12 +41,11 @@
               </v-layout>
             </v-card-text>
             <v-card-actions center-align>
-              <v-btn color="red" dark>
+              <v-btn :loadinf="loader" @click="getForm" color="red" dark>
                 <v-icon class="pl-1">shopping_cart</v-icon>
                 ارتقای حساب
               </v-btn>
             </v-card-actions>
-            <h2>form</h2>
             <div v-html="form">
             </div>
           </v-card>
@@ -77,37 +76,11 @@
     },
     data() {
       return {
+        benefits,
+        loader: false,
         info,
-        form: '<p>hi</p>'
+        form: ''
       }
-    },
-    async asyncData({$axios, store}) {
-      let query = {
-        port: 'zarinpal',
-        coupon: '123123',
-        subscription: '1',
-      }
-      try {
-        let form = await $axios.$post('/user/subscriptions', query);
-        return {
-          form,
-          upgradePrice: 20000,
-          userCharge: 19000,
-          benefits
-        }
-      } catch (err) {
-        let form = err;
-        return {
-          form,
-          upgradePrice: 20000,
-          userCharge: 19000,
-          benefits
-        }
-        store.commit('snackbar/setSnack', err)
-      }
-
-
-
     },
     computed: {
       isPremium() {
@@ -115,6 +88,25 @@
       }
     },
     methods: {
+      getForm() {
+        this.loader = true;
+        let query = {
+          port: 'zarinpal',
+          coupon: '123123',
+          subscription: '1',
+        }
+        this.$axios.$post('/user/subscriptions', query).then(res => {
+          this.form = res
+          this.loader = false;
+        }).catch((err) => {
+          console.log(err)
+          return {
+            form: ''
+          }
+          store.commit('snackbar/setSnack', err)
+          this.loader = false;
+        })
+      },
       upgrade() {
         if (!this.isPremium) {
           let data = this.$axios.get(gate_path)
