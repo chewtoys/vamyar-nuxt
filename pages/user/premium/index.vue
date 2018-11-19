@@ -41,7 +41,7 @@
               </v-layout>
             </v-card-text>
             <v-card-actions center-align>
-              <v-btn :loadinf="loader" @click="getForm" color="red" dark>
+              <v-btn :loading="loader" @click="getForm" color="red" dark>
                 <v-icon class="pl-1">shopping_cart</v-icon>
                 ارتقای حساب
               </v-btn>
