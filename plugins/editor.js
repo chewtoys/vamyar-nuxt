@@ -1,5 +1,9 @@
 import Vue from 'vue'
-import VueFroala from 'vue-froala-wysiwyg'
-import 'froala-editor/js/froala_editor.pkgd.min.js'
+import VueQuillEditor from 'vue-quill-editor/dist/ssr'
 
-Vue.use(VueFroala)
+import Quill from 'quill'
+
+import {ImageUpload} from 'quill-image-upload';
+
+Quill.register('modules/imageUpload', ImageUpload);
+Vue.use(VueQuillEditor)

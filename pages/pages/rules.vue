@@ -9,7 +9,7 @@
               <span>قوانین</span></h2>
           </v-card-title>
           <v-card-text>
-            <div>{{ settings('pages.rulesText') }}</div>
+            <div v-html=" settings('pages.rulesText')"></div>
           </v-card-text>
         </v-card>
       </v-flex>
