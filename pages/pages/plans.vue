@@ -4,9 +4,8 @@
       <h3>پلن ها</h3>
     </v-card-title>
     <v-card-text>
-      <p>
-        {{ text }}
-      </p>
+      <div v-html=" text ">
+      </div>
 
       <table>
         <tr>
