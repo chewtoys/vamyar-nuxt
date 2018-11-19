@@ -10,7 +10,7 @@
 </template>
 
 <script>
-  import Helper from '~/assets/js/Helper.js'
+  import Helper from '~/assets/js/helper'
 
   export default {
     props: ['value', 'label', 'readOnly', 'placeholder'],
