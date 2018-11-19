@@ -10,7 +10,7 @@ export default {
   head() {
     return {
       title: this.$store.state.navigation.title,
-      titleTemplate: _.get(this.$store.state, 'settings.data.site.siteTitle', '') + '- %s ',
+      titleTemplate: _.get(this.$store.state, 'settings.data.site.siteTitle', '') ,
       meta:
         [
           {
