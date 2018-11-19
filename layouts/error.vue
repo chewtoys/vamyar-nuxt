@@ -13,7 +13,7 @@
       <div v-else-if="statusCode === 500" class="title iransans">
         {{ (false &&  error && error.message ) ? error.message : 'مشکلی از طرف سرور رخ داد!'}}
       </div>
-      <div v-else="" class="title iransans">{{ error.message }}</div>
+      <div v-else="" class="title iransans" v-html=" error.message "></div>
       <p class="description">
         <nuxt-link class="error-link vazir" to="/">برگشت به صفحه‌ی نخست</nuxt-link>
         <br/>
