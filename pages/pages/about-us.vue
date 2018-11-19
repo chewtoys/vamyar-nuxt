@@ -19,7 +19,8 @@
 <script>
   export default {
     meta: {
-      title: "درباره‌ی ما"
+      title: "درباره‌ی ما",
+      breadcrumb: "درباره‌ی ما",
     },
     layout: "site",
     computed: {
