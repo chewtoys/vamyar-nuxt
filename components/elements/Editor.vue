@@ -10,6 +10,8 @@
 </template>
 
 <script>
+  import Helper from '~/assets/js/Helper.js'
+
   export default {
     props: ['value', 'label', 'readOnly', 'placeholder'],
     data() {
@@ -66,7 +68,7 @@
     },
     watch: {
       content(val) {
-        this.$emit("input", val)
+        this.$emit("input", Helper.nl2br(val))
       }
     },
     mounted() {
