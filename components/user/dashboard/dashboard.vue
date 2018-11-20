@@ -10,22 +10,22 @@
           </v-card-title>
           <v-progress-linear v-if="loader" :indeterminate="true"/>
           <v-card-text>
-            <v-chip color="green" text-color="white">
+            <v-chip color="info" text-color="white">
               کل آگهی ها
               <v-avatar class="info darken-4">۲۳</v-avatar>
             </v-chip>
-            <v-chip color="green" text-color="white">
+            <v-chip color="success" text-color="white">
               آگهی های تایید شده
-              <v-avatar class="green darken-4">۲۰</v-avatar>
+              <v-avatar class="success darken-4">۲۰</v-avatar>
             </v-chip>
-            <v-chip color="green" text-color="white">
+            <v-chip color="orange" text-color="white">
               تیکت ها
 
-              <v-avatar class="green darken-4">۱۰</v-avatar>
+              <v-avatar class="orange darken-4">۱۰</v-avatar>
             </v-chip>
-            <v-chip color="green" text-color="white">
+            <v-chip color="danger" text-color="white">
               مشاوره ها
-              <v-avatar class="green darken-4">۴۲</v-avatar>
+              <v-avatar class="danger darken-4">۴۲</v-avatar>
             </v-chip>
 
           </v-card-text>
