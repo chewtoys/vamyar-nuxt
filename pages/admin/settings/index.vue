@@ -169,6 +169,22 @@
           <v-tab-item
             value="tab-4"
           >
+            <Crud
+              v-model="onMedia"
+              :structure="mediaStructure"
+              label="ما در رسانه ها"
+            />
+
+            <Crud
+              v-model="whyUs"
+              :structure="whyUsStructure"
+              label="چرا ما؟"
+            />
+            <Crud
+              v-model="whatWeDo"
+              :structure="whatWeDoStructure"
+              label="چه کارهایی در وامیار انجام می شود؟"
+            />
             <v-textarea
               validate="required"
               v-model="headerText"
@@ -216,6 +232,7 @@
 <script>
   import Helper from '~/assets/js/helper'
   import Editor from '~/components/elements/Editor'
+  import Crud from '~/components/elements/Crud'
 
   const SAVE_PATH = '/settings'
   export default {
@@ -223,9 +240,26 @@
       breadcrumb: 'تنظیمات عمومی',
       title: 'تنظیمات عمومی سایت'
     },
-    components: {Editor},
+    components: {Editor, Crud},
     data() {
       return {
+
+        mediaStructure: [
+          {title: 'نام رسانه', name: 'name', type: 'text', value: ''},
+          {title: 'توضیحات', name: 'desc', type: 'textarea', value: ''},
+          {title: 'لینک رسانه', name: 'link', type: 'text', value: ''},
+          {title: 'تصویر', name: 'image', type: 'image', value: ''},
+        ],
+        whyUsStructure: [
+          {title: 'عنوان', name: 'title', type: 'text', value: ''},
+          {title: 'توضیحات', name: 'desc', type: 'textarea', value: ''},
+          {title: 'تصویر', name: 'image', type: 'image', value: ''},
+        ],
+        whatWeDoStructure: [
+          {title: 'عنوان', name: 'title', type: 'text', value: ''},
+          {title: 'توضیحات', name: 'desc', type: 'textarea', value: ''},
+          {title: 'تصویر', name: 'image', type: 'image', value: ''},
+        ],
         model: 'tab-1',
         content: 'سلام و احترام',
         config: {
@@ -242,6 +276,9 @@
         siteDescription: '',
         siteLogo: '',
         isSiteOpen: '',
+        onMedia: [],
+        whatWeDo: [],
+        whyUs: [],
         footerText: '',
         contactUsSuggestionText: '',
         headerText: '',
@@ -264,6 +301,9 @@
             siteTitle: "عنوان سایت",
             siteDescription: "توضیحات متا",
             siteLogo: 'لوگوی سایت',
+            onMedia: 'ما در رسانه ها',
+            whatWeDo: 'ما چه کار می کنیم؟',
+            whyUs: 'چرا ما',
             isSiteOpen: 'باز بودن سایت',
             footerText: 'متن فوتر',
             headerText: 'متن هدر',
@@ -310,15 +350,15 @@
                 {key: groupKey, value: JSON.stringify(data)}
               )
               .then((response) => {
-                let status = true
-                if (status) {
-                  // show success and redirect
-                  let fetchData = this.$axios.$get('/settings');
+
+                // show success and redirect
+                this.$axios.$get('/settings').then((fetchData) => {
                   if (_.has(fetchData, 'data')) this.$store.commit('settings/setAndProcessData', fetchData.data)
                   this.$store.commit('snackbar/setSnack', "با موفقیت ثبت شد.", "success")
-                } else {
+                }).catch(err => {
                   this.$store.commit('snackbar/setSnack', " خطایی رخ داد.", "warning")
-                }
+                })
+                //window.location = '/admin/settings';
                 this.saveLoading = false
               }).catch((error) => {
               this.saveLoading = false
@@ -329,13 +369,18 @@
                 {key: groupKey, value: JSON.stringify(data)}
               )
               .then((response) => {
-                let status = true
-                if (status) {
-                  // show success and redirect
+
+                // show success and redirect
+                this.$axios.$get('/settings').then((fetchData) => {
+                  if (_.has(fetchData, 'data')) this.$store.commit('settings/setAndProcessData', fetchData.data)
                   this.$store.commit('snackbar/setSnack', "با موفقیت ثبت شد.", "success")
-                } else {
+                }).catch(err => {
                   this.$store.commit('snackbar/setSnack', " خطایی رخ داد.", "warning")
-                }
+                })
+
+                this.$store.commit('snackbar/setSnack', "با موفقیت ثبت شد.", "success")
+                //window.location = '/admin/settings';
+
                 this.saveLoading = false
               }).catch((error) => {
               this.saveLoading = false
@@ -346,7 +391,7 @@
     },
     asyncData({store, error}) {
       // set initial data
-      if (!_.get(store.state.settings, 'data', false) || _.isEmpty(_.get(store.state.settings, 'data', null))) {
+      if (false && (!_.get(store.state.settings, 'data', false) || _.isEmpty(_.get(store.state.settings, 'data', null)))) {
         return error({
           statusCode: 503,
           message: 'در گرفتن تنظیمات مشکلی رخ داد.'

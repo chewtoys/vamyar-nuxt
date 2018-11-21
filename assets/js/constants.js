@@ -485,5 +485,6 @@ export const rawHeaders = {
   GENERAL_SETTINGS = {
     site: ['closedSiteText', 'isSiteOpen', 'siteTitle', 'siteDescription', 'siteLogo', 'siteFavIcon', 'footerText', 'headerText', 'subHeaderText'],
     adverts: ['noticeOnAdvertShow', 'noticeBeforeCreateAdvert', 'isImageAllowed'],
+    frontpage : ['whatWeDo','onMedia','whyUs', 'whatWeDo', 'noticeBeforeCreateAdvert', 'isImageAllowed'],
     pages: ['premiumText', 'aboutUsText', 'contactUsText', 'rulesText', 'contactUsSuggestionText', 'educationText']
   }

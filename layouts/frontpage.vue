@@ -10,8 +10,8 @@
   export default {
     head() {
       return {
-        title: this.$store.state.navigation.title,
-        titleTemplate: _.get(this.$store.state, 'settings.data.site.siteTitle', ''),
+        title: _.get(this.$store.state.navigation,'title','وامیار'),
+        titleTemplate: _.get(this.$store.state, 'settings.data.site.siteTitle', 'صفحه نخست ' ),
         meta:
           [
             {

@@ -50,7 +50,9 @@
                     </span>
                     <div class="full text-justify py-3">
                       <h3>توجه داشته باشید:</h3>
-                      <div class="font-13">{{ settings('adverts.noticeOnAdvertShow') }}</div>
+                      <v-alert type="info" :value="settings('adverts.noticeOnAdvertShow')!==''">
+                        <div class="font-13" v-html=" settings('adverts.noticeOnAdvertShow') "></div>
+                      </v-alert>
                     </div>
                     <v-divider/>
                   </div>
