@@ -56,7 +56,10 @@
   import Filters from "~/components/site/adverts/Filters.vue"
   import Helper from "~/assets/js/helper.js"
 
-  const number = 4
+  const number = 4,
+    cityMethod = '/cities?number=3000',
+    guaranteeMethod = '/guaranteeTypes',
+    loanTypeMethod = '/loanTypes'
 
   export default {
 
@@ -117,7 +120,7 @@
       } catch (err) {
         console.log(err);
         //error({statusCode: 404, message: "این صفحه فعال نمی باشد."})
-        return {items: [], paginator: [],msg:'مشکلی در گرفتن آگهی ها پیش آمد.', loading: false, type, slug}
+        return {items: [], paginator: [], msg: 'مشکلی در گرفتن آگهی ها پیش آمد.', loading: false, type, slug}
       }
     }
     ,
@@ -143,7 +146,7 @@
       ,
       // load more items
       loadMore: async function () {
-        this.msg=null;
+        this.msg = null;
         this.btn_loading = true
         try {
 
@@ -168,7 +171,7 @@
       // reload as filter changed
 
       loadAgain(filters = {}) {
-        this.msg=null;
+        this.msg = null;
         this.loading = true
         this.items = []
 

@@ -4,6 +4,7 @@
     <Search/>
     <LastAdverts/>
     <WhyUs/>
+    <WhyUsSlider/>
     <HowWeDo/>
     <Footer/>
   </div>
@@ -12,6 +13,7 @@
 <script>
   import Header from "~/components/site/frontpage/Header.vue"
   import WhyUs from "~/components/site/frontpage/WhyUs.vue"
+  import WhyUsSlider from "~/components/site/frontpage/WhyUsSlider.vue"
   import HowWeDo from "~/components/site/frontpage/HowWeDo.vue"
   import Search from "~/components/site/frontpage/Search.vue"
   import Categories from "~/components/site/frontpage/Categories.vue"
@@ -36,6 +38,7 @@
       HowWeDo,
       Categories,
       LastAdverts,
+      WhyUsSlider,
       Footer,
       Search
     }
