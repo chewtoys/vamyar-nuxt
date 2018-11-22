@@ -3,9 +3,9 @@
     <v-card class="categories pt-5 pb-5 px-2">
 
       <v-card-title
-        class="text-center yekn"
+        class="text-center align-center  yekn"
       >
-        <h1 class="title">چرا ما؟</h1>
+        <h1>چرا ما؟</h1>
         <v-spacer></v-spacer>
 
       </v-card-title>
