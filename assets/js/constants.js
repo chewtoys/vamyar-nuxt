@@ -483,8 +483,8 @@ export const rawHeaders = {
     ]
   },
   GENERAL_SETTINGS = {
-    site: ['closedSiteText', 'isSiteOpen', 'siteTitle', 'siteDescription', 'siteLogo', 'siteFavIcon', 'footerText', 'headerText', 'subHeaderText'],
+    site: ['closedSiteText', 'isSiteOpen', 'siteTitle', 'siteDescription', 'siteLogo', 'siteFavIcon', 'footerText'],
     adverts: ['noticeOnAdvertShow', 'noticeBeforeCreateAdvert', 'isImageAllowed'],
-    frontpage : ['whatWeDo','onMedia','whyUs', 'whatWeDo', 'noticeBeforeCreateAdvert', 'isImageAllowed'],
-    pages: ['premiumText', 'aboutUsText', 'contactUsText', 'rulesText', 'contactUsSuggestionText', 'educationText']
+    frontpage: ['whatWeDoClip', 'whatWeDo', 'onMedia', 'whyUs', 'whatWeDo', 'noticeBeforeCreateAdvert', 'isImageAllowed', 'headerBgUrl', 'headerText', 'subHeaderText'],
+    pages: ['premiumText', 'aboutUsText', 'contactUsTable', 'contactUsText', 'rulesText', 'contactUsSuggestionText', 'educationText']
   }

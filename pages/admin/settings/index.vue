@@ -13,7 +13,7 @@
 
         <v-tabs
           slot="extension"
-          v-model="model"
+          v-model="tab"
           centered
           fixed-tabs
           color="transparent"
@@ -38,7 +38,7 @@
         <v-divider/>
         <br/>
 
-        <v-tabs-items v-model="model">
+        <v-tabs-items v-model="tab">
           <v-tab-item
             value="tab-1"
           >
@@ -137,6 +137,11 @@
               data-vv-name="contactUsText"
               auto-grow
             />
+            <Crud
+              v-model="contactUsTable"
+              :structure="contactUsTableStructure"
+              label="اطلاعات تماس در صفحه ی تماس با ما"
+            />
             <Editor
               validate="required"
               v-model="contactUsSuggestionText"
@@ -185,6 +190,26 @@
               :structure="whatWeDoStructure"
               label="چه کارهایی در وامیار انجام می شود؟"
             />
+
+            <v-text-field
+              validate="required"
+              v-model="whatWeDoClip"
+              :error-messages="errors.collect('whatWeDoClip')"
+              box
+              label="آدرس فایل کلیپ"
+              data-vv-name="whatWeDoClip"
+              required
+            />
+            <v-text-field
+              validate="required"
+              v-model="headerBgUrl"
+              :error-messages="errors.collect('headerBgUrl')"
+              box
+              label="آدرس بکگراند هدر"
+              data-vv-name="headerBgUrl"
+              required
+            />
+
             <v-textarea
               validate="required"
               v-model="headerText"
@@ -240,7 +265,6 @@
       breadcrumb: 'تنظیمات عمومی',
       title: 'تنظیمات عمومی سایت'
     },
-    components: {Editor, Crud},
     data() {
       return {
 
@@ -260,18 +284,17 @@
           {title: 'توضیحات', name: 'desc', type: 'textarea', value: ''},
           {title: 'تصویر', name: 'image', type: 'image', value: ''},
         ],
-        model: 'tab-1',
-        content: 'سلام و احترام',
-        config: {
-          toolbar: [
-            ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript']
-          ],
-          height: 300
-        },
+        contactUsTableStructure: [
+          {title: 'عنوان', name: 'title', type: 'text', value: ''},
+          {title: 'متن', name: 'text', type: 'text', value: ''},
+        ],
+
+        tab: 'tab-1',
         savePending: false,
         saveLoading: false,
 
         // settings
+        whatWeDoClip: '',
         siteTitle: '',
         siteDescription: '',
         siteLogo: '',
@@ -290,6 +313,7 @@
         isImageAllowed: '',
         aboutUsText: '',
         contactUsText: '',
+        contactUsTable: '',
         educationText: '',
         rulesText: '',
 
@@ -302,7 +326,9 @@
             siteDescription: "توضیحات متا",
             siteLogo: 'لوگوی سایت',
             onMedia: 'ما در رسانه ها',
-            whatWeDo: 'ما چه کار می کنیم؟',
+            whatWeDo: 'ما چه کار می کنیم',
+            headerBgUrl: 'تصویر پس زمینه ی هدر',
+            whatWeDoClip: 'کلیپ ما چه کار می کنیم',
             whyUs: 'چرا ما',
             isSiteOpen: 'باز بودن سایت',
             footerText: 'متن فوتر',
@@ -315,6 +341,7 @@
             isImageAllowed: 'امکان ثبت تصویر در آگهی',
             aboutUsText: 'متن صفحه ی درباره ی ما',
             contactUsText: 'متن صفحه ی تماس با ما',
+            contactUsTable: 'اطلاعات صفحه ی تماس با ما',
             contactUsSuggestionText: 'متن صفحه ی تماس با ما',
             educationText: 'متن بالای قسمت آموزش',
             rulesText: 'متن قسمت قوانین',
@@ -406,6 +433,7 @@
         })
       })
       return list
-    }
+    },
+    components: {Editor, Crud},
   }
 </script>

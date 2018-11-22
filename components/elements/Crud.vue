@@ -64,9 +64,6 @@
           </v-icon>
         </td>
       </template>
-      <template slot="no-data">
-        <v-btn color="primary" @click="initialize">بازنشانی</v-btn>
-      </template>
     </v-data-table>
   </div>
 </template>
