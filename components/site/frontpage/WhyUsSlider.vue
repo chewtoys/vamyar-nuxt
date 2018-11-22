@@ -1,42 +1,42 @@
 <template>
+  <v-container grid-list-sm>
+    <v-card class="categories pt-5 pb-5 px-2">
 
-  <v-card
-    class="mx-auto"
-  >
-    <v-card-title
-      class="blue-grey white--text"
-    >
-      <span class="title">چرا ما؟</span>
-      <v-spacer></v-spacer>
+      <v-card-title
+        class="text-center yekn"
+      >
+        <h1 class="title">چرا ما؟</h1>
+        <v-spacer></v-spacer>
 
-    </v-card-title>
-    <v-card-text class="py-0">
-      <v-timeline dense>
-        <v-slide-x-reverse-transition
-          group
-          hide-on-leave
-        >
-          <v-timeline-item
-            v-for="item in items"
-            :key="item.id"
-            :color="item.color"
-            small
-            fill-dot
+      </v-card-title>
+      <v-card-text class="py-0">
+        <v-timeline dense>
+          <v-slide-x-reverse-transition
+            group
+            hide-on-leave
           >
-            <v-alert
-              :value="true"
+            <v-timeline-item
+              v-for="item in items"
+              :key="item.id"
               :color="item.color"
-              :icon="item.icon"
+              small
+              fill-dot
             >
-              <b>{{item.title || 'کاربر'}}</b>
-              <br/>
-              {{ item.desc || 'توضیحات'}}
-            </v-alert>
-          </v-timeline-item>
-        </v-slide-x-reverse-transition>
-      </v-timeline>
-    </v-card-text>
-  </v-card>
+              <v-alert
+                :value="true"
+                :color="item.color"
+                :icon="item.icon"
+              >
+                <b>{{item.title || 'کاربر'}}</b>
+                <br/>
+                {{ item.desc || 'توضیحات'}}
+              </v-alert>
+            </v-timeline-item>
+          </v-slide-x-reverse-transition>
+        </v-timeline>
+      </v-card-text>
+    </v-card>
+  </v-container>
 </template>
 <script>
   const COLORS = [
