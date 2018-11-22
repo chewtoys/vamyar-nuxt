@@ -88,6 +88,7 @@
         _.forEach(this.structure, (field) => {
           headers.push({text: field.title, value: field.name, sortable: false})
         })
+        headers.push({text: 'عملیات', sortable: false});
         return headers;
       },
       formTitle() {
