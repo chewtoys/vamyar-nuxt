@@ -28,7 +28,7 @@
           ]
       }
     },
-    middleware: ["adminAuthenticated", "navigation"],
+    middleware: ["updateSettings","adminAuthenticated", "navigation"],
     components: {
       ToolBar,
       Drawer,

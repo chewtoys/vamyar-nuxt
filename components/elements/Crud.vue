@@ -26,6 +26,9 @@
                                 :label="field.title"></v-text-field>
                   <v-textarea box v-if="field.type=='textarea'" v-model="editedItem[field.name]"
                               :label="field.title"></v-textarea>
+                  <Editor box v-if="field.type=='editor'" v-model="editedItem[field.name]"
+                          :label="field.title"/>
+
                 </v-flex>
 
               </v-layout>
@@ -46,7 +49,7 @@
       class="elevation-1"
     >
       <template slot="items" slot-scope="props">
-        <td v-for="field in structure">{{ props.item[field.name] }}</td>
+        <td v-for="field in structure" v-html="nl2br(props.item[field.name])"></td>
 
         <td class="justify-center layout px-0">
           <v-icon
@@ -69,6 +72,7 @@
 </template>
 <script>
   import Helper from '~/assets/js/helper'
+  import Editor from '~/components/elements/Editor'
 
   export default {
     props: ['value', 'label', 'structure', 'placeholder'],
@@ -105,6 +109,9 @@
       this.initialize()
     },
     methods: {
+      nl2br(text) {
+        return Helper.nl2br(text)
+      },
       initialize() {
         this.content = _.isArray(this.value) ? this.value : [];
       },
@@ -136,6 +143,7 @@
         }
         this.close()
       }
-    }
+    },
+    components: {Editor}
   }
 </script>

@@ -27,6 +27,6 @@
     },
     components: {Toolbar},
     computed: {},
-    middleware: ['isSiteOpen']
+    middleware: ['isSiteOpen',"updateSettings"]
   }
 </script>

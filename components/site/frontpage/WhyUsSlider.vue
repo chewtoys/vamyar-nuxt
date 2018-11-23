@@ -1,11 +1,9 @@
 <template>
-  <v-container grid-list-sm>
+  <v-container fluid grid-list-sm>
     <v-card class="categories pt-5 pb-5 px-2">
 
-      <v-card-title
-        class="text-center align-center  yekn"
-      >
-        <h1>چرا ما؟</h1>
+      <v-card-title>
+        <h2 class="full text-xs-center">چرا ما؟</h2>
         <v-spacer></v-spacer>
 
       </v-card-title>
@@ -27,9 +25,9 @@
                 :color="item.color"
                 :icon="item.icon"
               >
-                <b>{{item.title || 'کاربر'}}</b>
+                <b class="px-1">{{item.title || 'کاربر'}}</b>
                 <br/>
-                {{ item.desc || 'توضیحات'}}
+                <div class="px-1" v-html="nl2br(item.desc || 'توضیحات')"></div>
               </v-alert>
             </v-timeline-item>
           </v-slide-x-reverse-transition>
@@ -39,6 +37,8 @@
   </v-container>
 </template>
 <script>
+  import Helper from '~/assets/js/helper'
+
   const COLORS = [
     'info',
     'warning',
@@ -46,10 +46,10 @@
     'success'
   ]
   const ICONS = {
-    info: 'mdi-information',
-    warning: 'mdi-alert',
-    error: 'mdi-alert-circle',
-    success: 'mdi-check-circle'
+    info: 'person_pin',
+    warning: 'person_pin',
+    error: 'person_pin',
+    success: 'person_pin'
   }
 
   export default {
@@ -69,6 +69,9 @@
     },
 
     methods: {
+      nl2br(text) {
+        return Helper.nl2br(text)
+      },
       getItems() {
         return this.settings('frontpage.whyUs', [])
       },
@@ -85,9 +88,7 @@
         let newItemId = lastActiveItemId === lastId ? 1 : lastActiveItemId + 1;
         let newItem = _.find(this.allItems, {id: newItemId});
         let items = this.items
-        console.log({
-          count, lastId, activeItemsCount, lastActiveItemId, newItemId, newItem, items
-        });
+        //console.log({          count, lastId, activeItemsCount, lastActiveItemId, newItemId, newItem, items});
         this.items.unshift(newItem);
 
         if (activeItemsCount >= allowableCountForShow) {
@@ -113,7 +114,7 @@
         _.set(this.allItems, [index, 'color'], color)
       })
       this.items = [_.first(this.allItems)];
-      console.log(this.allItems, this.items);
+      //console.log(this.allItems, this.items);
       this.start();
     }
   }

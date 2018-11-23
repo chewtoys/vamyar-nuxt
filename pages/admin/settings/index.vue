@@ -286,7 +286,8 @@
         ],
         contactUsTableStructure: [
           {title: 'عنوان', name: 'title', type: 'text', value: ''},
-          {title: 'متن', name: 'text', type: 'text', value: ''},
+          {title: 'آیکون متریال', name: 'icon', type: 'text', value: ''},
+          {title: 'متن', name: 'text', type: 'editor', value: ''},
         ],
 
         tab: 'tab-1',
@@ -350,7 +351,7 @@
       }
     },
     methods: {
-      save: function () {
+      save() {
         this.saveLoading = true
         this.$validator
           .validateAll()
@@ -377,7 +378,6 @@
                 {key: groupKey, value: JSON.stringify(data)}
               )
               .then((response) => {
-
                 // show success and redirect
                 this.$axios.$get('/settings').then((fetchData) => {
                   if (_.has(fetchData, 'data')) this.$store.commit('settings/setAndProcessData', fetchData.data)
@@ -396,7 +396,6 @@
                 {key: groupKey, value: JSON.stringify(data)}
               )
               .then((response) => {
-
                 // show success and redirect
                 this.$axios.$get('/settings').then((fetchData) => {
                   if (_.has(fetchData, 'data')) this.$store.commit('settings/setAndProcessData', fetchData.data)

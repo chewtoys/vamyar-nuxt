@@ -73,6 +73,15 @@
             </v-card-title>
             <v-card-text>
               <div v-html="settings('pages.contactUsText')"></div>
+              <v-divider v-if="settings('pages.contactUsTable')">
+                <div v-for="item in settings('pages.contactUsTable',[])" :key="item.title">
+                  <h4>
+                    <v-icon class="px-1">{{item.icon || ''}}</v-icon>
+                    {{item.title}}
+                  </h4>
+                  <p v-html="item.text"></p>
+                </div>
+              </v-divider>
             </v-card-text>
           </v-card>
         </v-flex>
@@ -157,8 +166,8 @@
           }
         })
 
-      }, settings(key) {
-        return _.get(this.$store.state.settings.data, key, '')
+      }, settings(key, def='') {
+        return _.get(this.$store.state.settings.data, key, def)
       },
 
       clear() {

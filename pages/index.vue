@@ -1,18 +1,17 @@
 <template>
   <div>
     <Header/>
-    <Search/>
     <LastAdverts/>
-    <WhyUs/>
-    <WhyUsSlider/>
     <HowWeDo/>
+    <WhyUsSlider/>
+    <onMedia/>
     <Footer/>
   </div>
 </template>
 
 <script>
   import Header from "~/components/site/frontpage/Header.vue"
-  import WhyUs from "~/components/site/frontpage/WhyUs.vue"
+  import onMedia from "~/components/site/frontpage/onMedia.vue"
   import WhyUsSlider from "~/components/site/frontpage/WhyUsSlider.vue"
   import HowWeDo from "~/components/site/frontpage/HowWeDo.vue"
   import Search from "~/components/site/frontpage/Search.vue"
@@ -34,7 +33,7 @@
     layout: "frontpage",
     components: {
       Header,
-      WhyUs,
+      onMedia,
       HowWeDo,
       Categories,
       LastAdverts,

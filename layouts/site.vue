@@ -37,7 +37,8 @@
           ]
       }
     },
-    middleware: ["navigation",'isSiteOpen'],
+    middleware: ["updateSettings","navigation",'isSiteOpen'],
+
     components: {
       Breadcrumb,
       ToolBar,

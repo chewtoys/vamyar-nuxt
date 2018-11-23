@@ -1,26 +1,30 @@
 <template>
-  <v-container fluid>
+  <v-container fluid >
     <v-subheader>
       {{ title }}
     </v-subheader>
     <div style="background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);">
-      <v-card class="transparent frontpage howwedo pt-5 pb-5 px-5">
+      <v-card class="transparent frontpage howwedo pt-2 pb-5 px-5">
         <v-layout align-center justify-center class="my-4" row>
-          <v-flex xs12 sm6 offset-sm1>
-            <div v-for="item in items" :key="item.title" class="mt-1 mb-2 text-xs-right">
-              <div class="deep-purple--text text-xs-right">
-                <h3 class="font-17">{{ item.title }}</h3>
+          <v-flex xs12 :sm12="settings('frontpage.whatWeDoClip')===''" :sm6="settings('frontpage.whatWeDoClip')!==''"
+                  offset-sm1>
+            <div v-for="item in items" :key="item.title" class="mt-2 mb-2 text-xs-right">
+              <div class="white--text text-xs-right">
+                <h3 class="font-17">
+                  <v-icon class="pb-1">fiber_manual_record</v-icon>
+                  {{ item.title }}
+                </h3>
               </div>
               <div>
-                <p class="font-14 grey--text text-xs-right">{{ item.desc }}</p>
+                <p class="px-4 pt-1 pb-2 font-14 white--text text-xs-right" v-html="nl2br(item.desc)"></p>
               </div>
             </div>
           </v-flex>
-          <v-flex xs12 sm4>
-            <v-card class="cyan" height="300px">
-              <div class="transparent white--text text-xs-center">
-                <h1>کلیپ</h1>
-              </div>
+          <v-flex xs12 :sm6="settings('frontpage.whatWeDoClip')!==''">
+            <v-card v-if="settings('frontpage.whatWeDoClip')!==''" flat color="transparent">
+              <video :src="settings('frontpage.whatWeDoClip')" width="100%" controls>
+                مرورگر شما قابلیت پخش این ویدئو را ندارد.
+              </video>
             </v-card>
           </v-flex>
         </v-layout>
@@ -29,33 +33,26 @@
   </v-container>
 </template>
 <script>
-export default {
-  computed: {
-    title: function() {
-      return "چه کارهایی در وامیار انجام می شود؟"
+  import Helper from '~/assets/js/helper'
+
+
+  export default {
+    computed: {
+      title: function () {
+        return "چه کارهایی در وامیار انجام می شود؟"
+      },
+      items: function () {
+        return this.settings('frontpage.whatWeDo')
+      }
     },
-    items: function() {
-      return [
-        {
-          img: "https://randomuser.me/api/portraits/men/64.jpg",
-          title: "مورد اول",
-          desc:
-            "لورم ساز، تولید کننده لورم ایپسوم فارسی و انگلیسی برای طراحان وب و گرافیست ها همراه با امکان ایجاد تگ و جملات اتفاقی."
-        },
-        {
-          img: "https://randomuser.me/api/portraits/men/99.jpg",
-          title: "مورد دوم",
-          desc:
-            "لورم ساز، تولید کننده لورم ایپسوم فارسی و انگلیسی برای طراحان وب و گرافیست ها همراه با امکان ایجاد تگ و جملات اتفاقی."
-        },
-        {
-          img: "https://randomuser.me/api/portraits/men/51.jpg",
-          title: "مورد سوم",
-          desc:
-            "لورم ساز، تولید کننده لورم ایپسوم فارسی و انگلیسی برای طراحان وب و گرافیست ها همراه با امکان ایجاد تگ و جملات اتفاقی."
-        }
-      ]
+    methods: {
+      settings(key, def = '') {
+        return _.get(this.$store.state.settings.data, key, def)
+      },
+      nl2br(text) {
+        return Helper.nl2br(text)
+      }
     }
   }
-}
+
 </script>
