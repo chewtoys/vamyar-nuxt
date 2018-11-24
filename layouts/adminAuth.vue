@@ -10,7 +10,7 @@
   export default {
     head() {
       return {
-        title: this.$store.state.navigation.title,
+        title: 'ورود',
         titleTemplate: 'پنل مدیریت ' + _.get(this.$store.state, 'settings.data.site.siteTitle', '') + '- %s ',
         meta:
           [

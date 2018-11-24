@@ -5,7 +5,7 @@
 export default {
   meta:{
     title:'خبر ها',
-    breadcrumb:'خبر ها',
+    breadcrumb:'صفحه ی نخست',
   },
   layout: "site"
 }

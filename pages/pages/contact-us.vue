@@ -72,16 +72,18 @@
               </h2>
             </v-card-title>
             <v-card-text>
+              <v-divider v-if="settings('pages.contactUsText').length > 1 "/>
+              <br/>
               <div v-html="settings('pages.contactUsText')"></div>
-              <v-divider v-if="settings('pages.contactUsTable')">
-                <div v-for="item in settings('pages.contactUsTable',[])" :key="item.title">
-                  <h4>
-                    <v-icon class="px-1">{{item.icon || ''}}</v-icon>
-                    {{item.title}}
-                  </h4>
-                  <p v-html="item.text"></p>
-                </div>
-              </v-divider>
+              <v-divider v-if="table"/>
+              <br/>
+              <div v-for="item in table" :key="item.title">
+                <h4>
+                  <v-icon class="px-1">{{item.icon || ''}}</v-icon>
+                  {{item.title}}
+                </h4>
+                <p v-html="item.text"></p>
+              </div>
             </v-card-text>
           </v-card>
         </v-flex>
@@ -113,6 +115,9 @@
       }
     }),
     computed: {
+      table() {
+        return this.settings('pages.contactUsTable', []);
+      },
       lorem() {
         return this.$store.state.temp.lorem
       }
@@ -166,7 +171,7 @@
           }
         })
 
-      }, settings(key, def='') {
+      }, settings(key, def = '') {
         return _.get(this.$store.state.settings.data, key, def)
       },
 

@@ -1,15 +1,27 @@
 <template>
   <v-container fluid grid-list-lg>
     <v-subheader>
-      {{ title }}
+      {{ getTitle }}
     </v-subheader>
     <v-spacer/>
 
     <v-card color="transparent" flat>
 
       <v-card-text>
-        <v-alert  :value="!!msg" type="warning">
+        <v-alert v-if="!showPremium" :value="!!msg " type="warning">
           <span class="p-b--2">خطا: {{msg}}</span>
+        </v-alert>
+        <v-alert v-if="showPremium" :value="!!msg" type="success">
+          <span class="p-b--2">{{msg}}</span>
+          <v-spacer/>
+          <v-btn color="warning" :to="premiumLink">
+            <v-icon class="px-1">shopping_cart</v-icon>
+            خرید سریع اشتراک
+          </v-btn>
+          <v-btn to="/pages/plans">
+            <v-icon class="px-1">list</v-icon>
+            پلن ها
+          </v-btn>
         </v-alert>
         <div class="text-xs-center">
           <v-progress-circular
@@ -27,8 +39,8 @@
       </v-card-text>
       <v-card-actions class="pl-3">
         <v-spacer/>
-        <v-btn outline to="/categories" color="info ml-2" round>
-          <span>همه ی آگهی ها</span>
+        <v-btn outline :to="getLink" color="info ml-2" round>
+          <span>همه ی آگهی های این مجموعه</span>
           <v-icon>arrow_left</v-icon>
         </v-btn>
       </v-card-actions>
@@ -38,32 +50,55 @@
 <script>
   import AdvertCard from "~/components/site/adverts/Advert.vue"
 
-  const path = "/site/adverts?include=advertable",
-    title = "آخرین آگهی ها"
+  const
+    path = "/site/adverts",
+    link = "/categories",
+    title = "آخرین آگهی ها",
+    number = 12
+
   export default {
+    props: ['title', 'path', 'number', 'link'],
     components: {AdvertCard},
     data() {
       return {
+        showPremium: false,
         cardLoader: true,
         msg: null,
-        title,
         data: []
       }
     },
+    computed: {
+      getLink() {
+        return this.link || link
+      },
+      getTitle() {
+        return this.title || title
+      },
+      getPath() {
+        return this.path || path
+      },
+      getNumber() {
+        return this.number || number
+      },
+      premiumLink() {
+        return `/user/premium?redirect=${decodeURI(this.link)}`
+      }
+    },
     mounted() {
-      this.$axios.$get(path, {
-        params: {include: "advertable,city,user.details", number: 12}
+      this.$axios.$get(this.getPath, {
+        params: {include: "advert,advert.city,advert.user.details", number: this.getNumber}
       }).then(res => {
         this.data = _.get(res, 'data', [])
         this.cardLoader = false;
       }).catch((err) => {
-        console.log(err)
-        this.msg = 'مشکلی در گرفتن آخرین آگهی ها پیش آمد.'
-        this.$store.commit(
-          "snackbar/setSnack",
-          "مشکلی در گرفتن آگهی ها پیش آمد.",
-          "error"
-        )
+        let code = _.get(err, 'response.status', 404);
+
+        if (code === 404) this.msg = ' چیزی یافت نشد!'
+        if (code === 401 || code === 403) {
+          this.msg = 'برای دین این آگهی ها باید اشتراک فعال داشته باشید.'
+          this.showPremium = true;
+        }
+
         this.cardLoader = false;
       })
 

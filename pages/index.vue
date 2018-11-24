@@ -1,7 +1,9 @@
 <template>
   <div>
     <Header/>
-    <LastAdverts/>
+    <LastAdverts path="/site/loans" title="آخرین وام های فروشی و مشارکتی" number="12" link="/categories/loans"/>
+    <LastAdverts path="/site/coSigners" title="آخرین ضامن ها" number="12" link="/categories/co-signers"/>
+    <LastAdverts path="/site/finances" title="آخرین سرمایه گذارها" number="12" link="/categories/fiances"/>
     <HowWeDo/>
     <WhyUsSlider/>
     <onMedia/>

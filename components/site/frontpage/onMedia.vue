@@ -1,6 +1,6 @@
 <template>
 
-  <v-container fluid>
+  <v-container fluid v-if="show">
     <v-subheader>
       {{ title }}
     </v-subheader>
@@ -31,6 +31,9 @@
   export default {
 
     computed: {
+      show() {
+        return _.isArray(this.items) && this.items.length > 0
+      },
       title: function () {
         return "ما در رسانه ها"
       },

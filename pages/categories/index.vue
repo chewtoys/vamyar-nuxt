@@ -1,175 +1,189 @@
 <template>
-  <div>
-    <v-subheader>
-      دسته بندی ها
-    </v-subheader>
-    <v-layout row wrap>
-      <v-flex v-for="item in categories" :key="item.id" xs12 sm4 lg3>
-        <v-card :to="item.to" hover ripple>
-          <v-img
-            v-if="item.image"
-            :src="item.image"
-            :lazy-src="`https://placehold.it/100`"
-            aspect-ratio="2"
-            class="grey lighten-2"
-          >
-            <v-layout
-              slot="placeholder"
-              fill-height
-              align-center
-              justify-center
-              ma-0
+  <v-layout row wrap>
+    <v-flex xs12 sm12>
+      <AdvertFilters label="فیلتر کنید" v-model="AdvertFilters"/>
+      <LoansFilters label="فیلتر کنید" v-model="LoansFilters"/>
+    </v-flex>
+    <v-flex xs12 sm12>
+      <v-card color="transparent" flat>
+        <v-container grid-list-lg fluid>
+          <div v-if="loading">
+            <v-progress-linear :indeterminate="loading"/>
+          </div>
+          <v-layout v-if="!loading" row wrap>
+            <v-flex
+              v-for="item in items"
+              :key="item.id"
+              :sm6="!!settings('adverts.isImageAllowed')"
+              :sm4="!settings('adverts.isImageAllowed')"
+              lg4
+              xl2
             >
-              <v-progress-circular indeterminate color="grey lighten-5"/>
-            </v-layout>
-          </v-img>
-
-          <v-card-title>
-            <h4>{{ item.title }}</h4>
-          </v-card-title>
-          <v-card-text>
-            {{ item.text }}
-          </v-card-text>
-          <v-card-actions>
-            <p class="grey--text font-12">
-              <v-icon
-                color="grey lighten-1"
-                class="font-21">playlist_play
-              </v-icon>
-              <b>{{ item.count ? `${item.count} آگهی ثبت شده` : 'بدون آگهی' }}</b>
-            </p>
-            <v-spacer/>
-            <v-btn outline round color="orange">مشاهده</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-flex>
-    </v-layout>
-
-    <v-subheader>
-      آخرین آگهی ها
-    </v-subheader>
-    <v-layout row wrap>
-      <v-flex v-for="item in adverts" :sm6="!!item.image" :sm4="!item.image" :key="item.id" xs12>
-        <AdvertCard :item="item"/>
-      </v-flex>
-      <v-flex v-if="paginator && paginator.cursor && paginator.cursor.nextURL" xs12 sm12>
-        <div class="my-5 text-xs-center">
-          <v-btn :loading="btnLoading" round large outline color="info" @click="loadMore">
-            <span><v-icon class="px-1">arrow_drop_down</v-icon>نمایش بیشتر</span>
-          </v-btn>
-        </div>
-      </v-flex>
-    </v-layout>
-  </div>
+              <AdvertCard :item="item"/>
+            </v-flex>
+            <v-alert :value="!!msg" type="warning">
+              <span class="p-b--2">خطا: {{msg}}</span>
+            </v-alert>
+            <div class="text-xs-center">
+              <v-progress-circular
+                v-if="loading"
+                :size="50"
+                color="primary"
+                indeterminate
+              ></v-progress-circular>
+            </div>
+          </v-layout>
+        </v-container>
+      </v-card>
+    </v-flex>
+    <v-flex v-if="paginator&&paginator.cursor && paginator.cursor.nextURL" xs12 sm12>
+      <div class="my-5 text-xs-center">
+        <v-btn :loading="btn_loading" round large outline color="info" @click="loadMore">
+          <span><v-icon class="px-1">arrow_drop_down</v-icon>نمایش بیشتر</span>
+        </v-btn>
+      </div>
+    </v-flex>
+  </v-layout>
 </template>
 <script>
-  import AdvertCard from "~/components/site/adverts/Advert.vue"
+  //import axios from 'axios'
+  // /site/adverts?advertableType=loan&include=advertable
 
-  const path = "/site/adverts"
-  const title = "لیست آگهی ها",
-    breadcrumb = "کل آگهی ها"
+  import AdvertCard from "~/components/site/adverts/Advert.vue"
+  import AdvertFilters from "~/components/site/adverts/filters/CommonAdverts.vue"
+  import LoansFilters from "~/components/site/adverts/filters/LoansFilters.vue"
+
+  import Helper from "~/assets/js/helper.js"
+
+  const number = 4,
+    cityMethod = '/cities?number=3000',
+    guaranteeMethod = '/guaranteeTypes',
+    loanTypeMethod = '/loanTypes'
 
   export default {
-
     meta: {
-      title,
-      breadcrumb,
-      link: ''
+      title: 'لیست همه ی آگهی ها',
+      breadcrumb: 'همه ی آگهی ها'
     },
-    components: {AdvertCard},
     data() {
       return {
-        adverts: [],
-        paginator: [],
-        btnLoading: false
+        AdvertFilters: {},
+        filter: {},
+        loansFilter: {},
+        page: 1,
+        msg: null,
+        size: "sm",
+        paginator: {},
+        loading: true,
+        btn_loading: false,
+      }
+    }
+    ,
+    watch: {
+      filter() {
+        this.loadAgain(this.filter)
       }
     },
-    computed: {
-      link() {
-        return this.$route.path
-      },
-      categories() {
-        return [
-          {
-            id: 1,
-            title: "وام",
-            count: 10,
-            to: "/categories/loans",
-            image: null,
-            text: this.$store.state.temp.lorem
-          },
-          {
-            id: 2,
-            title: "درخواست وام",
-            count: 6,
-            to: "/categories/loan-requests",
-            image: null,
-            text: this.$store.state.temp.lorem
-          },
-          {
-            id: 3,
-            title: "سرمایه",
-            count: 7,
-            to: "/categories/finances",
-            image: null,
-            text: this.$store.state.temp.lorem
-          },
-          {
-            id: 4,
-            title: "درخواست سرمایه",
-            count: 7,
-            to: "/categories/finance-requests",
-            image: null,
-            text: this.$store.state.temp.lorem
-          },
-          {
-            id: 5,
-            title: "ضامن",
-            count: 7,
-            to: "/categories/co-signers",
-            image: null,
-            text: this.$store.state.temp.lorem
-          },
-          {
-            id: 6,
-            title: "درخواست ضامن",
-            count: 7,
-            to: "/categories/co-signer-requests",
-            image: null,
-            text: this.$store.state.temp.lorem
-          }
-        ]
+    // loading the first items from server
+    async asyncData({app, store, params, error, $axios}) {
+      let method = `/site/adverts`
+      let cursor
+      cursor = 0
+      let include = 'advertable,city,user.details';
+      let query = {
+        number,
+        include
       }
-    },
+      //console.log({query})
+      try {
+        // city
+        let cityData = await $axios.$get(cityMethod);
+        store.commit('city/setAndProcessData', cityData.data || []);
+        let {data, paginator} = await
+          app.$axios.$get(method, {
+            params: query
+          })
+        let loading = false
+        return {items: data, paginator, loading}
+      } catch (err) {
+        console.log(err);
+        //error({statusCode: 404, message: "این صفحه فعال نمی باشد."})
+        return {items: [], paginator: [], msg: 'مشکلی در گرفتن آگهی ها پیش آمد.', loading: false}
+      }
+    }
+    ,
+    computed: {}
+    ,
+    // method used in page
     methods: {
+      showFilter(type) {
+        return true;
+      },
+      settings(key) {
+        return _.get(this.$store.state.settings.data, key, '')
+      }
+      ,
       // load more items
-      async loadMore() {
-        this.btnLoading = true
+      loadMore: async function () {
+        this.msg = null;
+        this.btn_loading = true
         try {
           let method = this.paginator.cursor.nextURL
-          let {data, paginator} = await this.$axios.$get(method)
-          data.forEach((e, i) => {
-            this.adverts.push(e)
+          let {data, paginator} = await this.$axios.$get(method, {
+            params: {number}
           })
+          data.forEach((e, i) => {
+            this.items.push(e)
+          })
+          this.btn_loading = false
           this.paginator = paginator
         } catch (err) {
-          this.paginator.cursor = {}
           this.paginator.cursor.nextURL = false
           this.$store.commit("snackbar/setSnack", "آگهی بیشتری وجود ندارد.")
         }
-        this.btnLoading = false
+        this.btn_loading = false
+      }
+      ,
+      // reload as filter changed
+      loadAgain(filters = {}) {
+        this.msg = null;
+        this.loading = true
+        this.items = []
+        let method = `/site/adverts`
+        let include = 'advertable,city,user.details';
+        let filterArray = []
+        _.forEach(filters, function (value, key) {
+          filterArray.push(`${key}=${value}`)
+        })
+        let filter = _.split(filterArray, '`');
+        let query = {
+          include,
+          number,
+          filter
+        }
+        console.log({query})
+        this.$axios.$get(method, {
+          params: query
+        }).then(response => {
+          console.log(response)
+          this.items.push(_.get(response, 'data', []))
+          this.paginator = _.get(response, 'paginator', [])
+        }).catch((err) => {
+          console.log(err)
+          this.$store.commit(
+            "snackbar/setSnack",
+            "مشکلی در گرفتن آگهی ها پیش آمد."
+          )
+        })
+        //this.items = data;
+        this.loading = false
+        return true
       }
     },
-    async asyncData({app}) {
-      try {
-        let params = {
-          include: "advertable"
-        }
-        let {data, paginator} = await app.$axios.$get(path, {params})
-        return {adverts: data, paginator}
-      } catch (err) {
-        return {adverts: [], paginator: []}
-      }
+    components: {
+      AdvertFilters,
+      LoansFilters,
+      AdvertCard
     }
   }
 </script>

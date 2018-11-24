@@ -1,5 +1,6 @@
 <template>
   <span>
+
     <v-toolbar v-scroll="onScroll" flat :color="menuColor" class="white grey--text" app>
       <v-btn flat color="transparent" class="white--text" to="/">
         <v-icon class="deep-purple--text font-16 pl-1">polymer</v-icon>
@@ -8,12 +9,13 @@
         </v-toolbar-title>
       </v-btn>
       <v-divider vertical/>
-      <v-toolbar-items v-if="showQuickAccess">
+
+      <v-toolbar-items key="t1" v-if="showQuickAccess">
         <v-btn to="/categories/loans" flat>وام ها</v-btn>
         <v-btn to="/categories/co-signers" flat>ضامن ها</v-btn>
         <v-btn to="/categories/finances" flat>سرمایه گذاری ها</v-btn>
       </v-toolbar-items>
-      <v-toolbar-items v-if="!showQuickAccess && !isMobile">
+      <v-toolbar-items  key="t2"  v-if="!showQuickAccess && !isMobile">
         <v-menu :nudge-width="100">
           <v-btn slot="activator" flat>
             <span>دسته بندی ها</span>
@@ -34,16 +36,18 @@
         <v-btn to="/user/councils/create" flat>مشاوره</v-btn>
         <v-btn to="/user" flat>حساب من</v-btn>
       </v-toolbar-items>
-      <v-spacer/>
-        <searchBar v-if="showQuickAccess"/>
-      <v-spacer/>
-      <v-toolbar-side-icon v-if="isMobile" white--text @click.stop="drawer = !drawer"/>
-      <v-toolbar-items v-if="!showQuickAccess" class="hidden-sm-and-down">
+      <v-spacer  key="t5" />
+        <searchBar  key="t6" v-if="showQuickAccess"/>
+      <v-spacer  key="t7"/>
+      <v-toolbar-side-icon  key="t4"  v-if="isMobile" white--text @click.stop="drawer = !drawer"/>
+      <v-toolbar-items  key="t9"  v-if="!showQuickAccess" class="hidden-sm-and-down">
         <v-btn flat to="/user/adverts/loans/create" class="deep-orange--text font-14">ثبت رایگان آگهی</v-btn>
       </v-toolbar-items>
+
     </v-toolbar>
 
     <v-navigation-drawer
+
       v-if="isMobile"
       :disable-route-watcher="false"
       v-model="drawer"

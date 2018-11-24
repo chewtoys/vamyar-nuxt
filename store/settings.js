@@ -1,5 +1,9 @@
 export const state = () => ({
   data: null,
+
+  news: {
+    count: 1,
+  },
   adverts: {
     count: 99999,
   },
@@ -19,10 +23,10 @@ export const state = () => ({
     ],
   },
   coSigner: {
-    typeArray: ['بانک', 'شخصی'],
+    typeArray: ['بانک', 'دادگاه'],
     types: [
       {id: 0, name: 'بانک'},
-      {id: 1, name: 'شخصی'},
+      {id: 1, name: 'دادگاه'},
     ],
   }
 });

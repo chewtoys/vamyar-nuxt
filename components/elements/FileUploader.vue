@@ -1,6 +1,9 @@
 <template>
   <v-container grid-list-xs>
     <v-layout row wrap>
+      <v-flex xs12>
+        {{label}}
+      </v-flex>
       <v-flex xs8>
         <input
           id="file"
@@ -29,80 +32,94 @@
   </v-container>
 </template>
 <script>
-import axios from "axios"
-export default {
-  props: ["value"],
-  /*
-         Defines the data used by the component
-         */
-  data() {
-    return {
-      file: "",
-      hasFile: false,
-      url: this.value,
-      fileLoading: false,
-      uploadPercentage: 0
-    }
-  },
-  watch: {
-    url(val) {
-      this.$emit("input", val)
-    }
-  },
-  methods: {
-    /*
-             Handles a change on the file upload
-             */
-    remove() {
-      this.file = null
-      this.url = null
-    },
-    handleFileUpload() {
-      this.hasFile = true
-      this.file = this.$refs.file.files[0]
-    },
-    /*
-             Submits the file to the server
-             */
-    submitFile: function() {
-      this.fileLoading = true
-      /*
-                 Initialize the form data
-                 */
-      let formData = new FormData()
 
+  export default {
+    props: ["value", 'label', 'type'],
+    /*
+           Defines the data used by the component
+           */
+    data() {
+      return {
+        file: "",
+        hasFile: false,
+        url: this.value,
+        fileLoading: false,
+        uploadPercentage: 0
+      }
+    },
+    computed: {
+      getType() {
+        return this.type || 'admin'
+      },
+      getMethod() {
+        return this.getType === 'user' ? "/user/images" : "/admin/images";
+      },
+      getAuthorization() {
+        return this.getType === 'user' ? _.get(this.$store.state.user, 'auth', '') : _.get(this.$store.state.admin, 'auth', '')
+      },
+    },
+    watch: {
+      url(val) {
+        this.$emit("input", val)
+      }
+    },
+    methods: {
       /*
-                 Add the form data we need to submit
-                 */
-      formData.append("file", this.file)
+               Handles a change on the file upload
+               */
+      remove() {
+        this.file = null
+        this.url = null
+      },
+      handleFileUpload() {
+        this.hasFile = true
+        this.file = this.$refs.file.files[0]
+      },
+      /*
+               Submits the file to the server
+               */
+      submitFile: function () {
+        this.fileLoading = true
+        /*
+                   Initialize the form data
+                   */
+        let formData = new FormData()
 
-      /*
-                 Make the request to the POST /single-file URL
-                 */
-      axios
-        .post("/api/upload", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data"
-          },
-          onUploadProgress: function(progressEvent) {
-            this.uploadPercentage = parseInt(
-              Math.round((progressEvent.loaded * 100) / progressEvent.total)
-            )
-          }.bind(this)
-        })
-        .then(({ data }) => {
-          let { url } = data
-          this.url = url
-          this.hasFile = false
-          this.file = null
-          this.fileLoading = false
-        })
-        .catch(() => {
-          this.hasFile = false
-          this.file = null
-          this.fileLoading = false
-        })
+        /*
+                   Add the form data we need to submit
+                   */
+        formData.append("file", this.file)
+
+        /*
+                   Make the request to the POST /single-file URL
+                   */
+        let Authorization = `Bearer ${this.getAuthorization}`;
+        let method = this.getMethod;
+        this.$axios
+          .post(method, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization
+            },
+            onUploadProgress: function (progressEvent) {
+              this.uploadPercentage = parseInt(
+                Math.round((progressEvent.loaded * 100) / progressEvent.total)
+              )
+            }.bind(this)
+          })
+          .then(({data}) => {
+            let {url} = data
+            this.url = url
+            this.hasFile = false
+            this.file = null
+            this.fileLoading = false
+          })
+          .catch(() => {
+            this.hasFile = false
+            this.file = null
+            this.fileLoading = false
+          })
+      }
     }
   }
-}
 </script>

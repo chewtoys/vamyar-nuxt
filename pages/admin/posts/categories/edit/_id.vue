@@ -49,8 +49,8 @@
 
   const page_title = 'ثبت دسته بندی جدید',
     breadcrumb = 'ایجاد دسته بندی',
-    indexPath = '/admin/tickets/categories',
-    resourcePath = '/admin/ticketCategories'
+    indexPath = '/admin/posts/categories',
+    resourcePath = '/admin/categories'
 
   export default {
     $_veeValidate: {
@@ -65,11 +65,13 @@
       page_title,
       // ticket
       name: null,
+      slug: null,
 
       // validator dictionary
       dictionary: {
         attributes: {
           name: "عنوان دسته بندی",
+          slug: "عنوان دسته بندی",
           // custom attributes
         }
       },
@@ -81,6 +83,10 @@
       this.$axios.$get(method).then(res => {
         this.data = _.get(res, 'data');
         this.name = _.get(res, 'data.name', '');
+        this.slug = _.get(res, 'data.slug', '');
+        this.image = _.get(res, 'data.image', '');
+        this.description = _.get(res, 'data.description', '');
+        this.parent = _.get(res, 'data.parent', '');
       }).catch(err => {
         //console.log(err);
       })
@@ -108,7 +114,11 @@
       ,
       sendForm() {
         let data = {
-          name: this.name
+          name: this.name,
+          parent: this.parent,
+          description: this.description,
+          slug: this.slug,
+          image: this.image,
         }
         this.$axios
           .$put(this.uri, data)

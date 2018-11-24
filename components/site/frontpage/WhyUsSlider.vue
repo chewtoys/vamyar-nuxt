@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid grid-list-sm>
+  <v-container v-if="show" fluid grid-list-sm>
     <v-card class="categories pt-5 pb-5 px-2">
 
       <v-card-title>
@@ -54,10 +54,11 @@
 
   export default {
     data: () => ({
-
+      show: false,
       interval: null,
       items: [{
         id: 1,
+
         color: 'info',
         icon: ICONS['info']
       }],
@@ -105,17 +106,20 @@
       }
     },
     mounted() {
-      this.allItems = this.getItems();
-      _.forEach(this.allItems, (value, index) => {
-        let colorIndex = index % 4;
-        let color = COLORS[colorIndex]
-        _.set(this.allItems, [index, 'icon'], ICONS[color])
-        _.set(this.allItems, [index, 'id'], index + 1)
-        _.set(this.allItems, [index, 'color'], color)
-      })
-      this.items = [_.first(this.allItems)];
-      //console.log(this.allItems, this.items);
-      this.start();
+      if (_.isArray(this.allItems) && this.allItems.length > 0) {
+        this.allItems = this.getItems();
+        _.forEach(this.allItems, (value, index) => {
+          let colorIndex = index % 4;
+          let color = COLORS[colorIndex]
+          _.set(this.allItems, [index, 'icon'], ICONS[color])
+          _.set(this.allItems, [index, 'id'], index + 1)
+          _.set(this.allItems, [index, 'color'], color)
+        })
+        this.items = [_.first(this.allItems)];
+        //console.log(this.allItems, this.items);
+        this.start();
+        this.show = true;
+      }
     }
   }
 </script>

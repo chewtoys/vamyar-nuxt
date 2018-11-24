@@ -91,7 +91,7 @@ const Helper = {
   ,
   getAdvertType: function (item) {
     let types = CONSTANTS.advertTypes
-    let advertType = item.advertableType
+    let advertType = item.advertableType || item.advert.advertableType
     return _.get(_.find(types, {'advertType': advertType}), 'title', advertType || 'نامشخص');
   }
   ,
@@ -102,7 +102,7 @@ const Helper = {
   priceFormat(price = null) {
     price = price * 1 // convert to number;
     if (price > 0) return price.toLocaleString("fa-IR") + " ریال"
-    return "تعیین نشده"
+    return "توافقی"
   }
   ,
   getRawHeaders(type) {
