@@ -71,13 +71,13 @@
         loading: {
           paybackTime: false,
           loanTypeId: false,
-          amount: false
         },
         filter: {
           paybackTime: null,
           amount: null,
           loanTypeId: null,
         },
+
 
       }
     },
@@ -139,4 +139,5 @@
 
     }
   }
+
 </script>

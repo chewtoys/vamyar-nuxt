@@ -16,8 +16,6 @@
   import Helper from "~/assets/js/helper.js"
 
 
-  const
-    guaranteeMethod = '/guaranteeTypes'
 
 
   export default {
@@ -86,12 +84,7 @@
       },
     },
     mounted() {
-      // city
-      this.$axios.$get(guaranteeMethod).then(resp => {
-        this.$store.commit('guaranteeType/setAndProcessData', resp.data || []);
-      }).catch(err => {
-        console.log(err)
-      })
+
 
 
     },

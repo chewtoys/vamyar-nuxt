@@ -6,11 +6,11 @@
         <v-flex xs12 sm4 class="pa-1">
           <div>
             <v-select
-              :items="loanTypeList"
-              v-model="loanType"
-              :loading="loading.loanTypeId"
+              :items="typeList"
+              v-model="type"
+              :loading="loading.typeId"
               :menu-props="{contentClass:'farsi mx-3'}"
-              label="نوع وام"
+              label="نوع"
               light
               flat
               hide-details
@@ -20,29 +20,14 @@
             />
           </div>
         </v-flex>
-        <v-flex xs12 sm4 class="pa-1">
-          <div>
-            <v-text-field
-              v-model="filter.paybackTime"
-              :loading="loading.paybackTime"
-              solo-inverted
-              label="حداکثر مدت بازپرداخت"
-              append-icon="label"
-              light
-              flat
-              clearable
-              @change="emitToParent"
-            />
-          </div>
-        </v-flex>
         <v-flex xs12 sm4 class="pr-1 pt-1 pb-1 pl-0">
           <div>
             <v-select
-              :items="amountList"
-              v-model="amount"
-              :loading="loading.amount"
+              :items="guaranteeTypesList"
+              v-model="guaranteeTypes"
+              :loading="loading.guaranteeTypes"
               :menu-props="{contentClass:'farsi mx-3'}"
-              label="حدود قیمت"
+              label="ضمانت"
               light
               flat
               hide-details
@@ -60,30 +45,27 @@
 <script>
   import Helper from '~/assets/js/helper'
 
-  const loanTypeMethod = '/loanTypes'
+  const guaranteeMethod = '/guaranteeTypes'
 
   export default {
     props: ['value', 'label'],
     data() {
       return {
-        loanType: '',
-        amount: '',
+        type: null,
+        guaranteeTypes: null,
         loading: {
-          paybackTime: false,
-          loanTypeId: false,
-          amount: false
+          typeId: false,
+          guaranteeTypes: false
         },
         filter: {
-          paybackTime: null,
-          amount: null,
-          loanTypeId: null,
+          guaranteeTypes: null,
+          typeId: null,
         },
-
       }
     },
     watch: {
-      loanType(val) {
-        let list = _.get(this.$store.state, 'loanType.data', []);
+      type(val) {
+        let list = _.get(this.$store.state, 'settings.coSigner.types', []);
         let index = _.findIndex(list, {'name': val});
         let id = 0;
         if (index > 0) {
@@ -92,41 +74,36 @@
         }
         _.set(this, 'filters.loanTypeId', id)
       },
-      amount(val) {
-        let list = _.get(this.$store.state, 'settings.adverts.filters.amountArray', []);
+      guaranteeTypes(val) {
+        let list = _.get(this.$store.state, 'guaranteeType.data', []);
         let index = _.findIndex(list, {'name': val});
         let value = null;
         if (index > 0) {
           let item = list[index];
-          value = _.get(item, 'value', null);
+          value = _.get(item, 'id', null);
         }
-        _.set(this, 'filters.amount', value)
+        _.set(this, 'filters.guaranteeTypes', value)
       }
     },
     computed: {
       getLabel() {
         return this.label;
       },
-      loanTypeList() {
-        return _.get(this.$store.state, 'loanType.arrayList')
+      typeList() {
+        return _.get(this.$store.state, 'settings.coSigner.typeArray')
       },
-      amountList() {
-        let data = _.get(this.$store.state, 'settings.adverts.filters.amount', []);
-        let all = _.map(data, function (owner) {
-          return _.pick(owner, ['value', 'name'])
-        });
-        let arrayList = _.map(all, 'name');
-        this.$store.commit('settings/setAmountArray', arrayList);
-        return arrayList;
+      guaranteeTypesList() {
+        return _.get(this.$store.state, 'guaranteeType.arrayList', []);
       },
     },
     mounted() {
       _.forEach(this.value, (value, key) => {
         _.set(this, ['filter', key], value);
       })
-      //load initial data - loanTypes
-      this.$axios.$get(loanTypeMethod).then((resp) => {
-        this.$store.commit('loanType/setAndProcessData', resp.data || []);
+      //load initial data
+      // guaranteeMethod
+      this.$axios.$get(guaranteeMethod).then(resp => {
+        this.$store.commit('guaranteeType/setAndProcessData', resp.data || []);
       }).catch(err => {
         console.log(err)
       })

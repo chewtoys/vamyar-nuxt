@@ -12,7 +12,9 @@
             <v-spacer/>
             <i class="grey--text font-12">
               <v-icon class="pl-1 font-14 pb-1">today</v-icon>
-              {{ getProperty(item, 'date', '-') }}</i>
+آخرین بروزرسانی در
+              {{ getProperty(item, 'advert.jUpdatedAt', '-') }}
+            </i>
           </v-card-title>
           <div>
             <v-divider/>
@@ -29,7 +31,7 @@
                 <span calss="white--text">فوری</span>
                 <v-icon left class="white--text">label</v-icon>
               </v-chip>
-              <v-chip v-if="getProperty(item, 'advert.verified',false)" label color="green" text-color="white">
+              <v-chip v-if="getProperty(item, 'advert.advert.verified',false)" label color="green" text-color="white">
                 <span calss="white--text">بررسی شده</span>
                 <v-icon left class="white--text">security</v-icon>
               </v-chip>
@@ -126,22 +128,6 @@
                             </div>
                             <v-divider/>
                           </div>
-                          <div v-if="showMail">
-                            <div class="pa-2 mx-1">
-                              <v-icon class="pl-2">contact_mail</v-icon>
-                              <small class="font-14">ایمیل</small>
-                              <b class="left">
-                                <a :href="'mailto:' + mail ">{{ mail }}</a>
-                              </b>
-                              <v-divider/>
-                            </div>
-                          </div>
-                          <div v-if="showAddress" class="pa-2 mx-1">
-                            <v-icon class="pl-2 pb-1 black--text">business</v-icon>
-                            <small class="font-14">آدرس</small>
-                            <b class="left">{{ address }}</b>
-                            <v-divider/>
-                          </div>
                           <div v-if="showNoContactAvailable" class="pa-2 mx-1">
                             <v-icon class="pl-2 pb-1 black--text">no_meeting_room</v-icon>
                             <small class="font-14">خطا</small>
@@ -216,7 +202,7 @@
         let loading = false
 
         const breadcrumb = 'نمایش آگهی',
-          page_title = ` آگهی - ${data.title || 'بدون عنوان'}`;
+          page_title = ` آگهی-  ${data.advert.title || 'بدون عنوان'}`;
         store.commit("navigation/pushMeta", {breadcrumb, title: page_title});
         store.commit("navigation/setTitle", page_title);
 

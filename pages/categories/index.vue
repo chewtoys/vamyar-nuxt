@@ -1,8 +1,13 @@
 <template>
   <v-layout row wrap>
     <v-flex xs12 sm12>
-      <AdvertFilters label="فیلتر کنید" v-model="AdvertFilters"/>
-      <LoansFilters label="فیلتر کنید" v-model="LoansFilters"/>
+      <AdvertFilters label="فیلتر کنید" v-model="advertFilters"/>
+      <LoansFilters label="فیلتر وام " v-model="loansFilters"/>
+      <LoanRequestsFilters label="فیلتر در خواست وام " v-model="loanRequestsFilters"/>
+      <CoSignersFilters label="فیلتر ضامن ها" v-model="coSignersFilters"/>
+      <CoSignerRequestsFilters label="فیلتر درخواست ضامن" v-model="coSignerRequestsFilters"/>
+      <FinancesFilters label="فیلتر سرمایه گذاری ها" v-model="financesFilters"/>
+      <FinanceRequestsFilters label="فیلتر درخواست سرمایه گذاری " v-model="financeRequestsFilters"/>
     </v-flex>
     <v-flex xs12 sm12>
       <v-card color="transparent" flat>
@@ -51,7 +56,13 @@
 
   import AdvertCard from "~/components/site/adverts/Advert.vue"
   import AdvertFilters from "~/components/site/adverts/filters/CommonAdverts.vue"
-  import LoansFilters from "~/components/site/adverts/filters/LoansFilters.vue"
+  import LoansFilters from "~/components/site/adverts/filters/LoansFilters"
+  import LoanRequestsFilters from "~/components/site/adverts/filters/LoanRequestsFilters"
+  import CoSignersFilters from "~/components/site/adverts/filters/CoSignersFilters"
+  import CoSignerRequestsFilters from "~/components/site/adverts/filters/CoSignerRequestsFilters"
+  import FinancesFilters from "~/components/site/adverts/filters/FinancesFilters"
+  import FinanceRequestsFilters from "~/components/site/adverts/filters/FinanceRequestsFilters"
+
 
   import Helper from "~/assets/js/helper.js"
 
@@ -67,9 +78,14 @@
     },
     data() {
       return {
-        AdvertFilters: {},
+        advertFilters: {},
         filter: {},
-        loansFilter: {},
+        loansFilters: {},
+        loanRequestsFilters: {},
+        coSignersFilters: {},
+        coSignerRequestsFilters: {},
+        financesFilters: {},
+        financeRequestsFilters: {},
         page: 1,
         msg: null,
         size: "sm",
@@ -183,6 +199,11 @@
     components: {
       AdvertFilters,
       LoansFilters,
+      LoanRequestsFilters,
+      CoSignersFilters,
+      CoSignerRequestsFilters,
+      FinancesFilters,
+      FinanceRequestsFilters,
       AdvertCard
     }
   }

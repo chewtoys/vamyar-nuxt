@@ -1,10 +1,16 @@
 <template>
   <v-layout row wrap>
     <v-flex xs12 sm12>
-      <v-subheader>
-        فیلتر کنید
-      </v-subheader>
-      <Filters v-model="filter"/>
+      <AdvertFilters label="فیلتر کنید" v-model="advertFilters"/>
+      <LoansFilters v-if="type.type==='loans'" label="فیلتر وام " v-model="loansFilters"/>
+      <LoanRequestsFilters v-if="type.type==='loanRequests'" label="فیلتر در خواست وام "
+                           v-model="loanRequestsFilters"/>
+      <CoSignersFilters v-if="type.type==='coSigners'" label="فیلتر ضامن ها" v-model="coSignersFilters"/>
+      <CoSignerRequestsFilters v-if="type.type==='coSignerRequests'" label="فیلتر درخواست ضامن"
+                               v-model="coSignerRequestsFilters"/>
+      <FinancesFilters v-if="type.type==='finances'" label="فیلتر سرمایه گذاری ها" v-model="financesFilters"/>
+      <FinanceRequestsFilters v-if="type.type==='financeRequests'" label="فیلتر درخواست سرمایه گذاری "
+                              v-model="financeRequestsFilters"/>
     </v-flex>
     <v-flex xs12 sm12>
       <v-card color="transparent" flat>
@@ -51,9 +57,16 @@
   //import axios from 'axios'
   // /site/adverts?advertableType=loan&include=advertable
 
-  import ItemCard from "~/components/site/adverts/Loan.vue"
   import AdvertCard from "~/components/site/adverts/Advert.vue"
-  import Filters from "~/components/site/adverts/Filters.vue"
+  import AdvertFilters from "~/components/site/adverts/filters/CommonAdverts.vue"
+  import LoansFilters from "~/components/site/adverts/filters/LoansFilters"
+  import LoanRequestsFilters from "~/components/site/adverts/filters/LoanRequestsFilters"
+  import CoSignersFilters from "~/components/site/adverts/filters/CoSignersFilters"
+  import CoSignerRequestsFilters from "~/components/site/adverts/filters/CoSignerRequestsFilters"
+  import FinancesFilters from "~/components/site/adverts/filters/FinancesFilters"
+  import FinanceRequestsFilters from "~/components/site/adverts/filters/FinanceRequestsFilters"
+
+
   import Helper from "~/assets/js/helper.js"
 
   const number = 4,
@@ -62,11 +75,20 @@
     loanTypeMethod = '/loanTypes'
 
   export default {
-
-
+    meta: {
+      title: 'لیست همه ی آگهی ها',
+      breadcrumb: 'همه ی آگهی ها'
+    },
     data() {
       return {
+        advertFilters: {},
         filter: {},
+        loansFilters: {},
+        loanRequestsFilters: {},
+        coSignersFilters: {},
+        coSignerRequestsFilters: {},
+        financesFilters: {},
+        financeRequestsFilters: {},
         page: 1,
         msg: null,
         size: "sm",
@@ -83,63 +105,42 @@
     },
     // loading the first items from server
     async asyncData({app, store, params, error, $axios}) {
-      let slug = params.slug
-      let type = Helper.getTypeByAlias(slug)
-
       let method = `/site/adverts`
+      let slug = params.slug;
+      let type = Helper.getTypeByAlias(slug);
+
       let cursor
       cursor = 0
-
-      const breadcrumb = Helper.getBreadcrumb(type.title),
-        page_title = Helper.getPageTitle(type.title);
-      store.commit("navigation/pushMeta", {breadcrumb, title: page_title});
-      store.commit("navigation/setTitle", page_title);
-
       let include = 'advertable,city,user.details';
-      let filter = `advertableType=${type.advertType}`;
-
       let query = {
         number,
-        include,
-        filter
+        include
       }
       //console.log({query})
-
       try {
         // city
         let cityData = await $axios.$get(cityMethod);
         store.commit('city/setAndProcessData', cityData.data || []);
-
-
         let {data, paginator} = await
           app.$axios.$get(method, {
             params: query
           })
         let loading = false
-        return {items: data, paginator, loading, type, slug}
+        return {items: data, paginator, loading, slug, type}
       } catch (err) {
         console.log(err);
         //error({statusCode: 404, message: "این صفحه فعال نمی باشد."})
-        return {items: [], paginator: [], msg: 'مشکلی در گرفتن آگهی ها پیش آمد.', loading: false, type, slug}
+        return {slug, type, items: [], paginator: [], msg: 'مشکلی در گرفتن آگهی ها پیش آمد.', loading: false}
       }
     }
     ,
-    computed: {
-
-      // meta
-      title: function () {
-        return "مشاهده‌ی آگهی‌‌های" + this.type.title
-      }
-      ,
-      breadcrumb: function () {
-        return "مشاهده‌ی " + this.type.title
-      }
-    }
-
+    computed: {}
     ,
     // method used in page
     methods: {
-
+      showFilter(type) {
+        return true;
+      },
       settings(key) {
         return _.get(this.$store.state.settings.data, key, '')
       }
@@ -149,7 +150,6 @@
         this.msg = null;
         this.btn_loading = true
         try {
-
           let method = this.paginator.cursor.nextURL
           let {data, paginator} = await this.$axios.$get(method, {
             params: {number}
@@ -157,9 +157,7 @@
           data.forEach((e, i) => {
             this.items.push(e)
           })
-
           this.btn_loading = false
-
           this.paginator = paginator
         } catch (err) {
           this.paginator.cursor.nextURL = false
@@ -169,15 +167,13 @@
       }
       ,
       // reload as filter changed
-
       loadAgain(filters = {}) {
         this.msg = null;
         this.loading = true
         this.items = []
-
         let method = `/site/adverts`
         let include = 'advertable,city,user.details';
-        let filterArray = [`advertableType=${this.type.advertType}`]
+        let filterArray = []
         _.forEach(filters, function (value, key) {
           filterArray.push(`${key}=${value}`)
         })
@@ -207,8 +203,13 @@
       }
     },
     components: {
-      Filters,
-      ItemCard,
+      AdvertFilters,
+      LoansFilters,
+      LoanRequestsFilters,
+      CoSignersFilters,
+      CoSignerRequestsFilters,
+      FinancesFilters,
+      FinanceRequestsFilters,
       AdvertCard
     }
   }

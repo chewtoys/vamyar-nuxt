@@ -1,5 +1,6 @@
 <template>
   <v-flex xs12 md12>
+    <v-subheader>{{getLabel}}</v-subheader>
     <v-card class="elevation-0 pa-2" color="transparent" light>
       <v-layout rwo wrap>
         <v-flex xs12 sm4 class="pa-1">
@@ -65,7 +66,7 @@
   const cityMethod = '/cities?number=3000'
 
   export default {
-    props: ['value'],
+    props: ['value', 'label'],
     data() {
       return {
         loading: {
@@ -83,6 +84,9 @@
       }
     },
     computed: {
+      getLabel() {
+        return this.label;
+      },
       city_states() {
         return _.get(this.$store.state, 'city.arrayList')
       },
