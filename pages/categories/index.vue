@@ -1,13 +1,19 @@
 <template>
   <v-layout row wrap>
     <v-flex xs12 sm12>
-      <AdvertFilters label="فیلتر کنید" v-model="advertFilters"/>
-      <LoansFilters label="فیلتر وام " v-model="loansFilters"/>
-      <LoanRequestsFilters label="فیلتر در خواست وام " v-model="loanRequestsFilters"/>
-      <CoSignersFilters label="فیلتر ضامن ها" v-model="coSignersFilters"/>
-      <CoSignerRequestsFilters label="فیلتر درخواست ضامن" v-model="coSignerRequestsFilters"/>
-      <FinancesFilters label="فیلتر سرمایه گذاری ها" v-model="financesFilters"/>
-      <FinanceRequestsFilters label="فیلتر درخواست سرمایه گذاری " v-model="financeRequestsFilters"/>
+      <AdvertFilters label="فیلتر کنید" v-model="advertFilters" chooseType="1" @change="loadAgainCommonAdvertFilter"/>
+      <LoansFilters v-if="canShow('loans')" label="فیلتر وام " v-model="filter" vv-model="loansFilters"
+                    @change="loadAgainAdvertFilter"/>
+      <LoanRequestsFilters v-if="canShow('loanRequests')" label="فیلتر در خواست وام " v-model="filter"
+                           vv-model="loanRequestsFilters" @change="loadAgainAdvertFilter"/>
+      <CoSignersFilters v-if="canShow('coSigners')" label="فیلتر ضامن ها" v-model="filter" vv-model="coSignersFilters"
+                        @change="loadAgainAdvertFilter"/>
+      <CoSignerRequestsFilters v-if="canShow('coSignerRequests')" label="فیلتر درخواست ضامن"
+                               v-model="filter" vv-model="coSignerRequestsFilters" @change="loadAgainAdvertFilter"/>
+      <FinancesFilters v-if="canShow('finances')" label="فیلتر سرمایه گذاری ها" v-model="filter"
+                       vv-model="financesFilters" @change="loadAgainAdvertFilter"/>
+      <FinanceRequestsFilters v-if="canShow('financeRequests')" label="فیلتر درخواست سرمایه گذاری "
+                              v-model="filter" vv-model="financeRequestsFilters" @change="loadAgainAdvertFilter"/>
     </v-flex>
     <v-flex xs12 sm12>
       <v-card color="transparent" flat>
@@ -66,7 +72,7 @@
 
   import Helper from "~/assets/js/helper.js"
 
-  const number = 4,
+  const number = 15,
     cityMethod = '/cities?number=3000',
     guaranteeMethod = '/guaranteeTypes',
     loanTypeMethod = '/loanTypes'
@@ -78,6 +84,9 @@
     },
     data() {
       return {
+        commonComputedFilters: [],
+        computedFilters: [],
+        advertTypeName: null,
         advertFilters: {},
         filter: {},
         loansFilters: {},
@@ -96,9 +105,9 @@
     }
     ,
     watch: {
-      filter() {
-        this.loadAgain(this.filter)
-      }
+      //filter() {
+      //  this.loadAgain(this.filter)
+      //}
     },
     // loading the first items from server
     async asyncData({app, store, params, error, $axios}) {
@@ -132,8 +141,8 @@
     ,
     // method used in page
     methods: {
-      showFilter(type) {
-        return true;
+      canShow(type) {
+        return _.get(this, 'advertTypeName', '') === type;
       },
       settings(key) {
         return _.get(this.$store.state.settings.data, key, '')
@@ -160,6 +169,23 @@
         this.btn_loading = false
       }
       ,
+      loadAgainCommonAdvertFilter(filter) {
+        //console.log(filter);
+        let typeName = _.get(filter, 'advertTypeName', null);
+        if (typeName) {
+          _.set(this, 'advertTypeName', typeName);
+        }
+        let computedFilter = Helper.getComputedFilter(filter);
+        _.set(this, 'commonComputedFilters', computedFilter);
+        this.loadAgain();
+      },
+      loadAgainAdvertFilter(filter) {
+        //console.log({filter});
+        let type = _.get(this, 'advertTypeName', null);
+        let computedFilter = Helper.getComputedFilter(filter, type);
+        _.set(this, 'computedFilters', computedFilter);
+        this.loadAgain();
+      },
       // reload as filter changed
       loadAgain(filters = {}) {
         this.msg = null;
@@ -167,25 +193,37 @@
         this.items = []
         let method = `/site/adverts`
         let include = 'advertable,city,user.details';
-        let filterArray = []
-        _.forEach(filters, function (value, key) {
-          filterArray.push(`${key}=${value}`)
+        //console.log(1, this.commonComputedFilters, this.computedFilters);
+        let filterArray = [];
+        _.forEach(this.commonComputedFilters, function (value, key) {
+          if (value !== null && value !== '' && value !== 'null') {
+            filterArray.push(`${key}=${value}`)
+            console.log(`${key}=${value}`)
+          }
         })
-        let filter = _.split(filterArray, '`');
+        _.forEach(this.computedFilters, function (value, key) {
+          if (value !== null && value !== '' && value !== 'null') {
+            filterArray.push(`advertable.${key}=${value}`)
+            console.log(`advertable.${key}=${value}`,key,value)
+          }
+        })
+
+        let filter = _.join(filterArray, ',').replace('=<', '<').replace('=>', '>');
+
         let query = {
           include,
           number,
           filter
         }
-        console.log({query})
+        //console.log({query});
         this.$axios.$get(method, {
           params: query
         }).then(response => {
-          console.log(response)
+          //console.log(4, response)
           this.items.push(_.get(response, 'data', []))
           this.paginator = _.get(response, 'paginator', [])
         }).catch((err) => {
-          console.log(err)
+          //console.log(err)
           this.$store.commit(
             "snackbar/setSnack",
             "مشکلی در گرفتن آگهی ها پیش آمد."

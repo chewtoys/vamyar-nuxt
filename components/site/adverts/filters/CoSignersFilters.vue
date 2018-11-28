@@ -8,7 +8,7 @@
             <v-select
               :items="typeList"
               v-model="type"
-              :loading="loading.typeId"
+              :loading="loading.typeValue"
               :menu-props="{contentClass:'farsi mx-3'}"
               label="نوع"
               light
@@ -54,12 +54,12 @@
         type: null,
         guaranteeTypes: null,
         loading: {
-          typeId: false,
+          typeValue: false,
           guaranteeTypes: false
         },
         filter: {
-          guaranteeTypes: null,
-          typeId: null,
+          guaranteeTypeValue: null,
+          typeValue: null,
         },
 
       }
@@ -73,7 +73,7 @@
           let item = list[index];
           id = _.get(item, 'id', 0);
         }
-        _.set(this, 'filters.typeId', id)
+        _.set(this, 'filter.typeValue', id)
       },
       guaranteeTypes(val) {
         let list = _.get(this.$store.state, 'guaranteeType.data', []);
@@ -83,7 +83,7 @@
           let item = list[index];
           value = _.get(item, 'id', null);
         }
-        _.set(this, 'filters.guaranteeTypes', value)
+        _.set(this, 'filter.guaranteeTypeValue', value)
       }
     },
     computed: {

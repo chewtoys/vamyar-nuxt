@@ -59,7 +59,7 @@
         },
         filter: {
           guaranteeTypes: null,
-          typeId: null,
+          typeValue: null,
         },
       }
     },
@@ -72,7 +72,7 @@
           let item = list[index];
           id = _.get(item, 'id', 0);
         }
-        _.set(this, 'filters.loanTypeId', id)
+        _.set(this, 'filter.loanTypeValue', id)
       },
       guaranteeTypes(val) {
         let list = _.get(this.$store.state, 'guaranteeType.data', []);
@@ -82,7 +82,7 @@
           let item = list[index];
           value = _.get(item, 'id', null);
         }
-        _.set(this, 'filters.guaranteeTypes', value)
+        _.set(this, 'filter.guaranteeTypes', value)
       }
     },
     computed: {

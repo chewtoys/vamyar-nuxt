@@ -58,7 +58,7 @@
                 <b>{{ limitStr(show(item, 'text', 'advert.text'), 250, ' ...') }}</b>
               </td>
             </tr>
-            <tr v-if="item.city || item.advert.cityId" class="trrow">
+            <tr v-if="item.city || (item.advert && item.advert.cityId)" class="trrow">
               <td>
                 <small>شهر</small>
               </td>

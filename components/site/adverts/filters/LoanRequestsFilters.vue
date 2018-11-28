@@ -48,7 +48,7 @@
               hide-details
               solo-inverted
               append-icon="list"
-              @change="emitToParent"
+              @change="updateAmount"
             />
           </div>
         </v-flex>
@@ -66,17 +66,26 @@
     props: ['value', 'label'],
     data() {
       return {
-        loanType: '',
-        amount: '',
+        loanType: null,
+        amount: null,
         loading: {
           paybackTime: false,
+          minAmount: false,
+          maxAmount: false,
+          instant: false,
           loanTypeId: false,
         },
         filter: {
           paybackTime: null,
           amount: null,
+          minAmount: null,
+          maxAmount: null,
           loanTypeId: null,
+          instant: null,
+          title: null,
         },
+        city_search: null,
+        city_items: [],
 
 
       }
@@ -133,11 +142,57 @@
 
     },
     methods: {
+      rangeLabels(val) {
+        return this.range_labels[val]
+      },
+      updateAmount() {
+        let value = _.get(this, 'filter.amount');
+        let list = _.get(this.$store.state, 'settings.adverts.filters.amount', []);
+        let index = _.findIndex(list, {'name': value});
+        let amount = null;
+        if (index > 0) {
+          let item = list[index];
+          amount = _.get(item, 'value', null);
+        }
+        _.set(this, 'filter.amountValue', amount)
+        this.emitToParent();
+      },
       emitToParent() {
         return this.$emit("input", this.filter);
       },
+      // select the proper city
+      querySelections(v) {
+        _.set(this.loading, 'city', true)
+        // Simulated ajax query
 
+        this.city_items = this.city_states.filter(e => {
+          return (e || "").toLowerCase().indexOf((v || "").toLowerCase()) > -1
+        })
+        _.set(this.loading, 'city', false)
+      },
     }
   }
 
+  /*
+  <v-range-slider
+              v-if="false"
+              :tick-labels="range_labels"
+              :min="range_search_min"
+              :max="range_search_max"
+              thumb-label
+              class="ltr"
+              light
+              thumb-size="100"
+              @change="chargeValue()"
+            >
+              <template
+                slot="thumb-label"
+                slot-scope="props"
+              >
+                    <span>
+                      {{ rangeLabels(4 - props.value) }}
+                    </span>
+              </template>
+            </v-range-slider>
+   */
 </script>

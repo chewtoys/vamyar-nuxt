@@ -3,24 +3,23 @@
     <v-subheader>{{getLabel}}</v-subheader>
     <v-card class="elevation-0 pa-2" color="transparent" light>
       <v-layout rwo wrap>
-        <v-flex xs12 sm4 class="pr-1 pt-1 pb-1 pl-0">
+        <v-flex xs12 sm4 class="pa-1">
           <div>
             <v-select
               :items="amountList"
-              v-model="amount"
-              :loading="loading.amount"
+              v-model="filter.maxAmount"
+              :loading="loading.maxAmount"
               :menu-props="{contentClass:'farsi mx-3'}"
-              label="حداکثر سرمایه"
+              label="حدود قیمت"
               light
               flat
               hide-details
               solo-inverted
               append-icon="list"
-              @change="emitToParent"
+              @change="updateMaxAmount"
             />
           </div>
         </v-flex>
-
       </v-layout>
     </v-card>
   </v-flex>
@@ -28,29 +27,20 @@
 <script>
   import Helper from '~/assets/js/helper'
 
+  const loanTypeMethod = '/loanTypes'
+
   export default {
     props: ['value', 'label'],
     data() {
       return {
-        amount: null,
+        amount: '',
         loading: {
-          maxAmount: false,
+          maxAmount: false
         },
         filter: {
           maxAmount: null,
+          maxAmountValue: null
         },
-      }
-    },
-    watch: {
-      amount(val) {
-        let list = _.get(this.$store.state, 'settings.adverts.filters.amountArray', []);
-        let index = _.findIndex(list, {'name': val});
-        let value = null;
-        if (index > 0) {
-          let item = list[index];
-          value = _.get(item, 'value', null);
-        }
-        _.set(this, 'filter.maxAmount', value)
       }
     },
     computed: {
@@ -71,12 +61,31 @@
       _.forEach(this.value, (value, key) => {
         _.set(this, ['filter', key], value);
       })
+      //load initial data - loanTypes
+      this.$axios.$get(loanTypeMethod).then((resp) => {
+        this.$store.commit('loanType/setAndProcessData', resp.data || []);
+      }).catch(err => {
+        console.log(err)
+      })
     },
     methods: {
+
+      updateMaxAmount() {
+        let value = _.get(this, 'filter.maxAmount');
+        let list = _.get(this.$store.state, 'settings.adverts.filters.amount', []);
+        let index = _.findIndex(list, {'name': value});
+        let amount = null;
+        if (index > 0) {
+          let item = list[index];
+          amount = _.get(item, 'value', null);
+        }
+        _.set(this, 'filter.maxAmountValue', amount)
+        this.emitToParent();
+      },
       emitToParent() {
+        this.$emit("change", this.filter);
         return this.$emit("input", this.filter);
       },
     }
   }
-
 </script>

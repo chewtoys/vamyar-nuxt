@@ -67,8 +67,7 @@ const Helper = {
   isFieldAllowByAlias(slug, field, which = 'create') {
     let type = this.getTypeByAlias(slug).type;
     return this.isFieldAllowByType(type, field);
-  }
-  ,
+  },
   getTypeByAlias: function (alias = null) {
     let types = CONSTANTS.advertAliases
     if (alias && types[alias]) {
@@ -91,7 +90,8 @@ const Helper = {
   ,
   getAdvertType: function (item) {
     let types = CONSTANTS.advertTypes
-    let advertType = item.advertableType || item.advert.advertableType
+    let advertType = _.get(item, 'advertableType', _.get(item, 'advert.advertableType', ''));
+    //console.log({item,advertType})
     return _.get(_.find(types, {'advertType': advertType}), 'title', advertType || 'نامشخص');
   }
   ,
@@ -125,7 +125,42 @@ const Helper = {
       _.set(all, name, _.get(that, name, ''))
     })
     return all;
+  },
+  getComputedFilter(obj, type = null) {
+    let filter = {}, query = {};
+    let maximum = {
+      'amountValue': true,
+      'paybackTimeValue': true,
+      'maxAmountValue': true
+    };
+    let minimum = {};
+    if (type === null) {
+      // common filters
+
+      filter = _.pick(obj, ['cityIdValue', 'instantValue', 'titleValue']);
+    } else if (type === 'loans') {
+      filter = _.pick(obj, ['loanTypeValue', 'amountValue', 'paybackTimeValue']);
+    } else if (type === 'loanRequests') {
+      filter = _.pick(obj, ['loanTypeValue', 'amountValue', 'paybackTimeValue']);
+    } else if (type === 'finances') {
+      filter = _.pick(obj, ['maxAmountValue']);
+    } else if (type === 'financeRequests') {
+      filter = _.pick(obj, ['jobValue', 'maxAmount', 'maxAmountValue']);
+    } else if (type === 'coSigners') {
+      filter = _.pick(obj, ['guaranteeTypeValue']);
+    } else if (type === 'coSignerRequests') {
+      filter = _.pick(obj, ['guaranteeTypes', 'typeValue']);
+    }
+    let prefix = '';
+    _.forEach(filter, (val, key) => {
+      prefix = _.has(maximum, key) ? '<' : (_.has(minimum, key) ? '>' : '');
+      if (val) _.set(query, key.replace('Value', ''), prefix + val)
+    })
+
+    //console.log({obj, filter, query});
+    return query;
   }
+
 }
 
 export default Helper

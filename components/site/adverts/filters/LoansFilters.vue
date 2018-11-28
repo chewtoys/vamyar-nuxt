@@ -7,23 +7,24 @@
           <div>
             <v-select
               :items="loanTypeList"
-              v-model="loanType"
-              :loading="loading.loanTypeId"
+              v-model="filter.loanType"
+              :loading="loading.loanType"
               :menu-props="{contentClass:'farsi mx-3'}"
               label="نوع وام"
               light
               flat
+              clearable
               hide-details
               solo-inverted
               append-icon="list"
-              @change="emitToParent"
+              @change="updateLoanType"
             />
           </div>
         </v-flex>
         <v-flex xs12 sm4 class="pa-1">
           <div>
             <v-text-field
-              v-model="filter.paybackTime"
+              v-model="filter.paybackTimeValue"
               :loading="loading.paybackTime"
               solo-inverted
               label="حداکثر مدت بازپرداخت"
@@ -39,16 +40,17 @@
           <div>
             <v-select
               :items="amountList"
-              v-model="amount"
+              v-model="filter.amount"
               :loading="loading.amount"
               :menu-props="{contentClass:'farsi mx-3'}"
               label="حدود قیمت"
               light
               flat
+              clearable
               hide-details
               solo-inverted
               append-icon="list"
-              @change="emitToParent"
+              @change="updateAmount"
             />
           </div>
         </v-flex>
@@ -66,41 +68,20 @@
     props: ['value', 'label'],
     data() {
       return {
-        loanType: '',
         amount: '',
         loading: {
           paybackTime: false,
-          loanTypeId: false,
+          loanType: false,
           amount: false
         },
         filter: {
-          paybackTime: null,
+          paybackTimeValue: null,
           amount: null,
-          loanTypeId: null,
+          amountValue: null,
+          loanType: null,
+          loanTypeValue: null,
         },
 
-      }
-    },
-    watch: {
-      loanType(val) {
-        let list = _.get(this.$store.state, 'loanType.data', []);
-        let index = _.findIndex(list, {'name': val});
-        let id = 0;
-        if (index > 0) {
-          let item = list[index];
-          id = _.get(item, 'id', 0);
-        }
-        _.set(this, 'filters.loanTypeId', id)
-      },
-      amount(val) {
-        let list = _.get(this.$store.state, 'settings.adverts.filters.amountArray', []);
-        let index = _.findIndex(list, {'name': val});
-        let value = null;
-        if (index > 0) {
-          let item = list[index];
-          value = _.get(item, 'value', null);
-        }
-        _.set(this, 'filters.amount', value)
       }
     },
     computed: {
@@ -133,10 +114,33 @@
 
     },
     methods: {
+      updateLoanType() {
+        let value = _.get(this, 'filter.loanType');
+        let list = _.get(this.$store.state, 'loanType.data', []);
+        let index = _.findIndex(list, {'name': value});
+        if (index > 0) {
+          let item = list[index];
+          let id = _.get(item, 'id', 0);
+          _.set(this, 'filter.loanTypeValue', id)
+        }
+        this.emitToParent();
+      },
+      updateAmount() {
+        let value = _.get(this, 'filter.amount');
+        let list = _.get(this.$store.state, 'settings.adverts.filters.amount', []);
+        let index = _.findIndex(list, {'name': value});
+        let amount = null;
+        if (index > 0) {
+          let item = list[index];
+          amount = _.get(item, 'value', null);
+        }
+        _.set(this, 'filter.amountValue', amount)
+        this.emitToParent();
+      },
       emitToParent() {
+        this.$emit("change", this.filter);
         return this.$emit("input", this.filter);
       },
-
     }
   }
 </script>

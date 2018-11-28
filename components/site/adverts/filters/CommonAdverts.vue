@@ -3,7 +3,25 @@
     <v-subheader>{{getLabel}}</v-subheader>
     <v-card class="elevation-0 pa-2" color="transparent" light>
       <v-layout rwo wrap>
-        <v-flex xs12 sm4 class="pa-1">
+        <v-flex xs12 sm3 class="pa-1">
+          <div>
+            <v-select
+              :items="getAdvertTypeList"
+              v-model="filter.advertType"
+              :loading="loading.advertType"
+              :menu-props="{contentClass:'farsi mx-3'}"
+              label="نوع آگهی"
+              light
+              clearable
+              flat
+              hide-details
+              solo-inverted
+              append-icon="list"
+              @change="updateAdvertType"
+            />
+          </div>
+        </v-flex>
+        <v-flex xs12 sm3 class="pa-1">
           <div>
             <v-select
               :items="['همه','فقط فوری']"
@@ -13,14 +31,15 @@
               label="فوری"
               light
               flat
+              clearable
               hide-details
               solo-inverted
               append-icon="list"
-              @change="emitToParent"
+              @change="updateInstant"
             />
           </div>
         </v-flex>
-        <v-flex xs12 sm4 class="pa-1">
+        <v-flex xs12 sm3 class="pa-1">
           <div>
             <v-autocomplete
               :menu-props="{contentClass:'farsi mx-3'}"
@@ -32,19 +51,19 @@
               clearable
               light
               no-data-text="شهری یافت نشد"
-              label="جست و جوی شهر"
+              label="همه‌ی شهر ها"
               flat
               hide-no-data
               hide-details
               solo-inverted
-              @change="emitToParent"
+              @change="updateCity"
             />
           </div>
         </v-flex>
-        <v-flex xs12 sm4 class="pr-1 pt-1 pb-1 pl-0">
+        <v-flex xs12 sm3 class="pr-1 pt-1 pb-1 pl-0">
           <div>
             <v-text-field
-              v-model="filter.title"
+              v-model="filter.titleValue"
               :loading="loading.title"
               solo-inverted
               label="عنوان"
@@ -66,18 +85,24 @@
   const cityMethod = '/cities?number=3000'
 
   export default {
-    props: ['value', 'label'],
+    props: ['value', 'label', 'chooseType'],
     data() {
       return {
         loading: {
+          advertType: false,
           title: false,
           instant: false,
           city: true,
         },
         filter: {
+          advertType: null,
+          advertTypeName: null,
+          advertTypeValue: null,
           city: null,
+          cityIdValue: null,
           instant: null,
-          title: null,
+          instantValue: null,
+          titleValue: null,
         },
         city_search: null,
         city_items: [],
@@ -86,6 +111,19 @@
     computed: {
       getLabel() {
         return this.label;
+      },
+      getChooseType() {
+        return this.chooseType || false;
+      },
+      getAdvertTypeList() {
+        let list = Helper.getTypeByAlias();
+        //return list;
+        let titles = [];
+        _.forEach(list, (item) => {
+          titles.push(item.title)
+        })
+        return titles
+
       },
       city_states() {
         return _.get(this.$store.state, 'city.arrayList')
@@ -111,7 +149,42 @@
       })
     },
     methods: {
+      updateAdvertType() {
+        if (_.get(this, 'filter.advertType', false)) {
+          let type = _.get(_.find(Helper.getTypeByAlias(), {'title': _.get(this, 'filter.advertType', false)}), 'type', 'loan');
+          _.set(this, 'filter.advertTypeName', type);
+          _.set(this, 'filter.advertTypeValue', type);
+        }
+        this.emitToParent();
+      },
+      updateInstant() {
+        if (_.get(this, 'filter.instant', false)) {
+          if (_.get(this, 'filter.instant', null) === 'فقط فوری') {
+            _.set(this.filter, 'instantValue', 1);
+          }
+          else {
+            _.set(this.filter, 'instantValue', null);
+          }
+        }
+        this.emitToParent();
+      },
+      updateCity() {
+        if (_.get(this, 'filter.city', false)) {
+          let city = _.get(this, 'filter.city', false);
+          if (city) {
+            let list = _.get(this.$store.state, 'city.data', []);
+            let index = _.findIndex(list, {'name': city});
+            if (index > 0) {
+              let item = list[index];
+              let id = _.get(item, 'id', null);
+              _.set(this.filter, 'cityIdValue', id);
+            }
+          }
+        }
+        this.emitToParent();
+      },
       emitToParent() {
+        this.$emit("change", this.filter);
         return this.$emit("input", this.filter);
       },
       // select the proper city
@@ -123,7 +196,6 @@
           return (e || "").toLowerCase().indexOf((v || "").toLowerCase()) > -1
         })
         _.set(this.loading, 'city', false)
-
       },
     }
   }
