@@ -103,16 +103,17 @@
       categories: [{id: 1, name: 'بدون دسته بندی'}],
       categoryLoading: true,
       // validator dictionary
+      submit_loader: false,
       dictionary: {
         attributes: {
-          title: "عنوان تیکت",
-          message: "پیام",
-          priority: "فوریت",
-          ticketCategory: 'دسته بندی تیکت',
+          title: "عنوان مطلب",
+          slug: "پیام",
+          content: "فوریت",
+          categories: 'دسته بندی ',
           parentId: "والد",
           // custom attributes
         },
-        submit_loader: false,
+
       },
 
     }),
@@ -134,7 +135,6 @@
         createPath: function () {
           return createPath;
         },
-
       }
     ,
     async asyncData({params, store, $axios}) {
@@ -150,7 +150,6 @@
       })
     }
     ,
-
     methods: {
       toast(msg, color) {
         this.$store.commit("snackbar/setSnack", msg, color)
