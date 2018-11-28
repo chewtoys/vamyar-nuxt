@@ -138,6 +138,7 @@ const Helper = {
       // common filters
 
       filter = _.pick(obj, ['cityIdValue', 'instantValue', 'titleValue']);
+      _.get(filter, 'instantValue', null ) === 1 ? _.set(filter, 'instantValue', 'true') : _.set(filter, 'instantValue', '');
     } else if (type === 'loans') {
       filter = _.pick(obj, ['loanTypeValue', 'amountValue', 'paybackTimeValue']);
     } else if (type === 'loanRequests') {
@@ -151,6 +152,7 @@ const Helper = {
     } else if (type === 'coSignerRequests') {
       filter = _.pick(obj, ['guaranteeTypes', 'typeValue']);
     }
+
     let prefix = '';
     _.forEach(filter, (val, key) => {
       prefix = _.has(maximum, key) ? '<' : (_.has(minimum, key) ? '>' : '');

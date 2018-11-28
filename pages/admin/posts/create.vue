@@ -34,26 +34,34 @@
               data-vv-name="title"
               label="عنوان"
             />
-            <v-autocomplete
+            <v-text-field
               v-validate="'required'"
-              v-model="ticketCategoryName"
-              :error-messages="errors.collect('ticketCategory')"
+              v-model="slug"
+              :error-messages="errors.collect('slug')"
               box
-              label="دسته بندی"
-              data-vv-name="ticketCategory"
-              :items="ticketCategoryList"
-              persistent-hint
-            ></v-autocomplete>
-            <div class="quill-editor"
-                 v-model="content"
-                 v-quill:myQuillEditor="editorOption">
-            </div>
-            <v-textarea
-              v-model="message"
-              :error-messages="errors.collect('message')"
+              data-vv-name="slug"
+              label="مستعار"
+            />
+
+            <v-treeview label="والد"
+                        selectable
+                        v-model="parentId"
+                        transition
+                        :items="categories"
+                        :loading="categoryLoading"
+                        item-text="name"
+            />
+            <Img
+              v-model="image"
+              label="تصویر"
+            />
+            <Editor
+              validate="required"
+              v-model="content"
+              :error-messages="errors.collect('content')"
               box
-              label="پیام"
-              data-vv-name="message"
+              label="متن"
+              data-vv-name="content"
               auto-grow
             />
             <v-btn :loading="submit_loader" outline color="accent" round @click="processSubmit">
@@ -67,12 +75,13 @@
   </v-container>
 </template>
 <script>
+  import Editor from '~/components/elements/Editor'
 
-  const page_title = 'ثبت تیکت جدید',
-    breadcrumb = 'تیکت جدید',
-    indexPath = '/user/tickets',
-    createPath = '/user/tickets',
-    ticketCategoriesMethod = '/ticketCategories'
+  const page_title = 'ثبت مطلب جدید',
+    breadcrumb = 'مطلب جدید',
+    indexPath = '/user/posts',
+    createPath = '/user/posts',
+    categoriesMethod = '/admin/categories'
 
   export default {
     $_veeValidate: {
@@ -84,41 +93,40 @@
       breadcrumb: breadcrumb
     },
     data: () => ({
-      content: '<p>example content</p>',
-      editorOption: {
-        /* quill options */
-      },
+      parent: null,
+      content: '',
+      image: '',
+      title: '',
+      slug: '',
       page_title,
-      // ticket
-      title: null,
-      message: "",
-      ticketCategoryName: '',
-      priorityName: 0,
-
+      //
+      categories: [{id: 1, name: 'بدون دسته بندی'}],
+      categoryLoading: true,
       // validator dictionary
       dictionary: {
         attributes: {
           title: "عنوان تیکت",
           message: "پیام",
           priority: "فوریت",
-          ticketCategory: 'دسته بندی تیکت'
+          ticketCategory: 'دسته بندی تیکت',
+          parentId: "والد",
           // custom attributes
-        }
+        },
+        submit_loader: false,
       },
-      // info
-      info: {
-        title: "لطفا قبل از پر کردن فرم نکات زیر را مد نظر داشته باشید:",
-        text:
-          "لورم ایپسوم یا طرح‌نما (به انگلیسی: Lorem ipsum) به متنی آزمایشی و بی‌معنی در صنعت چاپ، صفحه‌آرایی و طراحی گرافیک گفته می‌شود. طراح گرافیک از این متن به عنوان عنصری از ترکیب بندی برای پر کردن صفحه و ارایه اولیه شکل ظاهری و کلی طرح سفارش گرفته شده استفاده می نماید، تا از نظر گرافیکی نشانگر چگونگی نوع و اندازه فونت و ظاهر متن باشد. معمولا طراحان گرافیک برای صفحه‌آرایی، نخست از متن‌های آزمایشی و بی‌معنی استفاده می‌کنند تا صرفا به مشتری یا صاحب کار خود نشان دهند که صفحه طراحی یا صفحه بندی شده بعد از اینکه متن در آن قرار گیرد چگونه به نظر می‌رسد و قلم‌ها و اندازه‌بندی‌ها چگونه در نظر گرفته شده‌است. از آنجایی که طراحان عموما نویسنده متن نیستند و وظیفه رعایت حق تکثیر متون را ندارند و در همان حال کار آنها به نوعی وابسته به متن می‌باشد آنها با استفاده از محتویات ساختگی، صفحه گرافیکی خود را صفحه‌آرایی می‌کنند تا مرحله طراحی و صفحه‌بندی را به پایان برند.",
-        heading: "عنوان متن"
-      },
-      submit_loader: false,
-      snackbar: false,
-      snack_text: null,
-      snack_color: "info"
+
     }),
     computed:
       {
+        parentId: {
+          get() {
+            return this.parent ? [this.parent] : []
+          },
+          set(val) {
+            console.log(val);
+            this.parent = (val)
+          }
+        },
         list: function () {
           return indexPath;
         }
@@ -126,40 +134,20 @@
         createPath: function () {
           return createPath;
         },
-        ticketCategory() {
-          let list = this.$store.state.ticketCategory.data;
-          let index = _.findIndex(list, {'name': this.ticketCategoryName});
-          let item = list[index];
-          return _.get(item, 'id', 0);
-        },
-        priority() {
-          let list = this.$store.state.settings.tickets.priorities;
-          let index = _.findIndex(list, {'name': this.priorityName});
-          let item = list[index];
-          return _.get(item, 'id', 0);
-        },
-        priorityList() {
-          return this.$store.state.settings.tickets.prioritiesArray;
-        }
-        ,
+
       }
     ,
     async asyncData({params, store, $axios}) {
-      try {
-        // loan types
-        let ticketCategories = await
-          $axios.$get(ticketCategoriesMethod);
-        store.commit('ticketCategory/setAndProcessData', ticketCategories.data || []);
-      } catch (error) {
-        console.log('error', error)
-      }
-      return {
-        ticketCategoryList: _.get(store.state, 'ticketCategory.arrayList', []),
-      }
+
     }
     ,
     mounted() {
       this.$validator.localize("fa", this.dictionary)
+      this.$axios.$get(categoriesMethod).then(res => {
+        let fetched = _.get(res, 'data', []);
+        this.categories = _.isArray(fetched) ? fetched : [];
+        this.categoryLoading = false;
+      })
     }
     ,
 
@@ -171,9 +159,9 @@
       sendForm() {
         let data = {
           title: this.title,
-          message: this.message,
-          priority: this.priority,
-          category: this.ticketCategory
+          slug: this.slug,
+          text: this.content,
+          categories: this.categories,
         }
         this.$axios
           .$post(createPath, data)
@@ -183,7 +171,6 @@
               // show success and redirect
               this.toast("با موفقیت ثبت شد.", "success")
               this.submit_loader = false
-              //this.$router.push("../")
             } else {
               this.toast(" خطایی رخ داد.", "warning")
               this.submit_loader = false
@@ -221,7 +208,7 @@
       }
     },
     components: {
-      quillEditor
+      Editor,
     }
   }
 </script>
