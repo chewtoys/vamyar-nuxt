@@ -25,7 +25,7 @@ export default function ({$axios, store, isClient, redirect, route}) {
   $axios.onError(err => {
     let {status} = _.get(err, 'response', 0);
 
-    if (status === 401 && isClient) {
+    if (status === 401 ) {
       if (_.startsWith(route.path, '/user')) {
         store.dispatch('user/logout')
         redirect('/user')
