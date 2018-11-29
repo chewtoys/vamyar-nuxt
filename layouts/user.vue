@@ -1,5 +1,7 @@
 <template>
   <v-app>
+      <ToolBar/>
+      <Drawer/>
     <v-content>
       <v-container fluid>
         <Breadcrumb/>
@@ -28,7 +30,7 @@
           ]
       }
     },
-    middleware: ["updateSettings","authenticated", "navigation", "userEditProfile", 'isSiteOpen'],
+    middleware: ["updateSettings", "authenticated", "navigation", "userEditProfile", 'isSiteOpen'],
     components: {
       ToolBar,
       Footer,

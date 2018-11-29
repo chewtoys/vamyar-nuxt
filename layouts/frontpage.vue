@@ -1,5 +1,6 @@
 <template>
   <v-app>
+      <Toolbar/>
     <nuxt/>
   </v-app>
 </template>
@@ -9,8 +10,8 @@
   export default {
     head() {
       return {
-        title: _.get(this.$store.state.navigation,'title','وامیار'),
-        titleTemplate: _.get(this.$store.state, 'settings.data.site.siteTitle', 'صفحه نخست ' ),
+        title: _.get(this.$store.state.navigation, 'title', 'وامیار'),
+        titleTemplate: _.get(this.$store.state, 'settings.data.site.siteTitle', 'صفحه نخست '),
         meta:
           [
             {
@@ -26,6 +27,6 @@
     },
     components: {Toolbar},
     computed: {},
-    middleware: ['isSiteOpen',"updateSettings"]
+    middleware: ['isSiteOpen', "updateSettings"]
   }
 </script>

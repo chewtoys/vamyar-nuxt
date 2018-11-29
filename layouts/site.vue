@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <ToolBar/>
     <v-content>
       <v-container grid-list-lg fluid>
         <Breadcrumb/>
@@ -36,7 +37,7 @@
           ]
       }
     },
-    middleware: ["updateSettings","navigation",'isSiteOpen'],
+    middleware: ["updateSettings", "navigation", 'isSiteOpen'],
 
     components: {
       Breadcrumb,
