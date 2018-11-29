@@ -59,20 +59,57 @@
           </v-card-title>
           <v-progress-linear v-if="loader" :indeterminate="true"/>
           <v-card-text>
-
-            <v-list-tile v-for="item in rawData" :key="item.id">
-              <span>{{item.title}}</span>
-            </v-list-tile>
-
+            <v-expansion-panel focusable>
+              <v-expansion-panel-content
+                v-for="item in adverts"
+                :key="item.id"
+              >
+                <div slot="header" class="text-right">{{item.title}}</div>
+                <v-card>
+                  <v-card-text class="grey lighten-4 text-right">
+                    <table>
+                      <tbody width="50%" class="oddTable">
+                      <tr>
+                        <td>نوع</td>
+                        <td>{{item.typeName}}</td>
+                      </tr>
+                      <tr>
+                        <td>تاریخ</td>
+                        <td>{{item.date}}</td>
+                      </tr>
+                      </tbody>
+                      <tbody width="50%">
+                      <tr>
+                        <td>
+                          <v-btn color="success" :to="`/user/adverts/${item.advertType}s/show/${item.id}`">
+                            <v-icon>navigate_before</v-icon>
+                            مشاهده
+                          </v-btn>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <v-btn color="warning" :to="`/user/adverts/${item.advertType}s/edit/${item.typeName}`">
+                            <v-icon>edit</v-icon>
+                            مشاهده
+                          </v-btn>
+                        </td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </v-card-text>
+                </v-card>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
           </v-card-text>
         </v-card>
-
-
       </v-flex>
     </v-layout>
   </v-container>
 </template>
 <script>
+  import Helper from '~/assets/js/helper'
+
   const path = "/user/adverts"
   export default {
     components: {},
@@ -99,13 +136,24 @@
         ]
       },
       adverts() {
-        return this.rawData
+        let adverts = _.get(this, 'rawData', []);
+        let final = [];
+        _.forEach(adverts, (item, key) => {
+          let pushyItem = {};
+          pushyItem.id = _.get(item, 'id', 'بدون عنوان');
+          pushyItem.title = _.get(item, 'title', 'بدون عنوان');
+          pushyItem.date = _.get(item, 'jCreatedAt', '-');
+          pushyItem.advertType = _.get(item, 'advertableType', _.get(item, 'advert.advertableType', ''));
+          pushyItem.typeName = Helper.getAdvertType(item);
+          final.push(pushyItem)
+        })
+        return final;
       }
     },
     mounted() {
       this.loader = true
       this.$axios
-        .get(path)
+        .$get(path, {params: {inclue: 'advertable', number: 10, orderBy: 'id:desc'}})
         .then(response => {
           this.rawData = response.data;
           this.loader = false
@@ -126,3 +174,18 @@
     }
   }
 </script>
+
+<style>
+  .oddTable td {
+    padding: 10px;
+  }
+
+  .oddTable td:first-child {
+    font-size: 12px;
+    min-width: 120px;
+  }
+
+  .oddTable tr:nth-child(even) {
+    background: rgba(0, 0, 0, .09);
+  }
+</style>
