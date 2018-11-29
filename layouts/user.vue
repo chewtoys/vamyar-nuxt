@@ -1,7 +1,5 @@
 <template>
   <v-app>
-    <ToolBar/>
-    <Drawer/>
     <v-content>
       <v-container fluid>
         <Breadcrumb/>

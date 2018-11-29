@@ -39,7 +39,7 @@ export default function ({$axios, store, isClient, redirect, route}) {
       //console.log({1: 'DEBUG ON AXIOS :  onError Message:', 3: error.response.data.error.message});
       store.commit('snackbar/setSnack', _.get(err, 'response.data.error.message.mobile', err.response.data.error.message))
     } else {
-      console.log({1: 'DEBUG ON AXIOS :  onError:', 3: _.get(err, 'response', ''), err})
+      //console.log({1: 'DEBUG ON AXIOS :  onError:', 3: _.get(err, 'response', ''), err})
     }
   })
 }
