@@ -67,36 +67,44 @@
                 <div slot="header" class="text-right">{{item.title}}</div>
                 <v-card>
                   <v-card-text class="grey lighten-4 text-right">
-                    <table>
-                      <tbody width="50%" class="oddTable">
-                      <tr>
-                        <td>نوع</td>
-                        <td>{{item.typeName}}</td>
-                      </tr>
-                      <tr>
-                        <td>تاریخ</td>
-                        <td>{{item.date}}</td>
-                      </tr>
-                      </tbody>
-                      <tbody width="50%">
-                      <tr>
-                        <td>
-                          <v-btn color="success" :to="`/user/adverts/${item.advertType}s/show/${item.id}`">
-                            <v-icon>navigate_before</v-icon>
-                            مشاهده
-                          </v-btn>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <v-btn color="warning" :to="`/user/adverts/${item.advertType}s/edit/${item.typeName}`">
-                            <v-icon>edit</v-icon>
-                            مشاهده
-                          </v-btn>
-                        </td>
-                      </tr>
-                      </tbody>
-                    </table>
+                    <v-layout row wrap>
+                      <v-flex xs12 sm6>
+                        <table>
+                          <tbody class="oddTable">
+                          <tr>
+                            <td>نوع آگهی</td>
+                            <td>{{item.typeName}}</td>
+                          </tr>
+                          <tr>
+                            <td>تاریخ</td>
+                            <td>{{item.date}}</td>
+                          </tr>
+                          </tbody>
+                        </table>
+                      </v-flex>
+                      <v-flex xs12 sm6>
+                        <table>
+                          <tbody>
+                          <tr>
+                            <td>
+                              <v-btn color="success" :to="`/user/adverts/${item.advertType}s/show/${item.advert.id}`">
+                                <v-icon class="px-1">navigate_before</v-icon>
+                                مشاهده
+                              </v-btn>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <v-btn color="warning" :to="`/user/adverts/${item.advertType}s/edit/${item.advert.id}`">
+                                <v-icon class="px-1">edit</v-icon>
+                                ویرایش
+                              </v-btn>
+                            </td>
+                          </tr>
+                          </tbody>
+                        </table>
+                      </v-flex>
+                    </v-layout>
                   </v-card-text>
                 </v-card>
               </v-expansion-panel-content>
@@ -141,6 +149,7 @@
         _.forEach(adverts, (item, key) => {
           let pushyItem = {};
           pushyItem.id = _.get(item, 'id', 'بدون عنوان');
+          pushyItem.advert = _.get(item, 'advert', []);
           pushyItem.title = _.get(item, 'title', 'بدون عنوان');
           pushyItem.date = _.get(item, 'jCreatedAt', '-');
           pushyItem.advertType = _.get(item, 'advertableType', _.get(item, 'advert.advertableType', ''));
