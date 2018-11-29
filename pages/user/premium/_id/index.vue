@@ -90,7 +90,7 @@
       return {
         loader: false,
         info,
-        id: 0,
+        id: '',
         form: '',
         coupon: '',
         plans: [
@@ -184,7 +184,7 @@
           port: 'zarinpal',
           coupon: this.coupon,
           subscription: this.id,
-          data: {redirect: this.redirectPath}
+          //data: {redirect: this.redirectPath}
         }
         this.$axios.$post('/user/subscriptions', query).then(res => {
           this.form = res
