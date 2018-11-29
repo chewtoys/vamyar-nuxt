@@ -2,76 +2,121 @@
   <v-container fluid grid-list-xs>
     <v-card class="py-5 px-4" color="white">
       <div>
-        <div>
-          <h1
-            v-if="info.title"
-            class="font-14"
-          >
-            <v-icon class="px-1 grey-text pb-1 font-19">arrow_left</v-icon>
-            {{ info.title }}
-          </h1>
-          <v-divider
-            v-if="info.title"
-            class="my-3"/>
-          <v-card
-            v-if="info.text"
-            dark color="green darken-1" class="pa-3 font-12">
-            <p class="font-14 text-justify">{{ info.text }}</p>
-          </v-card>
-          <v-divider
-            v-if="info.text"
-            class="my-3"/>
-        </div>
-        <div>
-          <v-card v-if="!isPremium" flat>
-            <v-card-title><h3>ارتقای حساب کاربری</h3></v-card-title>
-            <v-card-text>
-              <v-layout row wrap>
-                <div v-html="settings('pages.premiumText')">
-                </div>
-              </v-layout>
-            </v-card-text>
-            <v-card-actions center-align>
-              <v-btn :loading="loader" @click="getForm" color="red" dark>
-                <v-icon class="pl-1">shopping_cart</v-icon>
-                ارتقای حساب
-              </v-btn>
-            </v-card-actions>
-            <div v-html="form">
-            </div>
-          </v-card>
-        </div>
+        <h1
+          class="font-14"
+        >
+          <v-icon class="px-1 grey-text pb-1 font-19">arrow_left</v-icon>
+          اشتراک حساب
+        </h1>
+        <v-card v-if="!isPremium" flat>
+          <v-alert type="warning">شما اشتراک فعالی ندارید!</v-alert>
+        </v-card>
+        <v-card v-if="!isPremium" flat>
+          <v-layout row wrap>
+            <v-flex class="text-xs-center" sm="4" xs="12" lg="3" v-for="item in plans" :key="item.id">
+              <v-card :raised="!!item.special" hover :to="`/user/premium/${item.id}`" ripple :flat="!item.special"
+                      :color="item.special ? 'warning lighten-4' : 'grey lighten-4'">
+                <v-card-title>
+                  <h5 class="full text-center">{{item.title}}</h5>
+                </v-card-title>
+                <v-card-text>
+                  <div class="py-2" v-html="item.text"></div>
+                  <v-chip text-color="black" :color="item.special ? 'warning lighten-4' : 'grey lighten-3'"
+                          class="my-1 text-center">
+                    <strong>{{getPeriod(item.period)}}</strong></v-chip>
+                  <section class="my-3">
+                    <div class="full my-2" v-for="property in item.data" :key="property.title">
+                      <div>
+                        <small class="grey--text" v-if="property.title">{{property.title}}</small>
+                      </div>
+                      <div><span class="grey--text text--darken-3" v-if="property.desc" v-html="property.desc"></span>
+                      </div>
+                    </div>
+                  </section>
+                  <div class="pt-2" v-html="getPrice(item.price)"></div>
+                </v-card-text>
+                <v-card-actions>
+                  <v-btn block :color="item.special ? 'danger' : 'success'">
+                    <v-icon v-if="item.special" color="warning" class="px-1">star</v-icon>
+                    <v-icon v-else color="white" class="px-1">verified_user</v-icon>
+                    فعال سازی
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-flex>
+          </v-layout>
+        </v-card>
       </div>
     </v-card>
   </v-container>
 </template>
 <script>
-  const gate_path = "/user/is-premium",
-    //plans = "/admin/cities",
+  import Helper from '~/assets/js/helper'
+
+  const
     page_title = "وضعیت اشتراک من",
     breadcrumb = "اشتراک حساب کاربری"
-  const info = {
-    title: "وضعیت اشتراک"
-    //text: "لورم ایپسوم یا طرح‌نما (به انگلیسی: Lorem ipsum) به متنی آزمایشی و بی‌معنی در صنعت چاپ، صفحه‌آرایی و طراحی گرافیک گفته می‌شود. طراح گرافیک از این متن به عنوان عنصری از ترکیب بندی برای پر کردن صفحه و ارایه اولیه شکل ظاهری و کلی طرح سفارش گرفته شده استفاده می نماید، تا از نظر گرافیکی نشانگر چگونگی نوع و اندازه فونت و ظاهر متن باشد. معمولا طراحان گرافیک برای صفحه‌آرایی، نخست از متن‌های آزمایشی و بی‌معنی استفاده می‌کنند تا صرفا به مشتری یا صاحب کار خود نشان دهند که صفحه طراحی یا صفحه بندی شده بعد از اینکه متن در آن قرار گیرد چگونه به نظر می‌رسد و قلم‌ها و اندازه‌بندی‌ها چگونه در نظر گرفته شده‌است. از آنجایی که طراحان عموما نویسنده متن نیستند و وظیفه رعایت حق تکثیر متون را ندارند و در همان حال کار آنها به نوعی وابسته به متن می‌باشد آنها با استفاده از محتویات ساختگی، صفحه گرافیکی خود را صفحه‌آرایی می‌کنند تا مرحله طراحی و صفحه‌بندی را به پایان برند.",
-    // heading: 'عنوان متن'
-  }
-  const benefits =
-    "با ارتقای حساب کاربری به حساب ویژه از مزایای زیر برخود از مزایای زیر برخوردار خواهید شد:"
+
   export default {
-    $_veeValidate: {
-      validator: "new"
-    },
+
     meta: {
       breadcrumb,
       title: page_title
     },
     data() {
       return {
-        benefits,
         loader: false,
-        info,
         form: '',
-        plans: []
+        plans: [
+          {
+            id: 1,
+            title: 'پلن اول !',
+            price: '100000',
+            text: 'توضیحات',
+            period: '4',
+            special: 0,
+            data: [
+              {title: 'ویژگی اول', desc: 'توضیح اول'},
+              {title: "ویژگی دوم", desc: 'توضیح دوم'}
+            ],
+          },
+          {
+            id: 2,
+            title: 'پلن دوم !',
+            price: '60000',
+            text: 'توضیحات',
+            period: '1',
+            special: 1,
+            data: [
+              {title: 'ویژگی اول', desc: 'توضیح اول'},
+              {title: "ویژگی دوم", desc: 'توضیح دوم'}
+            ],
+          },
+          {
+            id: 3,
+            title: 'پلن سوم !',
+            price: '10000000',
+            text: 'توضیحات',
+            period: '9',
+            special: 0,
+            data: [
+              {title: 'ویژگی اول', desc: 'توضیح اول'},
+              {title: "ویژگی دوم", desc: 'توضیح دوم'}
+            ],
+          },
+          {
+            id: 4,
+            title: 'پلن چهارم !',
+            text: 'توضیحات',
+            price: '9000000',
+            period: '1',
+            special: 0,
+            data: [
+              {title: 'ویژگی اول', desc: 'توضیح اول'},
+              {title: "ویژگی دوم", desc: 'توضیح دوم'}
+            ],
+          },
+        ]
       }
     },
     computed: {
@@ -86,41 +131,31 @@
         return decodeURI(path || "/user");
       },
       isPremium() {
-        return false
+        return this.$store.state.user.hasSubscription;
       }
     },
     methods: {
       settings(key) {
         return _.get(this.$store.state.settings.data, key, '')
-      },
-      getForm() {
-        this.loader = true;
-        let query = {
-          port: 'zarinpal',
-          coupon: '123123',
-          subscription: '1',
-        }
-        this.$axios.$post('/user/subscriptions', query).then(res => {
-          this.form = res
-          this.loader = false;
-        }).catch((err) => {
-          console.log(err)
-          this.$store.commit('snackbar/setSnack', err)
-          this.loader = false;
-        })
-      },
-      mounted() {
-        let plansMethod = '';
-        this.$axios.$get()
-      },
-      upgrade() {
-        if (!this.isPremium) {
-          let data = this.$axios.get(gate_path)
-          // get code and redirect to gate
-        } else {
-          // alert message
-        }
+      }
+      ,
+      getPrice(val) {
+        return Helper.priceFormat(val);
+      }
+      ,
+      getPeriod(val) {
+        return val + ' ماهه';
+      }
+    },
+    async asyncData({error, $axios, store}) {
+
+      try {
+        let {data} = await $axios.$get(plansMethod)
+        return {plans: data}
+      } catch (err) {
+        //return error({statusCode: 503, message: "مشکلی در گرفتن داده ها رخ داد!"})
       }
     }
+
   }
 </script>

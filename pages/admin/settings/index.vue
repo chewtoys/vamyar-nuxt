@@ -183,7 +183,7 @@
               v-model="premiumText"
               :error-messages="errors.collect('premiumText')"
               box
-              label="توضیحات در صفحه ی ارتقا حساب"
+              label="توضیحات در صفحه ی اشتراک ها"
               data-vv-name="premiumText"
               auto-grow
             />

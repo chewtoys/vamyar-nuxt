@@ -58,6 +58,10 @@ export const actions = {
             if (_.has(data, 'details')) {
               commit("user/updateUserInfo", data)
             }
+            let subscriptionData = await $axios.$get("/user/subscriptions");
+            if (_.has(subscriptionData, 'data')) {
+              commit("user/updateUserSubscription", _.get(subscriptionData, 'data', null))
+            }
           } catch (error) {
             //console.log('AUTH ERROR', error)
             //return  redirect('/user/auth');
