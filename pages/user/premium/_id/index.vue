@@ -9,7 +9,7 @@
               v-if="info.title"
               class="font-14"
             >
-              <v-icon class="px-1 grey-text pb-1 font-19">arrow_left</v-icon>
+              <v-icon class="px-1 grey-text pb-1 font-19">receipt</v-icon>
               {{ info.title }}
             </h1>
             <v-divider
@@ -56,7 +56,7 @@
                 </tbody>
               </table>
               <v-btn @click="getForm" block color="success">
-                <v-icon class="px-1">spellcheck</v-icon>
+                <v-icon class="px-1">forward</v-icon>
                 <b>پرداخت</b>
               </v-btn>
               <div v-html="form"></div>
@@ -75,9 +75,9 @@
     plansMethod = '/subscriptions',
     subscriptionMethod = '/user/subscriptions',
     info = {
-      title: "اشتراک"
+      title: "تایید فعال سازی اشتراک"
     }
-
+    
   export default {
     $_veeValidate: {
       validator: "new"
