@@ -1,6 +1,21 @@
 <template>
   <div>
-
+    <v-card color="white" raised light class="py-5 px-4">
+      <v-layout row>
+        <v-flex xs12 md12 sm12 lg12>
+          <v-alert
+            :value="true"
+            color="info"
+            icon="info"
+          >{{ page_title }}
+          </v-alert>
+          <v-divider class="my-3"/>
+          <v-card dark color="green darken-1" class="pa-3 font-12">
+            <p class="font-14 text-justify"/>
+          </v-card>
+        </v-flex>
+      </v-layout>
+    </v-card>
     <v-card color="white" raised light class="mt-5 py-5 px-4">
       <div>
         <v-toolbar flat color="white">
@@ -36,89 +51,92 @@
           </div>
         </v-card-title>
 
-        <v-data-table
-          v-model="selected"
-          item-key="id"
-          select-all
-          :headers="headers"
-          :items="data"
-          :loading="loading"
-          :search="search"
-          :pagination.sync="pagination"
-          :total-items="totalData"
-          :rows-per-page-items="[5,10,25,100]"
-          no-results-text="هیچ موردی ثبت نشده است."
-          class="elevation-1"
-        >
-          <template slot="headerCell" slot-scope="props">
-            <v-tooltip bottom>
+        <template v-if="true">
+          <v-data-table
+            v-model="selected"
+            item-key="id"
+            select-all
+            :headers="headers"
+            :items="data"
+            :loading="loading"
+            :search="search"
+            :pagination.sync="pagination"
+            :total-items="totalData"
+            :rows-per-page-items="[5,10,25,100]"
+            no-results-text="هیچ موردی ثبت نشده است."
+            class="elevation-1"
+          >
+            <template slot="headerCell" slot-scope="props">
+              <v-tooltip bottom>
         <span slot="activator">
           {{ props.header.text }}
         </span>
-              <span>
+                <span>
           {{ props.header.text }}
         </span>
-            </v-tooltip>
-          </template>
-          <template slot="items" slot-scope="props">
-            <td>
-              <v-checkbox
-                v-model="props.selected"
-                primary
-                hide-details
-              ></v-checkbox>
-            </td>
-            <td class="text-xs-right">{{ props.item.id }}</td>
-            <td class="text-xs-right">
-              <nuxt-link :to="uri + '/edit/' + props.item.slug">{{ props.item.title || '-' }}</nuxt-link>
-            </td>
-            <td class="text-xs-right">{{ (props.item.slug || '-') }}</td>
-            <td class="text-xs-right">
-              <v-img aspect-ratio="1.7" :src="props.item.image"/>
-            </td>
-            <td class="text-xs-right">{{ getCategories(props.item) }}</td>
-            <td class="text-xs-left">
-              <nuxt-link title="ویرایش" :to=" uri + '/edit/' + props.item.slug" class="mx-1">
+              </v-tooltip>
+            </template>
+            <template slot="items" slot-scope="props">
+              <td>
+                <v-checkbox
+                  v-model="props.selected"
+                  primary
+                  hide-details
+                ></v-checkbox>
+              </td>
+              <td class="text-xs-right">{{ props.item.id }}</td>
+              <td class="text-xs-right">
+                <nuxt-link :to="uri + '/edit/' + props.item.id">{{ props.item.name || '-' }}</nuxt-link>
+              </td>
+              <td class="text-xs-right">
+                {{ props.item.slug || '-' }}
+              </td>
+              <td class="text-xs-right">
+                {{ props.item.parentId || '-' }}
+              </td>
+              <td class="text-xs-left">
+                <nuxt-link title="ویرایش" :to=" uri + '/edit/' + props.item.id" class="mx-1">
+                  <v-icon
+                    small
+                  >
+                    edit
+                  </v-icon>
+                </nuxt-link>
                 <v-icon
+                  class="mx-1"
                   small
+                  @click="deleteItem(props.item.id)"
                 >
-                  edit
+                  delete
                 </v-icon>
-              </nuxt-link>
-              <v-icon
-                class="mx-1"
-                small
-                @click="deleteItem(props.item.slug)"
-              >
-                delete
-              </v-icon>
-            </td>
-          </template>
-          <v-alert slot="no-results" :value="true" color="error" icon="warning">
-            نتیجه ای برای "{{ search }}" یافت نشد.
-          </v-alert>
-        </v-data-table>
-        <div class="text-xs-center pt-2">
-          <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
-        </div>
+              </td>
+            </template>
+            <v-alert slot="no-results" :value="true" color="error" icon="warning">
+              نتیجه ای برای "{{ search }}" یافت نشد.
+            </v-alert>
+          </v-data-table>
+          <div class="text-xs-center pt-2">
+            <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
+          </div>
+        </template>
       </div>
     </v-card>
   </div>
 </template>
 <script>
   import Helper from "~/assets/js/helper.js"
+  import Tree from "~/components/elements/Tree"
 
-  const page_title = 'مطالب',
-    fetchMethod = '/admin/posts',
-    breadcrumb = 'لیست مطالب',
-    indexPath = '/admin/posts',
-    createPath = '/admin/posts/create',
+  const page_title = 'دسته بندی های مطالب سایت',
+    breadcrumb = 'لیست کلی دسته بندی ها',
+    indexPath = '/admin/posts/categories',
+    fetchPath = '/admin/categories',
+    createPath = '/admin/categories/posts/create',
     headers = [
       {text: '‌شناسه', value: 'id', align: 'right'},
-      {text: 'عنوان', value: 'title', align: 'right'},
-      {text: 'مستعار', value: 'slug', align: 'right'},
-      {text: 'تصویر', value: 'image', align: 'right'},
-      {text: 'دسته بندی ', value: 'categories', align: 'right'},
+      {text: 'عنوان', value: 'name', align: 'right'},
+      {text: 'مسستعار', value: 'slug', align: 'right'},
+      {text: 'والد', value: 'parent', align: 'right'},
       {text: 'عملیات', sortable: false, align: 'left', width: '140px'},
     ]
 
@@ -128,6 +146,7 @@
       breadcrumb: breadcrumb
     },
     data: () => ({
+      description: '',
       data: [],
       totalData: 10,
       loading: true,
@@ -142,7 +161,7 @@
         return _.get(this.paginator, 'totalPages', 1)
       },
       uri() {
-        return `/admin/posts`;
+        return indexPath;
       },
       headers() {
         return headers;
@@ -159,23 +178,25 @@
       pagination: {
         handler() {
           this.loading = true;
-          let method = fetchMethod;
+          let method = fetchPath;
           let {sortBy, descending, page, rowsPerPage} = this.pagination;
           let query = {
             page,
             orderBy: `${sortBy || 'id'}:${descending ? 'desc' : 'asc'}`,
-            number: rowsPerPage,
-            include: 'categories'
+            number: rowsPerPage
           }
           //console.log({method, query, paginator: this.paginator}, {sortBy, descending, page, rowsPerPage});
           this.$axios.$get(method, {
             params: query
           }).then((response) => {
+
             this.paginator = _.get(response, 'paginator', {})
             this.data = _.get(response, 'data', [])
             this.totalData = _.get(response, 'paginator.totalCount', 0)
+
             //  console.log('on response: ', this.totalData, this.paginator, this.data, {response})
           }).catch((error) => {
+
             //console.log(error, method, query, this.paginator);
           }).then(() => {
             this.loading = false;
@@ -184,15 +205,12 @@
         deep: true
       },
     },
+    async asyncData({params, store, $axios}) {
+
+    }
+    ,
     methods: {
-      getCategories(item) {
-        let cats = item.categories || [];
-        let names = []
-        _.forEach(cats, (cat) => {
-          names.push(cat.name)
-        })
-        return _.join(names, ', ')
-      },
+
       deleteItems() {
         if (confirm('آیا مطمئن هستید که می خواهید این موارد را حذف کنید؟')) {
           _.forEach(this.selected, (obj, key) => {
@@ -206,7 +224,7 @@
         }
       },
       deleteById: function (id) {
-        let deletePath = `/admin/posts/${id}`;
+        let deletePath = `${fetchPath}/${id}`;
         //console.log(deletePath)
         _.remove(this.data, function (obj) {
           return _.get(obj, 'id', '') === id;
@@ -218,10 +236,8 @@
         }).catch((err) => {
           this.$store.commit('snackbar/setSnack', _.get(err, 'response.data.error.message', 'مشکلی در حذف کردن پیش آمد'), 'error')
         })
-      },
-      getLink(id) {
-        return "/admin/posts/" + id
       }
-    }
+    },
+    components: {Tree}
   }
 </script>

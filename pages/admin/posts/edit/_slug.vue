@@ -78,8 +78,8 @@
   import Editor from '~/components/elements/Editor'
   import Img from '~/components/elements/FileUploader'
 
-  const page_title = 'ثبت مطلب جدید',
-    breadcrumb = 'مطلب جدید',
+  const page_title = 'ویرایش مطلب ',
+    breadcrumb = 'ویرایش  ',
     indexPath = '/admin/posts',
     createPath = '/admin/posts',
     categoriesMethod = '/admin/categories'
@@ -99,6 +99,7 @@
       image: null,
       title: '',
       slug: '',
+      uriSlug: null,
       page_title,
       //
       categories: [{id: 1, name: 'بدون دسته بندی'}],
@@ -108,8 +109,8 @@
       dictionary: {
         attributes: {
           title: "عنوان مطلب",
-          slug: "پیام",
-          content: "فوریت",
+          slug: "مستعار",
+          content: "محتوا",
           categories: 'دسته بندی ',
           parentId: "والد",
           // custom attributes
@@ -120,6 +121,9 @@
     }),
     computed:
       {
+        updateMethod() {
+          return `${indexPath}/${this.uriSlug}`;
+        },
         list: function () {
           return indexPath;
         }
@@ -131,10 +135,29 @@
     ,
     mounted() {
       this.$validator.localize("fa", this.dictionary)
+      let getPostMethod = this.updateMethod;
+      let params = {
+        include: 'categories'
+      }
       this.$axios.$get(categoriesMethod).then(res => {
         let fetched = _.get(res, 'data', []);
         this.categories = _.isArray(fetched) ? fetched : [];
         this.categoryLoading = false;
+
+
+        this.$axios.$get(getPostMethod, {params}).then(res => {
+          this.title = _.get(res, 'data.title', '');
+          this.content = _.get(res, 'data.text', '');
+          this.slug = _.get(res, 'data.slug', '');
+          _.forEach(_.get(res, 'data.categories', ''), (cat) => {
+            this.parent.push(cat.id);
+            //console.log(cats)
+          })
+          this.image = _.get(res, 'data.image', '');
+        }).catch(err => {
+          return this.$store.commit("snackbar/setSnack", 'در گرفتن دیتا مشکلی رخ داد');
+        })
+
       }).catch(err => {
         console.log(err)
       })
@@ -149,12 +172,12 @@
         let data = {
           title: this.title,
           slug: this.slug,
-          image: this.image,
+          image: this.image || null,
           text: this.content,
           categories: this.parent,
         }
         this.$axios
-          .$post(createPath, data)
+          .$put(this.updateMethod, data)
           .then(() => {
             let status = true
             if (status) {
@@ -197,6 +220,9 @@
             this.toast(err, "error")
           })
       }
+    },
+    asyncData({params}) {
+      return {uriSlug: params.slug}
     },
     components: {
       Editor, Img

@@ -52,7 +52,7 @@
               :label="getTitle('title')"
             />
             <v-autocomplete
-              v-if="isAllowed('city') && !allCities"
+              v-if="isAllowed('city') "
               v-validate="'required'"
               v-model="cityName"
               :error-messages="errors.collect('city')"
@@ -148,6 +148,15 @@
               :label="getTitle('job')"
               data-vv-name="job"
             />
+            <v-text-field
+              v-if="isAllowed('bank')"
+              v-validate="'required'"
+              v-model="bank"
+              :error-messages="errors.collect('job')"
+              box
+              :label="getTitle('bank')"
+              data-vv-name="bank"
+            />
             <v-autocomplete
               v-if="isAllowed('loanType')"
               v-validate="'required'"
@@ -227,15 +236,19 @@
       interestRate: null,
       maxAmount: null,
       job: null,
+      bank: null,
 
       // validator dictionary
       dictionary: {
         attributes: {
           title: "عنوان آگهی",
           city: "شهر",
+          job: "شغل",
+          bank: "بانک",
           text: "متن توضیحات آگهی",
           image: "تصویر آگهی",
           amount: "مبلغ وام",
+          maxAmount: "حداکثر ",
           price: "قیمت فروش وام",
           paybackTime: "مدت زمان بازپرداخت",
           guaranteeTypes: "نوع ضامن",
@@ -343,7 +356,7 @@
           include: 'guaranteeTypes'
         }
         let {data} = await $axios.$get(getPath, {params: query});
-        console.log('get:',getPath, {params: query}, data)
+        console.log('get:', getPath, {params: query}, data)
         return {
           page_title,
           formType,
@@ -432,6 +445,13 @@
           .catch(err => {
             this.toast(err, "error")
           })
+      }
+    },
+    watch: {
+      allCities(val) {
+        if (val) {
+          return _.set(this, 'city', 3000);
+        }
       }
     }
   }

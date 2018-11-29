@@ -115,11 +115,12 @@
         {title: "لیست کاربران", icon: "inbox", to: "/users"},
       ],
       content: [
-        {title: "دسته بندی مطالب", icon: "inbox", to: "/admin/posts/categories"},
         {title: "لیست مطالب", icon: "inbox", to: "/admin/posts"},
-        {title: "آموزش ها", icon: "inbox", to: "/user/education"},
+        {title: "افزودن مطلب", icon: "inbox", to: "/admin/posts/create"},
+        {title: "دسته بندی مطالب", icon: "inbox", to: "/admin/posts/categories"},
       ],
       adminSection: [
+        {title: "لیست اشتراک ها", icon: "inbox", to: "/admin/subscriptions"},
         {title: "مدیرها", icon: "inbox", to: "/admin/moderators"},
       ],
       access: [

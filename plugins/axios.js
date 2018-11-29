@@ -1,4 +1,4 @@
-export default function ({$axios, store, redirect, route}) {
+export default function ({$axios, store, isClient, redirect, route}) {
   // Authorization
   if (store.state.admin.auth) {
     let accessToken = store.state.admin.auth;
@@ -25,7 +25,7 @@ export default function ({$axios, store, redirect, route}) {
   $axios.onError(err => {
     let {status} = _.get(err, 'response', 0);
 
-    if (status === 401) {
+    if (status === 401 && isClient) {
       if (_.startsWith(route.path, '/user')) {
         store.dispatch('user/logout')
         redirect('/user')

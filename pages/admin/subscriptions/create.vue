@@ -36,32 +36,29 @@
             />
             <v-text-field
               v-validate="'required'"
-              v-model="slug"
-              :error-messages="errors.collect('slug')"
+              v-model="period"
+              :error-messages="errors.collect('period')"
               box
-              data-vv-name="slug"
-              label="مستعار"
+              data-vv-name="period"
+              label="دوره"
             />
-            <v-treeview label="والد"
-                        selectable
-                        v-model="parent"
-                        transition
-                        :items="categories"
-                        :loading="categoryLoading"
-                        item-text="name"
-            />
-            <Img
-              v-model="image"
-              label="تصویر"
-            />
-            <Editor
-              validate="required"
-              v-model="content"
-              :error-messages="errors.collect('content')"
+            <v-text-field
+              v-validate="'required'"
+              v-model="price"
+              :error-messages="errors.collect('price')"
               box
-              label="محتوا"
-              data-vv-name="content"
-              auto-grow
+              data-vv-name="price"
+              label="قیمت"
+            />
+            <v-checkbox
+              v-model="special"
+              box
+              label="پیشنهاد سایت باشد؟"
+            />
+            <Crud
+              :structure="dataStructure"
+              v-model="data"
+              label="ویژگی ها"
             />
 
             <v-btn :loading="submit_loader" outline color="accent" round @click="processSubmit">
@@ -76,13 +73,13 @@
 </template>
 <script>
   import Editor from '~/components/elements/Editor'
+  import Crud from '~/components/elements/Crud'
   import Img from '~/components/elements/FileUploader'
 
-  const page_title = 'ثبت مطلب جدید',
-    breadcrumb = 'مطلب جدید',
-    indexPath = '/admin/posts',
-    createPath = '/admin/posts',
-    categoriesMethod = '/admin/categories'
+  const page_title = 'افزودن پلن',
+    breadcrumb = 'جدید',
+    indexPath = '/admin/subscriptions',
+    createPath = '/admin/subscriptions'
 
   export default {
     $_veeValidate: {
@@ -94,11 +91,15 @@
       breadcrumb: breadcrumb
     },
     data: () => ({
-      parent: [],
-      content: '',
-      image: null,
+      dataStructure: [
+        {title: 'عنوان', name: 'title', type: 'text', value: ''},
+        {title: 'توضیحات', name: 'desc', type: 'text', value: ''},
+      ],
       title: '',
-      slug: '',
+      period: '',
+      special: false,
+      price: null,
+      data: {},
       page_title,
       //
       categories: [{id: 1, name: 'بدون دسته بندی'}],
@@ -107,11 +108,11 @@
       submit_loader: false,
       dictionary: {
         attributes: {
-          title: "عنوان مطلب",
-          slug: "پیام",
-          content: "فوریت",
-          categories: 'دسته بندی ',
-          parentId: "والد",
+          title: "عنوان ",
+          period: "دوره",
+          price: "قیمت",
+          special: "ویژه",
+          data: 'جزییات',
           // custom attributes
         },
 
@@ -120,6 +121,9 @@
     }),
     computed:
       {
+        updateMethod() {
+          return `${indexPath}`;
+        },
         list: function () {
           return indexPath;
         }
@@ -131,13 +135,6 @@
     ,
     mounted() {
       this.$validator.localize("fa", this.dictionary)
-      this.$axios.$get(categoriesMethod).then(res => {
-        let fetched = _.get(res, 'data', []);
-        this.categories = _.isArray(fetched) ? fetched : [];
-        this.categoryLoading = false;
-      }).catch(err => {
-        console.log(err)
-      })
     }
     ,
     methods: {
@@ -148,13 +145,13 @@
       sendForm() {
         let data = {
           title: this.title,
-          slug: this.slug,
-          image: this.image,
-          text: this.content,
-          categories: this.parent,
+          price: this.price,
+          period: this.period,
+          special: this.special,
+          data: this.data,
         }
         this.$axios
-          .$post(createPath, data)
+          .$put(this.updateMethod, data)
           .then(() => {
             let status = true
             if (status) {
@@ -199,7 +196,7 @@
       }
     },
     components: {
-      Editor, Img
+      Crud, Editor, Img
     }
   }
 </script>

@@ -5,6 +5,7 @@ export const state = () => ({
     count: 1,
   },
   adverts: {
+    tradeStatusList: ['باز', 'درحال معامله', 'بسته شده'],
     count: 99999,
     filters: {
       amountArray: [],
@@ -42,9 +43,7 @@ export const state = () => ({
       {id: 1, name: 'دادگاه'},
     ],
   },
-  finances: {
-
-  }
+  finances: {}
 });
 
 export const mutations = {

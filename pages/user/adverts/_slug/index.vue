@@ -1,21 +1,5 @@
 <template>
   <div>
-    <v-card color="white" raised light class="py-5 px-4">
-      <v-layout row>
-        <v-flex xs12 md12 sm12 lg12>
-          <v-alert
-            :value="true"
-            color="info"
-            icon="info"
-          >{{ info.title }}
-          </v-alert>
-          <v-divider class="my-3"/>
-          <v-card dark color="green darken-1" class="pa-3 font-12">
-            <p class="font-14 text-justify"/>
-          </v-card>
-        </v-flex>
-      </v-layout>
-    </v-card>
     <v-card color="white" raised light class="mt-5 py-5 px-4">
       <div>
         <v-toolbar flat color="white">
@@ -67,28 +51,27 @@
                 hide-details
               ></v-checkbox>
             </td>
+            <td class="text-xs-right">{{ props.item.advert.title }}</td>
             <template v-if="type.type=='loans'">
-              <td class="text-xs-right">{{ props.item.advert.title }}</td>
-              <td class="text-xs-right">{{ props.item.advert.text }}</td>
-              <td class="text-xs-left">{{ props.item.price }}</td>
-              <td class="text-xs-left">{{ props.item.amount }}</td>
+              <td class="text-xs-left">{{ getPrice(props.item.price) }}</td>
+              <td class="text-xs-left">{{ getPrice(props.item.amount) }}</td>
             </template>
             <template v-if="type.type=='loanRequests'">
-              <td class="text-xs-right">{{ props.item.advert.title }}</td>
-              <td class="text-xs-right">{{ props.item.advert.text }}</td>
-              <td class="text-xs-left">{{ props.item.amount }}</td>
+              <td class="text-xs-left">{{ getPrice(props.item.amount) }}</td>
             </template>
             <template v-if="type.type=='finances'">
-              <td class="text-xs-right">{{ props.item.advert.title }}</td>
-              <td class="text-xs-left">{{ props.item.maxAmount }}</td>
-              <td class="text-xs-right">{{ props.item.advert.text }}</td>
+              <td class="text-xs-left">{{ getPrice(props.item.maxAmount) }}</td>
             </template>
             <template v-if="type.type=='coSigners'">
-              <td class="text-xs-right">{{ props.item.advert.title }}</td>
               <td class="text-xs-left">{{ getType(props.item.type) }}</td>
               <td class="text-xs-left">{{ getGuaranteeTypes(props.item.guaranteeTypes) }}</td>
-              <td class="text-xs-right">{{ props.item.advert.text }}</td>
             </template>
+            <td class="text-xs-right">
+              {{ tradeStatus(props.item) }}
+              <v-btn @click="chageTradeStatus(props.item.advert.id,0)">باز</v-btn>
+              <v-btn @click="chageTradeStatus(props.item.advert.id,1)">درحال معامله</v-btn>
+              <v-btn @click="chageTradeStatus(props.item.advert.id,2)">بسته</v-btn>
+            </td>
             <td class="text-xs-left">
               <a title="مشاهده" :href=" uri + '/show/' + props.item.id" class="mx-1">
                 <v-icon
@@ -138,7 +121,7 @@
       search: '',
       submit_loader: false,
     }),
-    async asyncData({params, app, store,$axios}) {
+    async asyncData({params, app, store, $axios}) {
 
       // guarantee
       let guaranteeData = await $axios.$get(guaranteeMethod);
@@ -225,7 +208,22 @@
       }
     },
     methods: {
-      getGuaranteeTypes(key) {
+      chageTradeStatus(id, type) {
+        let method = `/user/adverts/${id}/changeTradeStatus/${type}`
+        this.$axios.$put(method).then((res) => {
+
+        }).catch(err => {
+
+        })
+      },
+      getPrice(val) {
+        return Helper.priceFormat(val)
+      },
+      tradeStatus(item) {
+        let list = this.$store.state.settings.adverts.tradeStatusList;
+        return list[item.tradeStaus];
+      }
+      , getGuaranteeTypes(key) {
         let items = [];
         let list = this.$store.state.guaranteeType.data;
         _.forEach(key, (id) => {

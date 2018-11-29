@@ -16,7 +16,6 @@
     props: ['value', 'label', 'readOnly', 'placeholder'],
     data() {
       return {
-        content: '',
         editorOption: {
           placeholder: this.placeholder || 'اینجا بنویسید...',
           readOnly: this.readOnly || false,
@@ -64,15 +63,14 @@
     computed: {
       getLabel() {
         return _.get(this, 'label', '')
+      },
+      content: {
+        set(val) {
+          this.$emit("input", Helper.nl2br(val))
+        }, get() {
+          return this.value
+        }
       }
-    },
-    watch: {
-      content(val) {
-        this.$emit("input", Helper.nl2br(val))
-      }
-    },
-    mounted() {
-      this.content = this.value;
     }
   }
 </script>

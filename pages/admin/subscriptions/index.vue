@@ -70,15 +70,13 @@
             </td>
             <td class="text-xs-right">{{ props.item.id }}</td>
             <td class="text-xs-right">
-              <nuxt-link :to="uri + '/edit/' + props.item.slug">{{ props.item.title || '-' }}</nuxt-link>
+              <nuxt-link :to="uri + '/edit/' + props.item.id">{{ props.item.title || '-' }}</nuxt-link>
             </td>
-            <td class="text-xs-right">{{ (props.item.slug || '-') }}</td>
-            <td class="text-xs-right">
-              <v-img aspect-ratio="1.7" :src="props.item.image"/>
-            </td>
-            <td class="text-xs-right">{{ getCategories(props.item) }}</td>
+            <td class="text-xs-right">{{ getPrice(props.item.price || '-') }}</td>
+            <td class="text-xs-right">{{ (props.item.period || '-') + ' ماه' }}</td>
+
             <td class="text-xs-left">
-              <nuxt-link title="ویرایش" :to=" uri + '/edit/' + props.item.slug" class="mx-1">
+              <nuxt-link title="ویرایش" :to=" uri + '/edit/' + props.item.id" class="mx-1">
                 <v-icon
                   small
                 >
@@ -88,7 +86,7 @@
               <v-icon
                 class="mx-1"
                 small
-                @click="deleteItem(props.item.slug)"
+                @click="deleteItem(props.item.id)"
               >
                 delete
               </v-icon>
@@ -108,17 +106,16 @@
 <script>
   import Helper from "~/assets/js/helper.js"
 
-  const page_title = 'مطالب',
-    fetchMethod = '/admin/posts',
-    breadcrumb = 'لیست مطالب',
-    indexPath = '/admin/posts',
-    createPath = '/admin/posts/create',
+  const page_title = 'لیست اشتراک ها',
+    fetchMethod = '/admin/subscriptions',
+    breadcrumb = 'اشتراک ها',
+    indexPath = '/admin/subscriptions',
+    createPath = '/admin/subscriptions/create',
     headers = [
       {text: '‌شناسه', value: 'id', align: 'right'},
       {text: 'عنوان', value: 'title', align: 'right'},
-      {text: 'مستعار', value: 'slug', align: 'right'},
-      {text: 'تصویر', value: 'image', align: 'right'},
-      {text: 'دسته بندی ', value: 'categories', align: 'right'},
+      {text: 'قیمت', value: 'price', align: 'right'},
+      {text: 'مدت', value: 'period', align: 'right'},
       {text: 'عملیات', sortable: false, align: 'left', width: '140px'},
     ]
 
@@ -142,7 +139,7 @@
         return _.get(this.paginator, 'totalPages', 1)
       },
       uri() {
-        return `/admin/posts`;
+        return `${fetchMethod}`;
       },
       headers() {
         return headers;
@@ -165,7 +162,6 @@
             page,
             orderBy: `${sortBy || 'id'}:${descending ? 'desc' : 'asc'}`,
             number: rowsPerPage,
-            include: 'categories'
           }
           //console.log({method, query, paginator: this.paginator}, {sortBy, descending, page, rowsPerPage});
           this.$axios.$get(method, {
@@ -185,13 +181,8 @@
       },
     },
     methods: {
-      getCategories(item) {
-        let cats = item.categories || [];
-        let names = []
-        _.forEach(cats, (cat) => {
-          names.push(cat.name)
-        })
-        return _.join(names, ', ')
+      getPrice(price) {
+        return Helper.priceFormat(price)
       },
       deleteItems() {
         if (confirm('آیا مطمئن هستید که می خواهید این موارد را حذف کنید؟')) {
@@ -206,7 +197,7 @@
         }
       },
       deleteById: function (id) {
-        let deletePath = `/admin/posts/${id}`;
+        let deletePath = `${fetchMethod}/${id}`;
         //console.log(deletePath)
         _.remove(this.data, function (obj) {
           return _.get(obj, 'id', '') === id;
@@ -218,9 +209,6 @@
         }).catch((err) => {
           this.$store.commit('snackbar/setSnack', _.get(err, 'response.data.error.message', 'مشکلی در حذف کردن پیش آمد'), 'error')
         })
-      },
-      getLink(id) {
-        return "/admin/posts/" + id
       }
     }
   }

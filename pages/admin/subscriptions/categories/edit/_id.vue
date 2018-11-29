@@ -28,42 +28,12 @@
           <form>
             <v-text-field
               v-validate="'required'"
-              v-model="title"
-              :error-messages="errors.collect('title')"
+              v-model="name"
+              :error-messages="errors.collect('name')"
               box
-              data-vv-name="title"
+              data-vv-name="name"
               label="عنوان"
             />
-            <v-text-field
-              v-validate="'required'"
-              v-model="slug"
-              :error-messages="errors.collect('slug')"
-              box
-              data-vv-name="slug"
-              label="مستعار"
-            />
-            <v-treeview label="والد"
-                        selectable
-                        v-model="parent"
-                        transition
-                        :items="categories"
-                        :loading="categoryLoading"
-                        item-text="name"
-            />
-            <Img
-              v-model="image"
-              label="تصویر"
-            />
-            <Editor
-              validate="required"
-              v-model="content"
-              :error-messages="errors.collect('content')"
-              box
-              label="محتوا"
-              data-vv-name="content"
-              auto-grow
-            />
-
             <v-btn :loading="submit_loader" outline color="accent" round @click="processSubmit">
               <v-icon class="px-1">save</v-icon>
               ذخیره
@@ -75,14 +45,12 @@
   </v-container>
 </template>
 <script>
-  import Editor from '~/components/elements/Editor'
-  import Img from '~/components/elements/FileUploader'
+  import Helper from '~/assets/js/helper'
 
-  const page_title = 'ثبت مطلب جدید',
-    breadcrumb = 'مطلب جدید',
-    indexPath = '/admin/posts',
-    createPath = '/admin/posts',
-    categoriesMethod = '/admin/categories'
+  const page_title = 'ثبت دسته بندی جدید',
+    breadcrumb = 'ایجاد دسته بندی',
+    indexPath = '/admin/posts/categories',
+    resourcePath = '/admin/categories'
 
   export default {
     $_veeValidate: {
@@ -94,52 +62,51 @@
       breadcrumb: breadcrumb
     },
     data: () => ({
-      parent: [],
-      content: '',
-      image: null,
-      title: '',
-      slug: '',
       page_title,
-      //
-      categories: [{id: 1, name: 'بدون دسته بندی'}],
-      categoryLoading: true,
+      // ticket
+      name: null,
+      slug: null,
+
       // validator dictionary
-      submit_loader: false,
       dictionary: {
         attributes: {
-          title: "عنوان مطلب",
-          slug: "پیام",
-          content: "فوریت",
-          categories: 'دسته بندی ',
-          parentId: "والد",
+          name: "عنوان دسته بندی",
+          slug: "عنوان دسته بندی",
           // custom attributes
-        },
-
+        }
       },
-
+      submit_loader: false
     }),
+    mounted() {
+      let method = this.uri;
+      //console.log({method})
+      this.$axios.$get(method).then(res => {
+        this.data = _.get(res, 'data');
+        this.name = _.get(res, 'data.name', '');
+        this.slug = _.get(res, 'data.slug', '');
+        this.image = _.get(res, 'data.image', '');
+        this.description = _.get(res, 'data.description', '');
+        this.parent = _.get(res, 'data.parent', '');
+      }).catch(err => {
+        //console.log(err);
+      })
+      this.$validator.localize("fa", this.dictionary)
+    },
     computed:
       {
+        uri() {
+          return `${resourcePath}/${this.id}`;
+        },
         list: function () {
           return indexPath;
         }
-        ,
-        createPath: function () {
-          return createPath;
-        },
       }
     ,
-    mounted() {
-      this.$validator.localize("fa", this.dictionary)
-      this.$axios.$get(categoriesMethod).then(res => {
-        let fetched = _.get(res, 'data', []);
-        this.categories = _.isArray(fetched) ? fetched : [];
-        this.categoryLoading = false;
-      }).catch(err => {
-        console.log(err)
-      })
-    }
-    ,
+    async asyncData({params}) {
+      return {
+        id: params.id
+      }
+    },
     methods: {
       toast(msg, color) {
         this.$store.commit("snackbar/setSnack", msg, color)
@@ -147,14 +114,14 @@
       ,
       sendForm() {
         let data = {
-          title: this.title,
+          name: this.name,
+          parent: this.parent,
+          description: this.description,
           slug: this.slug,
           image: this.image,
-          text: this.content,
-          categories: this.parent,
         }
         this.$axios
-          .$post(createPath, data)
+          .$put(this.uri, data)
           .then(() => {
             let status = true
             if (status) {
@@ -197,9 +164,6 @@
             this.toast(err, "error")
           })
       }
-    },
-    components: {
-      Editor, Img
     }
   }
 </script>

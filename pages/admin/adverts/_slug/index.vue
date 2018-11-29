@@ -1,21 +1,5 @@
 <template>
   <div>
-    <v-card color="white" raised light class="py-5 px-4">
-      <v-layout row>
-        <v-flex xs12 md12 sm12 lg12>
-          <v-alert
-            :value="true"
-            color="info"
-            icon="info"
-          >{{ info.title }}
-          </v-alert>
-          <v-divider class="my-3"/>
-          <v-card dark color="green darken-1" class="pa-3 font-12">
-            <p class="font-14 text-justify"/>
-          </v-card>
-        </v-flex>
-      </v-layout>
-    </v-card>
     <v-card color="white" raised light class="mt-5 py-5 px-4">
       <div>
         <v-toolbar flat color="white">
@@ -60,7 +44,6 @@
           :rows-per-page-items="[10,25,100]"
           class="elevation-1"
         >
-
           <template slot="items" slot-scope="props">
             <td>
               <v-checkbox
@@ -69,50 +52,44 @@
                 hide-details
               ></v-checkbox>
             </td>
-
-            <td class="text-xs-right">
-              <nuxt-link title="مشاهده" :to=" uri + '/show/' + props.item.id" class="mx-1">
-                {{ props.item.id }}
-              </nuxt-link>
-            </td>
-            <td class="text-xs-right">
-              <nuxt-link title="مشاهده" target="_blank"
-                 :to=" '/admin/users/show/' + getProperty(props.item, 'advert.user.id') "
-                 class="mx-1">
-                {{ sender(props) }}
-              </nuxt-link>
-            </td>
-            <td class="text-xs-right">{{ getProperty(props.item, 'advert.title', 'بدون عنوان') }}</td>
-            <td class="text-xs-right">{{ getProperty(props.item, 'advert.text') }}</td>
+            <td class="text-xs-left">{{ (props.item.id) }}</td>
+            <td class="text-xs-left">{{ sender(props) }}</td>
+            <td class="text-xs-right">{{ props.item.advert.title }}</td>
             <template v-if="type.type=='loans'">
-              <td class="text-xs-left">{{ props.item.price }}</td>
-              <td class="text-xs-left">{{ props.item.amount }}</td>
+              <td class="text-xs-left">{{ getPrice(props.item.price) }}</td>
+              <td class="text-xs-left">{{ getPrice(props.item.amount) }}</td>
             </template>
             <template v-if="type.type=='loanRequests'">
-              <td class="text-xs-left">{{ props.item.amount }}</td>
+              <td class="text-xs-left">{{ getPrice(props.item.amount) }}</td>
             </template>
             <template v-if="type.type=='finances'">
-              <td class="text-xs-left">{{ props.item.maxAmount }}</td>
+              <td class="text-xs-left">{{ getPrice(props.item.maxAmount) }}</td>
             </template>
             <template v-if="type.type=='coSigners'">
               <td class="text-xs-left">{{ getType(props.item.type) }}</td>
               <td class="text-xs-left">{{ getGuaranteeTypes(props.item.guaranteeTypes) }}</td>
             </template>
+            <td class="text-xs-right">
+              {{ tradeStatus(props.item.advert.id) }}
+              <v-btn @click="chageTradeStatus(props.item.advert.id,0)">باز</v-btn>
+              <v-btn @click="chageTradeStatus(props.item.advert.id,1)">درحال معامله</v-btn>
+              <v-btn @click="chageTradeStatus(props.item.advert.id,2)">بسته</v-btn>
+            </td>
             <td class="text-xs-left">
-              <nuxt-link title="مشاهده" :to=" uri + '/show/' + props.item.id" class="mx-1">
+              <a title="مشاهده" :href=" uri + '/show/' + props.item.id" class="mx-1">
                 <v-icon
                   small
                 >
                   pageview
                 </v-icon>
-              </nuxt-link>
-              <nuxt-link title="ویرایش" :to=" uri + '/edit/' + props.item.id" class="mx-1">
+              </a>
+              <a title="ویرایش" :href=" uri + '/edit/' + props.item.id" class="mx-1">
                 <v-icon
                   small
                 >
                   edit
                 </v-icon>
-              </nuxt-link>
+              </a>
               <v-icon
                 class="mx-1"
                 small
@@ -237,6 +214,25 @@
       },
     },
     methods: {
+      chageTradeStatus(id, type) {
+        let method = `/admin/adverts/${id}/changeTradeStatus/${type}`
+        this.$axios.$put(method).then((res) => {
+
+        }).catch(err => {
+
+        })
+      },
+      getPrice(val) {
+        return Helper.priceFormat(val)
+      },
+      tradeStatus(id) {
+        let method = `/admin/adverts/${id}/changeTradeStatus`
+        return this.$axios.$get(method).then((res) => {
+          return _.get(res, 'data', 'نا مشخص')
+        }).catch(err => {
+          return err.toString();
+        })
+      },
       getProperty(item = [], path = '', alias = '-') {
         return _.get(item, path, alias)
       },
