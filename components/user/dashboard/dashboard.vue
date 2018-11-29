@@ -10,24 +10,18 @@
           </v-card-title>
           <v-progress-linear v-if="loader" :indeterminate="true"/>
           <v-card-text>
-            <v-chip color="info" text-color="white">
+            <v-chip color="success" text-color="white">
               کل آگهی ها
-              <v-avatar class="info darken-4">۲۳</v-avatar>
+              <v-avatar class="success darken-4">{{totalAdverts}}</v-avatar>
             </v-chip>
             <v-chip color="success" text-color="white">
-              آگهی های تایید شده
-              <v-avatar class="success darken-4">۲۰</v-avatar>
-            </v-chip>
-            <v-chip color="orange" text-color="white">
               تیکت ها
-
-              <v-avatar class="orange darken-4">۱۰</v-avatar>
+              <v-avatar class="success darken-4">{{totalTickets}}</v-avatar>
             </v-chip>
-            <v-chip color="danger" text-color="white">
+            <v-chip color="success" text-color="white">
               مشاوره ها
-              <v-avatar class="danger darken-4">۴۲</v-avatar>
+              <v-avatar class="success darken-4">{{totalCouncils}}</v-avatar>
             </v-chip>
-
           </v-card-text>
         </v-card>
         <v-card>
@@ -86,10 +80,14 @@
       return {
         loader: false,
         rawData: [],
-        rawAdverts: []
+        rawAdverts: [],
+        totalAdverts: '-',
+        totalTickets: '-',
+        totalCouncils: '-',
       }
     },
     computed: {
+
       links() {
         return [
           {title: 'ثبت وام', color: 'blue', link: '/adverts/loans/create', icon: 'note_add'},
@@ -117,6 +115,14 @@
           this.rawData = [];
           this.loader = false
         })
+
+      let statistics = '/user/statistics'
+      this.$axios.$get(statistics).then(res => {
+        this.totalAdverts = _.get(res, 'data.adverts', '-')
+        this.totalTickets = _.get(res, 'data.tickets', '-')
+        this.totalCouncils = _.get(res, 'data.councils', '-')
+      })
+
     }
   }
 </script>
