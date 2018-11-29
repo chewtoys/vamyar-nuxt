@@ -7,9 +7,9 @@
             <h3>اشتراک ها</h3>
           </v-card-title>
           <v-card-text>
-            <div v-html="">
-            </div>
-            <v-layout row wrap>
+            <div v-html="settings('pages.aboutUsText')"></div>
+
+            <v-layout class="my-5" row wrap>
               <v-flex class="text-xs-center" sm="4" xs="12" lg="3" v-for="item in plans" :key="item.id">
                 <v-card :raised="!!item.special" hover :to="`/user/premium/${item.id}`" ripple :flat="!item.special"
                         :color="item.special ? 'warning lighten-4' : 'grey lighten-4'">
@@ -18,19 +18,20 @@
                   </v-card-title>
                   <v-card-text>
                     <div class="py-2" v-html="item.text"></div>
-                    <v-chip  text-color="black" class="my-1 text-center" label outline small><strong>{{getPeriod(item.period)}}</strong></v-chip>
-                    <section class="py-1">
-                      <div class="full my-1" v-for="property in item.data" :key="property.title">
+                    <v-chip text-color="black" :color="item.special ? 'warning lighten-4' : 'grey lighten-3'" class="my-1 text-center" >
+                      <strong>{{getPeriod(item.period)}}</strong></v-chip>
+                    <section class="my-3">
+                      <div class="full my-2" v-for="property in item.data" :key="property.title">
                         <div>
-                          <small v-if="property.title">{{property.title}}</small>
+                          <small class="grey--text" v-if="property.title">{{property.title}}</small>
                         </div>
-                        <div><span v-if="property.desc" v-html="property.desc"></span></div>
+                        <div><span class="grey--text text--darken-3"  v-if="property.desc" v-html="property.desc"></span></div>
                       </div>
                     </section>
-                    <div class="py-2" v-html="getPrice(item.price)"></div>
+                    <div class="pt-2" v-html="getPrice(item.price)"></div>
                   </v-card-text>
                   <v-card-actions>
-                    <v-btn block :color="item.special ? 'danger' : 'success'" >
+                    <v-btn block :color="item.special ? 'danger' : 'success'">
                       <v-icon v-if="item.special" color="warning" class="px-1">star</v-icon>
                       <v-icon v-else color="white" class="px-1">verified_user</v-icon>
                       فعال سازی
@@ -120,6 +121,9 @@
     }
     ,
     methods: {
+      settings(key) {
+        return _.get(this.$store.state.settings.data, key, '')
+      },
       getPrice(val) {
         return Helper.priceFormat(val);
       },

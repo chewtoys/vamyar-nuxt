@@ -171,7 +171,7 @@
             />
             <Editor
               validate="required"
-              v-model="educationText"
+              v-model="addAdvertHelpText"
               :error-messages="errors.collect('addAdvertHelpText')"
               box
               label="متن صفحه‌ي آموزش قرار دادن آگهی"
@@ -180,20 +180,20 @@
             />
             <Editor
               validate="required"
-              v-model="educationText"
-              :error-messages="errors.collect('addAdvertHelpText')"
+              v-model="premiumText"
+              :error-messages="errors.collect('premiumText')"
               box
-              label="متن صفحه‌ي اشتراک ها در سایت"
-              data-vv-name="addAdvertHelpText"
+              label="توضیحات در صفحه ی ارتقا حساب"
+              data-vv-name="premiumText"
               auto-grow
             />
             <Editor
               validate="required"
-              v-model="educationText"
-              :error-messages="errors.collect('addAdvertHelpText')"
+              v-model="panelPremiumText"
+              :error-messages="errors.collect('panelPremiumText')"
               box
               label="متن صفحه‌ي اشتراک ها در پنل کاربری"
-              data-vv-name="addAdvertHelpText"
+              data-vv-name="panelPremiumText"
               auto-grow
             />
 
@@ -259,15 +259,7 @@
           <v-tab-item
             value="tab-5"
           >
-            <Editor
-              validate="required"
-              v-model="premiumText"
-              :error-messages="errors.collect('premiumText')"
-              box
-              label="توضیحات در صفحه ی ارتقا حساب"
-              data-vv-name="premiumText"
-              auto-grow
-            />
+
           </v-tab-item>
 
         </v-tabs-items>
@@ -336,12 +328,15 @@
         subHeaderText: '',
         closedSiteText: '',
         noticeOnAdvertShow: '',
-        premiumText: '',
+
         noticeBeforeCreateAdvert: '',
         isImageAllowed: '',
         aboutUsText: '',
         contactUsText: '',
         contactUsTable: '',
+        premiumText: '',
+        addAdvertHelpText: '',
+        panelPremiumText: '',
         educationText: '',
         rulesText: '',
 
@@ -363,7 +358,9 @@
             headerText: 'متن هدر',
             subHeaderText: 'متن زیرهدر',
             closedSiteText: 'متن بسته بودن سایت',
+            addAdvertHelp: 'متن صفحه ی ارتقای حساب',
             premiumText: 'متن صفحه ی ارتقای حساب',
+            panelPremiumText: 'متن صفحه ی ارتقای حساب پنل کاربران',
             noticeOnAdvertShow: 'متن صفحه ی نمایش آگهی',
             noticeBeforeCreateAdvert: 'پیام قبل از ایجاد آگهی',
             isImageAllowed: 'امکان ثبت تصویر در آگهی',
