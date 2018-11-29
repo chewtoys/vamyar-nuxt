@@ -70,7 +70,8 @@
         benefits,
         loader: false,
         info,
-        form: ''
+        form: '',
+        plans: []
       }
     },
     computed: {
@@ -107,6 +108,10 @@
           this.$store.commit('snackbar/setSnack', err)
           this.loader = false;
         })
+      },
+      mounted() {
+        let plansMethod = '';
+        this.$axios.$get()
       },
       upgrade() {
         if (!this.isPremium) {
