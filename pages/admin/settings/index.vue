@@ -169,6 +169,33 @@
               data-vv-name="educationText"
               auto-grow
             />
+            <Editor
+              validate="required"
+              v-model="educationText"
+              :error-messages="errors.collect('addAdvertHelpText')"
+              box
+              label="متن صفحه‌ي آموزش قرار دادن آگهی"
+              data-vv-name="addAdvertHelpText"
+              auto-grow
+            />
+            <Editor
+              validate="required"
+              v-model="educationText"
+              :error-messages="errors.collect('addAdvertHelpText')"
+              box
+              label="متن صفحه‌ي اشتراک ها در سایت"
+              data-vv-name="addAdvertHelpText"
+              auto-grow
+            />
+            <Editor
+              validate="required"
+              v-model="educationText"
+              :error-messages="errors.collect('addAdvertHelpText')"
+              box
+              label="متن صفحه‌ي اشتراک ها در پنل کاربری"
+              data-vv-name="addAdvertHelpText"
+              auto-grow
+            />
 
           </v-tab-item>
           <v-tab-item
