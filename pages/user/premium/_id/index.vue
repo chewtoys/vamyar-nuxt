@@ -71,13 +71,13 @@
   import Helper from '~/assets/js/helper'
 
   const page_title = "فعال سازی اشتراک ",
-    breadcrumb = "فعال سازی,",
+    breadcrumb = "فعال سازی",
     plansMethod = '/subscriptions',
     subscriptionMethod = '/user/subscriptions',
     info = {
       title: "تایید فعال سازی اشتراک"
     }
-    
+
   export default {
     $_veeValidate: {
       validator: "new"
