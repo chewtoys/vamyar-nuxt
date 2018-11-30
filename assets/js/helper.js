@@ -196,10 +196,10 @@ const Helper = {
     return _.get(CONSTANTS.rawHeaders, `${type}`, [{text: 'id'}]);
   }
   ,
-  getAdminRawHeaders(type) {
-    return _.get(CONSTANTS.adminRawHeaders, `${type}`, [{text: 'id'}]);
-  }
-  ,
+  //getAdminRawHeaders(type) {
+  //  return _.get(CONSTANTS.adminRawHeaders, `${type}`, [{text: 'id'}]);
+  //}
+  //,
   getGeneralSettingsGroup() {
     return CONSTANTS.GENERAL_SETTINGS;
   }

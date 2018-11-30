@@ -127,7 +127,6 @@
     councilRequestTypes = '/councilRequestTypes',
     cityMethod = '/cities?number=3000',
     headers = [
-      {text: 'شناسه', value: 'id', align: 'right'},
       {text: 'شهر', value: 'city', align: 'right'},
       {text: 'شغل', value: 'job', align: 'right'},
       {text: 'نوع', sortable: false, type: 'requestType', align: 'right'},

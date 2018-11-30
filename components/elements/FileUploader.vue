@@ -107,9 +107,9 @@
               )
             }.bind(this)
           })
-          .then(({data}) => {
+          .then((res) => {
             let {url} = data
-            this.url = url
+            this.url = `${_.get(res, 'data.url', '-')}`
             this.hasFile = false
             this.file = null
             this.fileLoading = false

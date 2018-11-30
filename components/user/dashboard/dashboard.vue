@@ -11,10 +11,10 @@
           <v-progress-linear v-if="loader" :indeterminate="true"/>
           <v-card-text>
             <v-card v-if="!isUserPremium" flat>
-              <v-alert type="warning">شما اشتراک فعالی ندارید!</v-alert>
-              <v-alert type="info"><p>برای تهیه ی اشتراک از لینک زیر اقدام نمایید.</p>
+              <v-alert :value="!isUserPremium" type="warning">شما اشتراک فعالی ندارید!</v-alert>
+              <v-alert :value="!isUserPremium" type="info"><p>برای تهیه ی اشتراک از لینک زیر اقدام نمایید.</p>
                 <div>
-                  <v-btn to="/user/premium">اشتراک ها</v-btn>
+                  <v-btn to="/user/premium">مشاهده ی اشتراک ها</v-btn>
                 </div>
               </v-alert>
             </v-card>
@@ -34,7 +34,6 @@
               آمار شما
             </v-subheader>
           </v-card-title>
-          <v-progress-linear v-if="loader" :indeterminate="true"/>
           <v-card-text>
             <v-chip color="success" text-color="white">
               کل آگهی ها
@@ -170,7 +169,6 @@
       }
     },
     computed: {
-
       isUserPremium() {
         return !!_.get(this.$store.state, 'user.hasSubscription', false);
       },

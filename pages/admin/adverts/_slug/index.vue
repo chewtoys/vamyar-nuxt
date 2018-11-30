@@ -65,17 +65,102 @@
             <template v-if="type.type=='finances'">
               <td class="text-xs-left">{{ getPrice(props.item.maxAmount) }}</td>
             </template>
+            <template v-if="type.type=='financeRequests'">
+              <td class="text-xs-left">{{ getPrice(props.item.amount) }}</td>
+              <td class="text-xs-left">{{ props.item.job }}</td>
+            </template>
             <template v-if="type.type=='coSigners'">
               <td class="text-xs-left">{{ getType(props.item.type) }}</td>
               <td class="text-xs-left">{{ getGuaranteeTypes(props.item.guaranteeTypes) }}</td>
             </template>
+            <template v-if="type.type=='coSignerRequests'">
+              <td class="text-xs-left">{{ getType(props.item.type) }}</td>
+              <td class="text-xs-left">{{ getGuaranteeTypes(props.item.guaranteeTypes) }}</td>
+              <td class="text-xs-left">{{ props.item.interestRate }}</td>
+              <td class="text-xs-left">{{ props.item.bank }}</td>
+            </template>
             <td class="text-xs-right">
-              {{ tradeStatus(props.item.advert.id) }}
-              <v-btn @click="chageTradeStatus(props.item.advert.id,0)">باز</v-btn>
-              <v-btn @click="chageTradeStatus(props.item.advert.id,1)">درحال معامله</v-btn>
-              <v-btn @click="chageTradeStatus(props.item.advert.id,2)">بسته</v-btn>
+              <v-menu offset-y>
+                <v-btn
+                  slot="activator"
+                  color="primary"
+                  outline
+                >
+                  {{ tradeStatus(props.item) }}
+                </v-btn>
+                <v-list>
+                  <v-list-tile
+                    @click="changeTradeStatus(props.item.advert.id,0)"
+                  >
+                    <v-list-tile-title>باز</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+                <v-list>
+                  <v-list-tile
+                    @click="changeTradeStatus(props.item.advert.id,1)"
+                  >
+                    <v-list-tile-title>در حال معامله</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+                <v-list>
+                  <v-list-tile
+                    @click="changeTradeStatus(props.item.advert.id,2)"
+                  >
+                    <v-list-tile-title>بسته شده</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+              </v-menu>
+
+              <v-menu offset-y>
+                <v-btn
+                  slot="activator"
+                  color="primary"
+                  outline
+                >
+                  {{ instant(props.item) }}
+                </v-btn>
+                <v-list>
+                  <v-list-tile
+                    @click="changeInstant(props.item.advert.id,1,props.item)"
+                  >
+                    <v-list-tile-title>فوری</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+                <v-list>
+                  <v-list-tile
+                    @click="changeInstant(props.item.advert.id,0,props.item)"
+                  >
+                    <v-list-tile-title>غیر فوری</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+              </v-menu>
+              <v-menu offset-y>
+                <v-btn
+                  slot="activator"
+                  color="primary"
+                  outline
+                >
+                  {{ verified(props.item) }}
+                </v-btn>
+                <v-list>
+                  <v-list-tile
+                    @click="changeVerified(props.item.advert.id,1,props.item)"
+                  >
+                    <v-list-tile-title>تایید شده</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+                <v-list>
+                  <v-list-tile
+                    @click="changeVerified(props.item.advert.id,0,props.item)"
+                  >
+                    <v-list-tile-title>تایید نشده</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+
+              </v-menu>
+
             </td>
-            <td class="text-xs-left">
+            <td>
               <a title="مشاهده" :href=" uri + '/show/' + props.item.id" class="mx-1">
                 <v-icon
                   small
@@ -163,7 +248,12 @@
         return `/admin/adverts/${this.slug}`;
       },
       headers() {
-        return Helper.getAdminRawHeaders(this.type.type);
+        let id = {text: "شناسه", align: "right", value: 'id'};
+        let owner = {text: "ثبت شده توسط", align: "right", value: 'advert.user.id'};
+        let result = Helper.getRawHeaders(this.type.type);
+        //result.unshift(owner);
+        //result.unshift(id);
+        return result;
       },
       info() {
         return {
@@ -235,6 +325,31 @@
       },
       getProperty(item = [], path = '', alias = '-') {
         return _.get(item, path, alias)
+      },
+      verified(item) {
+        return item.verified ? 'تایید شده' : 'تایید نشده';
+      },
+      tradeStatus(item) {
+        let list = this.$store.state.settings.adverts.tradeStatusList;
+        return list[item.tradeStaus || 0];
+      },
+
+      instant(item) {
+        return !!_.get(item, 'advert.instant', _.get(item, 'instant', false)) ? 'فوری' : 'غیر فوری'
+      },
+      changeInstant(id, val) {
+        let method = `/admin/${this.formType.type}/${id}`
+        this.$axios.$put(method, {instant: val}).then((res) => {
+          item.instant = val;
+        }).catch(err => {
+        })
+      },
+      changeVerified(id, val, item) {
+        let method = `/admin/${this.formType.type}/${id}`
+        this.$axios.$put(method, {verified: val}).then((res) => {
+          item.verified = val;
+        }).catch(err => {
+        })
       },
       sender(props) {
         return _.get(props.item, 'advert.user.details.firstName',

@@ -62,9 +62,19 @@
             <template v-if="type.type=='finances'">
               <td class="text-xs-left">{{ getPrice(props.item.maxAmount) }}</td>
             </template>
+            <template v-if="type.type=='financeRequests'">
+              <td class="text-xs-left">{{ getPrice(props.item.amount) }}</td>
+              <td class="text-xs-left">{{ props.item.job }}</td>
+            </template>
             <template v-if="type.type=='coSigners'">
               <td class="text-xs-left">{{ getType(props.item.type) }}</td>
               <td class="text-xs-left">{{ getGuaranteeTypes(props.item.guaranteeTypes) }}</td>
+            </template>
+            <template v-if="type.type=='coSignerRequests'">
+              <td class="text-xs-left">{{ getType(props.item.type) }}</td>
+              <td class="text-xs-left">{{ getGuaranteeTypes(props.item.guaranteeTypes) }}</td>
+              <td class="text-xs-left">{{ props.item.interestRate }}</td>
+              <td class="text-xs-left">{{ props.item.bank }}</td>
             </template>
             <td class="text-xs-right">
               <v-menu offset-y>
@@ -276,7 +286,6 @@
       changeInstant(id, val) {
         let method = `/user/${this.formType.type}/${id}`
         this.$axios.$put(method, {instant: val}).then((res) => {
-
         }).catch(err => {
         })
       },

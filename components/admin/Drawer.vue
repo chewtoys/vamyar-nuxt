@@ -26,7 +26,7 @@
         <v-list-tile-action>
           <v-icon></v-icon>
         </v-list-tile-action>
-        <v-list-tile-title class="text-justify rtl" v-text="item.title"/>
+        <v-list-tile-title class="text-justify rtl" v-text="item.siteLink"/>
       </v-list-tile>
       <v-divider/>
       <v-list-group
