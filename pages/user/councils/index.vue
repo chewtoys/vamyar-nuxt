@@ -125,17 +125,16 @@
     indexPath = '/user/councils',
     createPath = '/user/councils/create',
     councilRequestTypes = '/councilRequestTypes',
-    cityMethod = '/cities?number=3000'
-
-  headers = [
-    {text: 'شناسه', value: 'id', align: 'right'},
-    {text: 'شهر', value: 'city', align: 'right'},
-    {text: 'شغل', value: 'job', align: 'right'},
-    {text: 'نوع', sortable: false, type: 'requestType', align: 'right'},
-    {text: 'متن درخواست', value: 'status', sortable: true, align: 'right'},
-    {text: 'تاریخ ثبت', value: 'jUpdatedAt', sortable: true, align: 'right'},
-    {text: 'عملیات', sortable: false, align: 'left'},
-  ]
+    cityMethod = '/cities?number=3000',
+    headers = [
+      {text: 'شناسه', value: 'id', align: 'right'},
+      {text: 'شهر', value: 'city', align: 'right'},
+      {text: 'شغل', value: 'job', align: 'right'},
+      {text: 'نوع', sortable: false, type: 'requestType', align: 'right'},
+      {text: 'متن درخواست', value: 'status', sortable: true, align: 'right'},
+      {text: 'تاریخ ثبت', value: 'jUpdatedAt', sortable: true, align: 'right'},
+      {text: 'عملیات', sortable: false, align: 'left'},
+    ]
 
   export default {
     meta: {
@@ -143,7 +142,6 @@
       breadcrumb: breadcrumb
     },
     data: () => ({
-      headers,
       data: [],
       totalData: 0,
       loading: true,
