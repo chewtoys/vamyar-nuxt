@@ -67,12 +67,64 @@
               <td class="text-xs-left">{{ getGuaranteeTypes(props.item.guaranteeTypes) }}</td>
             </template>
             <td class="text-xs-right">
-              {{ tradeStatus(props.item) }}
-              <v-btn @click="chageTradeStatus(props.item.advert.id,0)">باز</v-btn>
-              <v-btn @click="chageTradeStatus(props.item.advert.id,1)">درحال معامله</v-btn>
-              <v-btn @click="chageTradeStatus(props.item.advert.id,2)">بسته</v-btn>
+              <v-menu offset-y>
+                <v-btn
+                  slot="activator"
+                  color="primary"
+                  outline
+                >
+                  {{ tradeStatus(props.item) }}
+                </v-btn>
+                <v-list>
+                  <v-list-tile
+                    @click="changeTradeStatus(props.item.advert.id,0)"
+                  >
+                    <v-list-tile-title>باز</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+                <v-list>
+                  <v-list-tile
+                    @click="changeTradeStatus(props.item.advert.id,1)"
+                  >
+                    <v-list-tile-title>در حال معامله</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+                <v-list>
+                  <v-list-tile
+                    @click="changeTradeStatus(props.item.advert.id,2)"
+                  >
+                    <v-list-tile-title>بسته شده</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+              </v-menu>
+
+              <v-menu offset-y>
+                <v-btn
+                  slot="activator"
+                  color="primary"
+                  outline
+                >
+                  {{ instant(props.item) }}
+                </v-btn>
+                <v-list>
+                  <v-list-tile
+                    @click="changeInstant(props.item.advert.id,1)"
+                  >
+                    <v-list-tile-title>فوری</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+                <v-list>
+                  <v-list-tile
+                    @click="changeInstant(props.item.advert.id,0)"
+                  >
+                    <v-list-tile-title>غیر فوری</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+
+              </v-menu>
+              {{ verified(props.item) }}
             </td>
-            <td class="text-xs-left">
+            <td>
               <a title="مشاهده" :href=" uri + '/show/' + props.item.id" class="mx-1">
                 <v-icon
                   small
@@ -202,13 +254,15 @@
         }
       }
     },
+
     mounted() {
       return {
         rawData: this.data || []
       }
     },
     methods: {
-      chageTradeStatus(id, type) {
+
+      changeTradeStatus(id, type) {
         let method = `/user/adverts/${id}/changeTradeStatus/${type}`
         this.$axios.$put(method).then((res) => {
 
@@ -216,12 +270,25 @@
 
         })
       },
+      instant(item) {
+        return !!_.get(item, 'advert.instant', _.get(item, 'instant', false)) ? 'فوری' : 'غیر فوری'
+      },
+      changeInstant(id, val) {
+        let method = `/user/${this.formType.type}/${id}`
+        this.$axios.$put(method, {instant: val}).then((res) => {
+
+        }).catch(err => {
+        })
+      },
       getPrice(val) {
         return Helper.priceFormat(val)
       },
+      verified(item) {
+        return item.verified ? 'تایید شده' : 'تایید نشده';
+      },
       tradeStatus(item) {
         let list = this.$store.state.settings.adverts.tradeStatusList;
-        return list[item.tradeStaus];
+        return list[item.tradeStaus || 0];
       }
       , getGuaranteeTypes(key) {
         let items = [];

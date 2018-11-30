@@ -8,10 +8,11 @@
           <v-icon class="px-1 grey-text pb-1 font-19">arrow_left</v-icon>
           اشتراک حساب
         </h1>
-        <v-card v-if="!isPremium" flat>
+        <v-card v-if="!isUserPremium" flat>
           <v-alert type="warning">شما اشتراک فعالی ندارید!</v-alert>
+          <v-alert type="info">برای تهیه ی اشتراک از زیر اقدام نمایید.</v-alert>
         </v-card>
-        <v-card v-if="!isPremium" flat>
+        <v-card flat>
           <v-layout row wrap>
             <v-flex class="text-xs-center" sm="4" xs="12" lg="3" v-for="item in plans" :key="item.id">
               <v-card :raised="!!item.special" hover :to="`/user/premium/${item.id}`" ripple :flat="!item.special"
@@ -124,14 +125,11 @@
         return _.get(this.$store.state, 'user', [])
       },
       isUserPremium() {
-        return !!_.get(this.$store.state, 'user.info.details', false)
+        return !!_.get(this.$store.state, 'user.hasSubscription', false);
       },
       redirectPath() {
         let path = _.get(this.$route, 'query.redirect', '');
         return decodeURI(path || "/user");
-      },
-      isPremium() {
-        return this.$store.state.user.hasSubscription;
       }
     },
     methods: {

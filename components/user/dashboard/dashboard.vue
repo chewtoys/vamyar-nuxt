@@ -5,7 +5,33 @@
         <v-card>
           <v-card-title>
             <v-subheader>
-              پروفایل شما
+              وضعیت حساب
+            </v-subheader>
+          </v-card-title>
+          <v-progress-linear v-if="loader" :indeterminate="true"/>
+          <v-card-text>
+            <v-card v-if="!isUserPremium" flat>
+              <v-alert type="warning">شما اشتراک فعالی ندارید!</v-alert>
+              <v-alert type="info"><p>برای تهیه ی اشتراک از لینک زیر اقدام نمایید.</p>
+                <div>
+                  <v-btn to="/user/premium">اشتراک ها</v-btn>
+                </div>
+              </v-alert>
+            </v-card>
+            <v-card v-else flat>
+              <v-alert type="success">حساب شما دارای اشتراک فعال می باشد.</v-alert>
+              <v-alert type="info"><p>برای تمدید اشتراک از لینک زیر اقدام نمایید.</p>
+                <div>
+                  <v-btn to="/user/premium">اشتراک ها</v-btn>
+                </div>
+              </v-alert>
+            </v-card>
+          </v-card-text>
+        </v-card>
+        <v-card>
+          <v-card-title>
+            <v-subheader>
+              آمار شما
             </v-subheader>
           </v-card-title>
           <v-progress-linear v-if="loader" :indeterminate="true"/>
@@ -30,7 +56,6 @@
               دسترسی سریع
             </v-subheader>
           </v-card-title>
-          <v-progress-linear v-if="loader" :indeterminate="true"/>
           <v-card-text>
             <v-layout row wrap>
               <v-flex xs6 sm4 lg2 v-for="item in links" :key="item.id">
@@ -57,14 +82,13 @@
               آخرین آگهی های شما
             </v-subheader>
           </v-card-title>
-          <v-progress-linear v-if="loader" :indeterminate="true"/>
           <v-card-text>
             <v-expansion-panel focusable>
               <v-expansion-panel-content
-                v-for="item in adverts"
-                :key="item.id"
+                v-for="(item,i) in adverts"
+                :key="i"
               >
-                <div slot="header" class="text-right">{{item.title}}</div>
+                <div slot="header" class="text-right">{{item.title || '-' }} {{item.instant}}</div>
                 <v-card>
                   <v-card-text class="grey lighten-4 text-right">
                     <v-layout row wrap>
@@ -73,11 +97,19 @@
                           <tbody class="oddTable">
                           <tr>
                             <td>نوع آگهی</td>
-                            <td>{{item.typeName}}</td>
+                            <td>{{item.type || '-'}}</td>
+                          </tr>
+                          <tr>
+                            <td>وضعیت</td>
+                            <td>{{item.tradeStatus || '-'}}</td>
+                          </tr>
+                          <tr>
+                            <td>وضعیت بررسی</td>
+                            <td>{{item.verified || '-'}}</td>
                           </tr>
                           <tr>
                             <td>تاریخ</td>
-                            <td>{{item.date}}</td>
+                            <td>{{item.jCreatedAt || '-'}}</td>
                           </tr>
                           </tbody>
                         </table>
@@ -87,7 +119,8 @@
                           <tbody>
                           <tr>
                             <td>
-                              <v-btn color="success" :to="`/user/adverts/${item.advertType}s/show/${item.advert.id}`">
+                              <v-btn color="success"
+                                     :to="`/user/adverts/${item.advertType }s/show/${item.advertableId}`">
                                 <v-icon class="px-1">navigate_before</v-icon>
                                 مشاهده
                               </v-btn>
@@ -95,7 +128,8 @@
                           </tr>
                           <tr>
                             <td>
-                              <v-btn color="warning" :to="`/user/adverts/${item.advertType}s/edit/${item.advert.id}`">
+                              <v-btn color="warning"
+                                     :to="`/user/adverts/${item.advertType}s/edit/${item.advertableId}`">
                                 <v-icon class="px-1">edit</v-icon>
                                 ویرایش
                               </v-btn>
@@ -118,7 +152,11 @@
 <script>
   import Helper from '~/assets/js/helper'
 
-  const path = "/user/adverts"
+  const path = "/user/adverts",
+    cityMethod = '/cities?number=3000',
+    guaranteeMethod = '/guaranteeTypes',
+    loanTypeMethod = '/loanTypes'
+
   export default {
     components: {},
     data() {
@@ -133,6 +171,9 @@
     },
     computed: {
 
+      isUserPremium() {
+        return !!_.get(this.$store.state, 'user.hasSubscription', false);
+      },
       links() {
         return [
           {title: 'ثبت وام', color: 'blue', link: '/adverts/loans/create', icon: 'note_add'},
@@ -147,22 +188,51 @@
         let adverts = _.get(this, 'rawData', []);
         let final = [];
         _.forEach(adverts, (item, key) => {
+
           let pushyItem = {};
+          //let pushyItem = Helper.computeAdvertData(item, this.$store, this.$axios);
+
+          let statusList = _.get(this.$store.state, 'settings.adverts.tradeStatusList', '[]');
           pushyItem.id = _.get(item, 'id', 'بدون عنوان');
+          pushyItem.advertableId = _.get(item, 'advertableId', '');
           pushyItem.advert = _.get(item, 'advert', []);
           pushyItem.title = _.get(item, 'title', 'بدون عنوان');
-          pushyItem.date = _.get(item, 'jCreatedAt', '-');
+          pushyItem.instant = _.get(item, 'instant', false) ? 'فوری' : '';
+          pushyItem.tradeStatus = statusList[_.get(item, 'tradeStatus', 0)];
+          pushyItem.verified = _.get(item, 'verified', false) ? 'تایید شده' : 'هنوز تایید نشده';
+          pushyItem.jCreatedAt = _.get(item, 'jCreatedAt', '-');
           pushyItem.advertType = _.get(item, 'advertableType', _.get(item, 'advert.advertableType', ''));
-          pushyItem.typeName = Helper.getAdvertType(item);
+          pushyItem.type = Helper.getAdvertType(item);
+
           final.push(pushyItem)
         })
+        //console.log({final})
         return final;
+      }
+    },
+    async asyncData({params, store, $axios, error}) {
+      try {
+        // city
+        let cityData = await $axios.$get(cityMethod);
+        store.commit('city/setAndProcessData', cityData.data || []);
+
+        // guarantee
+        let guaranteeData = await $axios.$get(guaranteeMethod);
+        store.commit('guaranteeType/setAndProcessData', guaranteeData.data || []);
+
+        // loan types
+        let loanTypeData = await $axios.$get(loanTypeMethod);
+        store.commit('loanType/setAndProcessData', loanTypeData.data || []);
+
+      } catch (err) {
+        //console.log('error', error)
+        //return error({statusCode: 404, message: 'آگهی یافت نشد :('})
       }
     },
     mounted() {
       this.loader = true
       this.$axios
-        .$get(path, {params: {inclue: 'advertable', number: 10, orderBy: 'id:desc'}})
+        .$get(path, {params: {include: 'advertable,city,user.details', number: 5, orderBy: 'id:desc'}})
         .then(response => {
           this.rawData = response.data;
           this.loader = false

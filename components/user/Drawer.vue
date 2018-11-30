@@ -15,17 +15,17 @@
       <v-divider/>
 
       <v-list-tile>
-        <v-list-tile-title class="text-justify rtl">آگهی</v-list-tile-title>
+        <v-list-tile-title class="text-justify rtl">آگهی های من</v-list-tile-title>
       </v-list-tile>
       <v-list-tile
         v-for="item in advertTypes"
-        :key="item.title"
+        :key="item.type"
         :to="`/user/adverts/${item.alias}`"
       >
         <v-list-tile-action>
-          <v-icon></v-icon>
+          <v-icon>inbox</v-icon>
         </v-list-tile-action>
-        <v-list-tile-title class="text-justify rtl" v-text="item.title"/>
+        <v-list-tile-title class="text-justify rtl" v-text="item.panelLink"/>
       </v-list-tile>
       <v-divider/>
       <v-list-group
@@ -65,8 +65,9 @@
         {title: "خروج", icon: "exit_to_app", to: "/user/logout"}
       ],
       panel: [
-        {title: "تیکت ها", icon: "inbox", to: "/user/tickets"},
-        {title: "کل فاکتورها", icon: "inbox", to: "/user/factors"}
+        {title: "درخواست های پشتیبانی", icon: "inbox", to: "/user/tickets"},
+        {title: "اشتراک من", icon: "inbox", to: "/user/premium"},
+        {title: "مشاوره ها", icon: "inbox", to: "/user/councils"},
         //{title: 'صندوق پیام ها', icon: 'inbox', to: '/user/settings'},
       ],
       access: [

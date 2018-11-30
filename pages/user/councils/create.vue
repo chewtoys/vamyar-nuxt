@@ -16,7 +16,7 @@
               </v-btn>
               <v-btn :loading="submit_loader" outline color="accent" round @click="processSubmit">
                 <v-icon class="px-1">save</v-icon>
-                ذخیره
+                تایید
               </v-btn>
             </v-toolbar>
           </div>
@@ -28,44 +28,44 @@
           <form>
             <v-text-field
               v-validate="'required'"
-              v-model="title"
-              :error-messages="errors.collect('title')"
+              v-model="job"
+              :error-messages="errors.collect('job')"
               box
-              data-vv-name="title"
-              label="عنوان"
+              data-vv-name="job"
+              label="شغل"
             />
             <v-autocomplete
               v-validate="'required'"
-              v-model="ticketCategoryName"
-              :error-messages="errors.collect('ticketCategory')"
+              v-model="requestTypeName"
+              :error-messages="errors.collect('requestType')"
               box
-              label="دسته بندی"
-              data-vv-name="ticketCategory"
-              :items="ticketCategoryList"
+              label="نوع درخواست"
+              data-vv-name="requestType"
+              :items="requestTypeList"
               persistent-hint
             ></v-autocomplete>
             <v-autocomplete
-              v-validate="'required'"
-              v-model="priorityName"
-              :error-messages="errors.collect('priority')"
+              v-model="cityName"
+              :error-messages="errors.collect('city')"
               box
-              label="اهمیت"
-              data-vv-name="priority"
-              :items="priorityList"
+              label="شهر"
+              data-vv-name="city"
+              :items="cities"
               persistent-hint
-            ></v-autocomplete>
+            />
             <v-textarea
-              v-model="message"
-              :error-messages="errors.collect('message')"
+              v-model="requestText"
+              :error-messages="errors.collect('requestText')"
               box
-              label="پیام"
-              data-vv-name="message"
+              label="متن درخواست"
+              data-vv-name="requestText"
               auto-grow
             />
             <v-btn :loading="submit_loader" outline color="accent" round @click="processSubmit">
               <v-icon class="px-1">save</v-icon>
-              ذخیره
+              تایید
             </v-btn>
+            <div v-html="html"></div>
           </form>
         </v-flex>
       </v-layout>
@@ -75,11 +75,12 @@
 <script>
   import Helper from '~/assets/js/helper'
 
-  const page_title = 'ثبت تیکت جدید',
-    breadcrumb = 'تیکت جدید',
-    indexPath = '/user/tickets',
-    createPath = '/user/tickets',
-    ticketCategoriesMethod = '/ticketCategories'
+  const page_title = 'درخواست مشاوره جدید',
+    breadcrumb = 'درخواست جدید',
+    indexPath = '/user/councils',
+    createPath = '/user/councils',
+    councilRequestTypes = '/councilRequestTypes',
+    cityMethod = '/cities?number=3000'
 
   export default {
     $_veeValidate: {
@@ -88,37 +89,34 @@
     ,
     meta: {
       title: page_title,
-      breadcrumb: breadcrumb
-    },
+      breadcrumb:
+      breadcrumb
+    }
+    ,
     data: () => ({
       page_title,
       // ticket
       title: null,
-      message: "",
-      ticketCategoryName: '',
-      priorityName:0,
+      html: "",
+      job: "",
+      cityName: null,
+      requestTypeList: [],
+      cities: [],
+      requestText: "",
+      requestTypeName: '',
+
 
       // validator dictionary
       dictionary: {
         attributes: {
-          title: "عنوان تیکت",
-          message: "پیام",
-          priority: "فوریت",
-          ticketCategory: 'دسته بندی تیکت'
+          job: "شغل",
+          city: "شهر",
+          requestText: "متن درخواست",
+          requestType: 'نوع مشاوره '
           // custom attributes
         }
       },
-      // info
-      info: {
-        title: "لطفا قبل از پر کردن فرم نکات زیر را مد نظر داشته باشید:",
-        text:
-          "لورم ایپسوم یا طرح‌نما (به انگلیسی: Lorem ipsum) به متنی آزمایشی و بی‌معنی در صنعت چاپ، صفحه‌آرایی و طراحی گرافیک گفته می‌شود. طراح گرافیک از این متن به عنوان عنصری از ترکیب بندی برای پر کردن صفحه و ارایه اولیه شکل ظاهری و کلی طرح سفارش گرفته شده استفاده می نماید، تا از نظر گرافیکی نشانگر چگونگی نوع و اندازه فونت و ظاهر متن باشد. معمولا طراحان گرافیک برای صفحه‌آرایی، نخست از متن‌های آزمایشی و بی‌معنی استفاده می‌کنند تا صرفا به مشتری یا صاحب کار خود نشان دهند که صفحه طراحی یا صفحه بندی شده بعد از اینکه متن در آن قرار گیرد چگونه به نظر می‌رسد و قلم‌ها و اندازه‌بندی‌ها چگونه در نظر گرفته شده‌است. از آنجایی که طراحان عموما نویسنده متن نیستند و وظیفه رعایت حق تکثیر متون را ندارند و در همان حال کار آنها به نوعی وابسته به متن می‌باشد آنها با استفاده از محتویات ساختگی، صفحه گرافیکی خود را صفحه‌آرایی می‌کنند تا مرحله طراحی و صفحه‌بندی را به پایان برند.",
-        heading: "عنوان متن"
-      },
       submit_loader: false,
-      snackbar: false,
-      snack_text: null,
-      snack_color: "info"
     }),
     computed:
       {
@@ -128,36 +126,42 @@
         ,
         createPath: function () {
           return createPath;
+        }
+        ,
+        city: function () {
+          let list = _.get(this.$store.state.city, 'data', []);
+          let index = _.findIndex(list, {'name': this.cityName});
+          if (index > 0) {
+            let item = list[index];
+            return _.get(item, 'id', 0);
+          }
+          return 0;
         },
-        ticketCategory() {
-          let list = this.$store.state.ticketCategory.data;
-          let index = _.findIndex(list, {'name': this.ticketCategoryName});
+        requestType() {
+          let list = this.$store.state.councilTypes.data;
+          let index = _.findIndex(list, {'title': this.requestTypeName});
           let item = list[index];
           return _.get(item, 'id', 0);
-        },
-        priority() {
-          let list = this.$store.state.settings.tickets.priorities;
-          let index = _.findIndex(list, {'name': this.priorityName});
-          let item = list[index];
-          return _.get(item, 'id', 0);
-        },
-        priorityList() {
-          return this.$store.state.settings.tickets.prioritiesArray;
         }
         ,
       }
     ,
     async asyncData({params, store, $axios}) {
       try {
+        // city
+        let cityData = await $axios.$get(cityMethod);
+        store.commit('city/setAndProcessData', cityData.data || []);
+
         // loan types
-        let ticketCategories = await
-          $axios.$get(ticketCategoriesMethod);
-        store.commit('ticketCategory/setAndProcessData', ticketCategories.data || []);
+        let councilTypes = await
+          $axios.$get(councilRequestTypes);
+        store.commit('councilTypes/setAndProcessData', councilTypes.data || []);
       } catch (error) {
         console.log('error', error)
       }
       return {
-        ticketCategoryList: _.get(store.state, 'ticketCategory.arrayList', []),
+        cities: _.get(store.state, 'city.arrayList', []),
+        requestTypeList: _.get(store.state, 'councilTypes.arrayList', []),
       }
     }
     ,
@@ -172,20 +176,22 @@
       ,
       sendForm() {
         let data = {
-          title: this.title,
-          message: this.message,
-          priority: this.priority,
-          category: this.ticketCategory
+          job: this.job,
+          city: this.city,
+          requestText: this.requestText,
+          requestType: this.requestType,
+          port: 'zarinpal'
         }
         this.$axios
           .$post(createPath, data)
-          .then(() => {
+          .then((res) => {
             let status = true
             if (status) {
               // show success and redirect
               this.toast("با موفقیت ثبت شد.", "success")
               this.submit_loader = false
-              this.$router.push(indexPath)
+              this.html = res;
+              //this.$router.push(indexPath)
             } else {
               this.toast(" خطایی رخ داد.", "warning")
               this.submit_loader = false

@@ -29,11 +29,11 @@
               :key="item.title"
               :to="item.link"
             >
-              <v-list-tile-title v-text="item.title"/>
+              <v-list-tile-title v-text="`لیست ${item.title}`"/>
             </v-list-tile>
           </v-list>
         </v-menu>
-        <v-btn to="/pages/plans" flat>تعرفه ها</v-btn>
+        <v-btn to="/pages/plans" flat>اشتراک ها</v-btn>
         <v-btn to="/news" flat>اخبار</v-btn>
         <v-btn to="/user/councils/create" flat>مشاوره</v-btn>
         <v-btn to="/user" flat>حساب من</v-btn>
@@ -126,6 +126,7 @@
 <script>
 
   import searchBar from '~/components/site/searchBar.vue'
+  import Helper from '~/assets/js/helper'
 
   export default {
     data() {
@@ -157,25 +158,29 @@
       items: function () {
         return [
           {title: "همه ی آگهی ها", hashtag: "all", link: "/categories"},
-          {title: "وام", hashtag: "loan", link: "/categories/loans"},
+          {title: _.get(Helper.getTypes('loans'), 'siteLink', 'وام ها'), hashtag: "loan", link: "/categories/loans"},
           {
-            title: "درخواست وام",
+            title: _.get(Helper.getTypes('loanRequests'), 'siteLink', 'درخواست های وام'),
             hashtag: "loan-request",
             link: "/categories/loan-requests"
           },
-          {title: "ضامن", hashtag: "co-signer", link: "/categories/co-signers"},
           {
-            title: "درخواست ضامن",
+            title: _.get(Helper.getTypes('coSigners'), 'siteLink', 'ضامن ها'),
+            hashtag: "co-signer",
+            link: "/categories/co-signers"
+          },
+          {
+            title: _.get(Helper.getTypes('coSignerRequests'), 'siteLink', 'درخواست ضامن'),
             hashtag: "co-signer-request",
             link: "/categories/co-signer-requests"
           },
           {
-            title: "سرمایه گذاری",
+            title: _.get(Helper.getTypes('finances'), 'siteLink', 'سرمایه گذارها'),
             hashtag: "finances",
             link: "/categories/finances"
           },
           {
-            title: "درخواست سرمایه گذاری",
+            title: _.get(Helper.getTypes('financeRequests'), 'siteLink', 'درخواست سرمایه'),
             hashtag: "finance-requests",
             link: "/categories/finance-requests"
           }

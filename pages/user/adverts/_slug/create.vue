@@ -343,6 +343,8 @@
     },
     mounted() {
       this.$validator.localize("fa", this.dictionary)
+      let mobile = _.get(this.$store, 'state.user.info.mobile');
+      _.set(this, 'mobile', mobile);
       // check if user has no access to create advert
       //let hasAccess = this.$store.state.accesses.loans ;
       let hasAccess = true

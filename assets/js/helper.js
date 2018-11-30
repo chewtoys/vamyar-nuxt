@@ -93,8 +93,95 @@ const Helper = {
     let advertType = _.get(item, 'advertableType', _.get(item, 'advert.advertableType', ''));
     //console.log({item,advertType})
     return _.get(_.find(types, {'advertType': advertType}), 'title', advertType || 'نامشخص');
-  }
-  ,
+  },
+  /*
+  @which = 'advert' || 'special' : advert for /adverts/~ routes
+   */
+  computeAdvertData: function (item, store, axios, which = 'advert') {
+
+    let types = CONSTANTS.advertTypes;
+    let advertableType = _.get(item, 'advertableType', _.get(item, 'advert.advertableType', ''));
+    let type = _.get(_.find(types, {'advertType': advertableType}), 'type', advertableType || 'loans');
+    let editable = this.getTypeFields(type, 'edit');
+    let properties = [];
+    let computed = {};
+    let commonFields = CONSTANTS.COMMON_FIELDS;
+    _.concat(commonFields, editable).forEach((field) => {
+      let name = _.get(field, 'name', field);
+      let title = _.get(field, 'title', field);
+      let path = _.get(item, _.get(field, 'path', _.get(field, 'name', name)), name);
+      if (which === 'advert') {
+        if (commonFields.includes(name)) {
+          path = _.get(field, 'path', _.get(field, 'name', name)).replace('advert.', '');
+        } else {
+          path = 'advertable.' + _.get(field, 'path', _.get(field, 'name', name)).replace('advert.', '');
+        }
+      }
+      let value = this.computeAdvertField(name, _.get(item, path, ''), store);
+      console.log({name, value});
+      _.set(computed, name, value)
+      properties.push({
+        title,
+        name,
+        value
+      });
+    })
+    //console.log({properties});
+    return this.properties = {base: item, computed, properties};
+
+  },
+  computeAdvertField(name, value, store) {
+    if (name === 'title') {
+      return value || ''
+    } else if (name === 'jCreatedAt') {
+      return value || ''
+    } else if (name === 'jUpdatedAt') {
+      return value || ''
+    } else if (name === 'image') {
+      return value || ''
+    } else if (name === 'description') {
+      return value || ''
+    } else if (name === 'id') {
+      return value || ''
+    } else if (name === 'text') {
+      return this.nl2br(value || '')
+    } else if (name === 'mobile') {
+      return value || ''
+    } else if (name === 'user') {
+      return value || ''
+    } else if (name === 'price') {
+      return this.priceFormat(value || '')
+    } else if (name === 'amount') {
+      return this.priceFormat(value || '')
+    } else if (name === 'maxAmount') {
+      return this.priceFormat(value || '')
+    } else if (name === 'job') {
+      return value || ''
+    } else if (name === 'interestRate') {
+      return value || ''
+    } else if (name === 'paybackTime') {
+      return value + ' ماه' || ''
+    } else if (name === 'bank') {
+      return (value || '')
+    } else if (name === 'loanType') {
+      let list = _.get(store, 'state.loanType.data', []);
+      let index = _.findIndex(list, {'id': value});
+      let item = _.get(list, [index], {});
+      return _.get(item, 'name', 'نامشخص');
+    } else if (name === 'city') {
+      if (!_.isNumber(value)) return value;
+      let list = _.get(store, 'state.city.data', []);
+      let index = _.findIndex(list, {'id': value});
+      let item = _.get(list, [index], {});
+      return _.get(item, 'name', '');
+    } else if (name === 'guaranteeTypes') {
+      let items = [];
+      _.forEach(value, (item) => {
+        items.push(item.name)
+      })
+      return _.join(items, ', ')
+    }
+  },
   limitStr(text = "", limit = 30, end = " ...") {
     return text.slice(0, limit) + end
   }
@@ -138,7 +225,7 @@ const Helper = {
       // common filters
 
       filter = _.pick(obj, ['cityIdValue', 'instantValue', 'titleValue']);
-      _.get(filter, 'instantValue', null ) === 1 ? _.set(filter, 'instantValue', 'true') : _.set(filter, 'instantValue', '');
+      _.get(filter, 'instantValue', null) === 1 ? _.set(filter, 'instantValue', 'true') : _.set(filter, 'instantValue', '');
     } else if (type === 'loans') {
       filter = _.pick(obj, ['loanTypeValue', 'amountValue', 'paybackTimeValue']);
     } else if (type === 'loanRequests') {

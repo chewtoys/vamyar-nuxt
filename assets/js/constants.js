@@ -1,5 +1,7 @@
 // data structure
-export const rawHeaders = {
+export const
+  COMMON_FIELDS = ['title', 'city', 'text', 'desc', 'advertType', 'verified', 'tradeStatus', 'mobile', 'instant', 'description'],
+  rawHeaders = {
     loans: [
       {text: "عنوان", align: "right", value: 'advert.title'},
       {text: "قیمت", value: "price", align: "left"},
@@ -148,13 +150,16 @@ export const rawHeaders = {
           title: 'نوع ضمانت'
         }, {
           name: 'amount',
-          title: 'مقدار وام'
+          title: 'میزان وام',
+          placeholder: 'ریال'
         }, {
           name: 'price',
-          title: 'مبلغ وام'
+          title: 'قیمت فروش',
+          placeholder: 'ریال'
         }, {
           name: 'paybackTime',
-          title: 'مدت بازپرداخت'
+          title: 'مدت بازپرداخت',
+          help: 'اگر خالی بگذارید به عنوان توافقی در نظر گرفته می شود.'
         }, {
           name: 'loanType',
           title: 'نوع وام'
@@ -187,16 +192,20 @@ export const rawHeaders = {
           path: 'guaranteeTypes' // ?
         }, {
           name: 'amount',
-          title: 'مقدار وام',
-          path: 'amount'
+          title: 'میزان وام',
+          path: 'amount',
+          placeholder: 'ریال'
         }, {
           name: 'price',
-          title: 'مبلغ وام',
-          path: 'price'
+          title: 'قیمت فروش',
+          path: 'price',
+          placeholder: 'ریال',
+          help: 'اگر خالی بگذارید به عنوان توافقی در نظر گرفته می شود.'
         }, {
           name: 'paybackTime',
           title: 'مدت بازپرداخت',
-          path: 'paybackTime'
+          path: 'paybackTime',
+          help: 'اگر خالی بگذارید به عنوان توافقی در نظر گرفته می شود.'
         }, {
           name: 'loanType',
           title: 'نوع وام',
@@ -226,10 +235,12 @@ export const rawHeaders = {
           title: 'نوع ضمانت'
         }, {
           name: 'amount',
-          title: 'مقدار وام'
+          title: 'مبلغ وام مورد نیاز',
+          placeholder: 'ریال'
         }, {
           name: 'paybackTime',
-          title: 'مدت بازپرداخت'
+          title: 'مدت بازپرداخت',
+          help: 'اگر خالی بگذارید به عنوان توافقی در نظر گرفته می شود.'
         }
       ],
       edit: [
@@ -259,12 +270,14 @@ export const rawHeaders = {
           path: 'guaranteeTypes' // ?
         }, {
           name: 'amount',
-          title: 'مقدار وام',
-          path: 'amount'
+          title: 'مبلغ وام مورد نیاز',
+          path: 'amount',
+          placeholder: 'ریال'
         }, {
           name: 'paybackTime',
           title: 'مدت بازپرداخت',
-          path: 'paybackTime'
+          path: 'paybackTime',
+          help: 'اگر خالی بگذارید به عنوان توافقی در نظر گرفته می شود.'
         },
       ],
     },
@@ -287,7 +300,8 @@ export const rawHeaders = {
           title: 'تصویر آگهی'
         }, {
           name: 'maxAmount',
-          title: 'سقف پرداخت سرمایه'
+          title: 'سقف پرداخت سرمایه',
+          placeholder: 'ریال'
         },
       ],
       edit: [
@@ -314,7 +328,8 @@ export const rawHeaders = {
         }, {
           name: 'maxAmount',
           title: 'حداکثر سرمایه',
-          path: 'maxAmount'
+          path: 'maxAmount',
+          placeholder: 'ریال'
         },
       ],
     },
@@ -340,7 +355,8 @@ export const rawHeaders = {
           title: 'شغل'
         }, {
           name: 'amount',
-          title: 'مقدار سرمایه درخواستی'
+          title: 'مقدار سرمایه درخواستی',
+          placeholder: 'ریال'
         },
       ],
       edit: [
@@ -371,7 +387,8 @@ export const rawHeaders = {
         }, {
           name: 'amount',
           title: 'مقدار سرمایه درخواستی',
-          path: 'amount'
+          path: 'amount',
+          placeholder: 'ریال'
         },
       ],
     },
@@ -510,37 +527,50 @@ export const rawHeaders = {
       type: "loanRequests",
       advertType: "loanRequest",
       alias: "loan-requests",
-      title: "درخواست وام"
+      title: "درخواست وام",
+      panelLink: "درخواست وام دارم",
+      siteLink: "درخواست های وام",
+
     },
     loans: {
       type: "loans",
       advertType: "loan",
       alias: "loans",
-      title: "وام"
+      title: "وام",
+      panelLink: "ثبت وام برای فروش یا مشارکت",
+      siteLink: "وام های فروشی و مشارکتی",
     },
     finances: {
       type: "finances",
       advertType: "finance",
       alias: "finances",
-      title: "سرمایه گذاری"
+      title: "سرمایه گذاری",
+      panelLink: "ثبت سرمایه (سرمایه گذار هستم)",
+      siteLink: "سرمایه گذارها",
     },
     financeRequests: {
       type: "financeRequests",
       advertType: "financeRequest",
       alias: "finance-requests",
-      title: "درخواست سرمایه گذاری"
+      title: "درخواست سرمایه گذاری",
+      panelLink: "درخواست سرمایه دارم",
+      siteLink: "درخواست های سرمایه",
     },
     coSigners: {
       type: "coSigners",
       advertType: "coSigner",
       alias: "co-signers",
-      title: "ضامن"
+      title: "ضامن",
+      panelLink: "ثبت ضمانت (ضامن هستم)",
+      siteLink: "ضامن ها",
     },
     coSignerRequests: {
       type: "coSignerRequests",
       advertType: "coSignerRequest",
       alias: "co-signer-requests",
-      title: "درخواست ضامن"
+      title: "درخواست ضامن",
+      panelLink: "درخواست ضامن دارم",
+      siteLink: "درخواست های ضمانت",
     }
   }, AdminMenu = {
     tickets: [

@@ -66,22 +66,22 @@
         return `${list}/${this.slug}`;
       },
       title() {
-        return Helper.priceFormat(_.get(this, 'data.advert.title', '-'));
+        return (_.get(this, 'data.advert.title', '-'));
       },
       mobile() {
         return (_.get(this, 'data.advert.mobile', '-'));
       },
       image() {
-        return Helper.priceFormat(_.get(this, 'data.advert.image', '-'));
+        return _.get(this, 'data.advert.image', '-');
       },
       paybackTime() {
-        return Helper.priceFormat(_.get(this, 'data.paybackTime', '-'));
+        return _.get(this, 'data.paybackTime', '-') + ' ماه';
       },
       interestRate() {
-        return Helper.priceFormat(_.get(this, 'data.interestRate', '-'));
+        return _.get(this, 'data.interestRate', '-');
       },
       bank() {
-        return Helper.priceFormat(_.get(this, 'data.bank', '-'));
+        return _.get(this, 'data.bank', '-');
       },
       editPath: function () {
         return `/user/${this.formType.type}/${this.id}`;
@@ -108,7 +108,7 @@
         return Helper.priceFormat(_.get(this, 'data.maxAmount', '-'));
       },
       job() {
-        return Helper.priceFormat(_.get(this, 'data.job', '-'));
+        return _.get(this, 'data.job', '-');
       },
       text() {
         return Helper.nl2br(_.get(this, 'data.advert.text', '-'));
@@ -143,7 +143,6 @@
         // loan types
         let loanTypeData = await $axios.$get(loanTypeMethod);
         store.commit('loanType/setAndProcessData', loanTypeData.data || []);
-
 
         // get advert data
         let getPath = `/user/${formType.type}/${id}`;
@@ -181,12 +180,7 @@
       //console.log({properties});
       this.properties = properties;
     },
-    methods: {
-
-      toast(msg, color) {
-        this.$store.commit("snackbar/setSnack", msg, color)
-      },
-    },
+    methods: {},
   }
 </script>
 <style>

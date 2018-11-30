@@ -67,6 +67,7 @@
               v-model="address"
               :error-messages="errors.collect('address')"
               box
+              v-if="false"
               label="آدرس"
               data-vv-name="address"
               auto-grow
