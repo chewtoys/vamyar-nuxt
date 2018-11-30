@@ -1,7 +1,8 @@
 <template>
   <v-layout row wrap>
     <v-flex xs12 sm12>
-      <AdvertFilters label="فیلتر کنید" v-model="advertFilters"/>
+
+      <AdvertFilters :chooseType="false" label="فیلتر کنید" v-model="advertFilters"/>
       <LoansFilters v-if="type.type==='loans'" label="فیلتر وام " v-model="loansFilters"/>
       <LoanRequestsFilters v-if="type.type==='loanRequests'" label="فیلتر در خواست وام "
                            v-model="loanRequestsFilters"/>
@@ -11,6 +12,15 @@
       <FinancesFilters v-if="type.type==='finances'" label="فیلتر سرمایه گذاری ها" v-model="financesFilters"/>
       <FinanceRequestsFilters v-if="type.type==='financeRequests'" label="فیلتر درخواست سرمایه گذاری "
                               v-model="financeRequestsFilters"/>
+
+      <v-flex xs12 sm6 class="py-2">
+        <p>مرتب سازی بر اساس</p>
+        <v-btn-toggle v-model="sort">
+          <v-btn flat>جدیدترین</v-btn>
+          <v-btn flat>قدیمی ترین</v-btn>
+        </v-btn-toggle>
+      </v-flex>
+
     </v-flex>
     <v-flex xs12 sm12>
       <v-card color="transparent" flat>
@@ -81,6 +91,17 @@
     },
     data() {
       return {
+        sortList: [
+          {title: 'جدیدترین', value: 'id:desc'},
+          {title: 'قدیمی ترین', value: 'id:asc'},
+          {title: 'کمترین قیمت', value: 'amount:asc', types: ['loans', 'loanRequests']},
+          {title: 'بیشترین قیمت', value: 'amount:desc', types: ['loans', 'loanRequests']},
+          {title: 'بیشترین سرمایه', value: 'maxAmount:desc', types: ['finances']},
+          {title: 'کمترین سرمایه', value: 'maxAmount:asc', types: ['finances']},
+          {title: 'بیشترین نرخ سود', value: 'interestRate:desc', types: ['coSignerRequest']},
+          {title: 'کمترین نرخ سود', value: 'interestRate:asc', types: ['coSignerRequest']},
+        ],
+        sort: 'id:desc',
         advertFilters: {},
         filter: {},
         loansFilters: {},

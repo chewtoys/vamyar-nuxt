@@ -2,60 +2,7 @@
   <v-flex xs12 md12>
     <v-subheader>{{getLabel}}</v-subheader>
     <v-card class="elevation-0 pa-2" color="transparent" light>
-      <v-layout rwo wrap>
-        <v-flex xs12 sm4 class="pa-1">
-          <div>
-            <v-select
-              :items="loanTypeList"
-              v-model="filter.loanType"
-              :loading="loading.loanType"
-              :menu-props="{contentClass:'farsi mx-3'}"
-              label="نوع وام"
-              light
-              flat
-              clearable
-              hide-details
-              solo-inverted
-              append-icon="list"
-              @change="updateLoanType"
-            />
-          </div>
-        </v-flex>
-        <v-flex xs12 sm4 class="pa-1">
-          <div>
-            <v-text-field
-              v-model="filter.paybackTimeValue"
-              :loading="loading.paybackTime"
-              solo-inverted
-              label="حداکثر مدت بازپرداخت"
-              append-icon="label"
-              light
-              flat
-              clearable
-              @change="emitToParent"
-            />
-          </div>
-        </v-flex>
-        <v-flex xs12 sm4 class="pr-1 pt-1 pb-1 pl-0">
-          <div>
-            <v-select
-              :items="amountList"
-              v-model="filter.amount"
-              :loading="loading.amount"
-              :menu-props="{contentClass:'farsi mx-3'}"
-              label="حدود قیمت"
-              light
-              flat
-              clearable
-              hide-details
-              solo-inverted
-              append-icon="list"
-              @change="updateAmount"
-            />
-          </div>
-        </v-flex>
 
-      </v-layout>
     </v-card>
   </v-flex>
 </template>
@@ -68,25 +15,12 @@
     props: ['value', 'label'],
     data() {
       return {
-        amount: '',
-        loading: {
-          paybackTime: false,
-          loanType: false,
-          amount: false
-        },
-        filter: {
-          paybackTimeValue: null,
-          amount: null,
-          amountValue: null,
-          loanType: null,
-          loanTypeValue: null,
-        },
-
+        sort: 'id:desc'
       }
     },
     computed: {
       getTypeOfLoan() {
-        return !!this.typeOfLoan ;
+        return !!this.typeOfLoan;
       },
       getLabel() {
         return this.label;

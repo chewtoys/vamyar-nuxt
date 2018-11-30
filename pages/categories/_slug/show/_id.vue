@@ -12,7 +12,7 @@
             <v-spacer/>
             <i class="grey--text font-12">
               <v-icon class="pl-1 font-14 pb-1">today</v-icon>
-آخرین بروزرسانی در
+              آخرین بروزرسانی در
               {{ getProperty(item, 'advert.jUpdatedAt', '-') }}
             </i>
           </v-card-title>
@@ -71,6 +71,12 @@
                           <b class="left">{{ getProperty(item, 'amount', '').toLocaleString('fa-IR') }} ريال</b>
                         </span>
                       </div>
+                      <div class="pa-2 mx-1 red--text" v-if="isAllowed('maxAmount')">
+                        <v-icon class="pb-1 pl-1 red--text">monetization_on</v-icon>
+                        <span><small class="font-14">حداکثر سرمایه مورد درخواست</small>
+                          <b class="left">{{ getProperty(item, 'maxAmount', '').toLocaleString('fa-IR') }} ريال</b>
+                        </span>
+                      </div>
                       <v-divider/>
                       <div class="pa-2 mx-1" v-if="isAllowed('price')">
                         <v-icon class="pb-1 pl-1">shopping_cart</v-icon>
@@ -79,6 +85,27 @@
                         </span>
                       </div>
                       <v-divider/>
+                      <div class="pa-2 mx-1">
+                        <v-icon class="pb-1 pl-1">location_on</v-icon>
+                        <span><small class="font-14">شماره موبایل</small>
+                          <b class="left"
+                             v-if="getProperty(item, 'advert.mobile', false)">{{ getProperty(item, 'advert.mobile', '')
+                            }}</b>
+                          <div class="left" v-else>
+                            <v-alert v-if="showPremium" :value="!!msg" type="success">
+
+          <v-btn color="warning" :to="premiumLink">
+            <v-icon class="px-1">shopping_cart</v-icon>
+            خرید سریع اشتراک
+          </v-btn>
+          <v-btn to="/pages/plans">
+            <v-icon class="px-1">list</v-icon>
+            پلن ها
+          </v-btn>
+        </v-alert>
+                          </div>
+                        </span>
+                      </div>
                       <div class="pa-2 mx-1" v-if="isAllowed('city')">
                         <v-icon class="pb-1 pl-1">location_on</v-icon>
                         <span><small class="font-14">شهر</small>
@@ -107,35 +134,7 @@
                         </span>
                       </div>
                       <v-divider/>
-                      <div class="my-5 mx-1">
-                        <div class="pa-2 mx-1">
-                          <h2>مشخصات تماس</h2>
-                        </div>
-                        <v-btn v-if="!showContact" :loading="showLoading" color="red" dark
-                               calss="white--text"
-                               @click="showDetail()">
-                          <v-icon class="pa-1">contacts</v-icon>
-                          <span class="text--white">نمایش مشخصات تماس</span>
-                        </v-btn>
-                        <div v-if="showContact" name="data">
-                          <div v-if="showPhone">
-                            <div class="pa-2 mx-1">
-                              <v-icon class="pl-2">contact_phone</v-icon>
-                              <small class="font-14">شماره تماس </small>
-                              <b class="left">
-                                <a :href="'tel:' + phone ">{{ phone }}</a>
-                              </b>
-                            </div>
-                            <v-divider/>
-                          </div>
-                          <div v-if="showNoContactAvailable" class="pa-2 mx-1">
-                            <v-icon class="pl-2 pb-1 black--text">no_meeting_room</v-icon>
-                            <small class="font-14">خطا</small>
-                            <b class="left">متاسفانه هیچ مشخصاتی برای تماس ثبت نشده است.</b>
-                            <v-divider/>
-                          </div>
-                        </div>
-                      </div>
+
                     </div>
                   </div>
                 </v-flex>
@@ -233,9 +232,15 @@
       },
       hasImage() {
         return !!this.settings('adverts.isImageAllowed') && !!this.item.advert.image
+      },
+      link() {
+        return this.$router.path;
       }
     },
     methods: {
+      premiumLink() {
+        return `/user/premium?redirect=${decodeURI(this.link)}`
+      },
       isAllowed(key) {
         return Helper.isFieldAllowByType(this.type.type, key)
       },

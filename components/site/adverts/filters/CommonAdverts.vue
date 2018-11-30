@@ -3,7 +3,7 @@
     <v-subheader>{{getLabel}}</v-subheader>
     <v-card class="elevation-0 pa-2" color="transparent" light>
       <v-layout rwo wrap>
-        <v-flex xs12 sm3 class="pa-1">
+        <v-flex v-if="getChooseType" xs12 sm3 class="pa-1">
           <div>
             <v-select
               :items="getAdvertTypeList"

@@ -1,7 +1,8 @@
 <template>
   <v-layout row wrap>
     <v-flex xs12 sm12>
-      <AdvertFilters label="فیلتر کنید" v-model="advertFilters" chooseType="1" @change="loadAgainCommonAdvertFilter"/>
+      <AdvertFilters :chooseType="true" label="فیلتر کنید" v-model="advertFilters" chooseType="1"
+                     @change="loadAgainCommonAdvertFilter"/>
       <LoansFilters v-if="canShow('loans')" label="فیلتر وام " v-model="filter" vv-model="loansFilters"
                     @change="loadAgainAdvertFilter"/>
       <LoanRequestsFilters v-if="canShow('loanRequests')" label="فیلتر در خواست وام " v-model="filter"
@@ -204,7 +205,7 @@
         _.forEach(this.computedFilters, function (value, key) {
           if (value !== null && value !== '' && value !== 'null') {
             filterArray.push(`advertable.${key}=${value}`)
-            console.log(`advertable.${key}=${value}`,key,value)
+            console.log(`advertable.${key}=${value}`, key, value)
           }
         })
 
