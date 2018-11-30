@@ -45,6 +45,7 @@
           class="elevation-1"
         >
           <template slot="items" slot-scope="props">
+
             <td>
               <v-checkbox
                 v-model="props.selected"
@@ -52,32 +53,32 @@
                 hide-details
               ></v-checkbox>
             </td>
-            <td class="text-xs-left">{{ (props.item.id) }}</td>
+            <td class="text-xs-left">{{ getProperty(props, 'item.id') }}</td>
             <td class="text-xs-left">{{ sender(props) }}</td>
-            <td class="text-xs-right">{{ props.item.advert.title }}</td>
+            <td class="text-xs-right">{{ getProperty(props, 'item.advert.title', '-') }}</td>
             <template v-if="type.type=='loans'">
-              <td class="text-xs-left">{{ getPrice(props.item.price) }}</td>
-              <td class="text-xs-left">{{ getPrice(props.item.amount) }}</td>
+              <td class="text-xs-left">{{ getPrice(getProperty(props, 'item.price', '')) }}</td>
+              <td class="text-xs-left">{{ getPrice(getProperty(props, 'item.amount', '')) }}</td>
             </template>
             <template v-if="type.type=='loanRequests'">
-              <td class="text-xs-left">{{ getPrice(props.item.amount) }}</td>
+              <td class="text-xs-left">{{ getPrice(getProperty(props, 'item.amount')) }}</td>
             </template>
             <template v-if="type.type=='finances'">
-              <td class="text-xs-left">{{ getPrice(props.item.maxAmount) }}</td>
+              <td class="text-xs-left">{{ getPrice(getProperty(props, 'item.maxAmount', '')) }}</td>
             </template>
             <template v-if="type.type=='financeRequests'">
-              <td class="text-xs-left">{{ getPrice(props.item.amount) }}</td>
-              <td class="text-xs-left">{{ props.item.job }}</td>
+              <td class="text-xs-left">{{ getPrice(getProperty(props, 'item.amount', '')) }}</td>
+              <td class="text-xs-left">{{ getProperty(props, 'item.job') }}</td>
             </template>
             <template v-if="type.type=='coSigners'">
-              <td class="text-xs-left">{{ getType(props.item.type) }}</td>
-              <td class="text-xs-left">{{ getGuaranteeTypes(props.item.guaranteeTypes) }}</td>
+              <td class="text-xs-left">{{ getType(getProperty(props, 'item.type')) }}</td>
+              <td class="text-xs-left">{{ getGuaranteeTypes(getProperty(props, 'item.guaranteeTypes')) }}</td>
             </template>
             <template v-if="type.type=='coSignerRequests'">
-              <td class="text-xs-left">{{ getType(props.item.type) }}</td>
-              <td class="text-xs-left">{{ getGuaranteeTypes(props.item.guaranteeTypes) }}</td>
-              <td class="text-xs-left">{{ props.item.interestRate }}</td>
-              <td class="text-xs-left">{{ props.item.bank }}</td>
+              <td class="text-xs-left">{{ getType(getProperty(props, 'item.type')) }}</td>
+              <td class="text-xs-left">{{ getGuaranteeTypes(getProperty(props, 'item.guaranteeTypes')) }}</td>
+              <td class="text-xs-left">{{ getProperty(props, 'item.interestRate') }}</td>
+              <td class="text-xs-left">{{ getProperty(props, 'item.bank) }}</td>
             </template>
             <td class="text-xs-right">
               <v-menu offset-y>
@@ -86,25 +87,25 @@
                   color="primary"
                   outline
                 >
-                  {{ tradeStatus(props.item) }}
+                  {{ tradeStatus(getProperty(props, 'item', [])) }}
                 </v-btn>
                 <v-list>
                   <v-list-tile
-                    @click="changeTradeStatus(props.item.advert.id,0)"
+                    @click="changeTradeStatus(getProperty(props, 'item.advert.id'),0)"
                   >
                     <v-list-tile-title>باز</v-list-tile-title>
                   </v-list-tile>
                 </v-list>
                 <v-list>
                   <v-list-tile
-                    @click="changeTradeStatus(props.item.advert.id,1)"
+                    @click="changeTradeStatus(getProperty(props, 'item.advert.id'),1)"
                   >
                     <v-list-tile-title>در حال معامله</v-list-tile-title>
                   </v-list-tile>
                 </v-list>
                 <v-list>
                   <v-list-tile
-                    @click="changeTradeStatus(props.item.advert.id,2)"
+                    @click="changeTradeStatus(getProperty(props, 'item.advert.id'),2)"
                   >
                     <v-list-tile-title>بسته شده</v-list-tile-title>
                   </v-list-tile>
@@ -117,18 +118,18 @@
                   color="primary"
                   outline
                 >
-                  {{ instant(props.item) }}
+                  {{ instant(getProperty(props, 'item')) }}
                 </v-btn>
                 <v-list>
                   <v-list-tile
-                    @click="changeInstant(props.item.advert.id,1,props.item)"
+                    @click="changeInstant(getProperty(props, 'item.advert.id'),1,props.item)"
                   >
                     <v-list-tile-title>فوری</v-list-tile-title>
                   </v-list-tile>
                 </v-list>
                 <v-list>
                   <v-list-tile
-                    @click="changeInstant(props.item.advert.id,0,props.item)"
+                    @click="changeInstant(getProperty(props, 'item.advert.id'),0,props.item)"
                   >
                     <v-list-tile-title>غیر فوری</v-list-tile-title>
                   </v-list-tile>
@@ -140,18 +141,18 @@
                   color="primary"
                   outline
                 >
-                  {{ verified(props.item) }}
+                  {{ verified(getProperty(props, 'item')) }}
                 </v-btn>
                 <v-list>
                   <v-list-tile
-                    @click="changeVerified(props.item.advert.id,1,props.item)"
+                    @click="changeVerified(getProperty(props, 'item.advert.id'),1,props.item)"
                   >
                     <v-list-tile-title>تایید شده</v-list-tile-title>
                   </v-list-tile>
                 </v-list>
                 <v-list>
                   <v-list-tile
-                    @click="changeVerified(props.item.advert.id,0,props.item)"
+                    @click="changeVerified(getProperty(props, 'item.advert.id'),0,props.item)"
                   >
                     <v-list-tile-title>تایید نشده</v-list-tile-title>
                   </v-list-tile>
@@ -188,6 +189,7 @@
             <v-alert type="info">
               <p>هنوز موردی اضافه نشده است. برای افزودن از بالا بر روی جدید کلیک کنید.</p>
             </v-alert>
+
           </template>
         </v-data-table>
         <div class="text-xs-center pt-2">
@@ -251,8 +253,8 @@
         let id = {text: "شناسه", align: "right", value: 'id'};
         let owner = {text: "ثبت شده توسط", align: "right", value: 'advert.user.id'};
         let result = Helper.getRawHeaders(this.type.type);
-        //result.unshift(owner);
-        //result.unshift(id);
+        result.unshift(owner);
+        result.unshift(id);
         return result;
       },
       info() {
@@ -338,14 +340,14 @@
         return !!_.get(item, 'advert.instant', _.get(item, 'instant', false)) ? 'فوری' : 'غیر فوری'
       },
       changeInstant(id, val) {
-        let method = `/admin/${this.formType.type}/${id}`
+        let method = `/admin/${this.type.type}/${id}`
         this.$axios.$put(method, {instant: val}).then((res) => {
           item.instant = val;
         }).catch(err => {
         })
       },
       changeVerified(id, val, item) {
-        let method = `/admin/${this.formType.type}/${id}`
+        let method = `/admin/${this.type.type}/${id}`
         this.$axios.$put(method, {verified: val}).then((res) => {
           item.verified = val;
         }).catch(err => {
