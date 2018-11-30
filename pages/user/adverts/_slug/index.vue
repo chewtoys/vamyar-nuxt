@@ -284,7 +284,7 @@
         return !!_.get(item, 'advert.instant', _.get(item, 'instant', false)) ? 'فوری' : 'غیر فوری'
       },
       changeInstant(id, val) {
-        let method = `/user/${this.formType.type}/${id}`
+        let method = `/user/adverts/${id}/instantIt`
         this.$axios.$put(method, {instant: val}).then((res) => {
         }).catch(err => {
         })

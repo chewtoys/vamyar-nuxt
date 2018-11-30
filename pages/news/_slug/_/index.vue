@@ -48,7 +48,6 @@
     asyncData({params}) {
       let item = params.item
       let slug = params.slug
-
       return {item, slug, params}
     },
     computed: {
@@ -57,7 +56,7 @@
       }
     },
     mounted() {
-      //console.log(this.slug, this.item)
+      console.log(this.params, this.slug, this.item)
     }
   }
 </script>

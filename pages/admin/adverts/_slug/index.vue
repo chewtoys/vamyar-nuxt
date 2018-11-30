@@ -145,21 +145,19 @@
                 </v-btn>
                 <v-list>
                   <v-list-tile
-                    @click="changeVerified(getProperty(props, 'item.advert.id'),1,props.item)"
+                    @click="changeVerified(getProperty(props, 'item.id'),1,props.item)"
                   >
                     <v-list-tile-title>تایید شده</v-list-tile-title>
                   </v-list-tile>
                 </v-list>
                 <v-list>
                   <v-list-tile
-                    @click="changeVerified(getProperty(props, 'item.advert.id'),0,props.item)"
+                    @click="changeVerified(getProperty(props, 'item.id'),0,props.item)"
                   >
                     <v-list-tile-title>تایید نشده</v-list-tile-title>
                   </v-list-tile>
                 </v-list>
-
               </v-menu>
-
             </td>
             <td>
               <a title="مشاهده" :href=" uri + '/show/' + props.item.id" class="mx-1">
@@ -189,7 +187,6 @@
             <v-alert type="info">
               <p>هنوز موردی اضافه نشده است. برای افزودن از بالا بر روی جدید کلیک کنید.</p>
             </v-alert>
-
           </template>
         </v-data-table>
         <div class="text-xs-center pt-2">
@@ -252,7 +249,8 @@
       headers() {
         let id = {text: "شناسه", align: "right", value: 'id'};
         let owner = {text: "ثبت شده توسط", align: "right", value: 'advert.user.id'};
-        let result = Helper.getRawHeaders(this.type.type);
+        let result = [];
+        result = Helper.getRawHeaders(this.type.type);
         result.unshift(owner);
         result.unshift(id);
         return result;
@@ -317,14 +315,6 @@
       getPrice(val) {
         return Helper.priceFormat(val)
       },
-      tradeStatus(id) {
-        let method = `/admin/adverts/${id}/changeTradeStatus`
-        return this.$axios.$get(method).then((res) => {
-          return _.get(res, 'data', 'نا مشخص')
-        }).catch(err => {
-          return err.toString();
-        })
-      },
       getProperty(item = [], path = '', alias = '-') {
         return _.get(item, path, alias)
       },
@@ -335,12 +325,11 @@
         let list = this.$store.state.settings.adverts.tradeStatusList;
         return list[item.tradeStaus || 0];
       },
-
       instant(item) {
         return !!_.get(item, 'advert.instant', _.get(item, 'instant', false)) ? 'فوری' : 'غیر فوری'
       },
       changeInstant(id, val) {
-        let method = `/admin/${this.type.type}/${id}`
+        let method = `/admin/adverts/${id}/instantIt`
         this.$axios.$put(method, {instant: val}).then((res) => {
           item.instant = val;
         }).catch(err => {
