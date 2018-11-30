@@ -78,7 +78,7 @@
               <td class="text-xs-left">{{ getType(getProperty(props, 'item.type')) }}</td>
               <td class="text-xs-left">{{ getGuaranteeTypes(getProperty(props, 'item.guaranteeTypes')) }}</td>
               <td class="text-xs-left">{{ getProperty(props, 'item.interestRate') }}</td>
-              <td class="text-xs-left">{{ getProperty(props, 'item.bank) }}</td>
+              <td class="text-xs-left">{{ getProperty(props, 'item.bank') }}</td>
             </template>
             <td class="text-xs-right">
               <v-menu offset-y>
