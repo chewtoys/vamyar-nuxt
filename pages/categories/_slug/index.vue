@@ -1,26 +1,28 @@
 <template>
   <v-layout row wrap>
     <v-flex xs12 sm12>
+      <v-card color="white">
+        <AdvertFilters :chooseType="false" label="فیلتر کنید" v-model="advertFilters"/>
+        <LoansFilters v-if="type.type==='loans'" label="فیلتر وام " v-model="loansFilters"/>
+        <LoanRequestsFilters v-if="type.type==='loanRequests'" label="فیلتر در خواست وام "
+                             v-model="loanRequestsFilters"/>
+        <CoSignersFilters v-if="type.type==='coSigners'" label="فیلتر ضامن ها" v-model="coSignersFilters"/>
+        <CoSignerRequestsFilters v-if="type.type==='coSignerRequests'" label="فیلتر درخواست ضامن"
+                                 v-model="coSignerRequestsFilters"/>
+        <FinancesFilters v-if="type.type==='finances'" label="فیلتر سرمایه گذاری ها" v-model="financesFilters"/>
+        <FinanceRequestsFilters v-if="type.type==='financeRequests'" label="فیلتر درخواست سرمایه گذاری "
+                                v-model="financeRequestsFilters"/>
 
-      <AdvertFilters :chooseType="false" label="فیلتر کنید" v-model="advertFilters"/>
-      <LoansFilters v-if="type.type==='loans'" label="فیلتر وام " v-model="loansFilters"/>
-      <LoanRequestsFilters v-if="type.type==='loanRequests'" label="فیلتر در خواست وام "
-                           v-model="loanRequestsFilters"/>
-      <CoSignersFilters v-if="type.type==='coSigners'" label="فیلتر ضامن ها" v-model="coSignersFilters"/>
-      <CoSignerRequestsFilters v-if="type.type==='coSignerRequests'" label="فیلتر درخواست ضامن"
-                               v-model="coSignerRequestsFilters"/>
-      <FinancesFilters v-if="type.type==='finances'" label="فیلتر سرمایه گذاری ها" v-model="financesFilters"/>
-      <FinanceRequestsFilters v-if="type.type==='financeRequests'" label="فیلتر درخواست سرمایه گذاری "
-                              v-model="financeRequestsFilters"/>
-
-      <v-flex xs12 sm6 class="py-2">
-        <p>مرتب سازی بر اساس</p>
-        <v-btn-toggle v-model="sort">
-          <v-btn flat>جدیدترین</v-btn>
-          <v-btn flat>قدیمی ترین</v-btn>
-        </v-btn-toggle>
-      </v-flex>
-
+        <v-flex xs12 sm6 class="py-2">
+          <v-subheader>مرتب سازی بر اساس</v-subheader>
+          <v-btn-toggle v-model="sort">
+            <v-btn v-for="item in sortList" :key="item.value" color="info" class="grey--text text--darken-4" @click="sortBy(item.value)"
+                   v-if="allowedSort(item)" flat>
+              {{item.title}}
+            </v-btn>
+          </v-btn-toggle>
+        </v-flex>
+      </v-card>
     </v-flex>
     <v-flex xs12 sm12>
       <v-card color="transparent" flat>
@@ -94,13 +96,14 @@
         sortList: [
           {title: 'جدیدترین', value: 'id:desc'},
           {title: 'قدیمی ترین', value: 'id:asc'},
-          {title: 'کمترین قیمت', value: 'amount:asc', types: ['loans', 'loanRequests']},
-          {title: 'بیشترین قیمت', value: 'amount:desc', types: ['loans', 'loanRequests']},
-          {title: 'بیشترین سرمایه', value: 'maxAmount:desc', types: ['finances']},
-          {title: 'کمترین سرمایه', value: 'maxAmount:asc', types: ['finances']},
-          {title: 'بیشترین نرخ سود', value: 'interestRate:desc', types: ['coSignerRequest']},
-          {title: 'کمترین نرخ سود', value: 'interestRate:asc', types: ['coSignerRequest']},
+          {title: 'کمترین قیمت', value: 'advertable.amount:asc', types: ['loans', 'loanRequests']},
+          {title: 'بیشترین قیمت', value: 'advertable.amount:desc', types: ['loans', 'loanRequests']},
+          {title: 'بیشترین سرمایه', value: 'advertable.maxAmount:desc', types: ['finances']},
+          {title: 'کمترین سرمایه', value: 'advertable.maxAmount:asc', types: ['finances']},
+          {title: 'بیشترین نرخ سود', value: 'advertable.interestRate:desc', types: ['coSignerRequest']},
+          {title: 'کمترین نرخ سود', value: 'advertable.interestRate:asc', types: ['coSignerRequest']},
         ],
+        type: '',
         sort: 'id:desc',
         advertFilters: {},
         filter: {},
@@ -129,7 +132,6 @@
       let method = `/site/adverts`
       let slug = params.slug;
       let type = Helper.getTypeByAlias(slug);
-
       let cursor
       cursor = 0
       let include = 'advertable,city,user.details';
@@ -159,6 +161,17 @@
     ,
     // method used in page
     methods: {
+      allowedSort(item) {
+        if (_.has(item, 'types')) {
+          let type = this.type.type;
+          return item.types.includes(type);
+        }
+        return true;
+      },
+      sortBy(val) {
+        this.sort = val;
+        this.loadAgain();
+      },
       showFilter(type) {
         return true;
       },
@@ -202,6 +215,7 @@
         let query = {
           include,
           number,
+          orderBy: this.sort,
           filter
         }
         console.log({query})

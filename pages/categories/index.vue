@@ -15,6 +15,18 @@
                        vv-model="financesFilters" @change="loadAgainAdvertFilter"/>
       <FinanceRequestsFilters v-if="canShow('financeRequests')" label="فیلتر درخواست سرمایه گذاری "
                               v-model="filter" vv-model="financeRequestsFilters" @change="loadAgainAdvertFilter"/>
+
+      <v-flex xs12 sm6 class="py-2">
+        <v-subheader>مرتب سازی بر اساس</v-subheader>
+        <v-btn-toggle v-model="sort">
+          <v-btn v-for="item in sortList" :key="item.value" color="info" class="grey--text text--darken-4"
+                 @click="sortBy(item.value)"
+                 v-if="allowedSort(item)" flat>
+            {{item.title}}
+          </v-btn>
+        </v-btn-toggle>
+      </v-flex>
+
     </v-flex>
     <v-flex xs12 sm12>
       <v-card color="transparent" flat>
@@ -85,6 +97,18 @@
     },
     data() {
       return {
+        sortList: [
+          {title: 'جدیدترین', value: 'id:desc'},
+          {title: 'قدیمی ترین', value: 'id:asc'},
+          {title: 'کمترین قیمت', value: 'advertable.amount:asc', types: ['loans', 'loanRequests']},
+          {title: 'بیشترین قیمت', value: 'advertable.amount:desc', types: ['loans', 'loanRequests']},
+          {title: 'بیشترین سرمایه', value: 'advertable.maxAmount:desc', types: ['finances']},
+          {title: 'کمترین سرمایه', value: 'advertable.maxAmount:asc', types: ['finances']},
+          {title: 'بیشترین نرخ سود', value: 'advertable.interestRate:desc', types: ['coSignerRequest']},
+          {title: 'کمترین نرخ سود', value: 'advertable.interestRate:asc', types: ['coSignerRequest']},
+        ],
+        type: '',
+        sort: 'id:desc',
         commonComputedFilters: [],
         computedFilters: [],
         advertTypeName: null,
@@ -149,6 +173,17 @@
         return _.get(this.$store.state.settings.data, key, '')
       }
       ,
+      allowedSort(item) {
+        if (_.has(item, 'types')) {
+          let type = this.advertTypeName;
+          return item.types.includes(type);
+        }
+        return true;
+      },
+      sortBy(val) {
+        this.advertTypeName = val;
+        this.loadAgain();
+      },
       // load more items
       loadMore: async function () {
         this.msg = null;
@@ -210,8 +245,9 @@
         })
 
         let filter = _.join(filterArray, ',').replace('=<', '<').replace('=>', '>');
-
+        let orederBy = this.sort;
         let query = {
+          orederBy,
           include,
           number,
           filter

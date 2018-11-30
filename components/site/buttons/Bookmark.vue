@@ -23,7 +23,7 @@ export default {
   },
   computed: {
     key: () => {
-      return "bookmark:" + document.location.pathname
+      return "bookmark." + document.location.pathname
     }
   },
   mounted() {

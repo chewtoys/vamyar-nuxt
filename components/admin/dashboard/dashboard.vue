@@ -179,8 +179,7 @@
                 v-for="(item,i) in tickets"
                 :key="i"
               >
-                <div slot="header" class="text-right">{{item.title
-                  }} - ({{ticketMethodsStatus(item.status)}})- ({{ticketMethodsPriority(item.priority)}})
+                <div slot="header" class="text-right">{{item.title}}
                 </div>
                 <v-card>
                   <v-card-text class="grey lighten-4 text-right">
@@ -189,8 +188,16 @@
                         <table>
                           <tbody class="oddTable">
                           <tr>
+                            <td>اهمیت</td>
+                            <td>{{ticketMethodsPriority(item.priority)}}</td>
+                          </tr>
+                          <tr>
+                            <td>وضعیت</td>
+                            <td>{{ticketMethodsStatus(item.status)}}</td>
+                          </tr>
+                          <tr>
                             <td>دسته بندی</td>
-                            <td>{{ticketMethodsCategory(item.category)}}</td>
+                            <td>{{ticketMethodsCategory(item.categoryId)}}</td>
                           </tr>
                           <tr>
                             <td>آخرین بروزرسانی</td>
@@ -313,7 +320,7 @@
           $axios.$get(ticketCategoriesMethod);
         store.commit('ticketCategory/setAndProcessData', ticketCategories.data || []);
       } catch (error) {
-        //console.log('error', error)
+        console.log('error', error)
       }
 
       try {
@@ -341,7 +348,9 @@
       getAdverts() {
         return '-'
       },
-
+      nl2br(text) {
+        return Helper.nl2br(text)
+      },
       ticketMethodsPriority(id) {
         return _.get(this.$store.state.settings.tickets.prioritiesArray, id, '')
       },

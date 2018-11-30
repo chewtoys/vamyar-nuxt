@@ -31,6 +31,27 @@
         <v-card>
           <v-card-title>
             <v-subheader>
+              آگهی های نشان شده ی من
+            </v-subheader>
+          </v-card-title>
+          <v-progress-linear v-if="loader" :indeterminate="true"/>
+          <v-card-text>
+            <v-card v-if="bookmarks" flat>
+
+            </v-card>
+            <v-card v-else flat>
+              <v-alert type="success">حساب شما دارای اشتراک فعال می باشد.</v-alert>
+              <v-alert type="info"><p>برای تمدید اشتراک از لینک زیر اقدام نمایید.</p>
+                <div>
+                  <v-btn to="/user/premium">اشتراک ها</v-btn>
+                </div>
+              </v-alert>
+            </v-card>
+          </v-card-text>
+        </v-card>
+        <v-card>
+          <v-card-title>
+            <v-subheader>
               آمار شما
             </v-subheader>
           </v-card-title>
@@ -150,6 +171,7 @@
 </template>
 <script>
   import Helper from '~/assets/js/helper'
+  import Cookie from "js-cookie"
 
   const path = "/user/adverts"
 
@@ -159,6 +181,7 @@
       return {
         loader: false,
         rawData: [],
+        bookmarks: false,
         rawAdverts: [],
         totalAdverts: '-',
         totalTickets: '-',
@@ -226,6 +249,9 @@
         this.totalCouncils = _.get(res, 'data.councils', '-')
       })
 
+      let bookmarks = Cookie.get();
+      console.log({bookmarks})
+      this.bookmarks = bookmarks;
     }
   }
 </script>

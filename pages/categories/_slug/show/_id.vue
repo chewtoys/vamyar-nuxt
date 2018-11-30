@@ -19,7 +19,7 @@
           <div>
             <v-divider/>
             <span>
-              <v-chip outline label class="black--text">
+              <v-chip v-if="getProperty(item, 'advert.user.details.lastName', false)" outline label class="black--text">
                 <v-icon right>verified_user</v-icon>
                 <span>ثبت شده توسط
                 {{getProperty(item, 'advert.user.details.lastName', '-')}}
@@ -67,21 +67,49 @@
                     <div class="">
                       <div class="pa-2 mx-1 red--text" v-if="isAllowed('amount')">
                         <v-icon class="pb-1 pl-1 red--text">monetization_on</v-icon>
-                        <span><small class="font-14">مبلغ</small>
-                          <b class="left">{{ getProperty(item, 'amount', '').toLocaleString('fa-IR') }} ريال</b>
+                        <span><small class="font-14">{{getTitle('amount')}}</small>
+                          <b class="left">{{ amount }} </b>
                         </span>
                       </div>
                       <div class="pa-2 mx-1 red--text" v-if="isAllowed('maxAmount')">
                         <v-icon class="pb-1 pl-1 red--text">monetization_on</v-icon>
-                        <span><small class="font-14">حداکثر سرمایه مورد درخواست</small>
-                          <b class="left">{{ getProperty(item, 'maxAmount', '').toLocaleString('fa-IR') }} ريال</b>
+                        <span><small class="font-14">{{getTitle('maxAmount')}}</small>
+                          <b class="left">{{ maxAmount }} </b>
                         </span>
                       </div>
                       <v-divider/>
                       <div class="pa-2 mx-1" v-if="isAllowed('price')">
                         <v-icon class="pb-1 pl-1">shopping_cart</v-icon>
                         <span><small class="font-14">{{getTitle('price')}}</small>
-                          <b class="left">{{ getProperty(item, 'price', '').toLocaleString('fa-IR') }} ريال</b>
+                          <b class="left">{{ price }} </b>
+                        </span>
+                      </div>
+                      <v-divider/>
+                      <div class="pa-2 mx-1" v-if="isAllowed('city')">
+                        <v-icon class="pb-1 pl-1">location_on</v-icon>
+                        <span><small class="font-14">{{getTitle('city')}}</small>
+                          <b class="left">{{ city }}</b>
+                        </span>
+                      </div>
+                      <v-divider/>
+                      <div class="pa-2 mx-1" v-if="isAllowed('paybackTime')">
+                        <v-icon class="pb-1 pl-1">keyboard_arrow_left</v-icon>
+                        <span> <small class="font-14">{{getTitle('paybackTime')}}</small>
+                          <b class="left">{{ getProperty(item, 'paybackTime', '') }} ماه</b>
+                        </span>
+                      </div>
+                      <v-divider/>
+                      <div class="pa-2 mx-1" v-if="isAllowed('guaranteeTypes')">
+                        <v-icon class="pb-1 pl-1">how_to_reg</v-icon>
+                        <span><small class="font-14">{{getTitle('guaranteeTypes')}}</small><b
+                          class="left">{{ getGuaranteeType }}</b></span>
+                      </div>
+                      <v-divider/>
+                      <div class="pa-2 mx-1" v-if="isAllowed('loanType')">
+                        <v-icon class="pb-1 pl-1">how_to_reg</v-icon>
+                        <span>
+                          <small class="font-14">{{getTitle('loanType')}}</small>
+                          <b class="left">{{ getLoanType }}</b>
                         </span>
                       </div>
                       <v-divider/>
@@ -92,49 +120,16 @@
                              v-if="getProperty(item, 'advert.mobile', false)">{{ getProperty(item, 'advert.mobile', '')
                             }}</b>
                           <div class="left" v-else>
-                            <v-alert v-if="showPremium" :value="!!msg" type="success">
-
+                            <v-alert :value="true" type="success">
+                              <p>برای دیدن شماره تماس باید اشتراک داشته باشید. پس از فعال سازی اشتراک به همین آدرس بر خواهید گشت:</p>
           <v-btn color="warning" :to="premiumLink">
             <v-icon class="px-1">shopping_cart</v-icon>
             خرید سریع اشتراک
-          </v-btn>
-          <v-btn to="/pages/plans">
-            <v-icon class="px-1">list</v-icon>
-            پلن ها
           </v-btn>
         </v-alert>
                           </div>
                         </span>
                       </div>
-                      <div class="pa-2 mx-1" v-if="isAllowed('city')">
-                        <v-icon class="pb-1 pl-1">location_on</v-icon>
-                        <span><small class="font-14">شهر</small>
-                          <b class="left">{{ getProperty(item, 'advert.city.name', '') }}</b>
-                        </span>
-                      </div>
-                      <v-divider/>
-                      <div class="pa-2 mx-1" v-if="isAllowed('paybackTime')">
-                        <v-icon class="pb-1 pl-1">keyboard_arrow_left</v-icon>
-                        <span> <small class="font-14">بازپرداخت</small>
-                          <b class="left">{{ getProperty(item, 'paybackTime', '') }} ماه</b>
-                        </span>
-                      </div>
-                      <v-divider/>
-                      <div class="pa-2 mx-1" v-if="isAllowed('guaranteeTypes')">
-                        <v-icon class="pb-1 pl-1">how_to_reg</v-icon>
-                        <span><small class="font-14">ضمانت</small><b
-                          class="left">{{ getProperty(item, 'guaranteeType', '') }}</b></span>
-                      </div>
-                      <v-divider/>
-                      <div class="pa-2 mx-1" v-if="isAllowed('type')">
-                        <v-icon class="pb-1 pl-1">how_to_reg</v-icon>
-                        <span>
-                          <small class="font-14">نوع وام</small>
-                          <b class="left">{{ getProperty(item, 'loanTypeId', '') }}</b>
-                        </span>
-                      </div>
-                      <v-divider/>
-
                     </div>
                   </div>
                 </v-flex>
@@ -166,10 +161,10 @@
   import Helper from "~/assets/js/helper.js"
 
   const path = "/site/adverts",
-    number = 4,
-    include = "advertable",
-    advertableType = "loan",
-    breadcrumb = "مشاهده‌‌ی آگهی"
+    breadcrumb = "مشاهده‌‌ی آگهی",
+    cityMethod = '/cities?number=3000',
+    guaranteeMethod = '/guaranteeTypes',
+    loanTypeMethod = '/loanTypes'
 
   export default {
 
@@ -193,15 +188,28 @@
       let slug = params.slug
       let method = `/site/${type.type}/${id}`
       let query = {
-        include: 'advert.user.details,advert.city'
+        include: 'advert.user.details,advert.city,guaranteeTypes'
       }
+
       try {
+// city
+        //let cityData = await $axios.$get(cityMethod);
+        //store.commit('city/setAndProcessData', cityData.data || []);
+
+        // guarantee
+        let guaranteeData = await $axios.$get(guaranteeMethod);
+        store.commit('guaranteeType/setAndProcessData', guaranteeData.data || []);
+
+        // loan types
+        let loanTypeData = await $axios.$get(loanTypeMethod);
+        store.commit('loanType/setAndProcessData', loanTypeData.data || []);
+
 
         let {data} = await app.$axios.$get(method, {params: query})
         let loading = false
 
         const breadcrumb = 'نمایش آگهی',
-          page_title = ` آگهی-  ${data.advert.title || 'بدون عنوان'}`;
+          page_title = ` ${data.advert.title || 'بدون عنوان'}`;
         store.commit("navigation/pushMeta", {breadcrumb, title: page_title});
         store.commit("navigation/setTitle", page_title);
 
@@ -235,17 +243,71 @@
       },
       link() {
         return this.$router.path;
-      }
-    },
-    methods: {
+      },
+      getGuaranteeType() {
+        let items = [];
+        _.forEach(this.item.guaranteeTypes, (item) => {
+          items.push(item.name)
+        })
+        return _.join(items, ', ')
+      },
+      getLoanType() {
+        let list = this.$store.state.loanType.data;
+        let index = _.findIndex(list, {'id': this.item.loanTypeId});
+        let item = list[index];
+        return _.get(item, 'name', 0);
+      },
+      price() {
+        return Helper.priceFormat(_.get(this, 'item.price',));
+      },
+      amount() {
+        return Helper.priceFormat(_.get(this, 'item.amount', ''));
+      },
+      maxAmount() {
+        return Helper.priceFormat(_.get(this, 'item.maxAmount', ''));
+      },
+      job() {
+        return _.get(this, 'item.job', '-');
+      },
+      mobile() {
+        return (_.get(this, 'item.advert.mobile', ''));
+      },
+      image() {
+        return _.get(this, 'item.advert.image', '');
+      },
+      paybackTime() {
+        return _.get(this, 'item.paybackTime', null) + ' ماه';
+      },
+      interestRate() {
+        return _.get(this, 'item.interestRate', null);
+      },
+      bank() {
+        return _.get(this, 'item.bank', '-');
+      },
+      city() {
+        if (_.has(this.item, 'advert.city.name')) return _.get(this.item, 'advert.city.name', '-');
+        let list = this.$store.state.city.data;
+        let index = _.findIndex(list, {'id': this.item.advert.cityId});
+        let item = [];
+        if (index > 0) {
+          item = list[index];
+        }
+        return _.get(item, 'name', '');
+      },
+      text() {
+        return Helper.nl2br(_.get(this, 'item.advert.text', '-'));
+      },
       premiumLink() {
         return `/user/premium?redirect=${decodeURI(this.link)}`
       },
+
+    },
+    methods: {
       isAllowed(key) {
         return Helper.isFieldAllowByType(this.type.type, key)
       },
       getTitle(key) {
-        return _.get(Helper.isFieldAllowByType(this.type.type, key), 'title', '')
+        return _.get(Helper.getFieldByType(this.type.type, key), 'title', '')
       },
       settings(key) {
         return _.get(this.$store.state.settings.data, key, '')
@@ -261,27 +323,10 @@
         let phone = this.item.advert.mobile
         let mail = this.item.advert.mail
         let address = this.item.advert.address
-
         if (phone) {
           this.phone = phone
           this.showPhone = true
         }
-        if (address) {
-          this.address = address
-          this.showAddress = true
-        }
-        if (mail) {
-          this.mail = mail
-          this.showMail = true
-        }
-        if (!phone && !mail && !address) {
-          this.showNoContactAvailable = true
-        }
-
-        setTimeout(() => {
-          this.showContact = true
-          this.showLoading = false
-        }, 1000)
       }
     }
   }
