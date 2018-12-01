@@ -20,7 +20,7 @@
   export default {
     data() {
       return {
-        text: "کپی آدرس صفحه",
+        text: "کپی کردن آدرس صفحه",
         text1: "کپی آدرس صفحه",
         text2: "کپی شد",
         loading: false,

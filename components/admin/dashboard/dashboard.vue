@@ -1,241 +1,241 @@
 <template>
-  <v-container grid-list-lg>
-    <v-layout row wrap>
-      <v-flex xs12>
-        <v-card>
-          <v-card-title>
-            <v-subheader>
-              خلاصه وضعیت و آمار سایت
-            </v-subheader>
-          </v-card-title>
-          <v-progress-linear v-if="loader" :indeterminate="true"/>
-          <v-card-text>
-            <v-layout row wrap>
-              <v-flex xs12 sm6>
-                <table class="oddTable">
-                  <tr>
-                    <td>آگهی ها
-                    </td>
-                    <td>{{getAdverts()}}</td>
-                  </tr>
-                  <tr>
-                    <td>کاربران
-                    </td>
-                    <td>{{getAdverts()}}</td>
-                  </tr>
-                  <tr>
-                    <td>اشتراک های خریداری شده
-                    </td>
-                    <td>{{getAdverts()}}</td>
-                  </tr>
-                  <tr>
-                    <td>مطالب
-                    </td>
-                    <td>{{getAdverts()}}</td>
-                  </tr>
-                  <tr>
-                    <td>آموزش ها
-                    </td>
-                    <td>{{getAdverts()}}</td>
-                  </tr>
-                </table>
-              </v-flex>
-              <v-flex xs12 sm6>
-                <table class="oddTable">
-                  <tr>
-                    <td>آگهی های تایید نشده
-                    </td>
-                    <td>{{getAdverts()}}</td>
-                  </tr>
-                  <tr>
-                    <td>تیکت های باز
-                    </td>
-                    <td>{{getAdverts()}}</td>
-                  </tr>
-                  <tr>
-                    <td>اشتراک های خریداری شده
-                    </td>
-                    <td>{{getAdverts()}}</td>
-                  </tr>
-                  <tr>
-                    <td>مشاوره های پرداخت شده
-                    </td>
-                    <td>{{getAdverts()}}</td>
-                  </tr>
-                  <tr>
-                    <td>وضعیت سایت
-                    </td>
-                    <td>{{settings('site.isSiteClosed') ? 'بسته' : 'باز'}}</td>
-                  </tr>
-                </table>
-              </v-flex>
-            </v-layout>
-          </v-card-text>
-        </v-card>
-        <v-card>
-          <v-card-title>
-            <v-subheader>
-              دسترسی سریع
-            </v-subheader>
-          </v-card-title>
-          <v-card-text>
-            <v-layout row wrap>
-              <v-flex xs6 sm4 lg2 v-for="item in links" :key="item.id">
-                <v-btn
-                  large
-                  round
-                  dark
-                  outline
-                  ripple
-                  block
-                  :to="item.link"
-                  :color="item.color"
-                >
-                  <v-icon class="px-1">{{item.icon || 'note_add' }}</v-icon>
-                  {{item.title}}
-                </v-btn>
-              </v-flex>
-            </v-layout>
-          </v-card-text>
-        </v-card>
-        <v-card>
-          <v-card-title>
-            <v-subheader>
-              آخرین آگهی های ثبت شده
-            </v-subheader>
-          </v-card-title>
-          <v-card-text>
-            <v-expansion-panel focusable>
-              <v-expansion-panel-content
-                v-for="(item,i) in adverts"
-                :key="i"
-              >
-                <div slot="header" class="text-right">{{item.title || '-' }} {{item.instant}}</div>
-                <v-card>
-                  <v-card-text class="grey lighten-4 text-right">
-                    <v-layout row wrap>
-                      <v-flex xs12 sm6>
-                        <table>
-                          <tbody class="oddTable">
-                          <tr>
-                            <td>نوع آگهی</td>
-                            <td>{{item.type || '-'}}</td>
-                          </tr>
-                          <tr>
-                            <td>وضعیت</td>
-                            <td>{{item.tradeStatus || '-'}}</td>
-                          </tr>
-                          <tr>
-                            <td>وضعیت بررسی</td>
-                            <td>{{item.verified || '-'}}</td>
-                          </tr>
-                          <tr>
-                            <td>تاریخ</td>
-                            <td>{{item.jCreatedAt || '-'}}</td>
-                          </tr>
-                          </tbody>
-                        </table>
-                      </v-flex>
-                      <v-flex xs12 sm6>
-                        <table>
-                          <tbody>
-                          <tr>
-                            <td>
-                              <v-btn color="success"
-                                     :to="`/admin/adverts/${item.advertType }s/show/${item.advertableId}`">
-                                <v-icon class="px-1">navigate_before</v-icon>
-                                مشاهده
-                              </v-btn>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <v-btn color="warning"
-                                     :to="`/admin/adverts/${item.advertType}s/edit/${item.advertableId}`">
-                                <v-icon class="px-1">edit</v-icon>
-                                ویرایش
-                              </v-btn>
-                            </td>
-                          </tr>
-                          </tbody>
-                        </table>
-                      </v-flex>
-                    </v-layout>
-                  </v-card-text>
-                </v-card>
-              </v-expansion-panel-content>
-            </v-expansion-panel>
-          </v-card-text>
-        </v-card>
-        <v-card>
-          <v-card-title>
-            <v-subheader>
-              آخرین تیکت های ثبت شده
-            </v-subheader>
-          </v-card-title>
-          <v-card-text>
-            <v-expansion-panel focusable>
-              <v-expansion-panel-content
-                v-for="(item,i) in tickets"
-                :key="i"
-              >
-                <div slot="header" class="text-right">{{item.title}}
-                </div>
-                <v-card>
-                  <v-card-text class="grey lighten-4 text-right">
-                    <v-layout row wrap>
-                      <v-flex xs12 sm6>
-                        <table>
-                          <tbody class="oddTable">
-                          <tr>
-                            <td>اهمیت</td>
-                            <td>{{ticketMethodsPriority(item.priority)}}</td>
-                          </tr>
-                          <tr>
-                            <td>وضعیت</td>
-                            <td>{{ticketMethodsStatus(item.status)}}</td>
-                          </tr>
-                          <tr>
-                            <td>دسته بندی</td>
-                            <td>{{ticketMethodsCategory(item.categoryId)}}</td>
-                          </tr>
-                          <tr>
-                            <td>آخرین بروزرسانی</td>
-                            <td>{{item.jUpdatedAt }}</td>
-                          </tr>
-                          <tr>
-                            <td>پیام</td>
-                            <td>
-                              <div class="py-4 px-3 font-14 text-justify" v-html="nl2br(item.message)"></div>
-                            </td>
-                          </tr>
-                          </tbody>
-                        </table>
-                      </v-flex>
-                      <v-flex xs12 sm6>
-                        <table>
-                          <tbody>
-                          <tr>
-                            <td>
-                              <v-btn color="success"
-                                     :to="`/admin/tickets/show/${item.id}`">
-                                <v-icon class="px-1">navigate_before</v-icon>
-                                مشاهده و پاسخ
-                              </v-btn>
-                            </td>
-                          </tr>
-                          </tbody>
-                        </table>
-                      </v-flex>
-                    </v-layout>
-                  </v-card-text>
-                </v-card>
-              </v-expansion-panel-content>
-            </v-expansion-panel>
-          </v-card-text>
-        </v-card>
-      </v-flex>
-    </v-layout>
+  <v-container grid-list-xs>
+    <v-card>
+      <v-card-title>
+        <v-subheader>
+          خلاصه وضعیت و آمار سایت
+        </v-subheader>
+      </v-card-title>
+      <v-progress-linear v-if="loader" :indeterminate="true"/>
+      <v-card-text>
+        <v-layout row wrap>
+          <v-flex xs12 sm6>
+            <table class="oddTable">
+              <tbody>
+              <tr>
+                <td>آگهی ها
+                </td>
+                <td>{{getAdverts()}}</td>
+              </tr>
+              <tr>
+                <td>کاربران
+                </td>
+                <td>{{getAdverts()}}</td>
+              </tr>
+              <tr>
+                <td>اشتراک های خریداری شده
+                </td>
+                <td>{{getAdverts()}}</td>
+              </tr>
+              <tr>
+                <td>مطالب
+                </td>
+                <td>{{getAdverts()}}</td>
+              </tr>
+              <tr>
+                <td>آموزش ها
+                </td>
+                <td>{{getAdverts()}}</td>
+              </tr>
+              </tbody>
+            </table>
+          </v-flex>
+          <v-flex xs12 sm6>
+            <table class="oddTable">
+              <tbody>
+                <tr>
+                  <td>آگهی های تایید نشده
+                  </td>
+                  <td>{{getAdverts()}}</td>
+                </tr>
+                <tr>
+                  <td>تیکت های باز
+                  </td>
+                  <td>{{getAdverts()}}</td>
+                </tr>
+                <tr>
+                  <td>اشتراک های خریداری شده
+                  </td>
+                  <td>{{getAdverts()}}</td>
+                </tr>
+                <tr>
+                  <td>مشاوره های پرداخت شده
+                  </td>
+                  <td>{{getAdverts()}}</td>
+                </tr>
+                <tr>
+                  <td>وضعیت سایت
+                  </td>
+                  <td>{{settings('site.isSiteClosed') ? 'بسته' : 'باز'}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </v-flex>
+        </v-layout>
+      </v-card-text>
+    </v-card>
+    <v-card>
+      <v-card-title>
+        <v-subheader>
+          دسترسی سریع
+        </v-subheader>
+      </v-card-title>
+      <v-card-text>
+        <v-layout row wrap>
+          <v-flex xs6 sm4 lg2 v-for="item in links" :key="item.id">
+            <v-btn
+              large
+              round
+              dark
+              outline
+              ripple
+              block
+              :to="item.link"
+              :color="item.color"
+            >
+              <v-icon class="px-1">{{item.icon || 'note_add' }}</v-icon>
+              {{item.title}}
+            </v-btn>
+          </v-flex>
+        </v-layout>
+      </v-card-text>
+    </v-card>
+    <v-card>
+      <v-card-title>
+        <v-subheader>
+          آخرین آگهی های ثبت شده
+        </v-subheader>
+      </v-card-title>
+      <v-card-text>
+        <v-expansion-panel focusable>
+          <v-expansion-panel-content
+            v-for="(item,i) in adverts"
+            :key="i"
+          >
+            <div slot="header" class="text-right">{{item.title || '-' }} {{item.instant}}</div>
+            <v-card>
+              <v-card-text class="grey lighten-4 text-right">
+                <v-layout row wrap>
+                  <v-flex xs12 sm6>
+                    <table>
+                      <tbody class="oddTable">
+                      <tr>
+                        <td>نوع آگهی</td>
+                        <td>{{item.type || '-'}}</td>
+                      </tr>
+                      <tr>
+                        <td>وضعیت</td>
+                        <td>{{item.tradeStatus || '-'}}</td>
+                      </tr>
+                      <tr>
+                        <td>وضعیت بررسی</td>
+                        <td>{{item.verified || '-'}}</td>
+                      </tr>
+                      <tr>
+                        <td>تاریخ</td>
+                        <td>{{item.jCreatedAt || '-'}}</td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </v-flex>
+                  <v-flex xs12 sm6>
+                    <table>
+                      <tbody>
+                      <tr>
+                        <td>
+                          <v-btn color="success"
+                                 :to="`/admin/adverts/${item.advertType }s/show/${item.advertableId}`">
+                            <v-icon class="px-1">navigate_before</v-icon>
+                            مشاهده
+                          </v-btn>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <v-btn color="warning"
+                                 :to="`/admin/adverts/${item.advertType}s/edit/${item.advertableId}`">
+                            <v-icon class="px-1">edit</v-icon>
+                            ویرایش
+                          </v-btn>
+                        </td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </v-flex>
+                </v-layout>
+              </v-card-text>
+            </v-card>
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+      </v-card-text>
+    </v-card>
+    <v-card>
+      <v-card-title>
+        <v-subheader>
+          آخرین تیکت های ثبت شده
+        </v-subheader>
+      </v-card-title>
+      <v-card-text>
+        <v-expansion-panel focusable>
+          <v-expansion-panel-content
+            v-for="(item,i) in tickets"
+            :key="i"
+          >
+            <div slot="header" class="text-right">{{item.title}}
+            </div>
+            <v-card>
+              <v-card-text class="grey lighten-4 text-right">
+                <v-layout row wrap>
+                  <v-flex xs12 sm6>
+                    <table>
+                      <tbody class="oddTable">
+                      <tr>
+                        <td>اهمیت</td>
+                        <td>{{ticketMethodsPriority(item.priority)}}</td>
+                      </tr>
+                      <tr>
+                        <td>وضعیت</td>
+                        <td>{{ticketMethodsStatus(item.status)}}</td>
+                      </tr>
+                      <tr>
+                        <td>دسته بندی</td>
+                        <td>{{ticketMethodsCategory(item.categoryId)}}</td>
+                      </tr>
+                      <tr>
+                        <td>آخرین بروزرسانی</td>
+                        <td>{{item.jUpdatedAt }}</td>
+                      </tr>
+                      <tr>
+                        <td>پیام</td>
+                        <td>
+                          <div class="py-4 px-3 font-14 text-justify" v-html="nl2br(item.message)"></div>
+                        </td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </v-flex>
+                  <v-flex xs12 sm6>
+                    <table>
+                      <tbody>
+                      <tr>
+                        <td>
+                          <v-btn color="success"
+                                 :to="`/admin/tickets/show/${item.id}`">
+                            <v-icon class="px-1">navigate_before</v-icon>
+                            مشاهده و پاسخ
+                          </v-btn>
+                        </td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </v-flex>
+                </v-layout>
+              </v-card-text>
+            </v-card>
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+      </v-card-text>
+    </v-card>
   </v-container>
 </template>
 <script>

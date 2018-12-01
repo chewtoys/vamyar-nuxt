@@ -35,7 +35,6 @@
               label="عنوان"
             />
             <v-textarea
-              v-validate="'required'"
               v-model="description"
               :error-messages="errors.collect('description')"
               box
@@ -123,7 +122,7 @@
             return this.parent ? [this.parent] : []
           },
           set(val) {
-            console.log(val);
+            //console.log(val);
             if (_.isArray(val) && val.length > 1) this.parent = _.last(val)
           }
         },
@@ -162,8 +161,9 @@
           slug: this.slug,
           image: this.image,
         }
+        let method = `${createPath}`
         this.$axios
-          .$post(createPath, data)
+          .$post(method, data)
           .then(() => {
             let status = true
             if (status) {

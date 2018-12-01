@@ -1,21 +1,5 @@
 <template>
   <div>
-    <v-card color="white" raised light class="py-5 px-4">
-      <v-layout row>
-        <v-flex xs12 md12 sm12 lg12>
-          <v-alert
-            :value="true"
-            color="info"
-            icon="info"
-          >{{ page_title }}
-          </v-alert>
-          <v-divider class="my-3"/>
-          <v-card dark color="green darken-1" class="pa-3 font-12">
-            <p class="font-14 text-justify"/>
-          </v-card>
-        </v-flex>
-      </v-layout>
-    </v-card>
     <v-card color="white" raised light class="mt-5 py-5 px-4">
       <div>
         <v-toolbar flat color="white">
@@ -86,7 +70,7 @@
               </td>
               <td class="text-xs-right">{{ props.item.id }}</td>
               <td class="text-xs-right">
-                <nuxt-link :to="uri + '/edit/' + props.item.id">{{ props.item.name || '-' }}</nuxt-link>
+                <nuxt-link :to="uri + '/edit/' + props.item.slug">{{ props.item.name || '-' }}</nuxt-link>
               </td>
               <td class="text-xs-right">
                 {{ props.item.slug || '-' }}
@@ -95,7 +79,7 @@
                 {{ props.item.parentId || '-' }}
               </td>
               <td class="text-xs-left">
-                <nuxt-link title="ویرایش" :to=" uri + '/edit/' + props.item.id" class="mx-1">
+                <nuxt-link title="ویرایش" :to=" uri + '/edit/' + props.item.slug" class="mx-1">
                   <v-icon
                     small
                   >
@@ -105,7 +89,7 @@
                 <v-icon
                   class="mx-1"
                   small
-                  @click="deleteItem(props.item.id)"
+                  @click="deleteItem(props.item.slug)"
                 >
                   delete
                 </v-icon>

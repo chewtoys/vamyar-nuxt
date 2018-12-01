@@ -34,7 +34,7 @@
           </v-list>
         </v-menu>
         <v-btn to="/pages/plans" flat>اشتراک ها</v-btn>
-        <v-btn to="/news" flat>اخبار</v-btn>
+        <v-btn to="/posts/news" flat>اخبار</v-btn>
         <v-btn to="/user/councils/create" flat>مشاوره</v-btn>
         <v-btn to="/user" flat>حساب من</v-btn>
       </v-toolbar-items>
@@ -93,13 +93,13 @@
 
         </v-list-group>
 
-        <v-list-tile class="pb-2" to="/news">
+        <v-list-tile class="pb-2" to="/posts/news">
           <v-list-tile-avatar>
             <v-icon v-text="'arrow_left'"/>
           </v-list-tile-avatar>
           <v-list-tile-title class="text-justify rtl">اخبار</v-list-tile-title>
         </v-list-tile>
-        <v-list-tile class="pb-2" to="/education">
+        <v-list-tile class="pb-2" to="/posts/instructions">
           <v-list-tile-avatar>
             <v-icon v-text="'arrow_left'"/>
           </v-list-tile-avatar>
