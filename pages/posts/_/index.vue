@@ -96,6 +96,7 @@
         parentPath: '/posts',
         category: [],
         slug: '',
+        rootSlug: 'news',
         path: '',
         showPath: '/posts/show',
         category: [],
@@ -109,9 +110,10 @@
       let subSlugs = _.split(path, '/')
       let lastSlug = _.last(subSlugs)
       let firstSlug = _.first(subSlugs)
-      let parentPath = _.join(_.initial(subSlugs),'/');
+      let parentPath = `/posts/${_.join(_.initial(subSlugs), '/')}`;
       let slug = lastSlug ? lastSlug : 'news';
       let breadcrumb = firstSlug === 'news' ? 'اخبار' : 'آموزش ها';
+      let rootSlug = firstSlug;
       let categoryMethod = `/site/categories/${slug}`
       let postsMethod = `/site/categories/${path}/posts`
       let posts = [], category = []
@@ -134,13 +136,14 @@
         category: _.get(category, 'data', []),
         item,
         slug,
+        rootSlug,
         parentPath,
         path
       }
     },
     computed: {
       currentPath() {
-        return this.$route.path;
+        return `/posts/${this.rootSlug}`;
       }
     },
     mounted() {
