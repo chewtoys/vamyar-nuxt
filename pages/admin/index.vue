@@ -13,7 +13,7 @@
 
   export default {
     meta: {
-      title: 'پنل مدیریت',
+      title: 'داشبورد',
       breadcrumb: 'مدیریت'
     },
     async asyncData({params, store, $axios, error}) {

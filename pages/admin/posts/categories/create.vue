@@ -50,14 +50,15 @@
               label="مستعار"
             />
 
-            <v-treeview label="والد"
-                        activatable
-                        :active="parentId"
-                        transition
-                        :items="categories"
-                        :loading="categoryLoading"
-                        item-text="name"
-            />
+            <v-radio-group v-model="parent" label="والد">
+              <v-radio
+                v-for="item in categories"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              ></v-radio>
+            </v-radio-group>
+
             <Img
               v-model="image"
               label="تصویر"
@@ -145,12 +146,40 @@
       this.$validator.localize("fa", this.dictionary)
       this.$axios.$get(fetchPath).then(res => {
         let fetched = _.get(res, 'data', []);
-        this.categories = _.isArray(fetched) ? fetched : [];
+        let final = [];
+        _.forEach(fetched, (cat, i) => {
+          final.push({id: cat.id, name: cat.name});
+          if (_.has(cat, 'children')) {
+            let childs = this.getChilds(cat)
+            _.forEach(childs, (child) => {
+              final.push({id: child.id, name: child.name});
+            })
+          }
+        })
+
+        this.categories = _.isArray(final) ? final : [];
         this.categoryLoading = false;
       })
     }
     ,
     methods: {
+      getChilds(cat) {
+        if (_.has(cat, 'children')) {
+          let items = [];
+          _.forEach(cat.children, (subCat, i) => {
+            items.push({id: subCat.id, name: subCat.name});
+            if (_.has(subCat, 'children')) {
+              let childs = this.getChilds(subCat)
+              _.forEach(childs, (child) => {
+                items.push({id: child.id, name: child.name});
+              })
+            }
+          })
+          return items;
+        } else {
+          return [];
+        }
+      },
       toast(msg, color) {
         this.$store.commit("snackbar/setSnack", msg, color)
       }

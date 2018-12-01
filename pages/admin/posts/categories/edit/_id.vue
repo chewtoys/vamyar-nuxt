@@ -49,15 +49,14 @@
               data-vv-name="slug"
               label="مستعار"
             />
-
-            <v-treeview label="والد"
-                        selectable
-                        v-model="parentId"
-                        transition
-                        :items="categories"
-                        :loading="categoryLoading"
-                        item-text="name"
-            />
+            <v-radio-group v-model="parent" label="والد">
+              <v-radio
+                v-for="item in categories"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              ></v-radio>
+            </v-radio-group>
             <Img
               v-model="image"
               label="تصویر"
@@ -154,8 +153,19 @@
     mounted() {
       this.$validator.localize("fa", this.dictionary)
       this.$axios.$get(fetchPath).then(res => {
-        let fetched = _.get(res, 'data', []);
-        this.categories = _.isArray(fetched) ? fetched : [];
+        let final = [];
+        _.forEach(fetched, (cat, i) => {
+          final.push({id: cat.id, name: cat.name});
+          if (_.has(cat, 'children')) {
+            let childs = this.getChilds(cat)
+            _.forEach(childs, (child) => {
+              final.push({id: child.id, name: child.name});
+            })
+          }
+        })
+
+        this.categories = _.isArray(final) ? final : [];
+
         this.categoryLoading = false;
         this.name = _.get(this, 'data.name');
         this.parent = _.get(this, 'data.parentId');
