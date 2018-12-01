@@ -19,7 +19,7 @@
           <v-btn fab outline small color="warning" @click="remove">
             <v-icon>delete</v-icon>
           </v-btn>
-          <img :src="'/'+url" :alt="url" class="full">
+          <img :src="`${root}/${url}`" :alt="url" class="full">
           <input v-model="url" type="hidden" name="url">
         </div>
       </v-flex>
@@ -33,6 +33,7 @@
 </template>
 <script>
 
+  const root = 'http://api.vamyar.org:8080'
   export default {
     props: ["value", 'label', 'type'],
     /*
@@ -40,6 +41,7 @@
            */
     data() {
       return {
+        root,
         file: "",
         hasFile: false,
         url: this.value,
@@ -88,7 +90,7 @@
         /*
                    Add the form data we need to submit
                    */
-        formData.append("file", this.file)
+        formData.append("image", this.file)
 
         /*
                    Make the request to the POST /single-file URL
@@ -96,7 +98,7 @@
         let Authorization = `Bearer ${this.getAuthorization}`;
         let method = this.getMethod;
         this.$axios
-          .post(method, formData, {
+          .$post(method, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
               Authorization
@@ -108,7 +110,7 @@
             }.bind(this)
           })
           .then((res) => {
-            let {url} = data
+            console.log(res, res.data.url)
             this.url = `${_.get(res, 'data.url', '-')}`
             this.hasFile = false
             this.file = null

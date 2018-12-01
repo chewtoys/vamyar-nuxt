@@ -51,8 +51,8 @@
             />
 
             <v-treeview label="والد"
-                        selectable
-                        v-model="parentId"
+                        activatable
+                        :active="parentId"
                         transition
                         :items="categories"
                         :loading="categoryLoading"
@@ -99,7 +99,6 @@
       image: '',
       slug: null,
       parent: null,
-
       categoryLoading: true,
       categories: [{id: 1, name: 'بدون دسته بندی'}],
       // validator dictionary
@@ -123,7 +122,10 @@
           },
           set(val) {
             //console.log(val);
-            if (_.isArray(val) && val.length > 1) this.parent = _.last(val)
+
+            if (_.isArray(val) && val.length >= 1) {
+              this.parent = _.last(val)
+            }
           }
         },
         list: function () {

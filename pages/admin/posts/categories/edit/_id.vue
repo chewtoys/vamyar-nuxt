@@ -124,8 +124,10 @@
             return this.parent ? [this.parent] : []
           },
           set(val) {
-            console.log(val);
-            if (_.isArray(val) && val.length > 1) this.parent = _.last(val)
+            //console.log(val);
+            if (_.isArray(val) && val.length >= 1) {
+              this.parent = _.last(val)
+            }
           }
         },
         list: function () {
@@ -172,7 +174,7 @@
         let data = {
           name: this.name,
           parent: this.parent,
-          description: this.description,
+          //description: this.description,
           slug: this.slug,
           image: this.image,
         }
