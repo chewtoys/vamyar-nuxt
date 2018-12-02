@@ -81,7 +81,7 @@
 
   import Helper from "~/assets/js/helper.js"
 
-  const number = 4,
+  const number = 15,
     cityMethod = '/cities?number=3000',
     guaranteeMethod = '/guaranteeTypes',
     loanTypeMethod = '/loanTypes'
