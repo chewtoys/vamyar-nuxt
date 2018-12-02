@@ -115,7 +115,7 @@
       let breadcrumb = firstSlug === 'news' ? 'اخبار' : 'آموزش ها';
       let rootSlug = firstSlug;
       let categoryMethod = `/site/categories/${slug}`
-      let postsMethod = `/site/categories/${path}/posts`
+      let postsMethod = `/site/categories/${slug}/posts`
       let posts = [], category = []
 
       try {

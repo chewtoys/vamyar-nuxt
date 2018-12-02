@@ -93,6 +93,12 @@
 
         </v-list-group>
 
+        <v-list-tile class="pb-2" to="/pages/plans">
+          <v-list-tile-avatar>
+            <v-icon v-text="'arrow_left'"/>
+          </v-list-tile-avatar>
+          <v-list-tile-title class="text-justify rtl">اشتراک ها</v-list-tile-title>
+        </v-list-tile>
         <v-list-tile class="pb-2" to="/posts/news">
           <v-list-tile-avatar>
             <v-icon v-text="'arrow_left'"/>
@@ -107,7 +113,7 @@
         </v-list-tile>
         <v-list-tile class="pb-2" to="/user/councils/create">
           <v-list-tile-avatar>
-            <v-icon v-text="'lock'"/>
+            <v-icon v-text="'arrow_left'"/>
           </v-list-tile-avatar>
           <v-list-tile-title class="text-justify rtl">مشاوره</v-list-tile-title>
         </v-list-tile>

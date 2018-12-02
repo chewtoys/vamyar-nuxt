@@ -50,7 +50,7 @@
 <script>
   import Helper from '~/assets/js/helper'
 
-  const plansMethod = '/subscriptions',
+  const plansMethod = '/site/subscriptions',
     subscriptionMethod = '/user/subscriptions'
 
   export default {

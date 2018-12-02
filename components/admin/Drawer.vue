@@ -111,8 +111,11 @@
       panel: [
         {title: "تیکت ها", icon: "inbox", to: "/admin/tickets"},
         {title: "دسته بندی تیکت ها", icon: "inbox", to: "/admin/tickets/categories"},
-        {title: "لاگ کاربران", icon: "inbox", to: "/users/logs"},
-        {title: "لیست کاربران", icon: "inbox", to: "/users"},
+        //{title: "لاگ کاربران", icon: "inbox", to: "/users/logs"},
+        {title: "درخواست های مشاوره", icon: "inbox", to: "/admin/councils"},
+        {title: "انواع مشاوره ها", icon: "inbox", to: "/admin/councils/categories"},
+        {title: "انتقادات و پیشنهادها", icon: "inbox", to: "/admin/contact-us"},
+        //{title: "لیست کاربران", icon: "inbox", to: "/users"},
       ],
       content: [
         {title: "لیست مطالب", icon: "inbox", to: "/admin/posts"},

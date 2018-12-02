@@ -72,7 +72,7 @@
 
   const page_title = "فعال سازی اشتراک ",
     breadcrumb = "فعال سازی",
-    plansMethod = '/subscriptions',
+    plansMethod = '/site/subscriptions',
     subscriptionMethod = '/user/subscriptions',
     info = {
       title: "تایید فعال سازی اشتراک"
@@ -93,56 +93,6 @@
         id: '',
         form: '',
         coupon: '',
-        plans: [
-          {
-            id: 1,
-            title: 'پلن اول !',
-            price: '100000',
-            text: 'توضیحات',
-            period: '4',
-            special: 0,
-            data: [
-              {title: 'ویژگی اول', desc: 'توضیح اول'},
-              {title: "ویژگی دوم", desc: 'توضیح دوم'}
-            ],
-          },
-          {
-            id: 2,
-            title: 'پلن دوم !',
-            price: '60000',
-            text: 'توضیحات',
-            period: '1',
-            special: 1,
-            data: [
-              {title: 'ویژگی اول', desc: 'توضیح اول'},
-              {title: "ویژگی دوم", desc: 'توضیح دوم'}
-            ],
-          },
-          {
-            id: 3,
-            title: 'پلن سوم !',
-            price: '10000000',
-            text: 'توضیحات',
-            period: '9',
-            special: 0,
-            data: [
-              {title: 'ویژگی اول', desc: 'توضیح اول'},
-              {title: "ویژگی دوم", desc: 'توضیح دوم'}
-            ],
-          },
-          {
-            id: 4,
-            title: 'پلن چهارم !',
-            text: 'توضیحات',
-            price: '9000000',
-            period: '1',
-            special: 0,
-            data: [
-              {title: 'ویژگی اول', desc: 'توضیح اول'},
-              {title: "ویژگی دوم", desc: 'توضیح دوم'}
-            ],
-          },
-        ]
       }
     },
     computed: {
@@ -201,7 +151,7 @@
       try {
         let {data} = await $axios.$get(`${plansMethod}/${id}`)
         return {
-          plans: data,
+          data,
           id
         }
       } catch (err) {
