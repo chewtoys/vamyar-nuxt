@@ -147,7 +147,7 @@
           </div>
         </v-card>
       </v-flex>
-      <v-flex xs12 xl4>
+      <v-flex v-if="false" xs12 xl4>
         <NewAdverts/>
       </v-flex>
     </v-layout>
