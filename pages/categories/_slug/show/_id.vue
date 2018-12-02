@@ -92,10 +92,31 @@
                         </span>
                       </div>
                       <v-divider/>
+                      <div class="pa-2 mx-1" v-if="isAllowed('job')">
+                        <v-icon class="pb-1 pl-1">location_on</v-icon>
+                        <span><small class="font-14">{{getTitle('job')}}</small>
+                          <b class="left">{{ job }}</b>
+                        </span>
+                      </div>
+                      <v-divider/>
+                      <div class="pa-2 mx-1" v-if="isAllowed('bank')">
+                        <v-icon class="pb-1 pl-1">location_on</v-icon>
+                        <span><small class="font-14">{{getTitle('bank')}}</small>
+                          <b class="left">{{ bank }}</b>
+                        </span>
+                      </div>
+                      <v-divider/>
+                      <div class="pa-2 mx-1" v-if="isAllowed('interestRate')">
+                        <v-icon class="pb-1 pl-1">location_on</v-icon>
+                        <span><small class="font-14">{{getTitle('interestRate')}}</small>
+                          <b class="left">{{ interestRate ? interestRate + 'درصد' : 'توافقی' }} </b>
+                        </span>
+                      </div>
+                      <v-divider/>
                       <div class="pa-2 mx-1" v-if="isAllowed('paybackTime')">
                         <v-icon class="pb-1 pl-1">keyboard_arrow_left</v-icon>
                         <span> <small class="font-14">{{getTitle('paybackTime')}}</small>
-                          <b class="left">{{ getProperty(item, 'paybackTime', '') }} ماه</b>
+                          <b class="left">{{ paybackTime ? paybackTime + ' ' : 'توافقی'}}</b>
                         </span>
                       </div>
                       <v-divider/>
@@ -122,12 +143,15 @@
                       </div>
                       <v-divider/>
                       <div class="pa-2 mx-1">
-                        <v-icon class="pb-1 pl-1">location_on</v-icon>
-                        <span><small class="font-14">شماره موبایل</small>
+                        <v-icon class="pb-1 pl-1 pt-2">location_on</v-icon>
+                        <span><small class="font-14 pt-2">شماره موبایل</small>
                           <b class="left"
-                             v-if="getProperty(item, 'advert.mobile', false)"><v-btn rounded outline color="info"
-                                                                                     :href="`tel:${getProperty(item, 'advert.mobile', '')}`">{{ getProperty(item, 'advert.mobile', '')
-                            }}</v-btn></b>
+                             v-if="getProperty(item, 'advert.mobile', false)">
+                            <v-btn round outline color="info"
+                                   :href="`tel:${getProperty(item, 'advert.mobile', '')}`">
+                              {{ getProperty(item, 'advert.mobile', '')}}
+                              <v-icon class="px-1">call</v-icon>
+                              </v-btn></b>
                           <div class="left" v-else>
                             <v-alert :value="true" type="success">
                               <p>برای دیدن شماره تماس باید اشتراک داشته باشید. پس از فعال سازی اشتراک به همین آدرس بر خواهید گشت:</p>
@@ -145,15 +169,23 @@
               </v-layout>
             </v-container>
           </v-card-text>
+          <v-container grid-list-xs>
+            <v-layout row wrap>
+              <v-flex xs12>
           <span class="right pa-3">
             <v-icon class="pl-1 pb-1 green--text">pageview</v-icon>
             <span>لطفا قبل از اقدام <nuxt-link class="red--text" to="/pages/rules">قوانین سایت</nuxt-link> را مطالعه فرمایید.</span>
           </span>
-          <div class="text-left">
-            <Bookmark/>
-            <Report/>
-            <CopyUrl/>
-          </div>
+              </v-flex>
+              <v-flex xs12>
+                <div class="text-left">
+                  <Bookmark/>
+                  <Report/>
+                  <CopyUrl/>
+                </div>
+              </v-flex>
+            </v-layout>
+          </v-container>
         </v-card>
       </v-flex>
       <v-flex v-if="false" xs12 xl4>
@@ -285,7 +317,7 @@
         return _.get(this, 'item.advert.image', '');
       },
       paybackTime() {
-        return _.get(this, 'item.paybackTime', null) + ' ماه';
+        return _.get(this, 'item.paybackTime', null);
       },
       interestRate() {
         return _.get(this, 'item.interestRate', null);
@@ -327,7 +359,7 @@
       isUrgent: function () {
         return this.item.isUrgent === true
       },
-      showDetail: function () {
+      showDetail: function () { 
         this.showLoading = true
         let phone = this.item.advert.mobile
         let mail = this.item.advert.mail
