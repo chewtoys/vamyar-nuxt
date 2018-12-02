@@ -114,11 +114,20 @@
                       </div>
                       <v-divider/>
                       <div class="pa-2 mx-1">
+                        <small class="font-14">
+                          <v-icon class="pb-1 pl-1">edit</v-icon>
+                          توضیحات
+                        </small>
+                        <p v-html="text"></p>
+                      </div>
+                      <v-divider/>
+                      <div class="pa-2 mx-1">
                         <v-icon class="pb-1 pl-1">location_on</v-icon>
                         <span><small class="font-14">شماره موبایل</small>
                           <b class="left"
-                             v-if="getProperty(item, 'advert.mobile', false)">{{ getProperty(item, 'advert.mobile', '')
-                            }}</b>
+                             v-if="getProperty(item, 'advert.mobile', false)"><v-btn rounded outline color="info"
+                                                                                     :href="`tel:${getProperty(item, 'advert.mobile', '')}`">{{ getProperty(item, 'advert.mobile', '')
+                            }}</v-btn></b>
                           <div class="left" v-else>
                             <v-alert :value="true" type="success">
                               <p>برای دیدن شماره تماس باید اشتراک داشته باشید. پس از فعال سازی اشتراک به همین آدرس بر خواهید گشت:</p>
