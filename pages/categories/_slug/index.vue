@@ -2,21 +2,26 @@
   <v-layout row wrap>
     <v-flex xs12 sm12>
       <v-card color="white">
-        <AdvertFilters :chooseType="false" label="فیلتر کنید" v-model="advertFilters"/>
-        <LoansFilters v-if="type.type==='loans'" label="فیلتر وام " v-model="loansFilters"/>
+        <AdvertFilters :chooseType="false" label="فیلتر کنید" v-model="advertFilters"
+                       @change="loadAgainCommonAdvertFilter"/>
+        <LoansFilters v-if="type.type==='loans'" label="فیلتر وام " v-model="loansFilters"
+                      @change="loadAgainAdvertFilter"/>
         <LoanRequestsFilters v-if="type.type==='loanRequests'" label="فیلتر در خواست وام "
-                             v-model="loanRequestsFilters"/>
-        <CoSignersFilters v-if="type.type==='coSigners'" label="فیلتر ضامن ها" v-model="coSignersFilters"/>
+                             v-model="loanRequestsFilters" @change="loadAgainAdvertFilter"/>
+        <CoSignersFilters v-if="type.type==='coSigners'" label="فیلتر ضامن ها" v-model="coSignersFilters"
+                          @change="loadAgainAdvertFilter"/>
         <CoSignerRequestsFilters v-if="type.type==='coSignerRequests'" label="فیلتر درخواست ضامن"
-                                 v-model="coSignerRequestsFilters"/>
-        <FinancesFilters v-if="type.type==='finances'" label="فیلتر سرمایه گذاری ها" v-model="financesFilters"/>
+                                 v-model="coSignerRequestsFilters" @change="loadAgainAdvertFilter"/>
+        <FinancesFilters v-if="type.type==='finances'" label="فیلتر سرمایه گذاری ها" v-model="financesFilters"
+                         @change="loadAgainAdvertFilter"/>
         <FinanceRequestsFilters v-if="type.type==='financeRequests'" label="فیلتر درخواست سرمایه گذاری "
-                                v-model="financeRequestsFilters"/>
+                                v-model="financeRequestsFilters" @change="loadAgainAdvertFilter"/>
 
         <v-flex xs12 sm6 class="py-2">
           <v-subheader>مرتب سازی بر اساس</v-subheader>
           <v-btn-toggle v-model="sort">
-            <v-btn v-for="item in sortList" :key="item.value" color="info" class="grey--text text--darken-4" @click="sortBy(item.value)"
+            <v-btn v-for="item in sortList" :key="item.value" color="info" class="grey--text text--darken-4"
+                   @click="sortBy(item.value)"
                    v-if="allowedSort(item)" flat>
               {{item.title}}
             </v-btn>
@@ -105,6 +110,9 @@
         ],
         type: '',
         sort: 'id:desc',
+        commonComputedFilters: [],
+        computedFilters: [],
+        advertTypeName: null,
         advertFilters: {},
         filter: {},
         loansFilters: {},
@@ -200,6 +208,25 @@
         this.btn_loading = false
       }
       ,
+      loadAgainCommonAdvertFilter(filter) {
+        //console.log(filter);
+        let typeName = _.get(filter, 'advertTypeName', null);
+        if (typeName) {
+          _.set(this, 'advertTypeName', typeName);
+        }else{
+          _.set(this, 'advertTypeName', this.type.type);
+        }
+        let computedFilter = Helper.getComputedFilter(filter);
+        _.set(this, 'commonComputedFilters', computedFilter);
+        this.loadAgain();
+      },
+      loadAgainAdvertFilter(filter) {
+        //console.log({filter});
+        let type = _.get(this, 'advertTypeName', null);
+        let computedFilter = Helper.getComputedFilter(filter, type);
+        _.set(this, 'computedFilters', computedFilter);
+        this.loadAgain();
+      },
       // reload as filter changed
       loadAgain(filters = {}) {
         this.msg = null;
@@ -207,11 +234,21 @@
         this.items = []
         let method = `/site/adverts`
         let include = 'advertable,city,user.details';
-        let filterArray = []
-        _.forEach(filters, function (value, key) {
-          filterArray.push(`${key}=${value}`)
+
+        let filterArray = [];
+        _.forEach(this.commonComputedFilters, function (value, key) {
+          if (value !== null && value !== '' && value !== 'null') {
+            filterArray.push(`${key}=${value}`)
+            console.log(`${key}=${value}`)
+          }
         })
-        let filter = _.split(filterArray, '`');
+        _.forEach(this.computedFilters, function (value, key) {
+          if (value !== null && value !== '' && value !== 'null') {
+            filterArray.push(`advertable.${key}=${value}`)
+            console.log(`advertable.${key}=${value}`, key, value)
+          }
+        })
+
         let query = {
           include,
           number,
