@@ -1,32 +1,33 @@
 <template>
   <v-layout row wrap>
     <v-flex xs12 sm12>
-      <AdvertFilters :chooseType="true" label="فیلتر کنید" v-model="advertFilters" chooseType="1"
-                     @change="loadAgainCommonAdvertFilter"/>
-      <LoansFilters v-if="canShow('loans')" label="فیلتر وام " v-model="filter" vv-model="loansFilters"
-                    @change="loadAgainAdvertFilter"/>
-      <LoanRequestsFilters v-if="canShow('loanRequests')" label="فیلتر در خواست وام " v-model="filter"
-                           vv-model="loanRequestsFilters" @change="loadAgainAdvertFilter"/>
-      <CoSignersFilters v-if="canShow('coSigners')" label="فیلتر ضامن ها" v-model="filter" vv-model="coSignersFilters"
-                        @change="loadAgainAdvertFilter"/>
-      <CoSignerRequestsFilters v-if="canShow('coSignerRequests')" label="فیلتر درخواست ضامن"
-                               v-model="filter" vv-model="coSignerRequestsFilters" @change="loadAgainAdvertFilter"/>
-      <FinancesFilters v-if="canShow('finances')" label="فیلتر سرمایه گذاری ها" v-model="filter"
-                       vv-model="financesFilters" @change="loadAgainAdvertFilter"/>
-      <FinanceRequestsFilters v-if="canShow('financeRequests')" label="فیلتر درخواست سرمایه گذاری "
-                              v-model="filter" vv-model="financeRequestsFilters" @change="loadAgainAdvertFilter"/>
+      <v-card color="white">
+        <AdvertFilters :chooseType="true" label="فیلتر کنید" v-model="advertFilters" chooseType="1"
+                       @change="loadAgainCommonAdvertFilter"/>
+        <LoansFilters v-if="canShow('loans')" label="فیلتر وام " v-model="filter" vv-model="loansFilters"
+                      @change="loadAgainAdvertFilter"/>
+        <LoanRequestsFilters v-if="canShow('loanRequests')" label="فیلتر در خواست وام " v-model="filter"
+                             vv-model="loanRequestsFilters" @change="loadAgainAdvertFilter"/>
+        <CoSignersFilters v-if="canShow('coSigners')" label="فیلتر ضامن ها" v-model="filter" vv-model="coSignersFilters"
+                          @change="loadAgainAdvertFilter"/>
+        <CoSignerRequestsFilters v-if="canShow('coSignerRequests')" label="فیلتر درخواست ضامن"
+                                 v-model="filter" vv-model="coSignerRequestsFilters" @change="loadAgainAdvertFilter"/>
+        <FinancesFilters v-if="canShow('finances')" label="فیلتر سرمایه گذاری ها" v-model="filter"
+                         vv-model="financesFilters" @change="loadAgainAdvertFilter"/>
+        <FinanceRequestsFilters v-if="canShow('financeRequests')" label="فیلتر درخواست سرمایه گذاری "
+                                v-model="filter" vv-model="financeRequestsFilters" @change="loadAgainAdvertFilter"/>
 
-      <v-flex xs12 sm6 class="py-2">
-        <v-subheader>مرتب سازی بر اساس</v-subheader>
-        <v-btn-toggle v-model="sort">
-          <v-btn v-for="item in sortList" :key="item.value" color="info" class="grey--text text--darken-4"
-                 @click="sortBy(item.value)"
-                 v-if="allowedSort(item)" flat>
-            {{item.title}}
-          </v-btn>
-        </v-btn-toggle>
-      </v-flex>
-
+        <v-flex xs12 sm6 class="py-2">
+          <v-subheader>مرتب سازی بر اساس</v-subheader>
+          <v-btn-toggle v-model="sort">
+            <v-btn v-for="item in sortList" :key="item.value" color="info" class="grey--text text--darken-4"
+                   @click="sortBy(item.value)"
+                   v-if="allowedSort(item)" flat>
+              {{item.title}}
+            </v-btn>
+          </v-btn-toggle>
+        </v-flex>
+      </v-card>
     </v-flex>
     <v-flex xs12 sm12>
       <v-card color="transparent" flat>

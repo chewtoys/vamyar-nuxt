@@ -142,7 +142,6 @@
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     padding: 4px;
   }
-
   .trrow:nth-child(even) td {
     background: rgba(0, 0, 0, 0.01);
   }

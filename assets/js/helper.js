@@ -79,7 +79,7 @@ const Helper = {
   ,
   getAdvertLink: function (item) {
     let types = CONSTANTS.advertTypes
-    let advertType = item.advertableType
+    let advertType = _.get(item,'advertableType',_.get(item,'advert.advertableType',''))
     let type = _.find(types, {'advertType': advertType})
     if (type && type.alias) {
       return "/categories/" + type.alias + "/show/" + _.get(item, 'advertable.id', _.get(item, 'id', 0))
