@@ -17,6 +17,7 @@
             </i>
           </v-card-title>
           <div>
+
             <v-divider/>
             <span>
               <v-chip v-if="getProperty(item, 'advert.user.details.lastName', false)" outline label class="black--text">
@@ -65,83 +66,117 @@
                       <h2>جزئیات آگهی</h2>
                     </div>
                     <div class="">
-                      <div class="pa-2 mx-1 red--text" v-if="isAllowed('amount')">
-                        <v-icon class="pb-1 pl-1 red--text">monetization_on</v-icon>
-                        <span><small class="font-14">{{getTitle('amount')}}</small>
+                      
+                      <template v-if="isAllowed('amount')">
+                        <div class="pa-2 mx-1 red--text">
+                          <v-icon class="pb-1 pl-1 red--text">monetization_on</v-icon>
+                          <span><small class="font-14">{{getTitle('amount')}}</small>
                           <b class="left">{{ amount }} </b>
                         </span>
-                      </div>
-                      <div class="pa-2 mx-1 red--text" v-if="isAllowed('maxAmount')">
-                        <v-icon class="pb-1 pl-1 red--text">monetization_on</v-icon>
-                        <span><small class="font-14">{{getTitle('maxAmount')}}</small>
+                        </div>
+                        <v-divider/>
+                      </template>
+
+                      <template v-if="isAllowed('maxAmount')">
+                        <div class="pa-2 mx-1 red--text" v-if="isAllowed('maxAmount')">
+                          <v-icon class="pb-1 pl-1 red--text">monetization_on</v-icon>
+                          <span><small class="font-14">{{getTitle('maxAmount')}}</small>
                           <b class="left">{{ maxAmount }} </b>
                         </span>
-                      </div>
-                      <v-divider/>
-                      <div class="pa-2 mx-1" v-if="isAllowed('price')">
-                        <v-icon class="pb-1 pl-1">shopping_cart</v-icon>
-                        <span><small class="font-14">{{getTitle('price')}}</small>
+                        </div>
+                        <v-divider/>
+                      </template>
+
+                      <template v-if="isAllowed('price')">
+                        <div class="pa-2 mx-1" v-if="isAllowed('price')">
+                          <v-icon class="pb-1 pl-1">shopping_cart</v-icon>
+                          <span><small class="font-14">{{getTitle('price')}}</small>
                           <b class="left">{{ price }} </b>
                         </span>
-                      </div>
-                      <v-divider/>
-                      <div class="pa-2 mx-1" v-if="isAllowed('city')">
-                        <v-icon class="pb-1 pl-1">location_on</v-icon>
-                        <span><small class="font-14">{{getTitle('city')}}</small>
+                        </div>
+                        <v-divider/>
+                      </template>
+
+                      <template v-if="isAllowed('city')">
+                        <div class="pa-2 mx-1" v-if="isAllowed('city')">
+                          <v-icon class="pb-1 pl-1">location_on</v-icon>
+                          <span><small class="font-14">{{getTitle('city')}}</small>
                           <b class="left">{{ city }}</b>
                         </span>
-                      </div>
-                      <v-divider/>
-                      <div class="pa-2 mx-1" v-if="isAllowed('job')">
-                        <v-icon class="pb-1 pl-1">location_on</v-icon>
-                        <span><small class="font-14">{{getTitle('job')}}</small>
+                        </div>
+                        <v-divider/>
+                      </template>
+
+                      <template v-if="isAllowed('job')">
+                        <div class="pa-2 mx-1" v-if="isAllowed('job')">
+                          <v-icon class="pb-1 pl-1">location_on</v-icon>
+                          <span><small class="font-14">{{getTitle('job')}}</small>
                           <b class="left">{{ job }}</b>
                         </span>
-                      </div>
-                      <v-divider/>
-                      <div class="pa-2 mx-1" v-if="isAllowed('bank')">
-                        <v-icon class="pb-1 pl-1">location_on</v-icon>
-                        <span><small class="font-14">{{getTitle('bank')}}</small>
+                        </div>
+                        <v-divider/>
+                      </template>
+
+                      <template v-if="isAllowed('bank')">
+                        <div class="pa-2 mx-1" v-if="isAllowed('bank')">
+                          <v-icon class="pb-1 pl-1">location_on</v-icon>
+                          <span><small class="font-14">{{getTitle('bank')}}</small>
                           <b class="left">{{ bank }}</b>
                         </span>
-                      </div>
-                      <v-divider/>
-                      <div class="pa-2 mx-1" v-if="isAllowed('interestRate')">
-                        <v-icon class="pb-1 pl-1">location_on</v-icon>
-                        <span><small class="font-14">{{getTitle('interestRate')}}</small>
+                        </div>
+                        <v-divider/>
+                      </template>
+
+                      <template v-if="isAllowed('interestRate')">
+                        <div class="pa-2 mx-1" v-if="isAllowed('interestRate')">
+                          <v-icon class="pb-1 pl-1">location_on</v-icon>
+                          <span><small class="font-14">{{getTitle('interestRate')}}</small>
                           <b class="left">{{ interestRate ? interestRate + 'درصد' : 'توافقی' }} </b>
                         </span>
-                      </div>
-                      <v-divider/>
-                      <div class="pa-2 mx-1" v-if="isAllowed('paybackTime')">
-                        <v-icon class="pb-1 pl-1">keyboard_arrow_left</v-icon>
-                        <span> <small class="font-14">{{getTitle('paybackTime')}}</small>
+                        </div>
+                        <v-divider/>
+                      </template>
+
+                      <template v-if="isAllowed('paybackTime')">
+                        <div class="pa-2 mx-1" v-if="isAllowed('paybackTime')">
+                          <v-icon class="pb-1 pl-1">keyboard_arrow_left</v-icon>
+                          <span> <small class="font-14">{{getTitle('paybackTime')}}</small>
                           <b class="left">{{ paybackTime ? paybackTime + ' ' : 'توافقی'}}</b>
                         </span>
-                      </div>
-                      <v-divider/>
-                      <div class="pa-2 mx-1" v-if="isAllowed('guaranteeTypes')">
-                        <v-icon class="pb-1 pl-1">how_to_reg</v-icon>
-                        <span><small class="font-14">{{getTitle('guaranteeTypes')}}</small><b
-                          class="left">{{ getGuaranteeType }}</b></span>
-                      </div>
-                      <v-divider/>
-                      <div class="pa-2 mx-1" v-if="isAllowed('loanType')">
-                        <v-icon class="pb-1 pl-1">how_to_reg</v-icon>
-                        <span>
+                        </div>
+                        <v-divider/>
+                      </template>
+
+                      <template v-if="isAllowed('guaranteeTypes')">
+                        <div class="pa-2 mx-1" v-if="isAllowed('guaranteeTypes')">
+                          <v-icon class="pb-1 pl-1">how_to_reg</v-icon>
+                          <span><small class="font-14">{{getTitle('guaranteeTypes')}}</small><b
+                            class="left">{{ getGuaranteeType }}</b></span>
+                        </div>
+                        <v-divider/>
+                      </template>
+
+                      <template v-if="isAllowed('loanType')">
+                        <div class="pa-2 mx-1" v-if="isAllowed('loanType')">
+                          <v-icon class="pb-1 pl-1">how_to_reg</v-icon>
+                          <span>
                           <small class="font-14">{{getTitle('loanType')}}</small>
                           <b class="left">{{ getLoanType }}</b>
                         </span>
-                      </div>
-                      <v-divider/>
-                      <div class="pa-2 mx-1">
-                        <small class="font-14">
-                          <v-icon class="pb-1 pl-1">edit</v-icon>
-                          توضیحات
-                        </small>
-                        <p v-html="text"></p>
-                      </div>
-                      <v-divider/>
+                        </div>
+                        <v-divider/>
+                      </template>
+                      <template v-if="isAllowed('text')">
+                        <div class="pa-2 mx-1">
+                          <small class="font-14">
+                            <v-icon class="pb-1 pl-1">edit</v-icon>
+                            توضیحات
+                          </small>
+                          <p v-html="text"></p>
+                        </div>
+                        <v-divider/>
+                      </template>
+
                       <div class="pa-2 mx-1">
                         <v-icon class="pb-1 pl-1 pt-2">location_on</v-icon>
                         <span><small class="font-14 pt-2">شماره موبایل</small>
@@ -359,7 +394,7 @@
       isUrgent: function () {
         return this.item.isUrgent === true
       },
-      showDetail: function () { 
+      showDetail: function () {
         this.showLoading = true
         let phone = this.item.advert.mobile
         let mail = this.item.advert.mail
