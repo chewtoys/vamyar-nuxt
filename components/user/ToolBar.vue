@@ -1,4 +1,7 @@
 <template>
+  <span>
+    <no-ssr>
+      <span>
   <v-toolbar
     color="white lighten-5"
     fixed
@@ -26,6 +29,9 @@
       </v-list>
     </v-menu>
   </v-toolbar>
+      </span>
+    </no-ssr>
+  </span>
 </template>
 <script>
   import Helper from "~/assets/js/helper"
@@ -43,16 +49,16 @@
         //{title: 'صندوق پیام ها', icon: 'inbox', to: '/user/settings'},
       ],
       loans: [
-        {title: "وام برای فروش", icon: "book", to: "/user/loans"},
-        {title: "درخواست وام", icon: "book", to: "/user/loan-requests"}
+        {title: "ثبت وام برای فروش یا مشارکت", icon: "book", to: "/user/loans"},
+        {title: "درخواست وام دارم", icon: "book", to: "/user/loan-requests"}
       ],
       coSigner: [
-        {title: "ضامن", icon: "book", to: "/user/co-signers"},
-        {title: "درخواست ضامن", icon: "book", to: "/user/co-signer-requests"}
+        {title: "ثبت ضمانت (ضامن هستم)", icon: "book", to: "/user/co-signers"},
+        {title: "درخواست ضامن دارم", icon: "book", to: "/user/co-signer-requests"}
       ],
       finances: [
-        {title: "سرمایه گذاری", icon: "book", to: "/user/finances"},
-        {title: "درخواست سرمایه", icon: "book", to: "/user/finance-requests"}
+        {title: "ثبت سرمایه (سرمایه گذار هستم)", icon: "book", to: "/user/finances"},
+        {title: "درخواست سرمایه دارم", icon: "book", to: "/user/finance-requests"}
       ],
       access: [
         {title: "سایت", icon: "book", to: "/user/adverts/vam"},

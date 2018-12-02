@@ -38,7 +38,7 @@
             دسته بندی: {{category}}
           </small>
         </v-toolbar>
-        <div class="py-4 px-3 font-14 text-justify">{{ list.message }}</div>
+        <div class="py-4 px-3 font-14 text-justify" v-html="nl2br(list.message)"></div>
 
       </v-card-text>
     </v-card>
@@ -193,6 +193,9 @@
     }
     ,
     methods: {
+      nl2br(txt) {
+        return Helper.nl2br(txt);
+      },
       toast(msg, color) {
         this.$store.commit("snackbar/setSnack", msg, color)
       }

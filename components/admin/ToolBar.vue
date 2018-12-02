@@ -1,4 +1,7 @@
 <template>
+  <span>
+    <no-ssr>
+      <span>
   <v-toolbar
     dark
     fixed
@@ -26,6 +29,9 @@
       </v-list>
     </v-menu>
   </v-toolbar>
+      </span>
+    </no-ssr>
+  </span>
 </template>
 <script>
   import Helper from "~/assets/js/helper"

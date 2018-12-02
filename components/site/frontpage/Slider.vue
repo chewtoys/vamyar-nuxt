@@ -15,56 +15,58 @@
   </v-container>
 </template>
 <script>
-import AdvertCard from "~/components/site/adverts/Advert.vue"
+  import AdvertCard from "~/components/site/adverts/Advert.vue"
 
-const path = "/site/adverts",
-  title = "آگهی‌های فوری"
-export default {
-  components: { AdvertCard },
-  data() {
-    return {
-      data: [],
-      title,
-      img: "http://placehold.it/2000x1000",
-      options: {
-        draggable: true,
-        loop: true,
-        duration: 200,
-        easing: "ease-out",
-        perPage: 3,
-        startIndex: 0,
-        multipleDrag: true,
-        threshold: 20,
-        rtl: true
+  const path = "/site/adverts",
+    title = "آگهی‌های فوری"
+  export default {
+    components: {AdvertCard},
+    data() {
+      return {
+        msg: null,
+        data: [],
+        title,
+        img: "http://placehold.it/2000x1000",
+        options: {
+          draggable: true,
+          loop: true,
+          duration: 200,
+          easing: "ease-out",
+          perPage: 3,
+          startIndex: 0,
+          multipleDrag: true,
+          threshold: 20,
+          rtl: true
+        }
       }
-    }
-  },
-  async mounted() {
-    try {
-      this.data = await this.$axios.$get(path, {
-        params: { include: "advertable" }
+    },
+    mounted() {
+      this.$axios.$get(path, {
+        params: {include: "advertable,city,user.details", number: 12}
+      }).then(res => {
+        this.data = _.get(res, 'data', [])
+      }).catch((err) => {
+        console.log(err)
+        this.msg = 'مشکلی در گرفتن آخرین آگهی ها پیش آمد'
+        this.$store.commit(
+          "snackbar/setSnack",
+          "مشکلی در گرفتن آگهی ها پیش آمد.",
+          "error"
+        )
       })
-    } catch (err) {
-      this.$store.commit(
-        "snackbar/setSnack",
-        "مشکلی در گرفتن آگهی ها پیش آمد.",
-        "error"
-      )
-      this.data = []
     }
   }
-}
 </script>
 
 <style>
-.wrp {
-  max-width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-}
+  .wrp {
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
 
-.slide {
-  max-height: 600px;
-  background: #ccc;
-}
+  .slide {
+    max-height: 600px;
+    background: #ccc;
+  }
 </style>

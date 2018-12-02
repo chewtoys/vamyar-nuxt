@@ -1,21 +1,5 @@
-<template xmlns:v-quill="http://www.w3.org/1999/xhtml">
+<template>
   <v-container grid-list-xs fluid>
-    <v-card color="white" raised light class="py-5 px-4">
-      <v-layout row>
-        <v-flex xs12 md12 sm12 lg12>
-          <v-alert
-            :value="true"
-            color="info"
-            icon="info"
-          >{{ info.title }}
-          </v-alert>
-          <v-divider class="my-3"/>
-          <v-card dark color="green darken-1" class="pa-3 font-12">
-            <p class="font-14 text-justify">{{ info.text }}</p>
-          </v-card>
-        </v-flex>
-      </v-layout>
-    </v-card>
     <v-card color="white" raised light class="mt-5 py-5 px-4">
       <v-layout row wrap>
         <v-flex xs12>
@@ -50,28 +34,36 @@
               data-vv-name="title"
               label="عنوان"
             />
-            <v-autocomplete
+            <v-text-field
               v-validate="'required'"
-              v-model="ticketCategoryName"
-              :error-messages="errors.collect('ticketCategory')"
+              v-model="slug"
+              :error-messages="errors.collect('slug')"
               box
-              label="دسته بندی"
-              data-vv-name="ticketCategory"
-              :items="ticketCategoryList"
-              persistent-hint
-            ></v-autocomplete>
-            <div class="quill-editor"
-                 v-model="content"
-                 v-quill:myQuillEditor="editorOption">
-            </div>
-            <v-textarea
-              v-model="message"
-              :error-messages="errors.collect('message')"
+              data-vv-name="slug"
+              label="مستعار"
+            />
+            <v-treeview label="والد"
+                        selectable
+                        v-model="parent"
+                        transition
+                        :items="categories"
+                        :loading="categoryLoading"
+                        item-text="name"
+            />
+            <Img
+              v-model="image"
+              label="تصویر"
+            />
+            <Editor
+              validate="required"
+              v-model="content"
+              :error-messages="errors.collect('content')"
               box
-              label="پیام"
-              data-vv-name="message"
+              label="محتوا"
+              data-vv-name="content"
               auto-grow
             />
+
             <v-btn :loading="submit_loader" outline color="accent" round @click="processSubmit">
               <v-icon class="px-1">save</v-icon>
               ذخیره
@@ -83,12 +75,14 @@
   </v-container>
 </template>
 <script>
+  import Editor from '~/components/elements/Editor'
+  import Img from '~/components/elements/FileUploader'
 
-  const page_title = 'ثبت تیکت جدید',
-    breadcrumb = 'تیکت جدید',
-    indexPath = '/user/tickets',
-    createPath = '/user/tickets',
-    ticketCategoriesMethod = '/ticketCategories'
+  const page_title = 'ثبت مطلب جدید',
+    breadcrumb = 'مطلب جدید',
+    indexPath = '/admin/posts',
+    createPath = '/admin/posts',
+    categoriesMethod = '/admin/categories'
 
   export default {
     $_veeValidate: {
@@ -100,38 +94,29 @@
       breadcrumb: breadcrumb
     },
     data: () => ({
-      content: '<p>example content</p>',
-      editorOption: {
-        /* quill options */
-      },
+      parent: [],
+      content: '',
+      image: null,
+      title: '',
+      slug: '',
       page_title,
-      // ticket
-      title: null,
-      message: "",
-      ticketCategoryName: '',
-      priorityName: 0,
-
+      //
+      categories: [{id: 1, name: 'بدون دسته بندی'}],
+      categoryLoading: true,
       // validator dictionary
+      submit_loader: false,
       dictionary: {
         attributes: {
-          title: "عنوان تیکت",
-          message: "پیام",
-          priority: "فوریت",
-          ticketCategory: 'دسته بندی تیکت'
+          title: "عنوان مطلب",
+          slug: "مستعار",
+          content: "متن",
+          categories: 'دسته بندی ',
+          parentId: "والد",
           // custom attributes
-        }
+        },
+
       },
-      // info
-      info: {
-        title: "لطفا قبل از پر کردن فرم نکات زیر را مد نظر داشته باشید:",
-        text:
-          "لورم ایپسوم یا طرح‌نما (به انگلیسی: Lorem ipsum) به متنی آزمایشی و بی‌معنی در صنعت چاپ، صفحه‌آرایی و طراحی گرافیک گفته می‌شود. طراح گرافیک از این متن به عنوان عنصری از ترکیب بندی برای پر کردن صفحه و ارایه اولیه شکل ظاهری و کلی طرح سفارش گرفته شده استفاده می نماید، تا از نظر گرافیکی نشانگر چگونگی نوع و اندازه فونت و ظاهر متن باشد. معمولا طراحان گرافیک برای صفحه‌آرایی، نخست از متن‌های آزمایشی و بی‌معنی استفاده می‌کنند تا صرفا به مشتری یا صاحب کار خود نشان دهند که صفحه طراحی یا صفحه بندی شده بعد از اینکه متن در آن قرار گیرد چگونه به نظر می‌رسد و قلم‌ها و اندازه‌بندی‌ها چگونه در نظر گرفته شده‌است. از آنجایی که طراحان عموما نویسنده متن نیستند و وظیفه رعایت حق تکثیر متون را ندارند و در همان حال کار آنها به نوعی وابسته به متن می‌باشد آنها با استفاده از محتویات ساختگی، صفحه گرافیکی خود را صفحه‌آرایی می‌کنند تا مرحله طراحی و صفحه‌بندی را به پایان برند.",
-        heading: "عنوان متن"
-      },
-      submit_loader: false,
-      snackbar: false,
-      snack_text: null,
-      snack_color: "info"
+
     }),
     computed:
       {
@@ -142,43 +127,19 @@
         createPath: function () {
           return createPath;
         },
-        ticketCategory() {
-          let list = this.$store.state.ticketCategory.data;
-          let index = _.findIndex(list, {'name': this.ticketCategoryName});
-          let item = list[index];
-          return _.get(item, 'id', 0);
-        },
-        priority() {
-          let list = this.$store.state.settings.tickets.priorities;
-          let index = _.findIndex(list, {'name': this.priorityName});
-          let item = list[index];
-          return _.get(item, 'id', 0);
-        },
-        priorityList() {
-          return this.$store.state.settings.tickets.prioritiesArray;
-        }
-        ,
       }
-    ,
-    async asyncData({params, store, $axios}) {
-      try {
-        // loan types
-        let ticketCategories = await
-          $axios.$get(ticketCategoriesMethod);
-        store.commit('ticketCategory/setAndProcessData', ticketCategories.data || []);
-      } catch (error) {
-        console.log('error', error)
-      }
-      return {
-        ticketCategoryList: _.get(store.state, 'ticketCategory.arrayList', []),
-      }
-    }
     ,
     mounted() {
       this.$validator.localize("fa", this.dictionary)
+      this.$axios.$get(categoriesMethod).then(res => {
+        let fetched = _.get(res, 'data', []);
+        this.categories = _.isArray(fetched) ? fetched : [];
+        this.categoryLoading = false;
+      }).catch(err => {
+        console.log(err)
+      })
     }
     ,
-
     methods: {
       toast(msg, color) {
         this.$store.commit("snackbar/setSnack", msg, color)
@@ -187,9 +148,10 @@
       sendForm() {
         let data = {
           title: this.title,
-          message: this.message,
-          priority: this.priority,
-          category: this.ticketCategory
+          slug: this.slug,
+          image: this.image,
+          text: this.content,
+          categories: this.parent,
         }
         this.$axios
           .$post(createPath, data)
@@ -199,7 +161,7 @@
               // show success and redirect
               this.toast("با موفقیت ثبت شد.", "success")
               this.submit_loader = false
-              //this.$router.push("../")
+              this.$router.push(indexPath)
             } else {
               this.toast(" خطایی رخ داد.", "warning")
               this.submit_loader = false
@@ -237,7 +199,7 @@
       }
     },
     components: {
-      quillEditor
+      Editor, Img
     }
   }
 </script>

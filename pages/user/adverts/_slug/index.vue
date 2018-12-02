@@ -1,21 +1,5 @@
 <template>
   <div>
-    <v-card color="white" raised light class="py-5 px-4">
-      <v-layout row>
-        <v-flex xs12 md12 sm12 lg12>
-          <v-alert
-            :value="true"
-            color="info"
-            icon="info"
-          >{{ info.title }}
-          </v-alert>
-          <v-divider class="my-3"/>
-          <v-card dark color="green darken-1" class="pa-3 font-12">
-            <p class="font-14 text-justify"/>
-          </v-card>
-        </v-flex>
-      </v-layout>
-    </v-card>
     <v-card color="white" raised light class="mt-5 py-5 px-4">
       <div>
         <v-toolbar flat color="white">
@@ -67,29 +51,90 @@
                 hide-details
               ></v-checkbox>
             </td>
+            <td class="text-xs-right">{{ props.item.advert.title }}</td>
             <template v-if="type.type=='loans'">
-              <td class="text-xs-right">{{ props.item.advert.title }}</td>
-              <td class="text-xs-right">{{ props.item.advert.text }}</td>
-              <td class="text-xs-left">{{ props.item.price }}</td>
-              <td class="text-xs-left">{{ props.item.amount }}</td>
+              <td class="text-xs-left">{{ getPrice(props.item.price) }}</td>
+              <td class="text-xs-left">{{ getPrice(props.item.amount) }}</td>
             </template>
             <template v-if="type.type=='loanRequests'">
-              <td class="text-xs-right">{{ props.item.advert.title }}</td>
-              <td class="text-xs-right">{{ props.item.advert.text }}</td>
-              <td class="text-xs-left">{{ props.item.amount }}</td>
+              <td class="text-xs-left">{{ getPrice(props.item.amount) }}</td>
             </template>
             <template v-if="type.type=='finances'">
-              <td class="text-xs-right">{{ props.item.advert.title }}</td>
-              <td class="text-xs-left">{{ props.item.maxAmount }}</td>
-              <td class="text-xs-right">{{ props.item.advert.text }}</td>
+              <td class="text-xs-left">{{ getPrice(props.item.maxAmount) }}</td>
+            </template>
+            <template v-if="type.type=='financeRequests'">
+              <td class="text-xs-left">{{ getPrice(props.item.amount) }}</td>
+              <td class="text-xs-left">{{ props.item.job }}</td>
             </template>
             <template v-if="type.type=='coSigners'">
-              <td class="text-xs-right">{{ props.item.advert.title }}</td>
               <td class="text-xs-left">{{ getType(props.item.type) }}</td>
               <td class="text-xs-left">{{ getGuaranteeTypes(props.item.guaranteeTypes) }}</td>
-              <td class="text-xs-right">{{ props.item.advert.text }}</td>
             </template>
-            <td class="text-xs-left">
+            <template v-if="type.type=='coSignerRequests'">
+              <td class="text-xs-left">{{ getType(props.item.type) }}</td>
+              <td class="text-xs-left">{{ getGuaranteeTypes(props.item.guaranteeTypes) }}</td>
+              <td class="text-xs-left">{{ props.item.interestRate }}</td>
+              <td class="text-xs-left">{{ props.item.bank }}</td>
+            </template>
+            <td class="text-xs-right">
+              <v-menu offset-y>
+                <v-btn
+                  slot="activator"
+                  color="primary"
+                  outline
+                >
+                  {{ tradeStatus(props.item) }}
+                </v-btn>
+                <v-list>
+                  <v-list-tile
+                    @click="changeTradeStatus(props.item.advert.id,0)"
+                  >
+                    <v-list-tile-title>باز</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+                <v-list>
+                  <v-list-tile
+                    @click="changeTradeStatus(props.item.advert.id,1)"
+                  >
+                    <v-list-tile-title>در حال معامله</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+                <v-list>
+                  <v-list-tile
+                    @click="changeTradeStatus(props.item.advert.id,2)"
+                  >
+                    <v-list-tile-title>بسته شده</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+              </v-menu>
+
+              <v-menu offset-y>
+                <v-btn
+                  slot="activator"
+                  color="primary"
+                  outline
+                >
+                  {{ instant(props.item) }}
+                </v-btn>
+                <v-list>
+                  <v-list-tile
+                    @click="changeInstant(props.item.advert.id,1)"
+                  >
+                    <v-list-tile-title>فوری</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+                <v-list>
+                  <v-list-tile
+                    @click="changeInstant(props.item.advert.id,0)"
+                  >
+                    <v-list-tile-title>غیر فوری</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+
+              </v-menu>
+              {{ verified(props.item) }}
+            </td>
+            <td>
               <a title="مشاهده" :href=" uri + '/show/' + props.item.id" class="mx-1">
                 <v-icon
                   small
@@ -138,7 +183,7 @@
       search: '',
       submit_loader: false,
     }),
-    async asyncData({params, app, store,$axios}) {
+    async asyncData({params, app, store, $axios}) {
 
       // guarantee
       let guaranteeData = await $axios.$get(guaranteeMethod);
@@ -219,13 +264,42 @@
         }
       }
     },
+
     mounted() {
       return {
         rawData: this.data || []
       }
     },
     methods: {
-      getGuaranteeTypes(key) {
+
+      changeTradeStatus(id, type) {
+        let method = `/user/adverts/${id}/changeTradeStatus/${type}`
+        this.$axios.$put(method).then((res) => {
+
+        }).catch(err => {
+
+        })
+      },
+      instant(item) {
+        return !!_.get(item, 'advert.instant', _.get(item, 'instant', false)) ? 'فوری' : 'غیر فوری'
+      },
+      changeInstant(id, val) {
+        let method = `/user/adverts/${id}/instantIt`
+        this.$axios.$put(method, {instant: val}).then((res) => {
+        }).catch(err => {
+        })
+      },
+      getPrice(val) {
+        return Helper.priceFormat(val)
+      },
+      verified(item) {
+        return item.verified ? 'تایید شده' : 'تایید نشده';
+      },
+      tradeStatus(item) {
+        let list = this.$store.state.settings.adverts.tradeStatusList;
+        return list[item.tradeStaus || 0];
+      }
+      , getGuaranteeTypes(key) {
         let items = [];
         let list = this.$store.state.guaranteeType.data;
         _.forEach(key, (id) => {

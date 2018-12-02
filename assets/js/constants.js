@@ -1,65 +1,47 @@
 // data structure
-export const rawHeaders = {
+export const
+  COMMON_FIELDS = ['title', 'city', 'text', 'desc', 'advertType', 'verified', 'tradeStatus', 'mobile', 'instant', 'description'],
+  rawHeaders = {
     loans: [
       {text: "عنوان", align: "right", value: 'advert.title'},
-      {text: "توضیحات", align: "right", value: 'advert.text'},
       {text: "قیمت", value: "price", align: "left"},
       {text: "مقدار وام", value: "amount", align: "left"},
+      {text: "وضعیت", align: "right", sortable: false},
       {text: "عملیات", align: "left", value: 'loanTypeId', width: '140px', sortable: false}
     ],
     loanRequests: [
       {text: "عنوان", value: "title", align: "right"},
-      {text: "توضیحات", value: "description", align: "right"},
       {text: "مقدار وام", value: "amount", align: "left"},
+      {text: "وضعیت", align: "right", sortable: false},
       {text: "عملیات", sortable: false, align: "left"}
     ],
     finances: [
       {text: "عنوان", align: "right", value: 'advert.title'},
       {text: "حداکثر سرمایه", value: "maxAmount", align: "left"},
-      {text: "توضیحات", align: "right", value: 'advert.text'},
+      {text: "وضعیت", align: "right", sortable: false},
+      {text: "عملیات", align: "left", value: 'loanTypeId', width: '140px', sortable: false}
+    ],
+    financeRequests: [
+      {text: "عنوان", align: "right", value: 'advert.title'},
+      {text: " سرمایه ی درخواستی", value: "amount", align: "left"},
+      {text: "شغل", align: "right", value: 'job'},
+      {text: "وضعیت", align: "right", sortable: false},
       {text: "عملیات", align: "left", value: 'loanTypeId', width: '140px', sortable: false}
     ],
     coSigners: [
       {text: "عنوان", align: "right", value: 'advert.title'},
       {text: "نوع ضمانت", value: "type", align: "left"},
       {text: "نوع ضامن", value: "guaranteeTypes", align: "left"},
-      {text: "توضیحات", align: "right", value: 'advert.text'},
+      {text: "وضعیت", align: "right", sortable: false},
       {text: "عملیات", align: "left", value: 'loanTypeId', width: '140px', sortable: false}
     ],
-  },
-  adminRawHeaders = {
-    loans: [
-      {text: "شناسه", align: "right", value: 'id'},
-      {text: "ثبت شده توسط", align: "right", value: 'advert.user.id'},
-      {text: "عنوان", align: "right", value: 'advert.title'},
-      {text: "توضیحات", align: "right", value: 'advert.text'},
-      {text: "قیمت", value: "price", align: "left"},
-      {text: "مقدار وام", value: "amount", align: "left"},
-      {text: "عملیات", align: "left", value: 'loanTypeId', width: '140px', sortable: false}
-    ],
-    loanRequests: [
-      {text: "شناسه", align: "right", value: 'id'},
-      {text: "ثبت شده توسط", align: "right", value: 'advert.user.id'},
-      {text: "عنوان", value: "title", align: "right"},
-      {text: "توضیحات", value: "description", align: "right"},
-      {text: "مقدار وام", value: "amount", align: "left"},
-      {text: "عملیات", sortable: false, align: "left"}
-    ],
-    finances: [
-      {text: "شناسه", align: "right", value: 'id'},
-      {text: "ثبت شده توسط", align: "right", value: 'advert.user.id'},
-      {text: "عنوان", align: "right", value: 'advert.title'},
-      {text: "حداکثر سرمایه", value: "maxAmount", align: "left"},
-      {text: "توضیحات", align: "right", value: 'advert.text'},
-      {text: "عملیات", align: "left", value: 'loanTypeId', width: '140px', sortable: false}
-    ],
-    coSigners: [
-      {text: "شناسه", align: "right", value: 'id'},
-      {text: "ثبت شده توسط", align: "right", value: 'advert.user.id'},
+    coSignerRequests: [
       {text: "عنوان", align: "right", value: 'advert.title'},
       {text: "نوع ضمانت", value: "type", align: "left"},
       {text: "نوع ضامن", value: "guaranteeTypes", align: "left"},
-      {text: "توضیحات", align: "right", value: 'advert.text'},
+      {text: "سود", align: "right", value: 'interestRate'},
+      {text: "بانک", align: "right", value: 'bank'},
+      {text: "وضعیت", align: "right", sortable: false},
       {text: "عملیات", align: "left", value: 'loanTypeId', width: '140px', sortable: false}
     ],
   },
@@ -132,13 +114,16 @@ export const rawHeaders = {
           title: 'نوع ضمانت'
         }, {
           name: 'amount',
-          title: 'مقدار وام'
+          title: 'میزان وام',
+          placeholder: 'ریال'
         }, {
           name: 'price',
-          title: 'مبلغ وام'
+          title: 'قیمت فروش',
+          placeholder: 'ریال'
         }, {
           name: 'paybackTime',
-          title: 'مدت بازپرداخت'
+          title: 'مدت بازپرداخت',
+          help: 'اگر خالی بگذارید به عنوان توافقی در نظر گرفته می شود.'
         }, {
           name: 'loanType',
           title: 'نوع وام'
@@ -164,23 +149,27 @@ export const rawHeaders = {
         }, {
           name: 'image',
           title: 'تصویر آگهی',
-          path: 'advert.mobile'
+          path: 'advert.image'
         }, {
           name: 'guaranteeTypes',
           title: 'نوع ضمانت',
           path: 'guaranteeTypes' // ?
         }, {
           name: 'amount',
-          title: 'مقدار وام',
-          path: 'amount'
+          title: 'میزان وام',
+          path: 'amount',
+          placeholder: 'ریال'
         }, {
           name: 'price',
-          title: 'مبلغ وام',
-          path: 'price'
+          title: 'قیمت فروش',
+          path: 'price',
+          placeholder: 'ریال',
+          help: 'اگر خالی بگذارید به عنوان توافقی در نظر گرفته می شود.'
         }, {
           name: 'paybackTime',
           title: 'مدت بازپرداخت',
-          path: 'paybackTime'
+          path: 'paybackTime',
+          help: 'اگر خالی بگذارید به عنوان توافقی در نظر گرفته می شود.'
         }, {
           name: 'loanType',
           title: 'نوع وام',
@@ -210,10 +199,12 @@ export const rawHeaders = {
           title: 'نوع ضمانت'
         }, {
           name: 'amount',
-          title: 'مقدار وام'
+          title: 'مبلغ وام مورد نیاز',
+          placeholder: 'ریال'
         }, {
           name: 'paybackTime',
-          title: 'مدت بازپرداخت'
+          title: 'مدت بازپرداخت',
+          help: 'اگر خالی بگذارید به عنوان توافقی در نظر گرفته می شود.'
         }
       ],
       edit: [
@@ -236,19 +227,21 @@ export const rawHeaders = {
         }, {
           name: 'image',
           title: 'تصویر آگهی',
-          path: 'advert.mobile'
+          path: 'advert.image'
         }, {
           name: 'guaranteeTypes',
           title: 'نوع ضمانت',
           path: 'guaranteeTypes' // ?
         }, {
           name: 'amount',
-          title: 'مقدار وام',
-          path: 'amount'
+          title: 'مبلغ وام مورد نیاز',
+          path: 'amount',
+          placeholder: 'ریال'
         }, {
           name: 'paybackTime',
           title: 'مدت بازپرداخت',
-          path: 'paybackTime'
+          path: 'paybackTime',
+          help: 'اگر خالی بگذارید به عنوان توافقی در نظر گرفته می شود.'
         },
       ],
     },
@@ -271,10 +264,10 @@ export const rawHeaders = {
           title: 'تصویر آگهی'
         }, {
           name: 'maxAmount',
-          title: 'سقف پرداخت سرمایه'
+          title: 'سقف پرداخت سرمایه',
+          placeholder: 'ریال'
         },
       ],
-
       edit: [
         {
           name: 'title',
@@ -295,11 +288,12 @@ export const rawHeaders = {
         }, {
           name: 'image',
           title: 'تصویر آگهی',
-          path: 'advert.mobile'
+          path: 'advert.image'
         }, {
           name: 'maxAmount',
           title: 'حداکثر سرمایه',
-          path: 'maxAmount'
+          path: 'maxAmount',
+          placeholder: 'ریال'
         },
       ],
     },
@@ -325,7 +319,40 @@ export const rawHeaders = {
           title: 'شغل'
         }, {
           name: 'amount',
-          title: 'مقدار سرمایه درخواستی'
+          title: 'مقدار سرمایه درخواستی',
+          placeholder: 'ریال'
+        },
+      ],
+      edit: [
+        {
+          name: 'title',
+          title: 'عنوان',
+          path: 'advert.title'
+        }, {
+          name: 'city',
+          title: 'شهر',
+          path: 'advert.cityId'
+        }, {
+          name: 'text',
+          title: 'توضیح آگهی',
+          path: 'advert.text'
+        }, {
+          name: 'mobile',
+          title: 'موبایل',
+          path: 'advert.mobile'
+        }, {
+          name: 'image',
+          title: 'تصویر آگهی',
+          path: 'advert.image'
+        }, {
+          name: 'job',
+          title: 'شغل',
+          path: 'job'
+        }, {
+          name: 'amount',
+          title: 'مقدار سرمایه درخواستی',
+          path: 'amount',
+          placeholder: 'ریال'
         },
       ],
     },
@@ -354,6 +381,37 @@ export const rawHeaders = {
           title: 'نوع ضمانت'
         },
       ],
+      edit: [
+        {
+          name: 'title',
+          title: 'عنوان',
+          path: 'advert.title'
+        }, {
+          name: 'city',
+          title: 'شهر',
+          path: 'advert.cityId'
+        }, {
+          name: 'text',
+          title: 'توضیح آگهی',
+          path: 'advert.text'
+        }, {
+          name: 'mobile',
+          title: 'موبایل',
+          path: 'advert.mobile'
+        }, {
+          name: 'image',
+          title: 'تصویر آگهی',
+          path: 'advert.image'
+        }, {
+          name: 'guaranteeTypes',
+          title: 'نوع ضامن',
+          path: 'guaranteeTypes'
+        }, {
+          name: 'type',
+          title: 'نوع ضمانت',
+          path: 'type'
+        },
+      ],
     },
     coSignerRequests: {
       create: [
@@ -376,17 +434,54 @@ export const rawHeaders = {
           name: 'guaranteeTypes',
           title: 'نوع ضامن'
         }, {
-          name: 'amount',
-          title: 'مقدار وام'
-        }, {
-          name: 'price',
-          title: 'مبلغ وام'
-        }, {
           name: 'type',
           title: 'نوع ضمانت'
         }, {
           name: 'interestRate',
           title: 'سود'
+        }, {
+          name: 'bank',
+          title: 'بانک'
+        },
+      ],
+      edit: [
+        {
+          name: 'title',
+          title: 'عنوان',
+          path: 'advert.title'
+        }, {
+          name: 'city',
+          title: 'شهر',
+          path: 'advert.cityId'
+        }, {
+          name: 'text',
+          title: 'توضیح آگهی',
+          path: 'advert.text'
+        }, {
+          name: 'mobile',
+          title: 'موبایل',
+          path: 'advert.mobile'
+        }, {
+          name: 'image',
+          title: 'تصویر آگهی',
+          path: 'advert.image'
+        }, {
+          name: 'guaranteeTypes',
+          title: 'نوع ضامن',
+          path: 'guaranteeTypes'
+        }, {
+          name: 'type',
+          title: 'نوع ضمانت',
+          path: 'type'
+        }, {
+          name: 'interestRate',
+          title: 'سود',
+          path: 'interestRate'
+        },
+        {
+          name: 'bank',
+          title: 'بانک',
+          path: 'bank'
         },
       ],
     }
@@ -396,37 +491,50 @@ export const rawHeaders = {
       type: "loanRequests",
       advertType: "loanRequest",
       alias: "loan-requests",
-      title: "درخواست وام"
+      title: "درخواست وام",
+      panelLink: "درخواست وام دارم",
+      siteLink: "درخواست های وام",
+
     },
     loans: {
       type: "loans",
       advertType: "loan",
       alias: "loans",
-      title: "وام"
+      title: "وام",
+      panelLink: "ثبت وام برای فروش یا مشارکت",
+      siteLink: "وام های فروشی و مشارکتی",
     },
     finances: {
       type: "finances",
       advertType: "finance",
       alias: "finances",
-      title: "سرمایه گذاری"
+      title: "سرمایه گذاری",
+      panelLink: "ثبت سرمایه (سرمایه گذار هستم)",
+      siteLink: "سرمایه گذارها",
     },
     financeRequests: {
       type: "financeRequests",
       advertType: "financeRequest",
       alias: "finance-requests",
-      title: "درخواست سرمایه گذاری"
+      title: "درخواست سرمایه گذاری",
+      panelLink: "درخواست سرمایه دارم",
+      siteLink: "درخواست های سرمایه",
     },
     coSigners: {
       type: "coSigners",
       advertType: "coSigner",
       alias: "co-signers",
-      title: "ضامن"
+      title: "ضامن",
+      panelLink: "ثبت ضمانت (ضامن هستم)",
+      siteLink: "ضامن ها",
     },
     coSignerRequests: {
       type: "coSignerRequests",
       advertType: "coSignerRequest",
       alias: "co-signer-requests",
-      title: "درخواست ضامن"
+      title: "درخواست ضامن",
+      panelLink: "درخواست ضامن دارم",
+      siteLink: "درخواست های ضمانت",
     }
   }, AdminMenu = {
     tickets: [
@@ -483,7 +591,8 @@ export const rawHeaders = {
     ]
   },
   GENERAL_SETTINGS = {
-    site: ['closedSiteText', 'isSiteOpen', 'siteTitle', 'siteDescription', 'siteLogo', 'siteFavIcon', 'footerText', 'headerText', 'subHeaderText'],
+    site: ['closedSiteText', 'isSiteOpen', 'siteTitle', 'siteDescription', 'siteLogo', 'siteFavIcon', 'footerText'],
     adverts: ['noticeOnAdvertShow', 'noticeBeforeCreateAdvert', 'isImageAllowed'],
-    pages: ['aboutUsText', 'contactUsText', 'rulesText', 'contactUsSuggestionText', 'educationText']
+    frontpage: ['whatWeDoClip', 'whatWeDo', 'onMedia', 'whyUs', 'whatWeDo', 'noticeBeforeCreateAdvert', 'isImageAllowed', 'headerBgUrl', 'headerText', 'subHeaderText'],
+    pages: ['premiumText', 'panelPremiumText', 'addAdvertHelpText', 'aboutUsText', 'contactUsTable', 'contactUsText', 'rulesText', 'contactUsSuggestionText', 'educationText']
   }

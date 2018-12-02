@@ -1,6 +1,9 @@
 <template>
   <span>
-    <v-toolbar v-scroll="onScroll" flat color="white" class="white grey--text" app>
+    <no-ssr>
+  <span>
+
+    <v-toolbar v-scroll="onScroll" flat :color="menuColor" class="white grey--text" app>
       <v-btn flat color="transparent" class="white--text" to="/">
         <v-icon class="deep-purple--text font-16 pl-1">polymer</v-icon>
         <v-toolbar-title>
@@ -8,12 +11,13 @@
         </v-toolbar-title>
       </v-btn>
       <v-divider vertical/>
-      <v-toolbar-items v-if="showQuickAccess">
+
+      <v-toolbar-items key="t1" v-if="showQuickAccess">
         <v-btn to="/categories/loans" flat>وام ها</v-btn>
         <v-btn to="/categories/co-signers" flat>ضامن ها</v-btn>
         <v-btn to="/categories/finances" flat>سرمایه گذاری ها</v-btn>
       </v-toolbar-items>
-      <v-toolbar-items v-if="!showQuickAccess && !isMobile">
+      <v-toolbar-items key="t2" v-if="!showQuickAccess && !isMobile">
         <v-menu :nudge-width="100">
           <v-btn slot="activator" flat>
             <span>دسته بندی ها</span>
@@ -25,25 +29,27 @@
               :key="item.title"
               :to="item.link"
             >
-              <v-list-tile-title v-text="item.title"/>
+              <v-list-tile-title v-text="`لیست ${item.title}`"/>
             </v-list-tile>
           </v-list>
         </v-menu>
-        <v-btn to="/pages/plans" flat>تعرفه ها</v-btn>
-        <v-btn to="/posts" flat>اخبار</v-btn>
+        <v-btn to="/pages/plans" flat>اشتراک ها</v-btn>
+        <v-btn to="/posts/news" flat>اخبار</v-btn>
         <v-btn to="/user/councils/create" flat>مشاوره</v-btn>
         <v-btn to="/user" flat>حساب من</v-btn>
       </v-toolbar-items>
-      <v-spacer/>
-        <searchBar/>
-      <v-spacer/>
-      <v-toolbar-side-icon v-if="isMobile" white--text @click.stop="drawer = !drawer"/>
-      <v-toolbar-items class="hidden-sm-and-down">
+      <v-spacer key="t5"/>
+        <searchBar key="t6" v-if="showQuickAccess"/>
+      <v-spacer key="t7"/>
+      <v-toolbar-side-icon key="t4" v-if="isMobile" white--text @click.stop="drawer = !drawer"/>
+      <v-toolbar-items key="t9" v-if="!showQuickAccess" class="hidden-sm-and-down">
         <v-btn flat to="/user/adverts/loans/create" class="deep-orange--text font-14">ثبت رایگان آگهی</v-btn>
       </v-toolbar-items>
+
     </v-toolbar>
 
     <v-navigation-drawer
+
       v-if="isMobile"
       :disable-route-watcher="false"
       v-model="drawer"
@@ -87,13 +93,19 @@
 
         </v-list-group>
 
-        <v-list-tile class="pb-2" to="/news">
+        <v-list-tile class="pb-2" to="/pages/plans">
+          <v-list-tile-avatar>
+            <v-icon v-text="'arrow_left'"/>
+          </v-list-tile-avatar>
+          <v-list-tile-title class="text-justify rtl">اشتراک ها</v-list-tile-title>
+        </v-list-tile>
+        <v-list-tile class="pb-2" to="/posts/news">
           <v-list-tile-avatar>
             <v-icon v-text="'arrow_left'"/>
           </v-list-tile-avatar>
           <v-list-tile-title class="text-justify rtl">اخبار</v-list-tile-title>
         </v-list-tile>
-        <v-list-tile class="pb-2" to="/education">
+        <v-list-tile class="pb-2" to="/posts/instructions">
           <v-list-tile-avatar>
             <v-icon v-text="'arrow_left'"/>
           </v-list-tile-avatar>
@@ -101,7 +113,7 @@
         </v-list-tile>
         <v-list-tile class="pb-2" to="/user/councils/create">
           <v-list-tile-avatar>
-            <v-icon v-text="'lock'"/>
+            <v-icon v-text="'arrow_left'"/>
           </v-list-tile-avatar>
           <v-list-tile-title class="text-justify rtl">مشاوره</v-list-tile-title>
         </v-list-tile>
@@ -114,10 +126,13 @@
       </v-list>
     </v-navigation-drawer>
   </span>
+    </no-ssr>
+  </span>
 </template>
 <script>
 
   import searchBar from '~/components/site/searchBar.vue'
+  import Helper from '~/assets/js/helper'
 
   export default {
     data() {
@@ -128,6 +143,9 @@
       }
     },
     computed: {
+      menuColor() {
+        return this.showQuickAccess ? 'yellow lighten-5' : 'white'
+      },
       isMobile() {
         return this.$vuetify.breakpoint.smAndDown
       },
@@ -146,25 +164,29 @@
       items: function () {
         return [
           {title: "همه ی آگهی ها", hashtag: "all", link: "/categories"},
-          {title: "وام", hashtag: "loan", link: "/categories/loans"},
+          {title: _.get(Helper.getTypes('loans'), 'siteLink', 'وام ها'), hashtag: "loan", link: "/categories/loans"},
           {
-            title: "درخواست وام",
+            title: _.get(Helper.getTypes('loanRequests'), 'siteLink', 'درخواست های وام'),
             hashtag: "loan-request",
             link: "/categories/loan-requests"
           },
-          {title: "ضامن", hashtag: "co-signer", link: "/categories/co-signers"},
           {
-            title: "درخواست ضامن",
+            title: _.get(Helper.getTypes('coSigners'), 'siteLink', 'ضامن ها'),
+            hashtag: "co-signer",
+            link: "/categories/co-signers"
+          },
+          {
+            title: _.get(Helper.getTypes('coSignerRequests'), 'siteLink', 'درخواست ضامن'),
             hashtag: "co-signer-request",
             link: "/categories/co-signer-requests"
           },
           {
-            title: "سرمایه گذاری",
+            title: _.get(Helper.getTypes('finances'), 'siteLink', 'سرمایه گذارها'),
             hashtag: "finances",
             link: "/categories/finances"
           },
           {
-            title: "درخواست سرمایه گذاری",
+            title: _.get(Helper.getTypes('financeRequests'), 'siteLink', 'درخواست سرمایه'),
             hashtag: "finance-requests",
             link: "/categories/finance-requests"
           }
@@ -178,7 +200,7 @@
 
       onScroll(e) {
         let top = this.offsetTop = window.pageYOffset || document.documentElement.scrollTop
-        this.showQuickAccess = this.offsetTop > 200;
+        this.showQuickAccess = this.offsetTop > 500;
       },
       go: function (item) {
         this.$router.push(item.to)

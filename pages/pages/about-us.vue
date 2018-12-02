@@ -9,7 +9,7 @@
               <span>درباره‌ی ما</span></h2>
           </v-card-title>
           <v-card-text>
-            <div>{{ settings('pages.aboutUsText') }}</div>
+            <div v-html="settings('pages.aboutUsText')"></div>
           </v-card-text>
         </v-card>
       </v-flex>
@@ -19,9 +19,9 @@
 <script>
   export default {
     meta: {
-      title: "درباره‌ی ما"
+      title: "درباره‌ی ما",
+      breadcrumb: "درباره‌ی ما",
     },
-    layout: "site",
     computed: {
       text() {
         return this.$store.state.temp.lorem

@@ -1,21 +1,5 @@
 <template>
   <div>
-    <v-card color="white" raised light class="py-5 px-4">
-      <v-layout row>
-        <v-flex xs12 md12 sm12 lg12>
-          <v-alert
-            :value="true"
-            color="info"
-            icon="info"
-          >{{ info.title }}
-          </v-alert>
-          <v-divider class="my-3"/>
-          <v-card dark color="green darken-1" class="pa-3 font-12">
-            <p class="font-14 text-justify"/>
-          </v-card>
-        </v-flex>
-      </v-layout>
-    </v-card>
     <v-card color="white" raised light class="mt-5 py-5 px-4">
       <div>
         <v-toolbar flat color="white">
@@ -60,8 +44,8 @@
           :rows-per-page-items="[10,25,100]"
           class="elevation-1"
         >
-
           <template slot="items" slot-scope="props">
+
             <td>
               <v-checkbox
                 v-model="props.selected"
@@ -69,50 +53,127 @@
                 hide-details
               ></v-checkbox>
             </td>
-
-            <td class="text-xs-right">
-              <nuxt-link title="مشاهده" :to=" uri + '/show/' + props.item.id" class="mx-1">
-                {{ props.item.id }}
-              </nuxt-link>
-            </td>
-            <td class="text-xs-right">
-              <nuxt-link title="مشاهده" target="_blank"
-                 :to=" '/admin/users/show/' + getProperty(props.item, 'advert.user.id') "
-                 class="mx-1">
-                {{ sender(props) }}
-              </nuxt-link>
-            </td>
-            <td class="text-xs-right">{{ getProperty(props.item, 'advert.title', 'بدون عنوان') }}</td>
-            <td class="text-xs-right">{{ getProperty(props.item, 'advert.text') }}</td>
+            <td class="text-xs-left">{{ getProperty(props, 'item.id') }}</td>
+            <td class="text-xs-left">{{ sender(props) }}</td>
+            <td class="text-xs-right">{{ getProperty(props, 'item.advert.title', '-') }}</td>
             <template v-if="type.type=='loans'">
-              <td class="text-xs-left">{{ props.item.price }}</td>
-              <td class="text-xs-left">{{ props.item.amount }}</td>
+              <td class="text-xs-left">{{ getPrice(getProperty(props, 'item.price', '')) }}</td>
+              <td class="text-xs-left">{{ getPrice(getProperty(props, 'item.amount', '')) }}</td>
             </template>
             <template v-if="type.type=='loanRequests'">
-              <td class="text-xs-left">{{ props.item.amount }}</td>
+              <td class="text-xs-left">{{ getPrice(getProperty(props, 'item.amount')) }}</td>
             </template>
             <template v-if="type.type=='finances'">
-              <td class="text-xs-left">{{ props.item.maxAmount }}</td>
+              <td class="text-xs-left">{{ getPrice(getProperty(props, 'item.maxAmount', '')) }}</td>
+            </template>
+            <template v-if="type.type=='financeRequests'">
+              <td class="text-xs-left">{{ getPrice(getProperty(props, 'item.amount', '')) }}</td>
+              <td class="text-xs-left">{{ getProperty(props, 'item.job') }}</td>
             </template>
             <template v-if="type.type=='coSigners'">
-              <td class="text-xs-left">{{ getType(props.item.type) }}</td>
-              <td class="text-xs-left">{{ getGuaranteeTypes(props.item.guaranteeTypes) }}</td>
+              <td class="text-xs-left">{{ getType(getProperty(props, 'item.type')) }}</td>
+              <td class="text-xs-left">{{ getGuaranteeTypes(getProperty(props, 'item.guaranteeTypes')) }}</td>
             </template>
-            <td class="text-xs-left">
-              <nuxt-link title="مشاهده" :to=" uri + '/show/' + props.item.id" class="mx-1">
+            <template v-if="type.type=='coSignerRequests'">
+              <td class="text-xs-left">{{ getType(getProperty(props, 'item.type')) }}</td>
+              <td class="text-xs-left">{{ getGuaranteeTypes(getProperty(props, 'item.guaranteeTypes')) }}</td>
+              <td class="text-xs-left">{{ getProperty(props, 'item.interestRate') }}</td>
+              <td class="text-xs-left">{{ getProperty(props, 'item.bank') }}</td>
+            </template>
+            <td class="text-xs-right">
+              <v-menu offset-y>
+                <v-btn
+                  slot="activator"
+                  color="primary"
+                  outline
+                >
+                  {{ tradeStatus(getProperty(props, 'item', [])) }}
+                </v-btn>
+                <v-list>
+                  <v-list-tile
+                    @click="changeTradeStatus(getProperty(props, 'item.advert.id'),0)"
+                  >
+                    <v-list-tile-title>باز</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+                <v-list>
+                  <v-list-tile
+                    @click="changeTradeStatus(getProperty(props, 'item.advert.id'),1)"
+                  >
+                    <v-list-tile-title>در حال معامله</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+                <v-list>
+                  <v-list-tile
+                    @click="changeTradeStatus(getProperty(props, 'item.advert.id'),2)"
+                  >
+                    <v-list-tile-title>بسته شده</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+              </v-menu>
+
+              <v-menu offset-y>
+                <v-btn
+                  slot="activator"
+                  color="primary"
+                  outline
+                >
+                  {{ instant(getProperty(props, 'item')) }}
+                </v-btn>
+                <v-list>
+                  <v-list-tile
+                    @click="changeInstant(getProperty(props, 'item.advert.id'),1,props.item)"
+                  >
+                    <v-list-tile-title>فوری</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+                <v-list>
+                  <v-list-tile
+                    @click="changeInstant(getProperty(props, 'item.advert.id'),0,props.item)"
+                  >
+                    <v-list-tile-title>غیر فوری</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+              </v-menu>
+              <v-menu offset-y>
+                <v-btn
+                  slot="activator"
+                  color="primary"
+                  outline
+                >
+                  {{ verified(getProperty(props, 'item')) }}
+                </v-btn>
+                <v-list>
+                  <v-list-tile
+                    @click="changeVerified(getProperty(props, 'item.id'),1,props.item)"
+                  >
+                    <v-list-tile-title>تایید شده</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+                <v-list>
+                  <v-list-tile
+                    @click="changeVerified(getProperty(props, 'item.id'),0,props.item)"
+                  >
+                    <v-list-tile-title>تایید نشده</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+              </v-menu>
+            </td>
+            <td>
+              <a title="مشاهده" :href=" uri + '/show/' + props.item.id" class="mx-1">
                 <v-icon
                   small
                 >
                   pageview
                 </v-icon>
-              </nuxt-link>
-              <nuxt-link title="ویرایش" :to=" uri + '/edit/' + props.item.id" class="mx-1">
+              </a>
+              <a title="ویرایش" :href=" uri + '/edit/' + props.item.id" class="mx-1">
                 <v-icon
                   small
                 >
                   edit
                 </v-icon>
-              </nuxt-link>
+              </a>
               <v-icon
                 class="mx-1"
                 small
@@ -186,7 +247,13 @@
         return `/admin/adverts/${this.slug}`;
       },
       headers() {
-        return Helper.getAdminRawHeaders(this.type.type);
+        let id = {text: "شناسه", align: "right", value: 'id'};
+        let owner = {text: "ثبت شده توسط", align: "right", value: 'advert.user.id'};
+        let result = [];
+        result = Helper.getRawHeaders(this.type.type);
+        result.unshift(owner);
+        result.unshift(id);
+        return result;
       },
       info() {
         return {
@@ -237,8 +304,43 @@
       },
     },
     methods: {
+      chageTradeStatus(id, type) {
+        let method = `/admin/adverts/${id}/changeTradeStatus/${type}`
+        this.$axios.$put(method).then((res) => {
+
+        }).catch(err => {
+
+        })
+      },
+      getPrice(val) {
+        return Helper.priceFormat(val)
+      },
       getProperty(item = [], path = '', alias = '-') {
         return _.get(item, path, alias)
+      },
+      verified(item) {
+        return item.verified ? 'تایید شده' : 'تایید نشده';
+      },
+      tradeStatus(item) {
+        let list = this.$store.state.settings.adverts.tradeStatusList;
+        return list[item.tradeStaus || 0];
+      },
+      instant(item) {
+        return !!_.get(item, 'advert.instant', _.get(item, 'instant', false)) ? 'فوری' : 'غیر فوری'
+      },
+      changeInstant(id, val) {
+        let method = `/admin/adverts/${id}/instantIt`
+        this.$axios.$put(method, {instant: val}).then((res) => {
+          item.instant = val;
+        }).catch(err => {
+        })
+      },
+      changeVerified(id, val, item) {
+        let method = `/admin/${this.type.type}/${id}`
+        this.$axios.$put(method, {verified: val}).then((res) => {
+          item.verified = val;
+        }).catch(err => {
+        })
       },
       sender(props) {
         return _.get(props.item, 'advert.user.details.firstName',

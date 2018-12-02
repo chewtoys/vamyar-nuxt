@@ -3,15 +3,8 @@
     <v-card color="white" raised light class="py-5 px-4">
       <v-layout row>
         <v-flex xs12 md12 sm12 lg12>
-          <v-alert
-            :value="true"
-            color="info"
-            icon="info"
-          >{{ info.title }}
-          </v-alert>
-          <v-divider class="my-3"/>
           <v-card dark color="green darken-1" class="pa-3 font-12">
-            <p class="font-14 text-justify">{{ info.text }}</p>
+            <p class="font-14 text-justify">{{ settings('adverts.noticeBeforeCreateAdvert') }}</p>
           </v-card>
         </v-flex>
       </v-layout>
@@ -52,7 +45,7 @@
               :label="getTitle('title')"
             />
             <v-autocomplete
-              v-if="isAllowed('city') && !allCities"
+              v-if="isAllowed('city') "
               v-validate="'required'"
               v-model="cityName"
               :error-messages="errors.collect('city')"
@@ -148,6 +141,15 @@
               :label="getTitle('job')"
               data-vv-name="job"
             />
+            <v-text-field
+              v-if="isAllowed('bank')"
+              v-validate="'required'"
+              v-model="bank"
+              :error-messages="errors.collect('job')"
+              box
+              :label="getTitle('bank')"
+              data-vv-name="bank"
+            />
             <v-autocomplete
               v-if="isAllowed('loanType')"
               v-validate="'required'"
@@ -227,15 +229,18 @@
       interestRate: null,
       maxAmount: null,
       job: null,
+      bank: null,
 
       // validator dictionary
       dictionary: {
         attributes: {
           title: "عنوان آگهی",
           city: "شهر",
+          bank: "بانک",
           text: "متن توضیحات آگهی",
           image: "تصویر آگهی",
           amount: "مبلغ وام",
+          maxAmount: "حداکثر سرمایه ",
           price: "قیمت فروش وام",
           paybackTime: "مدت زمان بازپرداخت",
           guaranteeTypes: "نوع ضامن",
@@ -245,12 +250,7 @@
         }
       },
       // info
-      info: {
-        title: "لطفا قبل از پر کردن فرم نکات زیر را مد نظر داشته باشید:",
-        text:
-          "لورم ایپسوم یا طرح‌نما (به انگلیسی: Lorem ipsum) به متنی آزمایشی و بی‌معنی در صنعت چاپ، صفحه‌آرایی و طراحی گرافیک گفته می‌شود. طراح گرافیک از این متن به عنوان عنصری از ترکیب بندی برای پر کردن صفحه و ارایه اولیه شکل ظاهری و کلی طرح سفارش گرفته شده استفاده می نماید، تا از نظر گرافیکی نشانگر چگونگی نوع و اندازه فونت و ظاهر متن باشد. معمولا طراحان گرافیک برای صفحه‌آرایی، نخست از متن‌های آزمایشی و بی‌معنی استفاده می‌کنند تا صرفا به مشتری یا صاحب کار خود نشان دهند که صفحه طراحی یا صفحه بندی شده بعد از اینکه متن در آن قرار گیرد چگونه به نظر می‌رسد و قلم‌ها و اندازه‌بندی‌ها چگونه در نظر گرفته شده‌است. از آنجایی که طراحان عموما نویسنده متن نیستند و وظیفه رعایت حق تکثیر متون را ندارند و در همان حال کار آنها به نوعی وابسته به متن می‌باشد آنها با استفاده از محتویات ساختگی، صفحه گرافیکی خود را صفحه‌آرایی می‌کنند تا مرحله طراحی و صفحه‌بندی را به پایان برند.",
-        heading: "عنوان متن"
-      },
+
       submit_loader: false,
       snackbar: false,
       snack_text: null,
@@ -265,23 +265,34 @@
         return `/user/${this.formType.type}`;
       },
       city: function () {
-        if (this.allCities) return 0;
-        let list = this.$store.state.city.data;
+        if (this.allCities) return 3000;
+        let list = _.get(this.$store.state.city, 'data', []);
         let index = _.findIndex(list, {'name': this.cityName});
-        let item = list[index];
-        return _.get(item, 'id', 0);
+        if (index > 0) {
+          let item = list[index];
+          return _.get(item, 'id', 0);
+        }
+        return 0;
       },
       loanType() {
         let list = this.$store.state.loanType.data;
         let index = _.findIndex(list, {'name': this.loanTypeName});
         let item = list[index];
-        return _.get(item, 'id', 0);
+        if (index > 0) {
+          let item = list[index];
+          return _.get(item, 'id', 0);
+        }
+        return 0;
       },
       type() {
         let list = this.$store.state.settings.coSigner.types;
         let index = _.findIndex(list, {'name': this.typeName});
         let item = list[index];
-        return _.get(item, 'id', 0);
+        if (index > 0) {
+          let item = list[index];
+          return _.get(item, 'id', 0);
+        }
+        return 0;
       },
       guaranteeTypes() {
         let items = [];
@@ -332,6 +343,8 @@
     },
     mounted() {
       this.$validator.localize("fa", this.dictionary)
+      let mobile = _.get(this.$store, 'state.user.info.mobile');
+      _.set(this, 'mobile', mobile);
       // check if user has no access to create advert
       //let hasAccess = this.$store.state.accesses.loans ;
       let hasAccess = true
@@ -340,6 +353,9 @@
       }
     },
     methods: {
+      settings(key) {
+        return _.get(this.$store.state.settings.data, key, '')
+      },
       getTitle(name, which = 'create') {
         return _.get(Helper.getFieldByType(this.formType.type, name, which), 'title', '-');
       },
@@ -398,6 +414,18 @@
           .catch(err => {
             this.toast(err, "error")
           })
+      }
+    },
+    watch: {
+      allCities(val) {
+        if (val) {
+          let list = _.get(this.$store.state.city, 'data', []);
+          let index = _.findIndex(list, {'id': 3000});
+          if (index > 0) {
+            let item = list[index];
+            return _.set(this, 'cityName', item.name);
+          }
+        }
       }
     }
   }

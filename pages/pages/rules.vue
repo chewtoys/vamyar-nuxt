@@ -9,7 +9,7 @@
               <span>قوانین</span></h2>
           </v-card-title>
           <v-card-text>
-            <div>{{ settings('pages.rulesText') }}</div>
+            <div v-html=" settings('pages.rulesText')"></div>
           </v-card-text>
         </v-card>
       </v-flex>
@@ -19,9 +19,9 @@
 <script>
   export default {
     meta: {
-      title: "قوانین"
+      title: "قوانین",
+      breadcrumb: "قوانین"
     },
-    layout: "site",
     computed: {
       text() {
         return this.$store.state.temp.lorem

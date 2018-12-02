@@ -1,21 +1,5 @@
 <template>
   <div>
-    <v-card color="white" raised light class="py-5 px-4">
-      <v-layout row>
-        <v-flex xs12 md12 sm12 lg12>
-          <v-alert
-            :value="true"
-            color="info"
-            icon="info"
-          >{{ page_title }}
-          </v-alert>
-          <v-divider class="my-3"/>
-          <v-card dark color="green darken-1" class="pa-3 font-12">
-            <p class="font-14 text-justify"/>
-          </v-card>
-        </v-flex>
-      </v-layout>
-    </v-card>
     <v-card color="white" raised light class="mt-5 py-5 px-4">
       <div>
         <v-toolbar flat color="white">
@@ -51,82 +35,92 @@
           </div>
         </v-card-title>
 
-        <v-data-table
-          v-model="selected"
-          item-key="id"
-
-          select-all
-          :headers="headers"
-          :items="data"
-          :loading="loading"
-          :search="search"
-          :pagination.sync="pagination"
-          :total-items="totalData"
-          :rows-per-page-items="[5,10,25,100]"
-          no-results-text="هیچ موردی ثبت نشده است."
-          class="elevation-1"
-        >
-          <template slot="headerCell" slot-scope="props">
-            <v-tooltip bottom>
+        <template v-if="true">
+          <v-data-table
+            v-model="selected"
+            item-key="id"
+            select-all
+            :headers="headers"
+            :items="data"
+            :loading="loading"
+            :search="search"
+            :pagination.sync="pagination"
+            :total-items="totalData"
+            :rows-per-page-items="[5,10,25,100]"
+            no-results-text="هیچ موردی ثبت نشده است."
+            class="elevation-1"
+          >
+            <template slot="headerCell" slot-scope="props">
+              <v-tooltip bottom>
         <span slot="activator">
           {{ props.header.text }}
         </span>
-              <span>
+                <span>
           {{ props.header.text }}
         </span>
-            </v-tooltip>
-          </template>
-          <template slot="items" slot-scope="props">
-            <td>
-              <v-checkbox
-                v-model="props.selected"
-                primary
-                hide-details
-              ></v-checkbox>
-            </td>
-            <td class="text-xs-right">{{ props.item.id }}</td>
-            <td class="text-xs-right">
-              <nuxt-link :to="uri + '/edit/' + props.item.id">{{ props.item.name || '-' }}</nuxt-link>
-            </td>
-            <td class="text-xs-left">
-              <nuxt-link title="مشاهده و پاسخ" :to=" uri + '/edit/' + props.item.id" class="mx-1">
+              </v-tooltip>
+            </template>
+            <template slot="items" slot-scope="props">
+              <td>
+                <v-checkbox
+                  v-model="props.selected"
+                  primary
+                  hide-details
+                ></v-checkbox>
+              </td>
+              <td class="text-xs-right">{{ props.item.id }}</td>
+              <td class="text-xs-right">
+                <nuxt-link :to="uri + '/edit/' + props.item.slug">{{ props.item.name || '-' }}</nuxt-link>
+              </td>
+              <td class="text-xs-right">
+                {{ props.item.slug || '-' }}
+              </td>
+              <td class="text-xs-right">
+                {{ props.item.parentId || '-' }}
+              </td>
+              <td class="text-xs-left">
+                <nuxt-link title="ویرایش" :to=" uri + '/edit/' + props.item.slug" class="mx-1">
+                  <v-icon
+                    small
+                  >
+                    edit
+                  </v-icon>
+                </nuxt-link>
                 <v-icon
+                  class="mx-1"
                   small
+                  @click="deleteItem(props.item.slug)"
                 >
-                  edit
+                  delete
                 </v-icon>
-              </nuxt-link>
-              <v-icon
-                class="mx-1"
-                small
-                @click="deleteItem(props.item.id)"
-              >
-                delete
-              </v-icon>
-            </td>
-          </template>
-          <v-alert slot="no-results" :value="true" color="error" icon="warning">
-            نتیجه ای برای "{{ search }}" یافت نشد.
-          </v-alert>
-        </v-data-table>
-        <div class="text-xs-center pt-2">
-          <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
-        </div>
+              </td>
+            </template>
+            <v-alert slot="no-results" :value="true" color="error" icon="warning">
+              نتیجه ای برای "{{ search }}" یافت نشد.
+            </v-alert>
+          </v-data-table>
+          <div class="text-xs-center pt-2">
+            <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
+          </div>
+        </template>
       </div>
     </v-card>
   </div>
 </template>
 <script>
   import Helper from "~/assets/js/helper.js"
+  import Tree from "~/components/elements/Tree"
 
-  const page_title = 'دسته بندی های تیکت',
-    ticketCategoriesMethod = '/ticketCategories',
-    breadcrumb = 'لیست دسته بندی ها',
-    indexPath = '/admin/ticketCategories',
-    createPath = '/admin/tickets/categories/create',
+  const page_title = 'دسته بندی های مطالب سایت',
+    breadcrumb = 'لیست کلی دسته بندی ها',
+    indexPath = '/admin/posts/categories',
+    fetchPath = '/admin/categories',
+    createPath = '/admin/categories/posts/create',
     headers = [
       {text: '‌شناسه', value: 'id', align: 'right'},
       {text: 'عنوان', value: 'name', align: 'right'},
+      {text: 'مسستعار', value: 'slug', align: 'right'},
+      {text: 'والد', value: 'parent', align: 'right'},
       {text: 'عملیات', sortable: false, align: 'left', width: '140px'},
     ]
 
@@ -151,7 +145,7 @@
         return _.get(this.paginator, 'totalPages', 1)
       },
       uri() {
-        return `/admin/tickets/categories`;
+        return indexPath;
       },
       headers() {
         return headers;
@@ -168,7 +162,7 @@
       pagination: {
         handler() {
           this.loading = true;
-          let method = indexPath;
+          let method = fetchPath;
           let {sortBy, descending, page, rowsPerPage} = this.pagination;
           let query = {
             page,
@@ -196,24 +190,11 @@
       },
     },
     async asyncData({params, store, $axios}) {
-      try {
-        // loan types
-        let ticketCategories = await
-          $axios.$get(ticketCategoriesMethod);
-        store.commit('ticketCategory/setAndProcessData', ticketCategories.data || []);
-      } catch (error) {
-        //console.log('error', error)
-      }
+
     }
     ,
     methods: {
 
-      category(id) {
-        let list = this.$store.state.ticketCategory.data;
-        let index = _.findIndex(list, {id});
-        let item = list[index];
-        return _.get(item, 'name', '');
-      },
       deleteItems() {
         if (confirm('آیا مطمئن هستید که می خواهید این موارد را حذف کنید؟')) {
           _.forEach(this.selected, (obj, key) => {
@@ -227,7 +208,7 @@
         }
       },
       deleteById: function (id) {
-        let deletePath = `/admin/ticketCategories/${id}`;
+        let deletePath = `${fetchPath}/${id}`;
         //console.log(deletePath)
         _.remove(this.data, function (obj) {
           return _.get(obj, 'id', '') === id;
@@ -240,6 +221,7 @@
           this.$store.commit('snackbar/setSnack', _.get(err, 'response.data.error.message', 'مشکلی در حذف کردن پیش آمد'), 'error')
         })
       }
-    }
+    },
+    components: {Tree}
   }
 </script>

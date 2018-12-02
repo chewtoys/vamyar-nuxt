@@ -26,7 +26,7 @@
         <v-list-tile-action>
           <v-icon></v-icon>
         </v-list-tile-action>
-        <v-list-tile-title class="text-justify rtl" v-text="item.title"/>
+        <v-list-tile-title class="text-justify rtl" v-text="item.siteLink"/>
       </v-list-tile>
       <v-divider/>
       <v-list-group
@@ -111,15 +111,19 @@
       panel: [
         {title: "تیکت ها", icon: "inbox", to: "/admin/tickets"},
         {title: "دسته بندی تیکت ها", icon: "inbox", to: "/admin/tickets/categories"},
-        {title: "لاگ کاربران", icon: "inbox", to: "/users/logs"},
-        {title: "لیست کاربران", icon: "inbox", to: "/users"},
+        //{title: "لاگ کاربران", icon: "inbox", to: "/users/logs"},
+        {title: "درخواست های مشاوره", icon: "inbox", to: "/admin/councils"},
+        {title: "انواع مشاوره ها", icon: "inbox", to: "/admin/councils/categories"},
+        {title: "انتقادات و پیشنهادها", icon: "inbox", to: "/admin/contact-us"},
+        //{title: "لیست کاربران", icon: "inbox", to: "/users"},
       ],
       content: [
-        {title: "دسته بندی مطالب", icon: "inbox", to: "/admin/posts/categories"},
         {title: "لیست مطالب", icon: "inbox", to: "/admin/posts"},
-        {title: "آموزش ها", icon: "inbox", to: "/user/education"},
+        {title: "افزودن مطلب", icon: "inbox", to: "/admin/posts/create"},
+        {title: "دسته بندی مطالب", icon: "inbox", to: "/admin/posts/categories"},
       ],
       adminSection: [
+        {title: "لیست اشتراک ها", icon: "inbox", to: "/admin/subscriptions"},
         {title: "مدیرها", icon: "inbox", to: "/admin/moderators"},
       ],
       access: [

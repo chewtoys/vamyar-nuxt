@@ -30,7 +30,7 @@ export const state = () => ({
     title: "بدون عنوان",
     breadcrumb: null
   },
-  client_secret: "zNHQAQZf88ixn2ufHXVukKz2in2tFfPfnqNkBTtD",
+  client_secret: "xX3Jonteuex6jfSu4kKHRISAFadwmYog039tE6yh",
   client_id: 1,
 });
 
@@ -57,6 +57,10 @@ export const actions = {
             let {data} = await $axios.$get("/user/details");
             if (_.has(data, 'details')) {
               commit("user/updateUserInfo", data)
+            }
+            let subscriptionData = await $axios.$get("/user/subscriptions");
+            if (_.has(subscriptionData, 'data')) {
+              commit("user/updateUserSubscription", _.get(subscriptionData, 'data', null))
             }
           } catch (error) {
             //console.log('AUTH ERROR', error)

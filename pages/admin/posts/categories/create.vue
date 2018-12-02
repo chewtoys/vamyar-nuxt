@@ -34,6 +34,35 @@
               data-vv-name="name"
               label="عنوان"
             />
+            <v-textarea
+              v-model="description"
+              :error-messages="errors.collect('description')"
+              box
+              data-vv-name="description"
+              label="توضیحات"
+            />
+            <v-text-field
+              v-validate="'required'"
+              v-model="slug"
+              :error-messages="errors.collect('slug')"
+              box
+              data-vv-name="slug"
+              label="مستعار"
+            />
+
+            <v-radio-group v-model="parent" label="والد">
+              <v-radio
+                v-for="item in categories"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              ></v-radio>
+            </v-radio-group>
+
+            <Img
+              v-model="image"
+              label="تصویر"
+            />
             <v-btn :loading="submit_loader" outline color="accent" round @click="processSubmit">
               <v-icon class="px-1">save</v-icon>
               ذخیره
@@ -46,11 +75,13 @@
 </template>
 <script>
   import Helper from '~/assets/js/helper'
+  import Img from '~/components/elements/FileUploader'
 
   const page_title = 'ثبت دسته بندی جدید',
     breadcrumb = 'ایجاد دسته بندی',
-    indexPath = '/admin/tickets/categories',
-    createPath = '/admin/ticketCategories'
+    indexPath = '/admin/posts/categories',
+    fetchPath = '/admin/categories',
+    createPath = '/admin/categories'
 
   export default {
     $_veeValidate: {
@@ -65,11 +96,20 @@
       page_title,
       // ticket
       name: null,
-
+      description: '',
+      image: '',
+      slug: null,
+      parent: null,
+      categoryLoading: true,
+      categories: [{id: 1, name: 'بدون دسته بندی'}],
       // validator dictionary
       dictionary: {
         attributes: {
           name: "عنوان دسته بندی",
+          slug: "مستعار",
+          image: "تصویر",
+          description: "توضیحات",
+          parentId: "والد",
           // custom attributes
         }
       },
@@ -77,34 +117,84 @@
     }),
     computed:
       {
+        parentId: {
+          get() {
+            return this.parent ? [this.parent] : []
+          },
+          set(val) {
+            //console.log(val);
+
+            if (_.isArray(val) && val.length >= 1) {
+              this.parent = _.last(val)
+            }
+          }
+        },
         list: function () {
           return indexPath;
         }
         ,
         createPath: function () {
           return createPath;
-        },
+        }
+        ,
       }
     ,
     async asyncData({params, store, $axios}) {
-
     }
     ,
     mounted() {
       this.$validator.localize("fa", this.dictionary)
+      this.$axios.$get(fetchPath).then(res => {
+        let fetched = _.get(res, 'data', []);
+        let final = [];
+        _.forEach(fetched, (cat, i) => {
+          final.push({id: cat.id, name: cat.name});
+          if (_.has(cat, 'children')) {
+            let childs = this.getChilds(cat)
+            _.forEach(childs, (child) => {
+              final.push({id: child.id, name: child.name});
+            })
+          }
+        })
+
+        this.categories = _.isArray(final) ? final : [];
+        this.categoryLoading = false;
+      })
     }
     ,
     methods: {
+      getChilds(cat) {
+        if (_.has(cat, 'children')) {
+          let items = [];
+          _.forEach(cat.children, (subCat, i) => {
+            items.push({id: subCat.id, name: subCat.name});
+            if (_.has(subCat, 'children')) {
+              let childs = this.getChilds(subCat)
+              _.forEach(childs, (child) => {
+                items.push({id: child.id, name: child.name});
+              })
+            }
+          })
+          return items;
+        } else {
+          return [];
+        }
+      },
       toast(msg, color) {
         this.$store.commit("snackbar/setSnack", msg, color)
       }
       ,
       sendForm() {
         let data = {
-          name: this.name
+          name: this.name,
+          parent: this.parent,
+          description: this.description,
+          slug: this.slug,
+          image: this.image,
         }
+        let method = `${createPath}`
         this.$axios
-          .$post(createPath, data)
+          .$post(method, data)
           .then(() => {
             let status = true
             if (status) {
@@ -148,5 +238,10 @@
           })
       }
     }
+    ,
+    components: {
+      Img
+    }
   }
+
 </script>
