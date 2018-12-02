@@ -66,7 +66,7 @@
                       <h2>جزئیات آگهی</h2>
                     </div>
                     <div class="">
-                      
+
                       <template v-if="isAllowed('amount')">
                         <div class="pa-2 mx-1 red--text">
                           <v-icon class="pb-1 pl-1 red--text">monetization_on</v-icon>
@@ -109,7 +109,7 @@
 
                       <template v-if="isAllowed('job')">
                         <div class="pa-2 mx-1" v-if="isAllowed('job')">
-                          <v-icon class="pb-1 pl-1">location_on</v-icon>
+                          <v-icon class="pb-1 pl-1">keyboard_arrow_left</v-icon>
                           <span><small class="font-14">{{getTitle('job')}}</small>
                           <b class="left">{{ job }}</b>
                         </span>
@@ -119,7 +119,7 @@
 
                       <template v-if="isAllowed('bank')">
                         <div class="pa-2 mx-1" v-if="isAllowed('bank')">
-                          <v-icon class="pb-1 pl-1">location_on</v-icon>
+                          <v-icon class="pb-1 pl-1">keyboard_arrow_left</v-icon>
                           <span><small class="font-14">{{getTitle('bank')}}</small>
                           <b class="left">{{ bank }}</b>
                         </span>
@@ -129,7 +129,7 @@
 
                       <template v-if="isAllowed('interestRate')">
                         <div class="pa-2 mx-1" v-if="isAllowed('interestRate')">
-                          <v-icon class="pb-1 pl-1">location_on</v-icon>
+                          <v-icon class="pb-1 pl-1">keyboard_arrow_left</v-icon>
                           <span><small class="font-14">{{getTitle('interestRate')}}</small>
                           <b class="left">{{ interestRate ? interestRate + 'درصد' : 'توافقی' }} </b>
                         </span>
@@ -172,13 +172,13 @@
                             <v-icon class="pb-1 pl-1">edit</v-icon>
                             توضیحات
                           </small>
-                          <p v-html="text"></p>
+                          <p class="py-2 px-3" v-html="text"></p>
                         </div>
                         <v-divider/>
                       </template>
 
                       <div class="pa-2 mx-1">
-                        <v-icon class="pb-1 pl-1 pt-2">location_on</v-icon>
+                        <v-icon class="pb-1 pl-1 pt-2">contact_phone</v-icon>
                         <span><small class="font-14 pt-2">شماره موبایل</small>
                           <b class="left"
                              v-if="getProperty(item, 'advert.mobile', false)">
@@ -318,7 +318,7 @@
         return !!this.settings('adverts.isImageAllowed') && !!this.item.advert.image
       },
       link() {
-        return this.$router.path;
+        return this.$route.path;
       },
       getGuaranteeType() {
         let items = [];
@@ -376,7 +376,6 @@
       premiumLink() {
         return `/user/premium?redirect=${decodeURI(this.link)}`
       },
-
     },
     methods: {
       isAllowed(key) {

@@ -136,12 +136,13 @@
           subscription: this.id,
           //data: {redirect: this.redirectPath}
         }
-        this.$axios.$post('/user/subscriptions', query).then(res => {
-          this.form = res
+        this.$axios.post('/user/subscriptions', query).then(res => {
+          // this.form = res
+          console.log(`'${res}'`);
           this.loader = false;
         }).catch((err) => {
-          console.log(err)
-          this.$store.commit('snackbar/setSnack', err)
+          console.log({err})
+          //this.$store.commit('snackbar/setSnack', err)
           this.loader = false;
         })
       },
