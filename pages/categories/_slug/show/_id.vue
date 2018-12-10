@@ -155,7 +155,6 @@
                         </div>
                         <v-divider/>
                       </template>
-
                       <template v-if="isAllowed('loanType')">
                         <div class="pa-2 mx-1" v-if="isAllowed('loanType')">
                           <v-icon class="pb-1 pl-1">how_to_reg</v-icon>
@@ -176,7 +175,6 @@
                         </div>
                         <v-divider/>
                       </template>
-
                       <div class="pa-2 mx-1">
                         <v-icon class="pb-1 pl-1 pt-2">contact_phone</v-icon>
                         <span><small class="font-14 pt-2">شماره موبایل</small>
@@ -306,7 +304,6 @@
       breadcrumb() {
         return "مشاهده‌ی " + type.title
       },
-
       // computed
       note1: function () {
         return this.$store.state.site.notes_on_request_loans

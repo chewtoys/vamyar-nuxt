@@ -85,6 +85,7 @@
               v-validate="'required|numeric'"
               v-model="amount"
               :error-messages="errors.collect('amount')"
+              :placeholder="getPlaceholder('amount')"
               box
               :label="getTitle('amount')"
               data-vv-name="amount"
@@ -99,16 +100,23 @@
               data-vv-name="price"
 
             />
-            <v-text-field
-              v-if="isAllowed('paybackTime')"
-              v-validate="'required|numeric'"
-              v-model="paybackTime"
-              :error-messages="errors.collect('paybackTime')"
-              box
-              :label="getTitle('paybackTime')"
-              data-vv-name="paybackTime"
-
-            />
+            <template v-if="isAllowed('paybackTime')">
+              <v-text-field
+                v-validate="'required|numeric'"
+                :placeholder="getPlaceholder('paybackTime')"
+                v-model="paybackTime"
+                :error-messages="errors.collect('paybackTime')"
+                box
+                :label="getTitle('paybackTime')"
+                data-vv-name="paybackTime"
+              />
+              <v-input
+                :messages="getHelp('paybackTime')"
+                prepend-icon="help"
+              >
+              </v-input>
+              <br/>
+            </template>
             <v-combobox
               v-if="isAllowed('guaranteeTypes')"
               v-validate="'required'"
@@ -135,6 +143,7 @@
               v-validate="'required|numeric'"
               v-model="maxAmount"
               :error-messages="errors.collect('maxAmount')"
+              :placeholder="getPlaceholder('maxAmount')"
               box
               :label="getTitle('maxAmount')"
               data-vv-name="maxAmount"
@@ -170,6 +179,30 @@
               :items="['بانک','دادگاه']"
               persistent-hint
             ></v-autocomplete>
+
+            <v-text-field
+              v-if="isAllowed('bank')"
+              v-validate="'required'"
+              v-model="bank"
+              :error-messages="errors.collect('job')"
+              box
+              :label="getTitle('bank')"
+              data-vv-name="bank"
+            />
+            <v-checkbox
+              persistent-hint
+              v-if="isAllowed('forBank')"
+              v-model="forBank"
+              box
+              :label="getTitle('forBank')"
+            />
+            <v-checkbox
+              persistent-hint
+              v-if="isAllowed('forCourt')"
+              v-model="forCourt"
+              box
+              :label="getTitle('forCourt')"
+            />
 
             <v-textarea
               v-if="isAllowed('text')"
@@ -224,8 +257,10 @@
       allCities: false,
       text: "",
       mobile: '',
+      bank: '',
       image: null,
-
+      forBank: false,
+      forCourt: false,
       // this type - loan
       guaranteeTypesName: null, // hasComputed
       loanTypeName: null,
@@ -389,10 +424,16 @@
 
     },
     methods: {
-      getTitle(name, which = 'create') {
+      getTitle(name, which = 'edit') {
         return _.get(Helper.getFieldByType(this.formType.type, name, which), 'title', '-');
       },
-      isAllowed(name, which = 'create') {
+      getPlaceholder(name, which = 'edit') {
+        return _.get(Helper.getFieldByType(this.formType.type, name, which), 'placeholder', '');
+      },
+      getHelp(name, which = 'edit') {
+        return _.get(Helper.getFieldByType(this.formType.type, name, which), 'help', '');
+      },
+      isAllowed(name, which = 'edit') {
         let slug = this.slug;
         return Helper.isFieldAllowByAlias(slug, name, which);
       },

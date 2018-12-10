@@ -78,6 +78,7 @@
               v-validate="'required|numeric'"
               v-model="amount"
               :error-messages="errors.collect('amount')"
+              :placeholder="getPlaceholder('amount')"
               box
               :label="getTitle('amount')"
               data-vv-name="amount"
@@ -92,16 +93,23 @@
               data-vv-name="price"
 
             />
-            <v-text-field
-              v-if="isAllowed('paybackTime')"
-              v-validate="'required|numeric'"
-              v-model="paybackTime"
-              :error-messages="errors.collect('paybackTime')"
-              box
-              :label="getTitle('paybackTime')"
-              data-vv-name="paybackTime"
-
-            />
+            <template v-if="isAllowed('paybackTime')">
+              <v-text-field
+                v-validate="'required|numeric'"
+                :placeholder="getPlaceholder('paybackTime')"
+                v-model="paybackTime"
+                :error-messages="errors.collect('paybackTime')"
+                box
+                :label="getTitle('paybackTime')"
+                data-vv-name="paybackTime"
+              />
+              <v-input
+                :messages="getHelp('paybackTime')"
+                prepend-icon="help"
+              >
+              </v-input>
+              <br/>
+            </template>
             <v-combobox
               v-if="isAllowed('guaranteeTypes')"
               v-validate="'required'"
@@ -127,6 +135,7 @@
               v-if="isAllowed('maxAmount')"
               v-validate="'required|numeric'"
               v-model="maxAmount"
+              :placeholder="getPlaceholder('maxAmount')"
               :error-messages="errors.collect('maxAmount')"
               box
               :label="getTitle('maxAmount')"
@@ -161,7 +170,23 @@
               :items="loanTypeList"
               persistent-hint
             ></v-autocomplete>
+            <v-checkbox
+              persistent-hint
+              v-if="isAllowed('forBank')"
+              v-model="forBank"
+              box
+              :label="getTitle('forBank')"
+            />
+            <v-checkbox
+              persistent-hint
+              v-if="isAllowed('forCourt')"
+              v-model="forCourt"
+              box
+              :label="getTitle('forCourt')"
+            />
             <v-autocomplete
+              autofocus
+              multiple
               v-if="isAllowed('type')"
               v-validate="'required'"
               v-model="typeName"
@@ -230,6 +255,8 @@
       maxAmount: null,
       job: null,
       bank: null,
+      forBank: false,
+      forCourt: false,
 
       // validator dictionary
       dictionary: {
@@ -257,7 +284,9 @@
       snack_color: "info"
     }),
     computed: {
-
+      link() {
+        return decodeURI(this.$route.path);
+      },
       list: function () {
         return `${list}/${this.slug}`;
       },
@@ -347,9 +376,11 @@
       _.set(this, 'mobile', mobile);
       // check if user has no access to create advert
       //let hasAccess = this.$store.state.accesses.loans ;
-      let hasAccess = true
-      if (!hasAccess) {
-        this.$router.push("/user/premium")
+      let isPremium = Helper.isPremiumType(this.formType.type);
+      let hasAccess = _.get(this.$store.state, 'user.hasSubscription', false);
+      if (isPremium && !hasAccess) {
+        this.$store.commit('snackbar/setSnack', 'متاسفانه شما دسترسی لازم برای ثبت این آگهی را ندارید.', 'warning');
+        this.$router.push(`/user/premium?redirect=${this.link}`);
       }
     },
     methods: {
@@ -357,7 +388,13 @@
         return _.get(this.$store.state.settings.data, key, '')
       },
       getTitle(name, which = 'create') {
-        return _.get(Helper.getFieldByType(this.formType.type, name, which), 'title', '-');
+        return _.get(Helper.getFieldByType(this.formType.type, name, which), 'title', '');
+      },
+      getPlaceholder(name, which = 'create') {
+        return _.get(Helper.getFieldByType(this.formType.type, name, which), 'placeholder', '');
+      },
+      getHelp(name, which = 'create') {
+        return _.get(Helper.getFieldByType(this.formType.type, name, which), 'help', '');
       },
       isAllowed(name, which = 'create') {
         let slug = this.slug;

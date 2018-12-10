@@ -79,7 +79,7 @@ const Helper = {
   ,
   getAdvertLink: function (item) {
     let types = CONSTANTS.advertTypes
-    let advertType = _.get(item,'advertableType',_.get(item,'advert.advertableType',''))
+    let advertType = _.get(item, 'advertableType', _.get(item, 'advert.advertableType', ''))
     let type = _.find(types, {'advertType': advertType})
     if (type && type.alias) {
       return "/categories/" + type.alias + "/show/" + _.get(item, 'advertable.id', _.get(item, 'id', 0))
@@ -190,10 +190,17 @@ const Helper = {
     price = price * 1 // convert to number;
     if (price > 0) return price.toLocaleString("fa-IR") + " ریال"
     return "توافقی"
+  },
+  isPremiumType(type, which = 'create') {
+    let list = _.get(CONSTANTS, ['PREMIUMS', which], []);
+    return list.includes(type);
   }
   ,
   getRawHeaders(type) {
     return _.get(CONSTANTS.rawHeaders, `${type}`, [{text: 'id'}]);
+  },
+  getCommonHeaders() {
+    return _.get(CONSTANTS, 'COMMON_FIELDS', [{text: 'id'}]);
   }
   ,
   //getAdminRawHeaders(type) {

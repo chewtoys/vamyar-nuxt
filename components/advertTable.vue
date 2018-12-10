@@ -3,7 +3,7 @@
     <v-card color="white" raised light class="mt-5 py-5 px-4">
       <div>
         <v-toolbar flat color="white">
-          <v-toolbar-title>{{ page_title }}</v-toolbar-title>
+          <v-toolbar-title>{{ pageTitle }}</v-toolbar-title>
           <v-spacer/>
           <v-btn
             color="red" outline light round class="mb-2"
@@ -36,15 +36,17 @@
           v-model="selected"
           item-key="id"
           select-all
-          :loading="tableLoader"
           :headers="headers"
+          :loading="tableLoader"
           :items="list"
+          :pagination.sync="pagination"
+          :total-items="totalData"
           :search="search"
           :rows-per-page-items="[10,25,100]"
           class="elevation-1"
         >
-
           <template slot="items" slot-scope="props">
+
             <td>
               <v-checkbox
                 v-model="props.selected"
@@ -52,32 +54,34 @@
                 hide-details
               ></v-checkbox>
             </td>
-            <td class="text-xs-right">{{ props.item.advert.title }}</td>
+            <td class="text-xs-left">{{ getProperty(props, 'item.id') }}</td>
+            <td class="text-xs-left">{{ sender(props) }}</td>
+            <td class="text-xs-right">{{ getProperty(props, 'item.advert.title', '-') }}</td>
             <template v-if="type.type=='loans'">
-              <td class="text-xs-left">{{ getPrice(props.item.price) }}</td>
-              <td class="text-xs-left">{{ getPrice(props.item.amount) }}</td>
+              <td class="text-xs-left">{{ getPrice(getProperty(props, 'item.price', '')) }}</td>
+              <td class="text-xs-left">{{ getPrice(getProperty(props, 'item.amount', '')) }}</td>
             </template>
             <template v-if="type.type=='loanRequests'">
-              <td class="text-xs-left">{{ getPrice(props.item.amount) }}</td>
+              <td class="text-xs-left">{{ getPrice(getProperty(props, 'item.amount')) }}</td>
             </template>
             <template v-if="type.type=='finances'">
-              <td class="text-xs-left">{{ getPrice(props.item.maxAmount) }}</td>
+              <td class="text-xs-left">{{ getPrice(getProperty(props, 'item.maxAmount', '')) }}</td>
             </template>
             <template v-if="type.type=='financeRequests'">
-              <td class="text-xs-left">{{ getPrice(props.item.amount) }}</td>
-              <td class="text-xs-left">{{ props.item.job }}</td>
+              <td class="text-xs-left">{{ getPrice(getProperty(props, 'item.amount', '')) }}</td>
+              <td class="text-xs-left">{{ getProperty(props, 'item.job') }}</td>
             </template>
             <template v-if="type.type=='coSigners'">
               <td class="text-xs-left">{{ getForBank(props.item) }}</td>
               <td class="text-xs-left">{{ getForCourt(props.item) }}</td>
-              <td class="text-xs-left">{{ getGuaranteeTypes(props.item.guaranteeTypes) }}</td>
+              <td class="text-xs-left">{{ getGuaranteeTypes(getProperty(props, 'item.guaranteeTypes')) }}</td>
             </template>
             <template v-if="type.type=='coSignerRequests'">
               <td class="text-xs-left">{{ getForBank(props.item) }}</td>
               <td class="text-xs-left">{{ getForCourt(props.item) }}</td>
-              <td class="text-xs-left">{{ getGuaranteeTypes(props.item.guaranteeTypes) }}</td>
-              <td class="text-xs-left">{{ props.item.interestRate }}</td>
-              <td class="text-xs-left">{{ props.item.bank }}</td>
+              <td class="text-xs-left">{{ getGuaranteeTypes(getProperty(props, 'item.guaranteeTypes')) }}</td>
+              <td class="text-xs-left">{{ getProperty(props, 'item.interestRate') }}</td>
+              <td class="text-xs-left">{{ getProperty(props, 'item.bank') }}</td>
             </template>
             <td class="text-xs-right">
               <v-menu offset-y>
@@ -86,25 +90,25 @@
                   color="primary"
                   outline
                 >
-                  {{ tradeStatus(props.item) }}
+                  {{ tradeStatus(getProperty(props, 'item', [])) }}
                 </v-btn>
                 <v-list>
                   <v-list-tile
-                    @click="changeTradeStatus(props.item.advert.id,0)"
+                    @click="changeTradeStatus(getProperty(props, 'item.advert.id'),0)"
                   >
                     <v-list-tile-title>باز</v-list-tile-title>
                   </v-list-tile>
                 </v-list>
                 <v-list>
                   <v-list-tile
-                    @click="changeTradeStatus(props.item.advert.id,1)"
+                    @click="changeTradeStatus(getProperty(props, 'item.advert.id'),1)"
                   >
                     <v-list-tile-title>در حال معامله</v-list-tile-title>
                   </v-list-tile>
                 </v-list>
                 <v-list>
                   <v-list-tile
-                    @click="changeTradeStatus(props.item.advert.id,2)"
+                    @click="changeTradeStatus(getProperty(props, 'item.advert.id'),2)"
                   >
                     <v-list-tile-title>بسته شده</v-list-tile-title>
                   </v-list-tile>
@@ -117,31 +121,47 @@
                   color="primary"
                   outline
                 >
-                  {{ instant(props.item) }}
+                  {{ instant(getProperty(props, 'item')) }}
                 </v-btn>
                 <v-list>
                   <v-list-tile
-                    @click="changeInstant(props.item.advert.id,1)"
+                    @click="changeInstant(getProperty(props, 'item.advert.id'),1,props.item)"
                   >
                     <v-list-tile-title>فوری</v-list-tile-title>
                   </v-list-tile>
                 </v-list>
                 <v-list>
                   <v-list-tile
-                    @click="changeInstant(props.item.advert.id,0)"
+                    @click="changeInstant(getProperty(props, 'item.advert.id'),0,props.item)"
                   >
                     <v-list-tile-title>غیر فوری</v-list-tile-title>
                   </v-list-tile>
                 </v-list>
-
               </v-menu>
-              <v-btn
-                color="primary"
-                disabled
-                outline
-              >
-                {{ verified(props.item) }}
-              </v-btn>
+              <v-menu offset-y>
+                <v-btn
+                  :disabled="!isAdmin"
+                  slot="activator"
+                  color="primary"
+                  outline
+                >
+                  {{ verified(getProperty(props, 'item')) }}
+                </v-btn>
+                <v-list>
+                  <v-list-tile
+                    @click="changeVerified(getProperty(props, 'item.id'),1,props.item)"
+                  >
+                    <v-list-tile-title>تایید شده</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+                <v-list>
+                  <v-list-tile
+                    @click="changeVerified(getProperty(props, 'item.id'),0,props.item)"
+                  >
+                    <v-list-tile-title>تایید نشده</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+              </v-menu>
             </td>
             <td>
               <a title="مشاهده" :href=" uri + '/show/' + props.item.id" class="mx-1">
@@ -173,6 +193,9 @@
             </v-alert>
           </template>
         </v-data-table>
+        <div class="text-xs-center pt-2">
+          <v-pagination v-model="pagination.page" :length="paginator.totalPages" @change="switchPage"></v-pagination>
+        </div>
       </div>
     </v-card>
   </div>
@@ -180,80 +203,37 @@
 <script>
   import Helper from "~/assets/js/helper.js"
 
-
   export default {
+    props: ['slug', 'which', 'type', 'pageTitle'],
     data: () => ({
-      slug: '',
+      list: [],
+      totalData: 10,
+      pagination: {}, //pagination is for vuetify - paginator is for API
+      paginator: {totalPages: 1}, //pagination is for vuetify - paginator is for API
       selected: [],
+      pages: 1,
       search: '',
       submit_loader: false,
       tableLoader: false,
     }),
-    async asyncData({params, app, store, $axios}) {
-
-      let slug = params.slug;
-      let type = Helper.getTypeByAlias(slug);
-      const breadcrumb = Helper.getBreadcrumb(type.title),
-        page_title = Helper.getPageTitle(type.title);
-      store.commit("navigation/pushMeta", {breadcrumb, title: page_title});
-      store.commit("navigation/setTitle", page_title);
-
-      let method = `/user/${type.type}`;
-      let advertableType;
-      let filter;
-      let orderBy = 'id:desc';
-      let cursor = 0;
-
-      if (!advertableType) {
-        advertableType = type.advertType
-      }
-      if (!filter) {
-        filter = "verified=true"
-      }
-
-      let query = {
-        number: store.state.settings.adverts.count,
-        include: "advert.user.details,guaranteeTypes",
-        //filter,
-        advertableType,
-        orderBy
-      };
-
-      try {
-        let {data, paginator} = await app.$axios.$get(method, {
-          params: query
-        });
-        let loading = false;
-        return {
-          list: data,
-          data,
-          breadcrumb,
-          page_title,
-          paginator,
-          loading,
-          type,
-          slug
-        }
-      } catch (err) {
-        //error({statusCode: 'این صفحه فعال نمی باشد.'})
-        return {
-          list: [],
-          data: [],
-          breadcrumb,
-          page_title,
-          paginator: [],
-          loading: false,
-          type,
-          slug
-        }
-      }
-    },
     computed: {
+      panel() {
+        return this.which === 'admin' ? 'admin' : 'user';
+      },
+      isAdmin() {
+        return this.panel === 'admin';
+      },
       uri() {
-        return `/user/adverts/${this.slug}`;
+        return `/${this.panel}/adverts/${this.slug}`;
       },
       headers() {
-        return Helper.getRawHeaders(this.type.type);
+        let id = {text: "شناسه", align: "right", value: 'id'};
+        let owner = {text: "ثبت شده توسط", align: "right", value: 'advert.user.id'};
+        let result = [];
+        result = Helper.getRawHeaders(this.type.type) ;
+        if (this.isAdmin) result.unshift(owner);
+        if (this.isAdmin) result.unshift(id);
+        return result;
       },
       info() {
         return {
@@ -262,27 +242,46 @@
       }
     },
     mounted() {
-      return {
-        rawData: this.data || []
-      }
+      //this.pagination = {
+      //  sortBy: 'id',
+      //  descending: true,
+      //  rowsPerPage: 25,
+      //}
     },
-    methods: {
 
+    methods: {
+      switchPage() {
+        this.loading = true;
+        let method = `/${this.panel}/${this.type.type}`;
+        let advertableType = this.type.advertType;
+        let include = 'advert.user.details,guaranteeTypes,cities,loanTypes';
+        let {sortBy, descending, page, rowsPerPage} = this.pagination;
+        let query = {
+          page,
+          advertableType,
+          include,
+          orderBy: `${sortBy || 'id'}:${descending ? 'desc' : 'asc'}`,
+          number: rowsPerPage
+        }
+        this.tableLoader = true;
+        //console.log({method, query, paginator: this.paginator}, {sortBy, descending, page, rowsPerPage});
+        this.$axios.$get(method, {
+          params: query
+        }).then((response) => {
+          this.paginator = _.get(response, 'paginator', {})
+          this.list = _.get(response, 'data', [])
+          this.totalData = _.get(response, 'paginator.totalCount', 0)
+          //this.pages = _.get(response, 'paginator.totalPages', 0)
+          this.tableLoader = false;
+          console.log('on response: ', this.paginator, this.pagination)
+        }).catch((error) => {
+          //console.log(error, method, query, this.paginator);
+          this.tableLoader = false;
+        });
+      },
       changeTradeStatus(id, type) {
         this.tableLoader = true;
-        let method = `/user/adverts/${id}/changeTradeStatus/${type}`
-        this.$axios.$put(method).then((res) => {
-          this.tableLoader = false;
-        }).catch(err => {
-          this.tableLoader = false;
-        })
-      },
-      instant(item) {
-        return !!_.get(item, 'advert.instant', _.get(item, 'instant', false)) ? 'فوری' : 'غیر فوری'
-      },
-      changeInstant(id, val) {
-        this.tableLoader = true;
-        let method = val === 1 ? `/user/adverts/${id}/instantIt` : `/user/adverts/${id}/unInstantIt`;
+        let method = `/${this.panel}/adverts/${id}/changeTradeStatus/${type}`
         this.$axios.$put(method).then((res) => {
           this.tableLoader = false;
         }).catch(err => {
@@ -292,14 +291,49 @@
       getPrice(val) {
         return Helper.priceFormat(val)
       },
+      getProperty(item = [], path = '', alias = '-') {
+        return _.get(item, path, alias)
+      },
       verified(item) {
         return item.verified ? 'تایید شده' : 'تایید نشده';
       },
       tradeStatus(item) {
         let list = this.$store.state.settings.adverts.tradeStatusList;
         return list[item.tradeStaus || 0];
-      }
-      , getGuaranteeTypes(key) {
+      },
+      instant(item) {
+        return !!_.get(item, 'advert.instant', _.get(item, 'instant', false)) ? 'فوری' : 'غیر فوری'
+      },
+      changeInstant(id, val) {
+        this.tableLoader = true;
+        let method = val === 1 ? `/${this.panel}/adverts/${id}/instantIt` : `/${this.panel}/adverts/${id}/unInstantIt`;
+
+        this.$axios.$put(method).then((res) => {
+          this.tableLoader = false;
+          item.instant = val;
+        }).catch(err => {
+          this.tableLoader = false;
+        })
+      },
+      changeVerified(id, val, item) {
+        if (this.isAdmin) {
+          this.tableLoader = true;
+          let method = `/${this.panel}/${this.type.type}/${id}`
+          this.$axios.$put(method, {verified: val}).then((res) => {
+            item.verified = val;
+            this.tableLoader = false;
+          }).catch(err => {
+            this.tableLoader = false;
+          })
+        }
+      },
+      sender(props) {
+        return _.get(props.item, 'advert.user.details.firstName',
+          _.get(props.item, 'advert.user.mobile',
+            _.get(props.item, 'advert.user.email',
+              _.get(props.item, 'advert.user.id', 'بدون مشخصات'))))
+      },
+      getGuaranteeTypes(key) {
         let items = [];
         let list = this.$store.state.guaranteeType.data;
         _.forEach(key, (item) => {
@@ -309,17 +343,17 @@
         })
         return _.toString(items) || key;
       },
-      getType(key) {
-        let list = this.$store.state.settings.coSigner.types;
-        let index = _.findIndex(list, {id: key});
-        let item = list[index];
-        return _.get(item, 'name', '');
-      },
       getForBank(item) {
         return _.get(item, 'forBank', false) ? 'خیر' : 'بله'
       },
       getForCourt(item) {
         return _.get(item, 'forCourt', false) ? 'خیر' : 'بله'
+      },
+      getType(key) {
+        let list = this.$store.state.settings.coSigner.types;
+        let index = _.findIndex(list, {id: key});
+        let item = list[index];
+        return _.get(item, 'name', '');
       },
       deleteItems() {
         if (confirm('آیا مطمئن هستید که می خواهید این موارد را حذف کنید؟')) {
@@ -334,24 +368,20 @@
         }
       },
       deleteById: function (id) {
-        let deletePath = `/user/${this.type.type}/${id}`;
+        let deletePath = `/${this.panel}/${this.type.type}/${id}`;
         _.remove(this.data, function (obj) {
           return _.get(obj, 'id', '') === id;
         });
-
         this.tableLoader = true;
         this.$axios.$delete(deletePath).then(() => {
           this.$store.commit('snackbar/setSnack', 'با موفقیت حذف شد', 'success')
           this.selected = [];
           this.tableLoader = false;
         }).catch((err) => {
-          this.$store.commit('snackbar/setSnack', _.get(err, 'response.data.error.message', 'مشکلی در حذف کردن پیش آمد'), 'error')
           this.tableLoader = false;
+          this.$store.commit('snackbar/setSnack', _.get(err, 'response.data.error.message', 'مشکلی در حذف کردن پیش آمد'), 'error')
         })
       }
-    },
-    $_veeValidate: {
-      validator: "new"
     }
   }
 </script>

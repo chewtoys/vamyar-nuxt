@@ -1,17 +1,28 @@
 // data structure
 export const
+  PREMIUMS = {
+    create: ['coSignerRequests', 'loanRequests', 'financeRequests'],
+    show: ['coSigners', 'loans', 'finances'],
+  },
   COMMON_FIELDS = ['title', 'city', 'text', 'desc', 'advertType', 'verified', 'tradeStatus', 'mobile', 'instant', 'description'],
   rawHeaders = {
-    loans: [
+    adverts: [
       {text: "عنوان", align: "right", value: 'advert.title'},
-      {text: "قیمت", value: "price", align: "left"},
-      {text: "مقدار وام", value: "amount", align: "left"},
+      {text: "شهر", value: "city", align: "left"},
+      {text: "توضیح ادمین", value: "description", align: "left"},
+      {text: "نوع آگهی", value: 'advertType', align: "right"},
+      {text: "وضعیت", align: "left", width: '140px', sortable: false},
+      {text: "عملیات", align: "left", value: 'loanTypeId', width: '140px', sortable: false}
+    ], loans: [
+      {text: "عنوان", align: "right", value: 'advert.title'},
+      {text: "قیمت فروش", value: "price", align: "left"},
+      {text: "مبلغ وام", value: "amount", align: "left"},
       {text: "وضعیت", align: "right", sortable: false},
       {text: "عملیات", align: "left", value: 'loanTypeId', width: '140px', sortable: false}
     ],
     loanRequests: [
       {text: "عنوان", value: "title", align: "right"},
-      {text: "مقدار وام", value: "amount", align: "left"},
+      {text: "مبلغ وام", value: "amount", align: "left"},
       {text: "وضعیت", align: "right", sortable: false},
       {text: "عملیات", sortable: false, align: "left"}
     ],
@@ -30,14 +41,16 @@ export const
     ],
     coSigners: [
       {text: "عنوان", align: "right", value: 'advert.title'},
-      {text: "نوع ضمانت", value: "type", align: "left"},
+      {text: "برای بانک", value: "forBank", align: "left"},
+      {text: "برای دادگاه", value: "forCourt", align: "left"},
       {text: "نوع ضامن", value: "guaranteeTypes", align: "left"},
       {text: "وضعیت", align: "right", sortable: false},
       {text: "عملیات", align: "left", value: 'loanTypeId', width: '140px', sortable: false}
     ],
     coSignerRequests: [
       {text: "عنوان", align: "right", value: 'advert.title'},
-      {text: "نوع ضمانت", value: "type", align: "left"},
+      {text: "برای دادگاه", value: "forBank", align: "left"},
+      {text: "برای بانک", value: "forCourt", align: "left"},
       {text: "نوع ضامن", value: "guaranteeTypes", align: "left"},
       {text: "سود", align: "right", value: 'interestRate'},
       {text: "بانک", align: "right", value: 'bank'},
@@ -123,6 +136,7 @@ export const
         }, {
           name: 'paybackTime',
           title: 'مدت بازپرداخت',
+          placeholder: 'ماه',
           help: 'اگر خالی بگذارید به عنوان توافقی در نظر گرفته می شود.'
         }, {
           name: 'loanType',
@@ -168,6 +182,7 @@ export const
         }, {
           name: 'paybackTime',
           title: 'مدت بازپرداخت',
+          placeholder: 'ماه',
           path: 'paybackTime',
           help: 'اگر خالی بگذارید به عنوان توافقی در نظر گرفته می شود.'
         }, {
@@ -204,6 +219,7 @@ export const
         }, {
           name: 'paybackTime',
           title: 'مدت بازپرداخت',
+          placeholder: 'ماه',
           help: 'اگر خالی بگذارید به عنوان توافقی در نظر گرفته می شود.'
         }
       ],
@@ -240,6 +256,7 @@ export const
         }, {
           name: 'paybackTime',
           title: 'مدت بازپرداخت',
+          placeholder: 'ماه',
           path: 'paybackTime',
           help: 'اگر خالی بگذارید به عنوان توافقی در نظر گرفته می شود.'
         },
@@ -377,8 +394,11 @@ export const
           name: 'guaranteeTypes',
           title: 'نوع ضامن'
         }, {
-          name: 'type',
-          title: 'نوع ضمانت'
+          name: 'forBank',
+          title: 'برای بانک'
+        }, {
+          name: 'forCourt',
+          title: 'برای دادگاه'
         },
       ],
       edit: [
@@ -407,9 +427,13 @@ export const
           title: 'نوع ضامن',
           path: 'guaranteeTypes'
         }, {
-          name: 'type',
-          title: 'نوع ضمانت',
-          path: 'type'
+          name: 'forBank',
+          title: 'برای بانک',
+          path: 'forBank'
+        }, {
+          name: 'forCourt',
+          title: 'برای دادگاه',
+          path: 'forCourt'
         },
       ],
     },
@@ -434,14 +458,20 @@ export const
           name: 'guaranteeTypes',
           title: 'نوع ضامن'
         }, {
-          name: 'type',
-          title: 'نوع ضمانت'
+          name: 'forBank',
+          title: 'برای بانک'
+        }, {
+          name: 'forCourt',
+          title: 'برای درگاه'
         }, {
           name: 'interestRate',
           title: 'سود'
         }, {
           name: 'bank',
           title: 'بانک'
+        }, {
+          name: 'loanType',
+          title: 'نوع وام'
         },
       ],
       edit: [
@@ -470,13 +500,21 @@ export const
           title: 'نوع ضامن',
           path: 'guaranteeTypes'
         }, {
-          name: 'type',
-          title: 'نوع ضمانت',
-          path: 'type'
+          name: 'forCourt',
+          title: 'برای دادگاه',
+          path: 'forCourt'
+        }, {
+          name: 'forBank',
+          title: 'برای بانک',
+          path: 'forBank'
         }, {
           name: 'interestRate',
           title: 'سود',
           path: 'interestRate'
+        }, {
+          name: 'loanType',
+          path: 'loanType',
+          title: 'نوع وام'
         },
         {
           name: 'bank',
