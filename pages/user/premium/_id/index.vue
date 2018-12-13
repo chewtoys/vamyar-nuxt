@@ -96,6 +96,10 @@
       }
     },
     computed: {
+      getSecret(){
+        let path = _.get(this.$route, 'query.redirect', '');
+        return decodeURI(path || "/user");
+      },
       user() {
         return _.get(this.$store.state, 'user', [])
       },
@@ -133,6 +137,7 @@
         let query = {
           port: 'zarinpal',
           coupon: this.coupon,
+          secret_1: this.getSecret ,
           subscription: this.id,
           //data: {redirect: this.redirectPath}
         }

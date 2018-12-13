@@ -6,6 +6,7 @@
           <v-toolbar-title>{{ pageTitle }}</v-toolbar-title>
           <v-spacer/>
           <v-btn
+            v-if="type.type!=='adverts'"
             color="red" outline light round class="mb-2"
             @click="deleteItems">
             <v-icon
@@ -36,6 +37,7 @@
           v-model="selected"
           item-key="id"
           select-all
+          v-if="type.type==='adverts'"
           :headers="headers"
           :loading="tableLoader"
           :items="list"
@@ -45,6 +47,149 @@
           :rows-per-page-items="[10,25,100]"
           class="elevation-1"
         >
+          <template slot="items" slot-scope="props">
+            <td>
+              <v-checkbox
+                v-model="props.selected"
+                primary
+                hide-details
+              ></v-checkbox>
+            </td>
+            <td class="text-xs-left">{{ getProperty(props, 'item.id') }}</td>
+            <td class="text-xs-left">{{ sender(props) }}</td>
+            <td class="text-xs-right">{{ getProperty(props, 'item.title', '-') }}</td>
+            <template>
+              <td class="text-xs-left">{{ getProperty(props, 'item.city.name', '') }}</td>
+              <td class="text-xs-left">{{ getProperty(props, 'item.description', '') }}</td>
+              <td class="text-xs-left">
+                {{ getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'title', 'نامشخص') }}
+              </td>
+            </template>
+            <td class="text-xs-right">
+              <v-menu offset-y>
+                <v-btn
+                  slot="activator"
+                  color="primary"
+                  outline
+                >
+                  {{ tradeStatus(getProperty(props, 'item', [])) }}
+                </v-btn>
+                <v-list>
+                  <v-list-tile
+                    @click="changeTradeStatus(getProperty(props, 'item.id'),0)"
+                  >
+                    <v-list-tile-title>باز</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+                <v-list>
+                  <v-list-tile
+                    @click="changeTradeStatus(getProperty(props, 'item.id'),1)"
+                  >
+                    <v-list-tile-title>در حال معامله</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+                <v-list>
+                  <v-list-tile
+                    @click="changeTradeStatus(getProperty(props, 'item.id'),2)"
+                  >
+                    <v-list-tile-title>بسته شده</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+              </v-menu>
+
+              <v-menu offset-y>
+                <v-btn
+                  slot="activator"
+                  color="primary"
+                  outline
+                >
+                  {{ instant(getProperty(props, 'item')) }}
+                </v-btn>
+                <v-list>
+                  <v-list-tile
+                    @click="changeInstant(getProperty(props, 'item.id'),1,props.item)"
+                  >
+                    <v-list-tile-title>فوری</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+                <v-list>
+                  <v-list-tile
+                    @click="changeInstant(getProperty(props, 'item.id'),0,props.item)"
+                  >
+                    <v-list-tile-title>غیر فوری</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+              </v-menu>
+              <v-menu offset-y>
+                <v-btn
+                  :disabled="!isAdmin"
+                  slot="activator"
+                  color="primary"
+                  outline
+                >
+                  {{ verified(getProperty(props, 'item')) }}
+                </v-btn>
+                <v-list>
+                  <v-list-tile
+                    @click="changeVerified(getProperty(props, 'item.id'),1,props.item)"
+                  >
+                    <v-list-tile-title>تایید شده</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+                <v-list>
+                  <v-list-tile
+                    @click="changeVerified(getProperty(props, 'item.id'),0,props.item)"
+                  >
+                    <v-list-tile-title>تایید نشده</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+              </v-menu>
+            </td>
+            <td>
+              <a title="مشاهده"
+                 :href=" `${uri}/${getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', '')}/show/${props.item.id}`"
+                 class="mx-1">
+                <v-icon
+                  small
+                >
+                  pageview
+                </v-icon>
+              </a>
+              <a title="ویرایش"
+                 :href="`${uri}/${getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', '')}/edit/${props.item.id}`"
+                 class="mx-1">
+                <v-icon
+                  small
+                >
+                  edit
+                </v-icon>
+              </a>
+              <v-icon
+                class="mx-1"
+                small
+                @click="deleteItem(props.item.id,getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', ''))"
+              >
+                delete
+              </v-icon>
+            </td>
+          </template>
+        </v-data-table>
+
+        <v-data-table
+          v-model="selected"
+          item-key="id"
+          select-all
+          v-else
+          :headers="headers"
+          :loading="tableLoader"
+          :items="list"
+          :pagination.sync="pagination"
+          :total-items="totalData"
+          :search="search"
+          :rows-per-page-items="[10,25,100]"
+          class="elevation-1"
+        >
+
           <template slot="items" slot-scope="props">
 
             <td>
@@ -186,6 +331,7 @@
                 delete
               </v-icon>
             </td>
+
           </template>
           <template slot="no-data">
             <v-alert type="info">
@@ -224,16 +370,16 @@
         return this.panel === 'admin';
       },
       uri() {
-        return `/${this.panel}/adverts/${this.slug}`;
+        return this.type.type === 'adverts' ? `/${this.panel}/adverts` : `/${this.panel}/adverts/${this.slug}`;
       },
       headers() {
         let id = {text: "شناسه", align: "right", value: 'id'};
         let owner = {text: "ثبت شده توسط", align: "right", value: 'advert.user.id'};
         let result = [];
-        result = Helper.getRawHeaders(this.type.type) ;
+        result = Helper.getRawHeaders(this.type.type);
         if (this.isAdmin) result.unshift(owner);
         if (this.isAdmin) result.unshift(id);
-        return result;
+        return _.uniq(result);
       },
       info() {
         return {
@@ -242,19 +388,23 @@
       }
     },
     mounted() {
-      //this.pagination = {
-      //  sortBy: 'id',
-      //  descending: true,
-      //  rowsPerPage: 25,
-      //}
+      this.pagination = {
+        sortBy: 'id',
+        descending: true,
+        rowsPerPage: 25,
+      };
+      this.switchPage()
     },
-
     methods: {
+      getAdvertType(advertType) {
+        return Helper.getTypeByAdvertType(advertType);
+      },
       switchPage() {
         this.loading = true;
         let method = `/${this.panel}/${this.type.type}`;
         let advertableType = this.type.advertType;
-        let include = 'advert.user.details,guaranteeTypes,cities,loanTypes';
+        let include = 'advert.user.details,guaranteeTypes,advert.cities,advert.loanTypes';
+        if (this.type.type === 'adverts') include = 'user.details,guaranteeType,city,loanType';
         let {sortBy, descending, page, rowsPerPage} = this.pagination;
         let query = {
           page,
@@ -331,7 +481,10 @@
         return _.get(props.item, 'advert.user.details.firstName',
           _.get(props.item, 'advert.user.mobile',
             _.get(props.item, 'advert.user.email',
-              _.get(props.item, 'advert.user.id', 'بدون مشخصات'))))
+              _.get(props.item, 'user.details.firstName',
+                _.get(props.item, 'user.mobile',
+                  _.get(props.item, 'user.email',
+                    _.get(props.item, 'advert.user.id', 'بدون مشخصات')))))))
       },
       getGuaranteeTypes(key) {
         let items = [];
@@ -355,20 +508,20 @@
         let item = list[index];
         return _.get(item, 'name', '');
       },
-      deleteItems() {
+      deleteItems(type = null) {
         if (confirm('آیا مطمئن هستید که می خواهید این موارد را حذف کنید؟')) {
           _.forEach(this.selected, (obj, key) => {
-            this.deleteById(_.get(obj, 'id', ''));
+            this.deleteById(_.get(obj, 'id', ''), type);
           })
         }
       },
-      deleteItem(id) {
+      deleteItem(id, type = null) {
         if (confirm('آیا مطمئن هستید که می خواهید این مورد را حذف کنید؟')) {
-          this.deleteById(id)
+          this.deleteById(id, type)
         }
       },
-      deleteById: function (id) {
-        let deletePath = `/${this.panel}/${this.type.type}/${id}`;
+      deleteById: function (id, type = null) {
+        let deletePath = `/${this.panel}/${type ? type : this.type.type}/${id}`;
         _.remove(this.data, function (obj) {
           return _.get(obj, 'id', '') === id;
         });

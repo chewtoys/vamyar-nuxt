@@ -94,6 +94,10 @@ const Helper = {
     //console.log({item,advertType})
     return _.get(_.find(types, {'advertType': advertType}), 'title', advertType || 'نامشخص');
   },
+  getTypeByAdvertType: function (advertType) {
+    let types = CONSTANTS.advertTypes
+    return _.find(types, {'advertType': advertType});
+  },
   /*
   @which = 'advert' || 'special' : advert for /adverts/~ routes
    */

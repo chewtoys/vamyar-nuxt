@@ -14,9 +14,16 @@
         <v-list-tile-title class="text-justify rtl">صفحه‌ی نخست</v-list-tile-title>
       </v-list-tile>
       <v-divider/>
-
       <v-list-tile>
         <v-list-tile-title class="text-justify rtl">کل آگهی ها</v-list-tile-title>
+      </v-list-tile>
+      <v-list-tile
+        to="/admin/adverts"
+      >
+        <v-list-tile-action>
+          <v-icon></v-icon>
+        </v-list-tile-action>
+        <v-list-tile-title class="text-justify rtl" v-text="'آخرین آگهی ها'"/>
       </v-list-tile>
       <v-list-tile
         v-for="item in advertTypes"
@@ -38,7 +45,6 @@
         <v-list-tile slot="activator">
           <v-list-tile-title class="text-justify rtl">کاربران</v-list-tile-title>
         </v-list-tile>
-
         <v-list-tile
           v-for="item in panel"
           :key="item.title"
@@ -48,7 +54,6 @@
             <v-icon v-text="item.icon"/>
           </v-list-tile-action>
           <v-list-tile-title class="text-justify rtl" v-text="item.title"/>
-
         </v-list-tile>
       </v-list-group>
       <v-divider/>
@@ -61,7 +66,6 @@
         <v-list-tile slot="activator">
           <v-list-tile-title class="text-justify rtl">مطالب</v-list-tile-title>
         </v-list-tile>
-
         <v-list-tile
           v-for="item in content"
           :key="item.title"
@@ -71,7 +75,6 @@
             <v-icon v-text="item.icon"/>
           </v-list-tile-action>
           <v-list-tile-title class="text-justify rtl" v-text="item.title"/>
-
         </v-list-tile>
       </v-list-group>
       <v-divider/>
@@ -113,7 +116,10 @@
         {title: "دسته بندی تیکت ها", icon: "inbox", to: "/admin/tickets/categories"},
         //{title: "لاگ کاربران", icon: "inbox", to: "/users/logs"},
         {title: "درخواست های مشاوره", icon: "inbox", to: "/admin/councils"},
-        {title: "انواع مشاوره ها", icon: "inbox", to: "/admin/councils/categories"},
+        {
+          title: "انواع مشاوره ها" +
+          "", icon: "inbox", to: "/admin/councils/categories"
+        },
         {title: "انتقادات و پیشنهادها", icon: "inbox", to: "/admin/contact-us"},
         //{title: "لیست کاربران", icon: "inbox", to: "/users"},
       ],
