@@ -340,7 +340,7 @@
           </template>
         </v-data-table>
         <div class="text-xs-center pt-2">
-          <v-pagination total-visible="8" v-model="pagination.page" :length="paginator.totalPages" @click="switchPage()"></v-pagination>
+          <v-pagination total-visible="8" v-model="pagination.page" :length="paginator.totalPages"></v-pagination>
         </div>
       </div>
     </v-card>
@@ -396,10 +396,9 @@
       this.switchPage()
     },
     watch: {
-      pagination: {
-        handler() {
-          this.switchPage();
-        }
+      pagination() {
+        console.log(this.pagination)
+        this.switchPage();
       }
     },
     methods: {
@@ -430,7 +429,7 @@
           this.totalData = _.get(response, 'paginator.totalCount', 0)
           //this.pages = _.get(response, 'paginator.totalPages', 0)
           this.tableLoader = false;
-          console.log('on response: ', this.paginator, this.pagination)
+          //console.log('on response: ', this.paginator, this.pagination)
         }).catch((error) => {
           //console.log(error, method, query, this.paginator);
           this.tableLoader = false;
