@@ -340,7 +340,7 @@
           </template>
         </v-data-table>
         <div class="text-xs-center pt-2">
-          <v-pagination v-model="pagination.page" :length="paginator.totalPages" @change="switchPage"></v-pagination>
+          <v-pagination total-visible="8" v-model="pagination.page" :length="paginator.totalPages" @click="switchPage()"></v-pagination>
         </div>
       </div>
     </v-card>
@@ -394,6 +394,13 @@
         rowsPerPage: 25,
       };
       this.switchPage()
+    },
+    watch: {
+      pagination: {
+        handler() {
+          this.switchPage();
+        }
+      }
     },
     methods: {
       getAdvertType(advertType) {
