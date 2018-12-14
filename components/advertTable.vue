@@ -16,7 +16,7 @@
             </v-icon>
             حذف انتخاب شده ها
           </v-btn>
-          <v-btn :to="uri+`/create`" color="green" outline light round class="mb-2">
+          <v-btn v-if="type.type!=='adverts'" :to="uri+`/create`" color="green" outline light round class="mb-2">
             <v-icon class="mx-1" small>create</v-icon>
             ثبت جدید
           </v-btn>
