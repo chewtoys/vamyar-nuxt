@@ -154,7 +154,7 @@
       this.$validator.localize("fa", this.dictionary)
       this.$axios.$get(fetchPath).then(res => {
         let final = [];
-        _.forEach(fetched, (cat, i) => {
+        _.forEach(res, (cat, i) => {
           final.push({id: cat.id, name: cat.name});
           if (_.has(cat, 'children')) {
             let childs = this.getChilds(cat)
@@ -163,9 +163,8 @@
             })
           }
         })
-
+        
         this.categories = _.isArray(final) ? final : [];
-
         this.categoryLoading = false;
         this.name = _.get(this, 'data.name');
         this.parent = _.get(this, 'data.parentId');

@@ -21,7 +21,7 @@
             ثبت جدید
           </v-btn>
         </v-toolbar>
-        <v-card-title>
+        <v-card-title v-if="false">
           جست‌و‌جو
           <v-spacer></v-spacer>
           <v-text-field
@@ -43,7 +43,6 @@
           :items="list"
           :pagination.sync="pagination"
           :total-items="totalData"
-          :search="search"
           :rows-per-page-items="[10,25,100]"
           class="elevation-1"
         >
@@ -107,14 +106,14 @@
                 </v-btn>
                 <v-list>
                   <v-list-tile
-                    @click="changeInstant(getProperty(props, 'item.id'),1,props.item)"
+                    @click="changeInstant(getProperty(props, 'item.id'),1,props.item,getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', ''))"
                   >
                     <v-list-tile-title>فوری</v-list-tile-title>
                   </v-list-tile>
                 </v-list>
                 <v-list>
                   <v-list-tile
-                    @click="changeInstant(getProperty(props, 'item.id'),0,props.item)"
+                    @click="changeInstant(getProperty(props, 'item.id'),0,props.item,getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', ''))"
                   >
                     <v-list-tile-title>غیر فوری</v-list-tile-title>
                   </v-list-tile>
@@ -131,14 +130,14 @@
                 </v-btn>
                 <v-list>
                   <v-list-tile
-                    @click="changeVerified(getProperty(props, 'item.id'),1,props.item)"
+                    @click="changeVerified(getProperty(props, 'item.advertableId'),1,props.item)"
                   >
                     <v-list-tile-title>تایید شده</v-list-tile-title>
                   </v-list-tile>
                 </v-list>
                 <v-list>
                   <v-list-tile
-                    @click="changeVerified(getProperty(props, 'item.id'),0,props.item)"
+                    @click="changeVerified(getProperty(props, 'item.advertableId'),0,props.item)"
                   >
                     <v-list-tile-title>تایید نشده</v-list-tile-title>
                   </v-list-tile>
@@ -147,7 +146,7 @@
             </td>
             <td>
               <a title="مشاهده"
-                 :href=" `${uri}/${getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', '')}/show/${props.item.id}`"
+                 :href=" `${uri}/${getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', '')}/show/${props.item.advertableId}`"
                  class="mx-1">
                 <v-icon
                   small
@@ -156,7 +155,7 @@
                 </v-icon>
               </a>
               <a title="ویرایش"
-                 :href="`${uri}/${getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', '')}/edit/${props.item.id}`"
+                 :href="`${uri}/${getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', '')}/edit/${props.item.advertableId}`"
                  class="mx-1">
                 <v-icon
                   small
@@ -167,7 +166,7 @@
               <v-icon
                 class="mx-1"
                 small
-                @click="deleteItem(props.item.id,getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', ''))"
+                @click="deleteItem(props.item.advertableId,getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', ''))"
               >
                 delete
               </v-icon>
@@ -185,7 +184,6 @@
           :items="list"
           :pagination.sync="pagination"
           :total-items="totalData"
-          :search="search"
           :rows-per-page-items="[10,25,100]"
           class="elevation-1"
         >
@@ -340,7 +338,7 @@
           </template>
         </v-data-table>
         <div class="text-xs-center pt-2">
-          <v-pagination total-visible="8" v-model="pagination.page" :length="paginator.totalPages"></v-pagination>
+          <v-pagination v-if="false" total-visible="8" v-model="pagination.page" :length="paginator.totalPages"></v-pagination>
         </div>
       </div>
     </v-card>
@@ -358,6 +356,7 @@
       paginator: {totalPages: 1}, //pagination is for vuetify - paginator is for API
       selected: [],
       pages: 1,
+      page: 1,
       search: '',
       submit_loader: false,
       tableLoader: false,
@@ -377,8 +376,9 @@
         let owner = {text: "ثبت شده توسط", align: "right", value: 'advert.user.id'};
         let result = [];
         result = Helper.getRawHeaders(this.type.type);
-        if (this.isAdmin) result.unshift(owner);
-        if (this.isAdmin) result.unshift(id);
+        console.log(result.length)
+        if (this.isAdmin && result[1].value!=='advert.user.id') result.unshift(owner);
+        if (this.isAdmin && result[0].value!=='id') result.unshift(id);
         return _.uniq(result);
       },
       info() {
@@ -388,17 +388,21 @@
       }
     },
     mounted() {
-      this.pagination = {
-        sortBy: 'id',
-        descending: true,
-        rowsPerPage: 25,
-      };
+      //this.pagination = {
+      //  sortBy: 'id',
+      //  page: 1,
+      //  descending: true,
+      //  rowsPerPage: 25,
+      //};
       this.switchPage()
     },
     watch: {
-      pagination() {
-        console.log(this.pagination)
-        this.switchPage();
+      pagination: {
+        handler() {
+          //console.log(this.pagination.page)
+          this.switchPage();
+        },
+        deep: true
       }
     },
     methods: {
@@ -471,10 +475,10 @@
           this.tableLoader = false;
         })
       },
-      changeVerified(id, val, item) {
+      changeVerified(id, val, item,which=null) {
         if (this.isAdmin) {
           this.tableLoader = true;
-          let method = `/${this.panel}/${this.type.type}/${id}`
+          let method = `/${this.panel}/${which ? which : this.type.type}/${id}`
           this.$axios.$put(method, {verified: val}).then((res) => {
             item.verified = val;
             this.tableLoader = false;

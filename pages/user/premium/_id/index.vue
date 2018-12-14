@@ -55,7 +55,7 @@
                 </tr>
                 </tbody>
               </table>
-              <v-btn @click="getForm" block color="success">
+              <v-btn :href="link" :disabled="!link" block color="success">
                 <v-icon class="px-1">forward</v-icon>
                 <b>پرداخت</b>
               </v-btn>
@@ -91,12 +91,13 @@
         loader: false,
         info,
         id: '',
+        link: '',
         form: '',
         coupon: '',
       }
     },
     computed: {
-      getSecret(){
+      getSecret() {
         let path = _.get(this.$route, 'query.redirect', '');
         return decodeURI(path || "/user");
       },
@@ -112,6 +113,16 @@
       },
       isPremium() {
         return this.$store.state.user.hasSubscription;
+      }
+    },
+    mounted() {
+      this.getForm();
+    },
+    watch: {
+      coupon: {
+        handler() {
+          this.getForm();
+        }
       }
     },
     methods: {
@@ -137,13 +148,20 @@
         let query = {
           port: 'zarinpal',
           coupon: this.coupon,
-          secret_1: this.getSecret ,
+          data: {redirect: this.getSecret},
           subscription: this.id,
           //data: {redirect: this.redirectPath}
         }
-        this.$axios.post('/user/subscriptions', query).then(res => {
-          // this.form = res
-          console.log(`'${res}'`);
+        this.$axios.$get('/user/subscriptions/paymentLink', {params: query}).then(res => {
+          // this.form = resa
+          if (_.has(res, 'data.paymentLink')) {
+            let link = _.get(res, 'data.paymentLink', '');
+            this.link = link;
+            //this.$axios.$post(link).then(res2 => {
+            //  console.log(`'${res2}'`);
+            //}).catch()
+          }
+          console.log(res);
           this.loader = false;
         }).catch((err) => {
           console.log({err})

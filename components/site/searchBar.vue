@@ -1,5 +1,4 @@
 <template>
-
   <v-autocomplete
     v-model="model"
     :items="items"
@@ -20,7 +19,7 @@
     <template slot="no-data">
       <v-list-tile>
         <v-list-tile-title>
-{{desc}}
+          {{desc}}
         </v-list-tile-title>
       </v-list-tile>
     </template>
@@ -41,13 +40,7 @@
       slot="item"
       slot-scope="{ item, tile }"
     >
-      <v-list-tile flat :to="link(item)">
-        <v-list-tile-avatar
-          color="indigo"
-          class="headline font-weight-light white--text"
-        >
-          {{ item.name.charAt(0) }}
-        </v-list-tile-avatar>
+      <v-list-tile flat @click="goTo(item.link)">
         <v-list-tile-content>
           <v-list-tile-title v-text="item.name"></v-list-tile-title>
           <v-list-tile-sub-title v-text="item.symbol"></v-list-tile-sub-title>
@@ -61,10 +54,10 @@
 
 </template>
 <script>
-  import axios from 'axios'
+  import Helper from '~/assets/js/helper'
 
   export default {
-    props: ['placeholder', 'subtext','dark','color'],
+    props: ['placeholder', 'subtext', 'dark', 'color'],
     data: () => ({
       isLoading: false,
       items: [],
@@ -90,23 +83,58 @@
       search(val) {
 // Items have already been loaded
         if (this.items.length > 0) return
-
         this.isLoading = true
-
 // Lazily load input items
-        axios.get('https://api.coinmarketcap.com/v2/listings/')
+        //adverts?filter=title=exampleTitle,text=exampleTitle
+        //posts?filter=title=exampleTitle,text=exampeTitle
+
+        let query = {
+          params: {
+            filter: `title=${val},text=${val}`
+          }
+        }
+
+
+        this.$axios.$get('site/adverts', query)
           .then(res => {
-            this.items = res.data.data
+            //console.log(res.data)
+            _.forEach(res.data, (item, x) => {
+              if (x < 10) {
+                let type = Helper.getTypeByAdvertType(item.advertableType);
+                let link = `/categories/${type.alias}/show/${item.advertableId}`
+                this.items.push({name: `${item.title} (${type.title})`, id: item.id, link})
+              }
+            })
+          })
+          .catch(err => {
+            console.log(err)
+          })
+          .finally(() => (this.isLoading = false))
+
+        this.$axios.$get('site/posts', query)
+          .then(res => {
+            //console.log(res.data)
+            _.forEach(res.data, (item, x) => {
+              if (x < 10) {
+                let link = `/posts/show/${item.slug}`
+                this.items.push({name: `${item.title} ('مطالب')`, id: item.id, link})
+              }
+            })
           })
           .catch(err => {
             console.log(err)
           })
           .finally(() => (this.isLoading = false))
       }
+
     },
     methods: {
       link(item) {
-        return `/item/${item.id}`
+        return `
+        /item/${item.id}`
+      },
+      goTo(to) {
+        this.$router.push(to);
       }
     }
   }

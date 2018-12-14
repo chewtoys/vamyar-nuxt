@@ -129,6 +129,7 @@
       try {
         posts = await $axios.$get(postsMethod);
       } catch (err) {
+        return error({statusCode: 404, message: err})
       }
       return {
         posts: _.get(posts, 'data', []),
