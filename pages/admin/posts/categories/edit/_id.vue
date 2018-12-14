@@ -163,7 +163,7 @@
             })
           }
         })
-        
+
         this.categories = _.isArray(final) ? final : [];
         this.categoryLoading = false;
         this.name = _.get(this, 'data.name');
