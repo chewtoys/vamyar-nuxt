@@ -32,7 +32,6 @@
             hide-details
           ></v-text-field>
         </v-card-title>
-
         <v-data-table
           v-model="selected"
           item-key="id"

@@ -28,6 +28,14 @@
           <form>
             <v-text-field
               v-validate="'required'"
+              v-model="title"
+              :error-messages="errors.collect('title')"
+              box
+              data-vv-name="title"
+              label="عنوان درخواست"
+            />
+            <v-text-field
+              v-validate="'required'"
               v-model="job"
               :error-messages="errors.collect('job')"
               box
@@ -78,8 +86,8 @@
   const page_title = 'درخواست مشاوره جدید',
     breadcrumb = 'درخواست جدید',
     indexPath = '/user/councils',
-    createPath = '/user/councils',
-    councilRequestTypes = '/councilRequestTypes',
+    createPath = '/user/councils/paymentLink',
+    councilRequestTypes = '/site/councilRequestTypes',
     cityMethod = '/cities?number=3000'
 
   export default {
@@ -109,6 +117,7 @@
       // validator dictionary
       dictionary: {
         attributes: {
+          title: "عنوان",
           job: "شغل",
           city: "شهر",
           requestText: "متن درخواست",
@@ -128,9 +137,10 @@
           return createPath;
         }
         ,
-        city: function () {
+        city() {
           let list = _.get(this.$store.state.city, 'data', []);
-          let index = _.findIndex(list, {'name': this.cityName});
+          let cityName = this.cityName;
+          let index = _.findIndex(list, {'name': cityName});
           if (index > 0) {
             let item = list[index];
             return _.get(item, 'id', 0);
@@ -176,14 +186,16 @@
       ,
       sendForm() {
         let data = {
+          title: this.title,
           job: this.job,
           city: this.city,
           requestText: this.requestText,
           requestType: this.requestType,
-          port: 'zarinpal'
+          port: 'zarinpal',
+          data: {redirect: '/user/councils'},
         }
         this.$axios
-          .$post(createPath, data)
+          .$get(createPath, {params:data})
           .then((res) => {
             let status = true
             if (status) {
@@ -191,6 +203,7 @@
               this.toast("با موفقیت ثبت شد.", "success")
               this.submit_loader = false
               this.html = res;
+              location.href = _.get(res,'data.paymentLink','/user/councils');
               //this.$router.push(indexPath)
             } else {
               this.toast(" خطایی رخ داد.", "warning")

@@ -26,11 +26,11 @@
         <v-flex xs12 md12 sm12 lg12>
           <form>
             <v-text-field
-              v-validate="'min:6|required'"
+              v-validate="'min:6|nullable'"
               v-model="password"
               :error-messages="errors.collect('password')"
               box
-              required
+
               data-vv-name="password"
               type="password"
               label="رمز عبور"
@@ -167,7 +167,7 @@
         this.snack_text = msg;
         this.snack_color = color
       },
-      async sendForm() {
+      sendForm() {
         let data = {
           firstName: this.firstName,
           lastName: this.lastName,
@@ -176,11 +176,12 @@
           password_confirmation: this.password,
           address: this.address
         };
-        try {
-          await this.$axios.$put(path, data)
-        } catch (error) {
+
+        this.$axios.$put(path, data).then(res => {
+          this.$store.commit("snackbar/setSnack", _.get(error, 'response.data.error.message', "با موفقیت بروز شد."));
+        }).catch(err => {
           this.$store.commit("snackbar/setSnack", _.get(error, 'response.data.error.message', "مشکلی در ارسال اطلاعات پیش آمد"));
-        }
+        })
 
         this.updateUser();
         this.submit_loader = false;
@@ -189,11 +190,6 @@
         try {
           let {data} = await this.$axios.$get("/user/details");
           if (_.has(data, 'details')) {
-            this.$store.commit(
-              "snackbar/setSnack",
-              "پروفایل با موفقیت بروز شد",
-              "success"
-            );
             this.$store.commit("user/updateUserInfo", data)
           }
         } catch (error) {
