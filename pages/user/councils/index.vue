@@ -83,10 +83,11 @@
               ></v-checkbox>
             </td>
             <td class="text-xs-right">{{ getCity(props.item) }}</td>
+            <td class="text-xs-right">{{ props.item.title }}</td>
             <td class="text-xs-right">{{ props.item.job }}</td>
             <td class="text-xs-right">{{ requestType(props.item.requestType) }}</td>
             <td class="text-xs-right">
-              <div v-html="nl2br(props.item.job)"></div>
+              <div v-html="nl2br(props.item.requestText)"></div>
             </td>
             <td class="text-xs-right">{{ props.item.jUpdatedAt }}</td>
             <td class="text-xs-left">
@@ -128,9 +129,10 @@
     cityMethod = '/cities?number=3000',
     headers = [
       {text: 'شهر', value: 'city', align: 'right'},
+      {text: 'عنوان', value: 'title', align: 'right'},
       {text: 'شغل', value: 'job', align: 'right'},
       {text: 'نوع', sortable: false, type: 'requestType', align: 'right'},
-      {text: 'متن درخواست', value: 'status', sortable: true, align: 'right'},
+      {text: 'متن درخواست', value: 'requestText', sortable: true, align: 'right'},
       {text: 'تاریخ ثبت', value: 'jUpdatedAt', sortable: true, align: 'right'},
       {text: 'عملیات', sortable: false, align: 'left'},
     ]

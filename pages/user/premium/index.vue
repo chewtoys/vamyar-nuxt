@@ -28,7 +28,7 @@
           </v-card-text>
           <v-layout row wrap>
             <v-flex class="text-xs-center" sm="4" xs="12" lg="3" v-for="item in plans" :key="item.id">
-              <v-card :raised="!!item.special" hover :to="`/user/premium/${item.id}`" ripple :flat="!item.special"
+              <v-card :raised="!!item.special" hover :to="`/user/premium/${item.id}/?redirect=${encodeURI(redirectPath)}`" ripple :flat="!item.special"
                       :color="item.special ? 'warning lighten-4' : 'grey lighten-4'">
                 <v-card-title>
                   <h5 class="full text-center">{{item.title}}</h5>

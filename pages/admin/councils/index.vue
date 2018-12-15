@@ -65,10 +65,11 @@
               ></v-checkbox>
             </td>
             <td class="text-xs-right">{{ props.item.id }}</td>
+            <td class="text-xs-right">{{ props.item.title }}</td>
             <td class="text-xs-right">{{ props.item.job }}</td>
             <td class="text-xs-right">{{ props.item.city }}</td>
             <td class="text-xs-right">{{ props.item.requestType }}</td>
-            <td class="text-xs-right">{{ props.item.requestText }}</td>
+            <td class="text-xs-right">{{ nl2br(props.item.requestText) }}</td>
 
             <td class="text-xs-left">
               <v-icon
@@ -97,6 +98,7 @@
     indexPath = '/admin/councils',
     headers = [
       {text: '‌شناسه', value: 'id', align: 'right'},
+      {text: 'عنوان', value: 'title', align: 'right'},
       {text: 'شغل', value: 'job', align: 'right'},
       {text: 'شهر', value: 'city', align: 'right'},
       {text: 'نوع درخواست', value: 'requestType', align: 'right'},
@@ -147,6 +149,7 @@
             page,
             orderBy: `${sortBy || 'id'}:${descending ? 'desc' : 'asc'}`,
             number: rowsPerPage,
+            include: 'city,requestType',
           }
           //console.log({method, query, paginator: this.paginator}, {sortBy, descending, page, rowsPerPage});
           this.$axios.$get(method, {
@@ -166,6 +169,9 @@
       },
     },
     methods: {
+      nl2br(val){
+        return Helper.nl2br(val);
+      },
       getPrice(price) {
         return Helper.priceFormat(price)
       },
