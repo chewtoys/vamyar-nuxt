@@ -68,6 +68,7 @@
               data-vv-name="password"
               label="رمز عبور جدید"
             />
+
             <v-btn :loading="submit_loader" outline color="accent" round @click="processSubmit">
               <v-icon class="px-1">save</v-icon>
               ذخیره
@@ -101,6 +102,7 @@
       firstName: null,
       lastName: null,
       mobile: null,
+      verified: false,
       email: null,
       image: null,
       password: null,
@@ -114,6 +116,7 @@
           mobile: "موبایل",
           email: "ایمیل",
           image: "عکس",
+          verified: "تایید حساب",
           password: "رمز عبور",
           password_confirmation: "تکرار رمز عبور",
           // custom attributes
