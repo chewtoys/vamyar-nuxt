@@ -73,7 +73,6 @@
               <v-icon class="px-1">save</v-icon>
               تایید
             </v-btn>
-            <div v-html="html"></div>
           </form>
         </v-flex>
       </v-layout>
