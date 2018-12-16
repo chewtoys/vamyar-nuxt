@@ -21,7 +21,7 @@
             ثبت جدید
           </v-btn>
         </v-toolbar>
-        <v-card-title v-if="false">
+        <v-card-title>
           جست‌و‌جو
           <v-spacer></v-spacer>
           <v-text-field
@@ -33,10 +33,9 @@
           ></v-text-field>
         </v-card-title>
         <v-data-table
+          v-if="type.type==='adverts'"
           v-model="selected"
           item-key="id"
-          select-all
-          v-if="type.type==='adverts'"
           :headers="headers"
           :loading="tableLoader"
           :items="list"
@@ -46,15 +45,9 @@
           class="elevation-1"
         >
           <template slot="items" slot-scope="props">
-            <td>
-              <v-checkbox
-                v-model="props.selected"
-                primary
-                hide-details
-              ></v-checkbox>
-            </td>
+
             <td class="text-xs-left">{{ getProperty(props, 'item.id') }}</td>
-            <td class="text-xs-left">{{ sender(props) }}</td>
+            <td v-if="isAdmin" class="text-xs-left">{{ sender(props) }}</td>
             <td class="text-xs-right">{{ getProperty(props, 'item.title', '-') }}</td>
             <template>
               <td class="text-xs-left">{{ getProperty(props, 'item.city.name', '') }}</td>
@@ -63,6 +56,31 @@
                 {{ getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'title', 'نامشخص') }}
               </td>
             </template>
+            <td class="text-xs-right">
+              <v-menu offset-y>
+                <v-btn
+                  slot="activator"
+                  color="primary"
+                  outline
+                >
+                  {{ instant(getProperty(props, 'item')) }}
+                </v-btn>
+                <v-list>
+                  <v-list-tile
+                    @click="changeInstant(getProperty(props, 'item.id'),1,props.item,getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', ''))"
+                  >
+                    <v-list-tile-title>فوری</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+                <v-list>
+                  <v-list-tile
+                    @click="changeInstant(getProperty(props, 'item.id'),0,props.item,getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', ''))"
+                  >
+                    <v-list-tile-title>غیر فوری</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+              </v-menu>
+            </td>
             <td class="text-xs-right">
               <v-menu offset-y>
                 <v-btn
@@ -94,30 +112,8 @@
                   </v-list-tile>
                 </v-list>
               </v-menu>
-
-              <v-menu offset-y>
-                <v-btn
-                  slot="activator"
-                  color="primary"
-                  outline
-                >
-                  {{ instant(getProperty(props, 'item')) }}
-                </v-btn>
-                <v-list>
-                  <v-list-tile
-                    @click="changeInstant(getProperty(props, 'item.id'),1,props.item,getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', ''))"
-                  >
-                    <v-list-tile-title>فوری</v-list-tile-title>
-                  </v-list-tile>
-                </v-list>
-                <v-list>
-                  <v-list-tile
-                    @click="changeInstant(getProperty(props, 'item.id'),0,props.item,getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', ''))"
-                  >
-                    <v-list-tile-title>غیر فوری</v-list-tile-title>
-                  </v-list-tile>
-                </v-list>
-              </v-menu>
+            </td>
+            <td class="text-xs-right">
               <v-menu offset-y>
                 <v-btn
                   :disabled="!isAdmin"
@@ -197,7 +193,7 @@
               ></v-checkbox>
             </td>
             <td class="text-xs-left">{{ getProperty(props, 'item.id') }}</td>
-            <td class="text-xs-left">{{ sender(props) }}</td>
+            <td v-if="isAdmin" class="text-xs-left">{{ sender(props) }}</td>
             <td class="text-xs-right">{{ getProperty(props, 'item.advert.title', '-') }}</td>
             <template v-if="type.type=='loans'">
               <td class="text-xs-left">{{ getPrice(getProperty(props, 'item.price', '')) }}</td>
@@ -225,6 +221,32 @@
               <td class="text-xs-left">{{ getProperty(props, 'item.interestRate') }}</td>
               <td class="text-xs-left">{{ getProperty(props, 'item.bank') }}</td>
             </template>
+
+            <td class="text-xs-right">
+              <v-menu offset-y>
+                <v-btn
+                  slot="activator"
+                  color="primary"
+                  outline
+                >
+                  {{ instant(getProperty(props, 'item')) }}
+                </v-btn>
+                <v-list>
+                  <v-list-tile
+                    @click="changeInstant(getProperty(props, 'item.id'),1,props.item,getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', ''))"
+                  >
+                    <v-list-tile-title>فوری</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+                <v-list>
+                  <v-list-tile
+                    @click="changeInstant(getProperty(props, 'item.id'),0,props.item,getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', ''))"
+                  >
+                    <v-list-tile-title>غیر فوری</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+              </v-menu>
+            </td>
             <td class="text-xs-right">
               <v-menu offset-y>
                 <v-btn
@@ -236,50 +258,28 @@
                 </v-btn>
                 <v-list>
                   <v-list-tile
-                    @click="changeTradeStatus(getProperty(props, 'item.advert.id'),0)"
+                    @click="changeTradeStatus(getProperty(props, 'item.id'),0)"
                   >
                     <v-list-tile-title>باز</v-list-tile-title>
                   </v-list-tile>
                 </v-list>
                 <v-list>
                   <v-list-tile
-                    @click="changeTradeStatus(getProperty(props, 'item.advert.id'),1)"
+                    @click="changeTradeStatus(getProperty(props, 'item.id'),1)"
                   >
                     <v-list-tile-title>در حال معامله</v-list-tile-title>
                   </v-list-tile>
                 </v-list>
                 <v-list>
                   <v-list-tile
-                    @click="changeTradeStatus(getProperty(props, 'item.advert.id'),2)"
+                    @click="changeTradeStatus(getProperty(props, 'item.id'),2)"
                   >
                     <v-list-tile-title>بسته شده</v-list-tile-title>
                   </v-list-tile>
                 </v-list>
               </v-menu>
-
-              <v-menu offset-y>
-                <v-btn
-                  slot="activator"
-                  color="primary"
-                  outline
-                >
-                  {{ instant(getProperty(props, 'item')) }}
-                </v-btn>
-                <v-list>
-                  <v-list-tile
-                    @click="changeInstant(getProperty(props, 'item.advert.id'),1,props.item)"
-                  >
-                    <v-list-tile-title>فوری</v-list-tile-title>
-                  </v-list-tile>
-                </v-list>
-                <v-list>
-                  <v-list-tile
-                    @click="changeInstant(getProperty(props, 'item.advert.id'),0,props.item)"
-                  >
-                    <v-list-tile-title>غیر فوری</v-list-tile-title>
-                  </v-list-tile>
-                </v-list>
-              </v-menu>
+            </td>
+            <td class="text-xs-right">
               <v-menu offset-y>
                 <v-btn
                   :disabled="!isAdmin"
@@ -291,20 +291,21 @@
                 </v-btn>
                 <v-list>
                   <v-list-tile
-                    @click="changeVerified(getProperty(props, 'item.id'),1,props.item)"
+                    @click="changeVerified(getProperty(props, 'item.advertableId'),1,props.item)"
                   >
                     <v-list-tile-title>تایید شده</v-list-tile-title>
                   </v-list-tile>
                 </v-list>
                 <v-list>
                   <v-list-tile
-                    @click="changeVerified(getProperty(props, 'item.id'),0,props.item)"
+                    @click="changeVerified(getProperty(props, 'item.advertableId'),0,props.item)"
                   >
                     <v-list-tile-title>تایید نشده</v-list-tile-title>
                   </v-list-tile>
                 </v-list>
               </v-menu>
             </td>
+
             <td>
               <a title="مشاهده" :href=" uri + '/show/' + props.item.id" class="mx-1">
                 <v-icon
@@ -337,7 +338,8 @@
           </template>
         </v-data-table>
         <div class="text-xs-center pt-2">
-          <v-pagination v-if="false" total-visible="8" v-model="pagination.page" :length="paginator.totalPages"></v-pagination>
+          <v-pagination v-if="false" total-visible="8" v-model="pagination.page"
+                        :length="paginator.totalPages"></v-pagination>
         </div>
       </div>
     </v-card>
@@ -375,9 +377,9 @@
         let owner = {text: "ثبت شده توسط", align: "right", value: 'advert.user.id'};
         let result = [];
         result = Helper.getRawHeaders(this.type.type);
-        console.log(result.length)
-        if (this.isAdmin && result[1].value!=='advert.user.id') result.unshift(owner);
-        if (this.isAdmin && result[0].value!=='id') result.unshift(id);
+        // console.log(result.length)
+        if (this.isAdmin && result[1].value !== 'advert.user.id') result.unshift(owner);
+        if (result[0].value !== 'id') result.unshift(id);
         return _.uniq(result);
       },
       info() {
@@ -387,15 +389,18 @@
       }
     },
     mounted() {
-      //this.pagination = {
-      //  sortBy: 'id',
-      //  page: 1,
-      //  descending: true,
-      //  rowsPerPage: 25,
-      //};
+      this.pagination = {
+        sortBy: 'id',
+        page: 1,
+        descending: true,
+        rowsPerPage: 25,
+      };
       this.switchPage()
     },
     watch: {
+      search(val) {
+        this.switchPage();
+      },
       pagination: {
         handler() {
           //console.log(this.pagination.page)
@@ -412,13 +417,18 @@
         this.loading = true;
         let method = `/${this.panel}/${this.type.type}`;
         let advertableType = this.type.advertType;
-        let include = 'advert.user.details,guaranteeTypes,advert.cities,advert.loanTypes';
+        let filter;
+        if (this.search) filter = `advert.mobile=${this.search},job=${this.search},price=${this.search},maxAmount=${this.search},amount=${this.search},advert.text=${this.search},advert.advertableId=${this.search},advert.id=${this.search},advert.description=${this.search},advert.city.name=${this.search},advert.user.mobile=${this.search},advert.user.email=${this.search}`
+        if (this.type.type === 'adverts' && this.search) filter = `mobile=${this.search},advertable.job=${this.search},advertable.price=${this.search},advertable.maxAmount=${this.search},advertable.amount=${this.search},title=${this.search},text=${this.search},advertableId=${this.search},id=${this.search},description=${this.search},city.name=${this.search},user.mobile=${this.search},user.email=${this.search}`
+
+        let include = 'advert.user.details,guaranteeType,advert.city,loanType';
         if (this.type.type === 'adverts') include = 'user.details,guaranteeType,city,loanType';
         let {sortBy, descending, page, rowsPerPage} = this.pagination;
         let query = {
           page,
           advertableType,
           include,
+          filter,
           orderBy: `${sortBy || 'id'}:${descending ? 'desc' : 'asc'}`,
           number: rowsPerPage
         }
@@ -474,7 +484,7 @@
           this.tableLoader = false;
         })
       },
-      changeVerified(id, val, item,which=null) {
+      changeVerified(id, val, item, which = null) {
         if (this.isAdmin) {
           this.tableLoader = true;
           let method = `/${this.panel}/${which ? which : this.type.type}/${id}`

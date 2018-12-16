@@ -11,32 +11,42 @@ export const
       {text: "شهر", value: "city", align: "left"},
       {text: "توضیح ادمین", value: "description", align: "left"},
       {text: "نوع آگهی", value: 'advertType', align: "right"},
-      {text: "وضعیت", align: "left", width: '140px', sortable: false},
+      {text: "فوری بودن", value: 'instant', align: "left", width: '140px'},
+      {text: "وضعیت", value: 'tradeStatus', align: "left", width: '140px'},
+      {text: "تایید شده", value: 'verified', align: "left", width: '140px'},
       {text: "عملیات", align: "left", value: 'loanTypeId', width: '140px', sortable: false}
     ], loans: [
       {text: "عنوان", align: "right", value: 'advert.title'},
       {text: "قیمت فروش", value: "price", align: "left"},
       {text: "مبلغ وام", value: "amount", align: "left"},
-      {text: "وضعیت", align: "right", sortable: false},
+      {text: "فوری بودن", value: 'instant', align: "left", width: '140px'},
+      {text: "وضعیت", value: 'tradeStatus', align: "left", width: '140px'},
+      {text: "تایید شده", value: 'verified', align: "left", width: '140px'},
       {text: "عملیات", align: "left", value: 'loanTypeId', width: '140px', sortable: false}
     ],
     loanRequests: [
       {text: "عنوان", value: "title", align: "right"},
       {text: "مبلغ وام", value: "amount", align: "left"},
-      {text: "وضعیت", align: "right", sortable: false},
+      {text: "فوری بودن", value: 'instant', align: "left", width: '140px'},
+      {text: "وضعیت", value: 'tradeStatus', align: "left", width: '140px'},
+      {text: "تایید شده", value: 'verified', align: "left", width: '140px'},
       {text: "عملیات", sortable: false, align: "left"}
     ],
     finances: [
       {text: "عنوان", align: "right", value: 'advert.title'},
       {text: "حداکثر سرمایه", value: "maxAmount", align: "left"},
-      {text: "وضعیت", align: "right", sortable: false},
+      {text: "فوری بودن", value: 'instant', align: "left", width: '140px'},
+      {text: "وضعیت", value: 'tradeStatus', align: "left", width: '140px'},
+      {text: "تایید شده", value: 'verified', align: "left", width: '140px'},
       {text: "عملیات", align: "left", value: 'loanTypeId', width: '140px', sortable: false}
     ],
     financeRequests: [
       {text: "عنوان", align: "right", value: 'advert.title'},
       {text: " سرمایه ی درخواستی", value: "amount", align: "left"},
       {text: "شغل", align: "right", value: 'job'},
-      {text: "وضعیت", align: "right", sortable: false},
+      {text: "فوری بودن", value: 'instant', align: "left", width: '140px'},
+      {text: "وضعیت", value: 'tradeStatus', align: "left", width: '140px'},
+      {text: "تایید شده", value: 'verified', align: "left", width: '140px'},
       {text: "عملیات", align: "left", value: 'loanTypeId', width: '140px', sortable: false}
     ],
     coSigners: [
@@ -44,7 +54,9 @@ export const
       {text: "برای بانک", value: "forBank", align: "left"},
       {text: "برای دادگاه", value: "forCourt", align: "left"},
       {text: "نوع ضامن", value: "guaranteeTypes", align: "left"},
-      {text: "وضعیت", align: "right", sortable: false},
+      {text: "فوری بودن", value: 'instant', align: "left", width: '140px'},
+      {text: "وضعیت", value: 'tradeStatus', align: "left", width: '140px'},
+      {text: "تایید شده", value: 'verified', align: "left", width: '140px'},
       {text: "عملیات", align: "left", value: 'loanTypeId', width: '140px', sortable: false}
     ],
     coSignerRequests: [
@@ -54,7 +66,9 @@ export const
       {text: "نوع ضامن", value: "guaranteeTypes", align: "left"},
       {text: "سود", align: "right", value: 'interestRate'},
       {text: "بانک", align: "right", value: 'bank'},
-      {text: "وضعیت", align: "right", sortable: false},
+      {text: "فوری بودن", value: 'instant', align: "left", width: '140px'},
+      {text: "وضعیت", value: 'tradeStatus', align: "left", width: '140px'},
+      {text: "تایید شده", value: 'verified', align: "left", width: '140px'},
       {text: "عملیات", align: "left", value: 'loanTypeId', width: '140px', sortable: false}
     ],
   },
