@@ -82,10 +82,10 @@
                 hide-details
               ></v-checkbox>
             </td>
-            <td class="text-xs-right">{{ getCity(props.item) }}</td>
             <td class="text-xs-right">{{ props.item.title }}</td>
+            <td class="text-xs-right">{{ getCity(props.item) }}</td>
             <td class="text-xs-right">{{ props.item.job }}</td>
-            <td class="text-xs-right">{{ requestType(props.item.requestType) }}</td>
+            <td class="text-xs-right">{{ (props.item.requestType.title) }}</td>
             <td class="text-xs-right">
               <div v-html="nl2br(props.item.requestText)"></div>
             </td>
@@ -128,8 +128,8 @@
     councilRequestTypes = '/councilRequestTypes',
     cityMethod = '/cities?number=3000',
     headers = [
-      {text: 'شهر', value: 'city', align: 'right'},
       {text: 'عنوان', value: 'title', align: 'right'},
+      {text: 'شهر', value: 'city', align: 'right'},
       {text: 'شغل', value: 'job', align: 'right'},
       {text: 'نوع', sortable: false, type: 'requestType', align: 'right'},
       {text: 'متن درخواست', value: 'requestText', sortable: true, align: 'right'},
@@ -153,9 +153,6 @@
       search: '',
     }),
     computed: {
-      getCity(item) {
-        return _.get(item, 'city.name');
-      },
       getType(item) {
 
       },
@@ -185,7 +182,8 @@
           let query = {
             page,
             orderBy: `${sortBy || 'id'}:${descending ? 'desc' : 'asc'}`,
-            number: rowsPerPage
+            number: rowsPerPage,
+            include: 'city,requestType'
           }
           //console.log({method, query, paginator: this.paginator}, {sortBy, descending, page, rowsPerPage});
           this.$axios.$get(method, {
@@ -206,28 +204,32 @@
         },
         deep: true
       },
-
     },
     async asyncData({params, store, $axios}) {
       try {
         // city
-        let cityData = await $axios.$get(cityMethod);
-        store.commit('city/setAndProcessData', cityData.data || []);
+        //let cityData = await $axios.$get(cityMethod);
+        //store.commit('city/setAndProcessData', cityData.data || []);
 
         // loan types
-        let councilTypes = await
-          $axios.$get(councilRequestTypes);
-        store.commit('councilTypes/setAndProcessData', councilTypes.data || []);
+        // let councilTypes = await
+        //   $axios.$get(councilRequestTypes);
+        // store.commit('councilTypes/setAndProcessData', councilTypes.data || []);
       } catch (error) {
         console.log('error', error)
       }
       return {
-        cities: _.get(store.state, 'city.arrayList', []),
-        requestTypeList: _.get(store.state, 'councilTypes.arrayList', []),
+        //cities: _.get(store.state, 'city.arrayList', []),
+        //requestTypeList: _.get(store.state, 'councilTypes.arrayList', []),
       }
     },
     methods: {
-
+      nl2br(val) {
+        return Helper.nl2br(val)
+      },
+      getCity(item) {
+        return _.get(item, 'city.name','ثبت نشده!');
+      },
       requestType(id) {
         let list = this.$store.state.councilTypes.data;
         let index = _.findIndex(list, {id});
