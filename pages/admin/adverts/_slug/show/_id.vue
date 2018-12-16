@@ -147,7 +147,7 @@
         // get advert data
         let getPath = `/admin/${formType.type}/${id}`;
         let query = {
-          include: 'guaranteeTypes,cities,loanTypes'
+          include: 'user.details,guaranteeType,city,loanType'
         }
         let {data} = await $axios.$get(getPath, {params: query});
         //console.log('get:', getPath, {params: query}, data)
@@ -165,8 +165,6 @@
       }
     },
     mounted() {
-      this.$validator.localize("fa", this.dictionary);
-
       let data = this.data;
       let editable = Helper.getTypeFields(this.formType.type, 'edit');
       //console.log({editable});

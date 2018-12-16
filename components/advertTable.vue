@@ -448,10 +448,12 @@
           this.tableLoader = false;
         });
       },
-      changeTradeStatus(id, type) {
+      changeTradeStatus(id, type, item) {
         this.tableLoader = true;
-        let method = `/${this.panel}/adverts/${id}/changeTradeStatus/${type}`
+        let method = `/${this.panel}/${this.type.type}/${id}/changeTradeStatus/${type}`
         this.$axios.$put(method).then((res) => {
+          let index = _.findIndex(this.list, {id: id});
+          this.list[index].tradeStatus = type;
           this.tableLoader = false;
         }).catch(err => {
           this.tableLoader = false;
@@ -468,7 +470,7 @@
       },
       tradeStatus(item) {
         let list = this.$store.state.settings.adverts.tradeStatusList;
-        return list[item.tradeStaus || 0];
+        return list[item.tradeStatus || 0];
       },
       instant(item) {
         return !!_.get(item, 'advert.instant', _.get(item, 'instant', false)) ? 'فوری' : 'غیر فوری'
@@ -476,8 +478,9 @@
       changeInstant(id, val) {
         this.tableLoader = true;
         let method = val === 1 ? `/${this.panel}/adverts/${id}/instantIt` : `/${this.panel}/adverts/${id}/unInstantIt`;
-
         this.$axios.$put(method).then((res) => {
+          let index = _.findIndex(this.list, {id: id});
+          this.list[index].instant = val;
           this.tableLoader = false;
           item.instant = val;
         }).catch(err => {
