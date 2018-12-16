@@ -21,7 +21,6 @@
             </v-toolbar>
           </div>
           <v-divider class="mb-5 mt-1"/>
-
         </v-flex>
         <v-divider class="my-3"/>
         <v-flex xs12 md12 sm12 lg12>
@@ -68,6 +67,11 @@
               data-vv-name="password"
               label="رمز عبور جدید"
             />
+            <ImgUpload
+              v-model="image"
+              box
+              label="تصویر کاربر"
+            />
 
             <v-btn :loading="submit_loader" outline color="accent" round @click="processSubmit">
               <v-icon class="px-1">save</v-icon>
@@ -81,6 +85,7 @@
 </template>
 <script>
   import Helper from '~/assets/js/helper'
+  import ImgUpload from '~/components/elements/FileUploader.vue'
 
   const page_title = 'ویرایش حساب ',
     breadcrumb = 'ویرایش',
@@ -132,8 +137,8 @@
       //console.log({method})
       this.$axios.$get(method, {params: query}).then(res => {
         this.data = _.get(res, 'data');
-        this.firstName = _.get(res, 'data.firstName', '');
-        this.lastName = _.get(res, 'data.lastName', '');
+        this.firstName = _.get(res, 'data.details.firstName', '');
+        this.lastName = _.get(res, 'data.details.lastName', '');
         this.email = _.get(res, 'data.email', '');
         this.mobile = _.get(res, 'data.mobile', '');
         this.image = _.get(res, 'data.image', '');
@@ -163,6 +168,7 @@
       }
       ,
       sendForm() {
+
         let data = {
           firstName: this.firstName,
           lastName: this.lastName,
@@ -170,7 +176,7 @@
           image: this.image,
           mobile: this.mobile,
           password: this.password,
-          password_confirmation: this.password_confirmation
+          password_confirmation: this.password
         }
         this.$axios
           .$put(this.uri, data)
@@ -188,17 +194,17 @@
           })
           .catch((error) => {
             // catch and show error
-            this.toast(_.get(error, 'response.data.error.message', {error}), "error")
             //console.log(1, _.get(error, 'response.data.error', 'no res.data'), 3, _.get(error, 'response.data.error.message', 'no data'))
-            if (_.isArray(_.get(error, 'response.data.error.message', ''))) {
+            if (_.isObject(_.get(error, 'response.data.error.message', ''))) {
               _.forEach(_.get(error, 'response.data.error.message', []), (value, key) => {
                 this.toast(value, "error")
               })
+            } else {
+              this.toast(_.get(error, 'response.data.error.message', {error}), "error")
             }
             this.submit_loader = false
           })
-      }
-      ,
+      },
       processSubmit() {
         this.submit_loader = true
         this.$validator
@@ -216,6 +222,7 @@
             this.toast(err, "error")
           })
       }
-    }
+    },
+    components: {ImgUpload}
   }
 </script>
