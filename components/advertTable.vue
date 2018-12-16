@@ -48,10 +48,10 @@
 
             <td class="text-xs-left">{{ getProperty(props, 'item.id') }}</td>
             <td v-if="isAdmin" class="text-xs-left">{{ sender(props) }}</td>
+            <td v-if="isAdmin" class="text-xs-left">{{ getProperty(props, 'item.description', '') }}</td>
             <td class="text-xs-right">{{ getProperty(props, 'item.title', '-') }}</td>
             <template>
               <td class="text-xs-left">{{ getProperty(props, 'item.city.name', '') }}</td>
-              <td class="text-xs-left">{{ getProperty(props, 'item.description', '') }}</td>
               <td class="text-xs-left">
                 {{ getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'title', 'نامشخص') }}
               </td>
@@ -375,9 +375,11 @@
       headers() {
         let id = {text: "شناسه", align: "right", value: 'id'};
         let owner = {text: "ثبت شده توسط", align: "right", value: 'advert.user.id'};
+        let description = {text: "توضیح ادمین", value: "description", align: "left"};
         let result = [];
         result = Helper.getRawHeaders(this.type.type);
         // console.log(result.length)
+        if (this.isAdmin && result[2].value !== 'description') result.unshift(description);
         if (this.isAdmin && result[1].value !== 'advert.user.id') result.unshift(owner);
         if (result[0].value !== 'id') result.unshift(id);
         return _.uniq(result);
