@@ -9,7 +9,6 @@ export const
     adverts: [
       {text: "عنوان", align: "right", value: 'advert.title'},
       {text: "شهر", value: "city", align: "left"},
-      {text: "توضیح ادمین", value: "description", align: "left"},
       {text: "نوع آگهی", value: 'advertType', align: "right"},
       {text: "فوری بودن", value: 'instant', align: "left", width: '140px'},
       {text: "وضعیت", value: 'tradeStatus', align: "left", width: '140px'},
