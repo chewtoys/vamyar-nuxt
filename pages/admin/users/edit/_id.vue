@@ -124,6 +124,7 @@
     mounted() {
       let method = this.uri;
       let query = {
+        include: 'details'
       }
       //console.log({method})
       this.$axios.$get(method, {params: query}).then(res => {
