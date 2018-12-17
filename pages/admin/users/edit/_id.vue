@@ -84,6 +84,43 @@
             />
 
             <v-card dark color="primary" v-if="hasSubscription" class="my-4">
+              <v-card-title>جزئیات اشتراک این کاربر</v-card-title>
+              <table>
+                <tbody v-for="plan in userSubscriptions" :key="plan.id">
+                <tr>
+                  <td>
+                    <samll>عنوان</samll>
+                  </td>
+                  <td>{{plan.title}}</td>
+                </tr>
+                <tr>
+                  <td>
+                    <samll>دوره</samll>
+                  </td>
+                  <td>{{plan.period}}</td>
+                </tr>
+                <tr>
+                  <td>
+                    <samll>تاریخ فعالسازی</samll>
+                  </td>
+                  <td>{{getProperty(plan, 'info.jCreatedAt', '-')}}</td>
+                </tr>
+                <tr>
+                  <td>
+                    <samll>تاریخ انقضا</samll>
+                  </td>
+                  <td>{{getProperty(plan, 'info.jCreatedAt', '-')}}</td>
+                </tr>
+                <tr>
+                  <td>
+                    <samll>روزهای باقی مانده</samll>
+                  </td>
+                  <td>{{getProperty(plan, 'info.remained', '-')}}</td>
+                </tr>
+                </tbody>
+              </table>
+            </v-card>
+            <v-card dark color="primary" v-if="hasSubscription" class="my-4">
               <v-card-title>تمدید اشتراک</v-card-title>
               <v-select
                 v-model="currentSubscriptionId"
@@ -223,6 +260,9 @@
       }
     },
     methods: {
+      getProperty(item, path, val) {
+        return _.get(item, path, val);
+      },
       initialLoad() {
         let method = this.uri;
         let query = {
