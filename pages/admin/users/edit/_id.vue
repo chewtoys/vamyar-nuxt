@@ -83,7 +83,7 @@
               label="تصویر کاربر"
             />
 
-            <v-card v-if="hasSubscription">
+            <v-card dark color="primary" v-if="hasSubscription" class="my-4">
               <v-card-title>تمدید اشتراک</v-card-title>
               <v-select
                 v-model="currentSubscriptionId"
@@ -100,12 +100,12 @@
                 v-model="days"
                 :error-messages="errors.collect('days')"
                 box
-                label="افزودن روز به اشتراک"
+                label="تعداد روزی که میخواهید اضافه کنید"
               />
               <v-btn color="info" @click="addDays">افزودن روز به اشتراک</v-btn>
             </v-card>
-            <v-card v-if="hasSubscription">
-              <v-card-title>تمدید اشتراک</v-card-title>
+            <v-card color="warning" v-if="hasSubscription" class="my-4">
+              <v-card-title>حذف اشتراک</v-card-title>
               <v-select
                 v-model="currentDeleteSubscriptionId"
                 :items="userSubscriptions"
@@ -116,10 +116,10 @@
                 return-object
                 single-line
               ></v-select>
-              <v-btn color="info" @click="removeSubscription">حذف اشتراک</v-btn>
+              <v-btn color="error" @click="removeSubscription">حذف اشتراک</v-btn>
             </v-card>
 
-            <v-card class="my-4">
+            <v-card color="success" class="my-4">
               <v-card-title>افزودن اشتراک جدید</v-card-title>
               <v-select
                 v-model="newSubscription"
