@@ -210,7 +210,7 @@
     computed:
       {
         hasSubscription() {
-          return !!(_.get(this, 'data.subscriptions', [])).length;
+          return !!(_.get(this, 'data.subscriptions', []).length);
         },
         userSubscriptions() {
           return _.get(this, 'data.subscriptions', []);
