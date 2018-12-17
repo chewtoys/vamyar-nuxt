@@ -104,8 +104,22 @@
               />
               <v-btn color="info" @click="addDays">افزودن روز به اشتراک</v-btn>
             </v-card>
+            <v-card v-if="hasSubscription">
+              <v-card-title>تمدید اشتراک</v-card-title>
+              <v-select
+                v-model="currentDeleteSubscriptionId"
+                :items="userSubscriptions"
+                item-text="title"
+                item-value="id"
+                label="اشتراکی که میخواهد حذف کنید را انتخاب کنید"
+                persistent-hint
+                return-object
+                single-line
+              ></v-select>
+              <v-btn color="info" @click="removeSubscription">حذف اشتراک</v-btn>
+            </v-card>
 
-            <v-card>
+            <v-card class="my-4">
               <v-card-title>افزودن اشتراک جدید</v-card-title>
               <v-select
                 v-model="newSubscription"
@@ -163,7 +177,9 @@
       password: null,
       password_confirmation: null,
       subscriptionsList: [],
+      data: [],
       currentSubscriptionId: '',
+      currentDeleteSubscriptionId: '',
       days: null,
 
       // validator dictionary
@@ -183,29 +199,7 @@
       submit_loader: false
     }),
     mounted() {
-      let method = this.uri;
-      let query = {
-        include: 'details,subscriptions'
-      }
-      //console.log({method})
-      this.$axios.$get(method, {params: query}).then(res => {
-        this.data = _.get(res, 'data');
-        this.firstName = _.get(res, 'data.details.firstName', '');
-        this.lastName = _.get(res, 'data.details.lastName', '');
-        this.email = _.get(res, 'data.email', '');
-        this.verified = _.get(res, 'data.verified', '');
-        this.mobile = _.get(res, 'data.mobile', '');
-        this.image = _.get(res, 'data.image', '');
-      }).catch(err => {
-        //console.log(err);
-      })
-      this.$validator.localize("fa", this.dictionary);
-
-      let subscriptionsMethods = '/site/subscriptions'
-      this.$axios.$get(subscriptionsMethods).then(res => {
-        this.subscriptionsList = _.get(res, 'data', [])
-      }).catch(err => {
-      })
+      this.initialLoad();
     },
     computed:
       {
@@ -229,21 +223,60 @@
       }
     },
     methods: {
+      initialLoad() {
+        let method = this.uri;
+        let query = {
+          include: 'details,subscriptions'
+        }
+        //console.log({method})
+        this.$axios.$get(method, {params: query}).then(res => {
+          this.data = _.get(res, 'data');
+          this.firstName = _.get(res, 'data.details.firstName', '');
+          this.lastName = _.get(res, 'data.details.lastName', '');
+          this.email = _.get(res, 'data.email', '');
+          this.verified = _.get(res, 'data.verified', '');
+          this.mobile = _.get(res, 'data.mobile', '');
+          this.image = _.get(res, 'data.image', '');
+        }).catch(err => {
+          //console.log(err);
+        })
+        this.$validator.localize("fa", this.dictionary);
+
+        let subscriptionsMethods = '/site/subscriptions'
+        this.$axios.$get(subscriptionsMethods).then(res => {
+          this.subscriptionsList = _.get(res, 'data', [])
+        }).catch(err => {
+        })
+      },
       addSubscription() {
-        let subscriptionId = _.get(this.newSubscription,'id',null);
+        let subscriptionId = _.get(this.newSubscription, 'id', null);
         let addMethod = `/admin/user/${this.id}/subscriptions`;
-        this.$axios.$post(addMethod, {subscription:subscriptionId}).then(res => {
+        this.$axios.$post(addMethod, {subscription: subscriptionId}).then(res => {
           console.log(res);
           this.$store.commit('snackbar/setSnack', 'با موفقیت افزوده شد');
+          this.initialLoad()
         }).catch(err => {
         })
       },
       addDays() {
         let addDays = this.days;
-        let addMethod = `/admin/user/${this.id}/subscriptions/${_.get(this.currentSubscriptionId,'id',null)}`
-        this.$axios.$post(addMethod, {addDays}).then(res => {
+        let addMethod = `/admin/user/${this.id}/subscriptions/${_.get(this.currentSubscriptionId, 'id', null)}`
+        this.$axios.$post(addMethod, {
+          addDays,
+          // subscription: _.get(this.currentSubscriptionId, 'id', null)
+        }).then(res => {
           console.log(res);
           this.$store.commit('snackbar/setSnack', 'با موفقیت افزوده شد');
+          this.initialLoad()
+        }).catch(err => {
+        })
+      },
+      removeSubscription() {
+        let addMethod = `/admin/user/${this.id}/subscriptions/${_.get(this.currentDeleteSubscriptionId, 'id', null)}`
+        this.$axios.$delete(addMethod).then(res => {
+          console.log(res);
+          this.$store.commit('snackbar/setSnack', 'با موفقیت حذف شد');
+          this.initialLoad()
         }).catch(err => {
         })
       },
