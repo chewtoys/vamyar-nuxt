@@ -30,11 +30,13 @@
     "nuxt": "^v2.3.4",
     "quill-image-upload": "^0.1.2",
     "vee-validate": "^2.1.0-beta.9",
-    "vue": "^2.5.17",
+    "vue": "^2.5.21",
+    "vue-server-renderer": "^2.5.21",
+    "vue-template-compiler":"latest",
     "vue-clipboard2": "^0.2.1",
     "vue-quill-editor": "^3.0.6",
     "vue2-siema": "^0.2.0",
-    "vuetify": "^1.3.11",
+    "vuetify": "^1.3.14",
     "vuetify-upload-button": "^1.0.0",
     "babel-eslint": "^8.2.1",
     "babel-loader": "latest",
@@ -57,7 +59,7 @@
     "stylus-loader": "^3.0.2",
     "ts-loader": "latest",
     "typescript": "latest",
-    "vue-cli": "^2.9.6",
+    "vue-cli": "latest",
     "webpack-node-externals": "^1.7.2"
   }
 }

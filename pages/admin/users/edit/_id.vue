@@ -49,6 +49,16 @@
               data-vv-name="mobile"
               label="موبایل"
             />
+
+            <v-checkbox
+              v-validate="''"
+              v-model="verified"
+              :error-messages="errors.collect('verified')"
+              box
+              data-vv-name="verified"
+              label="شماره تایید شده"
+            />
+
             <v-text-field
               v-validate="'email'"
               v-model="email"
@@ -73,10 +83,49 @@
               label="تصویر کاربر"
             />
 
+            <v-card v-if="hasSubscription">
+              <v-card-title>تمدید اشتراک</v-card-title>
+              <v-select
+                v-model="currentSubscriptionId"
+                :items="userSubscriptions"
+                item-text="title"
+                item-value="id"
+                label="اشتراکی که میخواهد تمدید کنید را انتخاب کنید"
+                persistent-hint
+                return-object
+                single-line
+              ></v-select>
+              <v-text-field
+                v-validate="''"
+                v-model="days"
+                :error-messages="errors.collect('days')"
+                box
+                label="افزودن روز به اشتراک"
+              />
+              <v-btn color="info" @click="addDays">افزودن روز به اشتراک</v-btn>
+            </v-card>
+
+            <v-card>
+              <v-card-title>افزودن اشتراک جدید</v-card-title>
+              <v-select
+                v-model="newSubscription"
+                :items="subscriptionsList"
+                item-text="title"
+                item-value="id"
+                label="اشتراک جدید را انتخاب کنید"
+                persistent-hint
+                return-object
+                single-line
+              ></v-select>
+              <v-btn color="success" @click="addSubscription">افزودن اشتراک به حساب</v-btn>
+              <br/>
+            </v-card>
+
             <v-btn :loading="submit_loader" outline color="accent" round @click="processSubmit">
               <v-icon class="px-1">save</v-icon>
               ذخیره
             </v-btn>
+
           </form>
         </v-flex>
       </v-layout>
@@ -102,6 +151,7 @@
       breadcrumb: breadcrumb
     },
     data: () => ({
+      newSubscription: '',
       page_title,
       // ticket
       firstName: null,
@@ -112,6 +162,9 @@
       image: null,
       password: null,
       password_confirmation: null,
+      subscriptionsList: [],
+      currentSubscriptionId: '',
+      days: null,
 
       // validator dictionary
       dictionary: {
@@ -132,7 +185,7 @@
     mounted() {
       let method = this.uri;
       let query = {
-        include: 'details'
+        include: 'details,subscriptions'
       }
       //console.log({method})
       this.$axios.$get(method, {params: query}).then(res => {
@@ -140,15 +193,28 @@
         this.firstName = _.get(res, 'data.details.firstName', '');
         this.lastName = _.get(res, 'data.details.lastName', '');
         this.email = _.get(res, 'data.email', '');
+        this.verified = _.get(res, 'data.verified', '');
         this.mobile = _.get(res, 'data.mobile', '');
         this.image = _.get(res, 'data.image', '');
       }).catch(err => {
         //console.log(err);
       })
       this.$validator.localize("fa", this.dictionary);
+
+      let subscriptionsMethods = '/site/subscriptions'
+      this.$axios.$get(subscriptionsMethods).then(res => {
+        this.subscriptionsList = _.get(res, 'data', [])
+      }).catch(err => {
+      })
     },
     computed:
       {
+        hasSubscription() {
+          return !!(_.get(this, 'data.subscriptions', [])).length;
+        },
+        userSubscriptions() {
+          return _.get(this, 'data.subscriptions', []);
+        },
         uri() {
           return `${resourcePath}/${this.id}`;
         },
@@ -163,17 +229,35 @@
       }
     },
     methods: {
+      addSubscription() {
+        let subscriptionId = _.get(this.newSubscription,'id',null);
+        let addMethod = `/admin/user/${this.id}/subscriptions`;
+        this.$axios.$post(addMethod, {subscription:subscriptionId}).then(res => {
+          console.log(res);
+          this.$store.commit('snackbar/setSnack', 'با موفقیت افزوده شد');
+        }).catch(err => {
+        })
+      },
+      addDays() {
+        let addDays = this.days;
+        let addMethod = `/admin/user/${this.id}/subscriptions/${_.get(this.currentSubscriptionId,'id',null)}`
+        this.$axios.$post(addMethod, {addDays}).then(res => {
+          console.log(res);
+          this.$store.commit('snackbar/setSnack', 'با موفقیت افزوده شد');
+        }).catch(err => {
+        })
+      },
       toast(msg, color) {
         this.$store.commit("snackbar/setSnack", msg, color)
       }
       ,
       sendForm() {
-
         let data = {
           firstName: this.firstName,
           lastName: this.lastName,
           email: this.email,
           image: this.image,
+          verified: this.verified,
           mobile: this.mobile,
           password: this.password,
           password_confirmation: this.password

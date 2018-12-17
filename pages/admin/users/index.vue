@@ -20,6 +20,17 @@
             ثبت جدید
           </v-btn>
         </v-toolbar>
+        <v-card-title>
+          جست‌و‌جو
+          <v-spacer></v-spacer>
+          <v-text-field
+            v-model="search"
+            append-icon="search"
+            label="چیزی بنویسید"
+            single-line
+            hide-details
+          ></v-text-field>
+        </v-card-title>
         <v-data-table
           v-model="selected"
           item-key="id"
@@ -69,6 +80,8 @@
             <td class="text-xs-right">
               {{ props.item.verified ? 'فعال' : 'غیر فعال' }}
             </td>
+            <td class="text-xs-right" v-html="showSubscription(props.item)">
+            </td>
             <td class="text-xs-right">
               {{ props.item.jUpdatedAt }}
             </td>
@@ -117,6 +130,7 @@
       {text: 'موبایل', value: 'mobile', align: 'right'},
       {text: 'نام و نام خانوادگی', value: 'lastName', align: 'right'},
       {text: 'وضعیت حساب', value: 'verified', align: 'right'},
+      {text: 'وضعیت اشتراک', value: 'subscriptions', align: 'right'},
       {text: 'آخرین ویرایش', value: 'jUpdatedAt', align: 'right'},
       {text: 'ثبت حساب', value: 'jCreatedAt', align: 'right'},
       {text: 'عملیات', sortable: false, align: 'left', width: '140px'},
@@ -156,42 +170,62 @@
       }
     },
     watch: {
+      search(val) {
+        this.switchPage();
+      },
       pagination: {
         handler() {
-          this.loading = true;
-          let method = fetchPath;
-          let {sortBy, descending, page, rowsPerPage} = this.pagination;
-          let query = {
-            page,
-            orderBy: `${sortBy || 'id'}:${descending ? 'desc' : 'asc'}`,
-            number: rowsPerPage,
-            include: 'details'
-          }
-          //console.log({method, query, paginator: this.paginator}, {sortBy, descending, page, rowsPerPage});
-          this.$axios.$get(method, {
-            params: query
-          }).then((response) => {
-
-            this.paginator = _.get(response, 'paginator', {})
-            this.data = _.get(response, 'data', [])
-            this.totalData = _.get(response, 'paginator.totalCount', 0)
-
-            //  console.log('on response: ', this.totalData, this.paginator, this.data, {response})
-          }).catch((error) => {
-
-            //console.log(error, method, query, this.paginator);
-          }).then(() => {
-            this.loading = false;
-          })
+          this.switchPage();
         },
         deep: true
       },
     },
     async asyncData({params, store, $axios}) {
 
-    }
-    ,
+    },
     methods: {
+      showSubscription(item) {
+        if (_.get(item, 'subscriptions', []).length < 1) return 'غیر فعال';
+        let subs = _.get(item, 'subscriptions', []);
+        let list = [];
+        _.forEach(subs, (plan, i) => {
+          let title = "نام اشتراک: " + _.get(plan, 'title', '-')
+          let period = 'کل مدت دوره: ' + _.get(plan, 'period', '-') + 'روز'
+          let registered = 'تاریخ فعالسازی: ' + _.get(plan, 'info.jCreatedAt', '-')
+          list.push(++i + '- ' + period + '<br/>' + title + '<br/>' + registered)
+        })
+        return _.join(list, '<hr/>')
+      },
+      switchPage() {
+        this.loading = true;
+        let method = fetchPath;
+        let filter = '';
+        if (this.search) filter = `details.firstName=${this.search},details.lastName=${this.search},mobile=${this.search},id=${this.search},email=${this.search}`
+        let {sortBy, descending, page, rowsPerPage} = this.pagination;
+        let query = {
+          page,
+          orderBy: `${sortBy || 'id'}:${descending ? 'desc' : 'asc'}`,
+          number: rowsPerPage,
+          include: 'details,subscriptions',
+          filter
+        }
+        //console.log({method, query, paginator: this.paginator}, {sortBy, descending, page, rowsPerPage});
+        this.$axios.$get(method, {
+          params: query
+        }).then((response) => {
+
+          this.paginator = _.get(response, 'paginator', {})
+          this.data = _.get(response, 'data', [])
+          this.totalData = _.get(response, 'paginator.totalCount', 0)
+
+          //  console.log('on response: ', this.totalData, this.paginator, this.data, {response})
+        }).catch((error) => {
+
+          //console.log(error, method, query, this.paginator);
+        }).then(() => {
+          this.loading = false;
+        })
+      },
       getProperty(item, path, def = '') {
         return _.get(item, path, def);
       },

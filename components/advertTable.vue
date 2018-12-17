@@ -34,6 +34,7 @@
         </v-card-title>
         <v-data-table
           v-if="type.type==='adverts'"
+          hide-actions
           v-model="selected"
           item-key="id"
           :headers="headers"
@@ -338,7 +339,7 @@
           </template>
         </v-data-table>
         <div class="text-xs-center pt-2">
-          <v-pagination v-if="false" total-visible="8" v-model="pagination.page"
+          <v-pagination total-visible="8" v-model="pagination.page"
                         :length="paginator.totalPages"></v-pagination>
         </div>
       </div>

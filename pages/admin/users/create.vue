@@ -50,6 +50,14 @@
               data-vv-name="mobile"
               label="موبایل"
             />
+            <v-checkbox
+              v-validate="''"
+              v-model="verified"
+              :error-messages="errors.collect('verified')"
+              box
+              data-vv-name="verified"
+              label="شماره تایید شده"
+            />
             <v-text-field
               v-validate="'email'"
               v-model="email"
@@ -164,6 +172,7 @@
           email: this.email,
           image: this.image,
           mobile: this.mobile,
+          verified: this.verified,
           password: this.password,
           password_confirmation: this.password_confirmation
         }
