@@ -11,39 +11,26 @@
           <v-progress-linear v-if="loader" :indeterminate="true"/>
           <v-card-text>
             <v-card v-if="!isUserPremium" flat>
-              <v-alert :value="!isUserPremium" type="warning">شما اشتراک فعالی ندارید!</v-alert>
-              <v-alert :value="!isUserPremium" type="info"><p>برای تهیه ی اشتراک از لینک زیر اقدام نمایید.</p>
+              <v-alert :value="true" type="warning">شما اشتراک فعالی ندارید!</v-alert>
+              <v-alert :value="true" type="info"><p>برای تهیه ی اشتراک از لینک زیر اقدام نمایید.</p>
                 <div>
                   <v-btn to="/user/premium">مشاهده ی اشتراک ها</v-btn>
                 </div>
               </v-alert>
             </v-card>
             <v-card v-else flat>
-              <v-alert type="success">حساب شما دارای اشتراک فعال می باشد.</v-alert>
-              <v-alert type="info"><p>برای تمدید اشتراک از لینک زیر اقدام نمایید.</p>
-                <div>
+              <v-alert :value="true" type="success">حساب شما دارای اشتراک فعال می باشد.</v-alert>
+              <v-alert :value="true" color="info"><p>جزئیات اشتراک شما:</p>
+                <p>عنوان اشتراک: {{planTitle}}</p>
+                <p>دوره ی اشتراک: {{planPeriod}}</p>
+                <p>شروع اشتراک: {{planStart}}</p>
+                <p>انقضای اشتراک: {{planExpire}}</p>
+                <p>هزینه ی اشتراک: {{planPrice}}</p>
+                <p>روز باقی مانده: {{leftDays}}</p></v-alert>
+              <v-alert  v-if="false"  :value="true" color="blue"><p>برای تمدید اشتراک می توانید از لینک زیر اقدام نمایید.</p>
+                <div >
                   <v-btn to="/user/premium">اشتراک ها</v-btn>
-                </div>
-              </v-alert>
-            </v-card>
-          </v-card-text>
-        </v-card>
-        <v-card>
-          <v-card-title>
-            <v-subheader>
-              آگهی های نشان شده ی من
-            </v-subheader>
-          </v-card-title>
-          <v-progress-linear v-if="loader" :indeterminate="true"/>
-          <v-card-text>
-            <v-card v-if="bookmarks" flat>
-
-            </v-card>
-            <v-card v-else flat>
-              <v-alert type="success">حساب شما دارای اشتراک فعال می باشد.</v-alert>
-              <v-alert type="info"><p>برای تمدید اشتراک از لینک زیر اقدام نمایید.</p>
-                <div>
-                  <v-btn to="/user/premium">اشتراک ها</v-btn>
+                  <v-btn :to="`/user/premium/${getPlan.id}`">تمدید همین اشتراک</v-btn>
                 </div>
               </v-alert>
             </v-card>
@@ -86,11 +73,11 @@
                   outline
                   ripple
                   block
-                  :to="item.link"
-                  :color="item.color"
+                  :to="`/user/adverts/${item.alias}/create`"
+                  color="info"
                 >
                   <v-icon class="px-1">{{item.icon || 'note_add' }}</v-icon>
-                  {{item.title}}
+                  {{item.panelLink}}
                 </v-btn>
               </v-flex>
             </v-layout>
@@ -103,7 +90,7 @@
             </v-subheader>
           </v-card-title>
           <v-card-text>
-            <v-expansion-panel focusable>
+            <v-expansion-panel popout focusable>
               <v-expansion-panel-content
                 v-for="(item,i) in adverts"
                 :key="i"
@@ -189,18 +176,28 @@
       }
     },
     computed: {
+      planTitle() {
+        return _.get(this.$store.state, 'user.subscription.title', '-')
+      }, planPeriod() {
+        return _.get(this.$store.state, 'user.subscription.period', '-')
+      }, planStart() {
+        return _.get(this.$store.state, 'user.subscription.info.jCreatedAt', '-')
+      }, planPrice() {
+        return Helper.priceFormat(_.get(this.$store.state, 'user.subscription.price', '-'))
+      },getPlan() {
+        return _.get(this.$store.state, 'user.subscription', {})
+      }, planInfo() {
+        return _.get(this.$store.state, 'user.subscription.info', {})
+      }, planExpire() {
+        return _.get(this.$store.state, 'user.subscription.info.jEndAt', '-')
+      }, leftDays() {
+        return _.get(this.$store.state, 'user.subscription.left', '0‌') + ' روز'
+      },
       isUserPremium() {
         return !!_.get(this.$store.state, 'user.hasSubscription', false);
       },
       links() {
-        return [
-          {title: 'ثبت وام', color: 'blue', link: '/adverts/loans/create', icon: 'note_add'},
-          {title: 'ثبت درخواست وام', color: 'blue', link: '/adverts/loan-requests/create', icon: 'note_add'},
-          {title: 'ثبت ضامن', color: 'blue', link: '/adverts/co-signers/create', icon: 'note_add'},
-          {title: 'ثبت درخواست ضامن', color: 'blue', link: '/adverts/co-signer-requests/create', icon: 'note_add'},
-          {title: 'ثبت سرمایه', color: 'blue', link: '/adverts/finances/create', icon: 'note_add'},
-          {title: 'ثبت وام', color: 'blue', link: '/adverts/finance-requests/create', icon: 'note_add'},
-        ]
+        return Helper.getTypes()
       },
       adverts() {
         let adverts = _.get(this, 'rawData', []);
@@ -250,7 +247,7 @@
       })
 
       let bookmarks = Cookie.get();
-      console.log({bookmarks})
+      //console.log({bookmarks})
       this.bookmarks = bookmarks;
     }
   }

@@ -171,10 +171,11 @@
         </v-data-table>
 
         <v-data-table
+          v-else
           v-model="selected"
           item-key="id"
           select-all
-          v-else
+          hide-actions
           :headers="headers"
           :loading="tableLoader"
           :items="list"

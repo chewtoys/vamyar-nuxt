@@ -6,8 +6,10 @@ export const state = () => ({
   hasSubscription: false,
   subscription: {
     period: 0,
+    left: 0,
     title: null,
-  }
+  },
+  subscriptions: []
 })
 
 export const mutations = {
@@ -15,8 +17,10 @@ export const mutations = {
     state.info = data
   },
   updateUserSubscription(state, data) {
-    if (_.has(data, 'id')) {
-      state.subscription = data;
+    if (_.isArray(data) && data.length > 0) {
+      state.subscription = data[0];
+      state.subscription.period = _.get(data[0], 'period', 0);
+      state.subscriptions = data;
       state.hasSubscription = true;
     } else {
       state.hasSubscription = false;
