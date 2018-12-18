@@ -98,6 +98,10 @@ const Helper = {
     let types = CONSTANTS.advertTypes
     return _.find(types, {'advertType': advertType});
   },
+  getAdvertTypeByType: function (type) {
+    let types = CONSTANTS.advertTypes
+    return _.find(types, {'type': type});
+  },
   /*
   @which = 'advert' || 'special' : advert for /adverts/~ routes
    */
@@ -132,7 +136,6 @@ const Helper = {
     })
     //console.log({properties});
     return this.properties = {base: item, computed, properties};
-
   },
   computeAdvertField(name, value, store) {
     if (name === 'title') {
