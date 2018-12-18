@@ -184,7 +184,6 @@
           :rows-per-page-items="[10,25,100]"
           class="elevation-1"
         >
-
           <template slot="items" slot-scope="props">
 
             <td>

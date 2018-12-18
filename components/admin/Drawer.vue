@@ -113,6 +113,7 @@
       ],
       panel: [
         {title: "لیست کاربران", icon: "inbox", to: "/admin/users"},
+        {title: "لاگ کاربران", icon: "inbox", to: "/admin/users/logs"},
         //{title: "لیست اشتراک های خریداری شده", icon: "inbox", to: "/admin/users/subscriptions"},
         {title: "تیکت ها", icon: "inbox", to: "/admin/tickets"},
         {title: "دسته بندی تیکت ها", icon: "inbox", to: "/admin/tickets/categories"},
