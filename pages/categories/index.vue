@@ -182,7 +182,7 @@
         return true;
       },
       sortBy(val) {
-        this.advertTypeName = val;
+        this.sort = val;
         this.loadAgain();
       },
       // load more items
@@ -229,7 +229,7 @@
         this.loading = true
         this.items = []
         let method = `/site/adverts`
-        let include = 'advertable,city,user.details';
+        let include = 'advertable,city,user.details,loanType,guaranteeType';
         //console.log(1, this.commonComputedFilters, this.computedFilters);
         let filterArray = [];
         _.forEach(this.commonComputedFilters, function (value, key) {
@@ -244,14 +244,16 @@
             console.log(`advertable.${key}=${value}`, key, value)
           }
         })
-
+        let must = null;
+        if (this.advertTypeName) must = `advertableType=${_.get(Helper.getAdvertTypeByType(this.advertTypeName), 'advertType', this.advertTypeName.slice(0,-1))}`
         let filter = _.join(filterArray, ',').replace('=<', '<').replace('=>', '>');
         let orederBy = this.sort;
         let query = {
           orederBy,
           include,
           number,
-          filter
+          filter,
+          must
         }
         //console.log({query});
         this.$axios.$get(method, {
