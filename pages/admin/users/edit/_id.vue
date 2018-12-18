@@ -83,44 +83,44 @@
               label="تصویر کاربر"
             />
 
-            <v-card dark color="primary" v-if="hasSubscription" class="my-4">
+            <v-card color="lime" v-if="hasSubscription" class="my-4">
               <v-card-title>جزئیات اشتراک این کاربر</v-card-title>
-              <table>
+              <table class="oddTable">
                 <tbody v-for="plan in userSubscriptions" :key="plan.id">
                 <tr>
                   <td>
-                    <samll>عنوان</samll>
+                    <small>عنوان</small>
                   </td>
                   <td>{{plan.title}}</td>
                 </tr>
                 <tr>
                   <td>
-                    <samll>دوره</samll>
+                    <small>دوره</small>
                   </td>
                   <td>{{plan.period}}</td>
                 </tr>
                 <tr>
                   <td>
-                    <samll>تاریخ فعالسازی</samll>
+                    <small>تاریخ فعالسازی</small>
                   </td>
                   <td>{{getProperty(plan, 'info.jCreatedAt', '-')}}</td>
                 </tr>
                 <tr>
                   <td>
-                    <samll>تاریخ انقضا</samll>
+                    <small>تاریخ انقضا</small>
                   </td>
                   <td>{{getProperty(plan, 'info.jCreatedAt', '-')}}</td>
                 </tr>
                 <tr>
                   <td>
-                    <samll>روزهای باقی مانده</samll>
+                    <small>روزهای باقی مانده</small>
                   </td>
                   <td>{{getProperty(plan, 'info.remained', '-')}}</td>
                 </tr>
                 </tbody>
               </table>
             </v-card>
-            <v-card dark color="primary" v-if="hasSubscription" class="my-4">
+            <v-card  color="primary lighten-4" v-if="hasSubscription" class="my-4">
               <v-card-title>تمدید اشتراک</v-card-title>
               <v-select
                 v-model="currentSubscriptionId"
@@ -141,7 +141,7 @@
               />
               <v-btn color="info" @click="addDays">افزودن روز به اشتراک</v-btn>
             </v-card>
-            <v-card color="warning" v-if="hasSubscription" class="my-4">
+            <v-card color="warning lighten-4" v-if="hasSubscription" class="my-4">
               <v-card-title>حذف اشتراک</v-card-title>
               <v-select
                 v-model="currentDeleteSubscriptionId"
@@ -156,7 +156,7 @@
               <v-btn color="error" @click="removeSubscription">حذف اشتراک</v-btn>
             </v-card>
 
-            <v-card color="success" class="my-4">
+            <v-card color="success lighten-4" class="my-4">
               <v-card-title>افزودن اشتراک جدید</v-card-title>
               <v-select
                 v-model="newSubscription"

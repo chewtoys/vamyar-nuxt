@@ -256,17 +256,3 @@
   }
 </script>
 
-<style>
-  .oddTable td {
-    padding: 10px;
-  }
-
-  .oddTable td:first-child {
-    font-size: 12px;
-    min-width: 120px;
-  }
-
-  .oddTable tr:nth-child(even) {
-    background: rgba(0, 0, 0, .09);
-  }
-</style>
