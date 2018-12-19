@@ -2,7 +2,7 @@
   <v-layout row wrap>
     <v-flex xs12 sm12>
       <v-card color="white">
-        <AdvertFilters :chooseType="isAdverts" label="فیلتر کنید" v-model="advertFilters" chooseType="1"
+        <AdvertFilters :chooseType="isAdverts" label="فیلتر کنید" v-model="advertFilters"
                        @change="loadAgainCommonAdvertFilter"/>
         <LoansFilters v-if="canShow('loans')" label="فیلتر وام " v-model="filter" vv-model="loansFilters"
                       @change="loadAgainAdvertFilter"/>
