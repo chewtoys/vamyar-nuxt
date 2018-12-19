@@ -1,4 +1,4 @@
-<template>
+<template> 
   <v-layout row wrap>
     <v-flex xs12 sm12>
       <v-card color="white">
