@@ -260,7 +260,7 @@
           params: query
         }).then(response => {
           //console.log(4, response)
-          this.items.push(_.get(response, 'data', []))
+          this.items = _.get(response, 'data', [])
           this.paginator = _.get(response, 'paginator', [])
         }).catch((err) => {
           //console.log(err)
