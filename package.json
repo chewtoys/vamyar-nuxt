@@ -12,10 +12,11 @@
   },
   "scripts": {
     "dev": "nuxt",
+    "localdev": "cross-env NUXT_HOST=0.0.0.0 NUXT_PORT=80 nuxt",
     "dev2": "cross-env NUXT_HOST=0.0.0.0 NUXT_PORT=9000 nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
-    "prod": "pm2 start npm ecosystem.config.js --name nuxt -- start",
+    "prod": "cross-env NUXT_HOST=0.0.0.0 NUXT_PORT=9000 nuxt -- start",
     "prod2": "pm2 start npm --name nuxt -- start",
     "prod3": "forever start \"/usr/local/bin/npm\" start --prefix \"/var/www/vamyar.tk/vamyar-nuxt\"",
     "generate": "nuxt generate",
