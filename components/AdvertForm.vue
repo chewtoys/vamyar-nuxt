@@ -297,6 +297,15 @@
       sendPath: function () {
         return this.isEdit ? this.editPath : this.createPath;
       },
+      cities() {
+        return _.get(this.$store.state, 'city.arrayList', []);
+      },
+      guaranteeTypesList() {
+        return _.get(this.$store.state, 'guaranteeType.arrayList', []);
+      },
+      loanTypeList() {
+        return _.get(this.$store.state, 'loanType.arrayList', []);
+      },
       city: {
         get: function () {
           if (this.allCities) return 3000;
