@@ -64,7 +64,6 @@
               box
               label="قابل انتقال به سایر شهر ها می باشد."
             />
-
             <v-text-field
               v-if="isAllowed('mobile')"
               v-validate="'numeric'"
@@ -348,7 +347,7 @@
         }
       },
       link() {
-        if (this.isEdit()) return `/${this.panel}/${this.slug}/${this.action}/${this.id}`
+        if (this.isEdit) return `/${this.panel}/${this.slug}/${this.action}/${this.id}`
         return `/${this.panel}/${this.slug}/${this.action}`
       }
     },
