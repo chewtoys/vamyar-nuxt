@@ -3,13 +3,6 @@
     <v-card color="white" raised light class="py-5 px-4">
       <v-layout row>
         <v-flex xs12 md12 sm12 lg12>
-          <v-alert
-            :value="true"
-            color="info"
-            icon="info"
-          >
-          </v-alert>
-          <v-divider class="my-3"/>
           <v-card dark color="green darken-1" class="pa-3 font-12">
             <p class="font-14 text-justify">
               {{settings('adverts.noticeBeforeCreateAdvert')}}
@@ -354,6 +347,10 @@
           this.guaranteeTypesName = items || [];
         }
       },
+      link() {
+        if (this.isEdit()) return `/${this.panel}/${this.slug}/${this.action}/${this.id}`
+        return `/${this.panel}/${this.slug}/${this.action}`
+      }
     },
 
     mounted() {
@@ -454,7 +451,7 @@
       },
       settings(key) {
         return _.get(this.$store.state.settings.data, key, '')
-      }
+      },
     },
     watch: {
       allCities(val) {

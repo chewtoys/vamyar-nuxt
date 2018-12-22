@@ -70,14 +70,15 @@ export default {
   axios: {
     //proxyHeaders: false,
     //changeOrigin: true,
-    baseURL: "https://api.vamyar.org"
+    changeOrigin: true,
+    baseURL: "api.vamyar.org",
+    port: 443,
     //debug: false,
     //proxyHeaders: false,
     //mode: 'no-cors',
     //credentials: false
     // See https://github.com/nuxt-community/axios-module#options
   },
-
   build: {
     plugins: [
       new webpack.ProvidePlugin({

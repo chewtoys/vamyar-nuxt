@@ -9,11 +9,10 @@
   const cityMethod = '/cities?number=3000',
     guaranteeMethod = '/guaranteeTypes',
     loanTypeMethod = '/loanTypes'
-
   export default {
     data: () => ({
       data: [],
-      formType: [],
+      formType: null ,
       slug: null,
     }),
     async asyncData({params, store, $axios, error}) {
@@ -43,7 +42,8 @@
           slug,
         }
       } catch (err) {
-        //return error({statusCode: 404, message: 'آگهی یافت نشد :('})
+        console.log(err)
+        return error({statusCode: 404, message: 'آگهی یافت نشد :('})
       }
     },
     components: {AdvertForm}
