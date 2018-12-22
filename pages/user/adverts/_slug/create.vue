@@ -43,7 +43,7 @@
         }
       } catch (err) {
         console.log(err)
-        return error({statusCode: 404, message: 'آگهی یافت نشد :('})
+        return error({statusCode: 503, message: 'آگهی یافت نشد :('})
       }
     },
     components: {AdvertForm}
