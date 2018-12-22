@@ -1,6 +1,7 @@
 const pkg = require('./package')
 const nodeExternals = require('webpack-node-externals')
 import webpack from 'webpack'
+import https from 'https'
 
 export default {
 
@@ -72,10 +73,11 @@ export default {
     //changeOrigin: true,
     changeOrigin: true,
     baseURL: "https://api.vamyar.org",
-    rejectUnauthorized: false
-    ,
+    httpsAgent: new https.Agent({
+      rejectUnauthorized: false
+    }),
     //port: 443,
-    debug: true,
+    debug: true,غش
     //proxyHeaders: false,
     //mode: 'no-cors',
     //credentials: false
