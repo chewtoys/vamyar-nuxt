@@ -347,8 +347,8 @@
         }
       },
       link() {
-        if (this.isEdit) return `/${this.panel}/${this.slug}/${this.action}/${this.id}`
-        return `/${this.panel}/${this.slug}/${this.action}`
+        if (this.isEdit) return `/${this.panel}/adverts/${this.slug}/${this.action}/${this.id}`
+        return `/${this.panel}/adverts/${this.slug}/${this.action}`
       }
     },
 
