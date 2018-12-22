@@ -73,7 +73,7 @@ export default {
     changeOrigin: true,
     baseURL: "api.vamyar.org",
     port: 443,
-    //debug: false,
+    debug: false,
     //proxyHeaders: false,
     //mode: 'no-cors',
     //credentials: false
