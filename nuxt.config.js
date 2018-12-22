@@ -70,7 +70,7 @@ export default {
   axios: {
     //proxyHeaders: false,
     //changeOrigin: true,
-    baseURL: "http://api.vamyar.org"
+    baseURL: "https://api.vamyar.org"
     //debug: false,
     //proxyHeaders: false,
     //mode: 'no-cors',
