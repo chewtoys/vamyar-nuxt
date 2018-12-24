@@ -87,9 +87,6 @@
               :label="getTitle('amount')"
               data-vv-name="amount"
             />
-            <v-text-field
-
-            />
             <v-combobox
               :items="['توافقی']"
               :placeholder="getPlaceholder('price')"
@@ -275,10 +272,7 @@
     }),
     computed: {
       amountHint() {
-        let amount = this.amount;
-        if (amount) {
-          return Helper.priceFormat(amount)
-        }
+        return Helper.computeAdvertField('amount', this.amount)
       },
       priceHint() {
         return Helper.computeAdvertField('price', this.price)
@@ -429,20 +423,19 @@
       },
       sendForm() {
         let data = Helper.selectDataForSend(this.formType.type, this, this.action);
-        this.$axios
-          .$put(this.sendPath, data)
-          .then(() => {
-            let status = true
-            if (status) {
-              // show success and redirect
-              this.toast("با موفقیت ثبت شد.", "success")
-              this.submit_loader = false
-              this.$router.push(this.list)
-            } else {
-              this.toast(" خطایی رخ داد.", "warning")
-              this.submit_loader = false
-            }
-          })
+        let req = this.isEdit ? this.$axios.$put(this.sendPath, data) : this.$axios.$post(this.sendPath, data);
+        req.then(() => {
+          let status = true
+          if (status) {
+            // show success and redirect
+            this.toast("با موفقیت ثبت شد.", "success")
+            this.submit_loader = false
+            this.$router.push(this.list)
+          } else {
+            this.toast(" خطایی رخ داد.", "warning")
+            this.submit_loader = false
+          }
+        })
           .catch((error) => {
             // catch and show error
 
