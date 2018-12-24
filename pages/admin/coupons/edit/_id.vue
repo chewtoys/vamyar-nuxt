@@ -99,6 +99,7 @@
     },
     data: () => ({
       page_title,
+      id: null,
       date: null,
       code: '',
       userName: '',
@@ -107,6 +108,7 @@
       oneTimeUsable: false,
       submit_loader: false,
       allUsersList: [],
+      data: [],
       dictionary: {
         attributes: {
           code: "کد تخفیف",
@@ -126,21 +128,23 @@
     },
     computed:
       {
-        updateMethod() {
-          return `${indexPath}`;
-        },
         list: function () {
           return indexPath;
         }
         ,
-        createPath: function () {
-          return createPath;
+        sendPath: function () {
+          return `${indexPath}/${id}`;
         },
-        expireDate() {
-          let jalali = this.date;
-          let gregorian = jalaali.toGregorian(jalali);
-          console.log(jalali, gregorian)
-          return gregorian;
+        expireDate: {
+          get() {
+            let jalali = this.date;
+            let gregorian = jalaali.toGregorian(jalali);
+            console.log(jalali, gregorian)
+            return gregorian;
+          },
+          set(val) {
+
+          }
         }
       }
     ,
@@ -150,9 +154,21 @@
         this.allUsersList = res.data;
         console.log(this.usersList)
       })
+      this.code = _.get(this.data, 'code', '');
+      this.discount = _.get(this.data, 'discount', '');
+      this.expireDate = _.get(this.data, 'expireDate', '');
+      this.onTimeUsable = _.get(this.data, 'onTimeUsable', '');
+      this.userId = _.get(this.data, 'userId', '');
     },
-    asyncData({params,$axios}){
-      
+    asyncData({params, $axios, error}) {
+      let id = params.id;
+      let method = `${indexPath}/${id}`
+      try {
+        let {data} = $axios.$get(method);
+        return {id, data}
+      } catch (err) {
+        return error({statusCode: 503, message: err})
+      }
     }
     ,
     methods: {
@@ -170,7 +186,7 @@
         }
 
         this.$axios
-          .$put(this.updateMethod, data)
+          .$put(this.sendPath, data)
           .then(() => {
             let status = true
             if (status) {
