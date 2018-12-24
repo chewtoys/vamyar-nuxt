@@ -157,9 +157,9 @@ const Helper = {
     } else if (name === 'user') {
       return value || ''
     } else if (name === 'price') {
-      return value ? this.priceFormat(value || '') : 'توافقی'
+      return value ? this.priceFormat(value) : 'توافقی'
     } else if (name === 'amount') {
-      return this.priceFormat(value || '')
+      return value ? this.priceFormat(value) : 'نامشخص'
     } else if (name === 'maxAmount') {
       return this.priceFormat(value || '')
     } else if (name === 'job') {
