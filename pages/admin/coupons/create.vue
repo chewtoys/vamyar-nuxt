@@ -138,7 +138,7 @@
         },
         expireDate() {
           let jalali = this.date;
-          let gregorian = moment('1392/6/3 16:40', 'jYYYY/jM/jD HH:mm').format('YYYY-M-D HH:mm:ss') ;
+          let gregorian = moment(jalali, 'jYYYY/jM/jD HH:mm').format('YYYY-M-D HH:mm:ss') ;
           console.log(jalali, gregorian)
           return gregorian;
         }

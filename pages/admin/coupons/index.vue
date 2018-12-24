@@ -73,7 +73,7 @@
             <td class="text-xs-right">{{ props.item.code }}</td>
             <td class="text-xs-right">{{ props.item.discount }}</td>
             <td class="text-xs-right">{{ (props.item.oneTimeUsage ? 'بله' : 'خیر') }}</td>
-            <td class="text-xs-right">{{ (props.item.expireDate) }}</td>
+            <td class="text-xs-right">{{ jDate(props.item.expireDate) }}</td>
             <td class="text-xs-left">
               <nuxt-link title="ویرایش" :to=" uri + '/edit/' + props.item.id" class="mx-1">
                 <v-icon
@@ -105,6 +105,7 @@
 <script>
   import Helper from "~/assets/js/helper.js"
 
+  const moment = require('moment-jalaali');
   const page_title = 'لیست تخفیف ها',
     fetchMethod = '/admin/coupons',
     breadcrumb = 'کوپون ها',
@@ -181,6 +182,10 @@
       },
     },
     methods: {
+      jDate(val) {
+        return moment(val, 'YYYY-M-D HH:mm:ss').format('jYYYY/jM/jD HH:mm:ss');
+
+      },
       getPrice(price) {
         return Helper.priceFormat(price)
       },
