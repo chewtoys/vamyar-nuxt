@@ -137,7 +137,7 @@ const Helper = {
     //console.log({properties});
     return this.properties = {base: item, computed, properties};
   },
-  computeAdvertField(name, value, store) {
+  computeAdvertField(name, value, store = []) {
     if (name === 'title') {
       return value || ''
     } else if (name === 'jCreatedAt') {
@@ -157,7 +157,7 @@ const Helper = {
     } else if (name === 'user') {
       return value || ''
     } else if (name === 'price') {
-      return this.priceFormat(value || '')
+      return value ? this.priceFormat(value || '') : 'توافقی'
     } else if (name === 'amount') {
       return this.priceFormat(value || '')
     } else if (name === 'maxAmount') {
@@ -167,7 +167,7 @@ const Helper = {
     } else if (name === 'interestRate') {
       return value || ''
     } else if (name === 'paybackTime') {
-      return value + ' ماه' || ''
+      return value ? (value + ' سال') : 'توافقی'
     } else if (name === 'bank') {
       return (value || '')
     } else if (name === 'loanType') {

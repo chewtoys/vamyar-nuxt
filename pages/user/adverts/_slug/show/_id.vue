@@ -75,7 +75,7 @@
         return _.get(this, 'data.advert.image', '-');
       },
       paybackTime() {
-        return _.get(this, 'data.paybackTime', '-') + ' ماه';
+        return   _.get(this, 'data.paybackTime', '') + ' سال';
       },
       interestRate() {
         return _.get(this, 'data.interestRate', '-');

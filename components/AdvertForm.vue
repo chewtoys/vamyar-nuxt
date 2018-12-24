@@ -1,6 +1,6 @@
 <template>
   <v-container grid-list-xs fluid>
-    <v-card color="white" raised light class="py-5 px-4">
+    <v-card v-if="!isAdmin" color="white" raised light class="py-5 px-4">
       <v-layout row>
         <v-flex xs12 md12 sm12 lg12>
           <v-card dark color="green darken-1" class="pa-3 font-12">
@@ -49,7 +49,9 @@
             <v-autocomplete
               v-if="isAllowed('city') "
               v-validate="'required'"
-              v-model="cityName"
+              v-model="city"
+              item-text="name"
+              item-value="id"
               :error-messages="errors.collect('city')"
               box
               :label="getTitle('city')"
@@ -76,6 +78,7 @@
             />
             <v-text-field
               v-if="isAllowed('amount')"
+              :hint="amountHint"
               v-validate="'required|numeric'"
               v-model="amount"
               :error-messages="errors.collect('amount')"
@@ -95,12 +98,14 @@
               v-model="priceName"
               :error-messages="errors.collect('price')"
               box
+              :hint="priceHint"
               :label="getTitle('price')"
               data-vv-name="price"
             ></v-combobox>
             <template v-if="isAllowed('paybackTime')">
               <v-combobox
                 :items="['توافقی']"
+                :hint="paybackTimeHint"
                 v-validate="'required'"
                 :placeholder="getPlaceholder('paybackTime')"
                 v-model="paybackTimeName"
@@ -228,7 +233,7 @@
       slug: '',
       // advert
       title: null,
-      cityName: null,
+      city: null,
       allCities: false,
       text: "",
       mobile: '',
@@ -269,6 +274,18 @@
       submit_loader: false,
     }),
     computed: {
+      amountHint() {
+        let amount = this.amount;
+        if (amount) {
+          return Helper.priceFormat(amount)
+        }
+      },
+      priceHint() {
+        return Helper.computeAdvertField('price', this.price)
+      },
+      paybackTimeHint() {
+        return Helper.computeAdvertField('paybackTime', this.paybackTime)
+      },
       isAdmin() {
         return this.panel === 'admin'
       },
@@ -297,28 +314,13 @@
         return this.isEdit ? this.editPath : this.createPath;
       },
       cities() {
-        return _.get(this.$store.state, 'city.arrayList', []);
+        return _.get(this.$store.state, 'city.data', []);
       },
       guaranteeTypesList() {
         return _.get(this.$store.state, 'guaranteeType.arrayList', []);
       },
       loanTypeList() {
         return _.get(this.$store.state, 'loanType.arrayList', []);
-      },
-      city: {
-        get: function () {
-          if (this.allCities) return 3000;
-          let list = this.$store.state.city.data;
-          let index = _.findIndex(list, {'name': this.cityName});
-          let item = list[index];
-          return _.get(item, 'id', 0);
-        },
-        set: function (val) {
-          let list = this.$store.state.city.data;
-          let index = _.findIndex(list, {'id': val});
-          let item = list[index];
-          this.cityName = item.name;
-        }
       },
       price: {
         get: function () {

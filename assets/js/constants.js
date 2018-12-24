@@ -149,7 +149,7 @@ export const
         }, {
           name: 'paybackTime',
           title: 'مدت بازپرداخت',
-          placeholder: 'ماه',
+          placeholder: 'سال',
           help: 'اگر خالی بگذارید به عنوان توافقی در نظر گرفته می شود.'
         }, {
           name: 'loanType',
@@ -195,7 +195,7 @@ export const
         }, {
           name: 'paybackTime',
           title: 'مدت بازپرداخت',
-          placeholder: 'ماه',
+          placeholder: 'سال',
           path: 'paybackTime',
           help: 'اگر خالی بگذارید به عنوان توافقی در نظر گرفته می شود.'
         }, {
@@ -232,7 +232,7 @@ export const
         }, {
           name: 'paybackTime',
           title: 'مدت بازپرداخت',
-          placeholder: 'ماه',
+          placeholder: 'سال',
           help: 'اگر خالی بگذارید به عنوان توافقی در نظر گرفته می شود.'
         }
       ],
@@ -269,7 +269,7 @@ export const
         }, {
           name: 'paybackTime',
           title: 'مدت بازپرداخت',
-          placeholder: 'ماه',
+          placeholder: 'سال',
           path: 'paybackTime',
           help: 'اگر خالی بگذارید به عنوان توافقی در نظر گرفته می شود.'
         },
