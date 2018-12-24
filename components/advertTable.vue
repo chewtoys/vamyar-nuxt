@@ -141,24 +141,24 @@
               </v-menu>
             </td>
             <td>
-              <a title="مشاهده"
-                 :href=" `${uri}/${getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', '')}/show/${props.item.advertableId}`"
+              <nuxt-link title="مشاهده"
+                 :to=" `${uri}/${getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', '')}/show/${props.item.advertableId}`"
                  class="mx-1">
                 <v-icon
                   small
                 >
                   pageview
                 </v-icon>
-              </a>
-              <a title="ویرایش"
-                 :href="`${uri}/${getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', '')}/edit/${props.item.advertableId}`"
+              </nuxt-link>
+              <nuxt-link title="ویرایش"
+                 :to="`${uri}/${getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', '')}/edit/${props.item.advertableId}`"
                  class="mx-1">
                 <v-icon
                   small
                 >
                   edit
                 </v-icon>
-              </a>
+              </nuxt-link>
               <v-icon
                 class="mx-1"
                 small
@@ -308,20 +308,20 @@
             </td>
 
             <td>
-              <a title="مشاهده" :href=" uri + '/show/' + props.item.id" class="mx-1">
+              <nuxt-link title="مشاهده" :to=" uri + '/show/' + props.item.id" class="mx-1">
                 <v-icon
                   small
                 >
                   pageview
                 </v-icon>
-              </a>
-              <a title="ویرایش" :href=" uri + '/edit/' + props.item.id" class="mx-1">
+              </nuxt-link>
+              <nuxt-link title="ویرایش" :to=" uri + '/edit/' + props.item.id" class="mx-1">
                 <v-icon
                   small
                 >
                   edit
                 </v-icon>
-              </a>
+              </nuxt-link>
               <v-icon
                 class="mx-1"
                 small
@@ -478,7 +478,7 @@
       instant(item) {
         return !!_.get(item, 'advert.instant', _.get(item, 'instant', false)) ? 'فوری' : 'غیر فوری'
       },
-      changeInstant(id, val) {
+      changeInstant(id, val=1,item=[],type='') {
         if (this.isAdmin) {
           this.tableLoader = true;
           let method = val === 1 ? `/${this.panel}/adverts/${id}/instantIt` : `/${this.panel}/adverts/${id}/unInstantIt`;
@@ -491,14 +491,13 @@
             this.tableLoader = false;
           })
         } else if (confirm('آیا مطمئن هستید می خواید این آگهی را فوری کنید؟')) {
-          this.tableLoader = true;
           let method = val === 1 ? `/${this.panel}/adverts/${id}/instantPaymentLink` : `/${this.panel}/adverts/${id}/unInstantIt`;
-          let data = {
+          let query = {
             port: 'zarinpal'
           }
-          this.$axios.$put(method, data).then((res) => {
+          this.$axios.$put(method, query).then((res) => {
             let link = _.get(res, 'data.paymentLink', '#')
-            window.location = link
+            //window.location = link
           }).catch(err => {
             this.tableLoader = false;
           })

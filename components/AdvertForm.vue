@@ -210,6 +210,16 @@
               data-vv-name="text"
               auto-grow
             />
+            <v-textarea
+              v-if="isAdmin"
+              v-model="description"
+              :error-messages="errors.collect('description')"
+              box
+              label="یادداشت آگهی"
+              data-vv-name="description"
+              auto-grow
+            />
+
             <v-btn :loading="submit_loader" outline color="accent" round @click="processSubmit">
               <v-icon class="px-1">save</v-icon>
               ذخیره
@@ -232,6 +242,7 @@
       title: null,
       city: null,
       allCities: false,
+      description: "",
       text: "",
       mobile: '',
       image: null,
@@ -256,6 +267,7 @@
           city: "شهر",
           job: "شغل",
           bank: "بانک",
+          description: "متن یادداشت آگهی",
           text: "متن توضیحات آگهی",
           image: "تصویر آگهی",
           amount: "مبلغ وام",
@@ -393,7 +405,7 @@
 
       // set values in default
       if (this.isEdit) {
-        let editableFields = Helper.getTypeFields(this.formType.type, 'edit');
+        let editableFields = Helper.getTypeFields(this.formType.type, 'edit',this.isAdmin);
         _.forEach(editableFields, (value) => {
           //console.log({value}, value.name, value.path)
           _.set(this, [value.name], _.get(this.data, `${value.path}`, ''));
@@ -422,7 +434,7 @@
         this.$store.commit("snackbar/setSnack", msg, color)
       },
       sendForm() {
-        let data = Helper.selectDataForSend(this.formType.type, this, this.action);
+        let data = Helper.selectDataForSend(this.formType.type, this, this.action,this.isAdmin);
         let req = this.isEdit ? this.$axios.$put(this.sendPath, data) : this.$axios.$post(this.sendPath, data);
         req.then(() => {
           let status = true

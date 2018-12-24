@@ -59,9 +59,13 @@ const Helper = {
     return _.get(_.find(_.get(fields, `${type}.${which}`, {}), {'name': field}), 'path', field);
   }
   ,
-  getTypeFields(type, which = 'create') {
+  getTypeFields(type, which = 'create', isAdmin = false) {
     let fields = CONSTANTS.fieldByType;
-    return _.get(fields, `${type}.${which}`, {})
+    let list = _.get(fields, `${type}.${which}`, {})
+    if (isAdmin) {
+      list.push({name: 'description', path: 'description'})
+    }
+    return list;
   }
   ,
   isFieldAllowByAlias(slug, field, which = 'create') {
@@ -218,13 +222,16 @@ const Helper = {
     return CONSTANTS.GENERAL_SETTINGS;
   }
   ,
-  selectDataForSend(type, that, which = 'create') {
+  selectDataForSend(type, that, which = 'create', isAdmin = false) {
     let fields = _.map(CONSTANTS.fieldByType[type][which], 'name');
     //console.log('Fields:', {fields})
     let all = {};
     _.forEach(fields, (name) => {
       _.set(all, name, _.get(that, name, ''))
     })
+    if (isAdmin) {
+      _.set(all, 'description', _.get(that, 'description', ''))
+    }
     return all;
   },
   getComputedFilter(obj, type = null) {
