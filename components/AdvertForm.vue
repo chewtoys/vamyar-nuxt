@@ -85,31 +85,30 @@
               data-vv-name="amount"
             />
             <v-text-field
+
+            />
+            <v-combobox
+              :items="['توافقی']"
+              :placeholder="getPlaceholder('price')"
               v-if="isAllowed('price')"
-              v-validate="'required|numeric'"
-              v-model="price"
+              v-validate="'required'"
+              v-model="priceName"
               :error-messages="errors.collect('price')"
               box
               :label="getTitle('price')"
               data-vv-name="price"
-
-            />
+            ></v-combobox>
             <template v-if="isAllowed('paybackTime')">
-              <v-text-field
-                v-validate="'required|numeric'"
+              <v-combobox
+                :items="['توافقی']"
+                v-validate="'required'"
                 :placeholder="getPlaceholder('paybackTime')"
-                v-model="paybackTime"
+                v-model="paybackTimeName"
                 :error-messages="errors.collect('paybackTime')"
                 box
                 :label="getTitle('paybackTime')"
                 data-vv-name="paybackTime"
-              />
-              <v-input
-                :messages="getHelp('paybackTime')"
-                prepend-icon="help"
-              >
-              </v-input>
-              <br/>
+              ></v-combobox>
             </template>
             <v-combobox
               v-if="isAllowed('guaranteeTypes')"
@@ -238,10 +237,10 @@
       forCourt: false,
       guaranteeTypesName: null, // Computed
       loanTypeName: null,
-      paybackTime: null,
+      paybackTimeName: null,
       amount: null,
       payback: null,
-      price: null,
+      priceName: null,
       type: null,
       interestRate: null,
       maxAmount: null,
@@ -286,7 +285,7 @@
         return this.isEdit ? 'ویرایش آگهی' : 'ثبت آگهی جدید'
       },
       list: function () {
-        return `/${this.getPanel}/${this.slug}`;
+        return `/${this.getPanel}/adverts/${this.slug}`;
       },
       editPath: function () {
         return `/${this.getPanel}/${this.formType.type}/${this.id}`;
@@ -319,6 +318,22 @@
           let index = _.findIndex(list, {'id': val});
           let item = list[index];
           this.cityName = item.name;
+        }
+      },
+      price: {
+        get: function () {
+          return (this.priceName === 'توافقی') ? 0 : this.priceName;
+        },
+        set: function (val) {
+          this.priceName = val === 0 ? 'توافقی' : val;
+        }
+      },
+      paybackTime: {
+        get: function () {
+          return (this.paybackTimeName === 'توافقی') ? 0 : this.paybackTimeName;
+        },
+        set: function (val) {
+          this.paybackTimeName = val === 0 ? 'توافقی' : val;
         }
       },
       loanType: {

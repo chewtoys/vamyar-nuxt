@@ -53,6 +53,10 @@ export default {
       src: '~/plugins/editor',
       ssr: false
     },
+    {
+      src: '~/plugins/datepicker.js',
+      ssr: false
+    },
     "~/plugins/vuetify.js",
     {
       src: "~/plugins/siema.js",
@@ -72,7 +76,7 @@ export default {
     //proxyHeaders: false,
     //changeOrigin: true,
     changeOrigin: true,
-    baseURL: "https://api.vamyar.org",
+    baseURL: "http://api.vamyar.org",
     httpsAgent: new https.Agent({
       rejectUnauthorized: false
     }),

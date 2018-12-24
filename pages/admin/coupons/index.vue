@@ -70,12 +70,10 @@
               ></v-checkbox>
             </td>
             <td class="text-xs-right">{{ props.item.id }}</td>
-            <td class="text-xs-right">
-              <nuxt-link :to="uri + '/edit/' + props.item.id">{{ props.item.title || '-' }}</nuxt-link>
-            </td>
-            <td class="text-xs-right">{{ getPrice(props.item.price || '-') }}</td>
-            <td class="text-xs-right">{{ (props.item.period || '-') + ' ماه' }}</td>
-
+            <td class="text-xs-right">{{ props.item.code }}</td>
+            <td class="text-xs-right">{{ props.item.discount }}</td>
+            <td class="text-xs-right">{{ (props.item.oneTimeUsage ? 'بله' : 'خیر') }}</td>
+            <td class="text-xs-right">{{ (props.item.expireDate) }}</td>
             <td class="text-xs-left">
               <nuxt-link title="ویرایش" :to=" uri + '/edit/' + props.item.id" class="mx-1">
                 <v-icon
@@ -107,16 +105,17 @@
 <script>
   import Helper from "~/assets/js/helper.js"
 
-  const page_title = 'لیست اشتراک ها',
-    fetchMethod = '/admin/subscriptions',
-    breadcrumb = 'اشتراک ها',
-    indexPath = '/admin/subscriptions',
-    createPath = '/admin/subscriptions/create',
+  const page_title = 'لیست تخفیف ها',
+    fetchMethod = '/admin/coupons',
+    breadcrumb = 'کوپون ها',
+    indexPath = '/admin/coupons',
+    createPath = '/admin/coupons/create',
     headers = [
       {text: '‌شناسه', value: 'id', align: 'right'},
-      {text: 'عنوان', value: 'title', align: 'right'},
-      {text: 'قیمت', value: 'price', align: 'right'},
-      {text: 'مدت', value: 'period', align: 'right'},
+      {text: 'تخفیف', value: 'discount', align: 'right'},
+      {text: 'کد', value: 'code', align: 'right'},
+      {text: 'یکبار مصرف؟', value: 'oneTimeUsage', align: 'right'},
+      {text: 'انقضا', value: 'expireDate', align: 'right'},
       {text: 'عملیات', sortable: false, align: 'left', width: '140px'},
     ]
 

@@ -479,16 +479,29 @@
         return !!_.get(item, 'advert.instant', _.get(item, 'instant', false)) ? 'فوری' : 'غیر فوری'
       },
       changeInstant(id, val) {
-        this.tableLoader = true;
-        let method = val === 1 ? `/${this.panel}/adverts/${id}/instantIt` : `/${this.panel}/adverts/${id}/unInstantIt`;
-        this.$axios.$put(method).then((res) => {
-          let index = _.findIndex(this.list, {id: id});
-          this.list[index].instant = val;
-          this.tableLoader = false;
-          item.instant = val;
-        }).catch(err => {
-          this.tableLoader = false;
-        })
+        if(this.isAdmin) {
+          this.tableLoader = true;
+          let method = val === 1 ? `/${this.panel}/adverts/${id}/instantIt` : `/${this.panel}/adverts/${id}/unInstantIt`;
+          this.$axios.$put(method).then((res) => {
+            let index = _.findIndex(this.list, {id: id});
+            this.list[index].instant = val;
+            this.tableLoader = false;
+            item.instant = val;
+          }).catch(err => {
+            this.tableLoader = false;
+          })
+        }else if(confirm('آیا مطمئن هستید می خواید این آگهی را فوری کنید؟')){
+          this.tableLoader = true;
+          let method = val === 1 ? `/${this.panel}/adverts/${id}/instantPaymentLink` : `/${this.panel}/adverts/${id}/unInstantIt`;
+          this.$axios.$put(method).then((res) => {
+            let index = _.findIndex(this.list, {id: id});
+            this.list[index].instant = val;
+            this.tableLoader = false;
+            item.instant = val;
+          }).catch(err => {
+            this.tableLoader = false;
+          })
+        }
       },
       changeVerified(id, val, item, which = null) {
         if (this.isAdmin) {
