@@ -82,7 +82,7 @@
   </v-container>
 </template>
 <script>
-  const jalaali = require('jalaali-js');
+  const moment  = require('moment-jalaali');
   const page_title = 'افزودن کد تخفیف جدید',
     breadcrumb = 'کدجدید',
     indexPath = '/admin/coupons',
@@ -138,7 +138,7 @@
         },
         expireDate() {
           let jalali = this.date;
-          let gregorian = jalaali.toGregorian(jalali);
+          let gregorian = moment('1392/6/3 16:40', 'jYYYY/jM/jD HH:mm').format('YYYY-M-D HH:mm:ss') ;
           console.log(jalali, gregorian)
           return gregorian;
         }

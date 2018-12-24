@@ -82,7 +82,7 @@
   </v-container>
 </template>
 <script>
-  const jalaali = require('jalaali-js');
+  const moment  = require('moment-jalaali');
   const page_title = 'افزودن کد تخفیف جدید',
     breadcrumb = 'کدجدید',
     indexPath = '/admin/coupons',
