@@ -83,8 +83,8 @@
 </template>
 <script>
   const moment = require('moment-jalaali');
-  const page_title = 'افزودن کد تخفیف جدید',
-    breadcrumb = 'کدجدید',
+  const page_title = 'ویرایش کد تخفیف ',
+    breadcrumb = 'کدتخفیف',
     indexPath = '/admin/coupons',
     createPath = '/admin/coupons'
 
@@ -108,7 +108,7 @@
       oneTimeUsable: false,
       submit_loader: false,
       allUsersList: [],
-      data: [],
+      data: null ,
       dictionary: {
         attributes: {
           code: "کد تخفیف",
@@ -133,7 +133,7 @@
         }
         ,
         sendPath: function () {
-          return `${indexPath}/${id}`;
+          return `${indexPath}/${this.id}`;
         },
         expireDate: {
           get() {
@@ -142,9 +142,14 @@
             return gregorian;
           },
           set(val) {
-            let gregorian = val;
-            let jalali = moment(gregorian, 'YYYY-M-D HH:mm:ss').format('jYYYY/jM/jD HH:mm:ss');
-            this.date = jalali;
+            if (!val) return '-';
+            try {
+              let m = moment(val, 'YYYY-M-D HH:mm:ss')
+              this.date = (m.isValid()) ? m.format('jYYYY/jM/jD HH:mm') : val;
+            } catch (err) {
+              //console.log(err, val)
+              this.date = val;
+            }
           }
         }
       }
@@ -161,11 +166,11 @@
       this.onTimeUsable = _.get(this.data, 'onTimeUsable', '');
       this.userId = _.get(this.data, 'userId', '');
     },
-    asyncData({params, $axios, error}) {
+    async asyncData({params, $axios, error}) {
       let id = params.id;
       let method = `${indexPath}/${id}`
       try {
-        let {data} = $axios.$get(method);
+        let {data} = await $axios.$get(method);
         return {id, data}
       } catch (err) {
         return error({statusCode: 503, message: err})
@@ -182,10 +187,9 @@
           code: this.code,
           discount: this.discount,
           userId: this.userId,
-          oneTimeUsable: this.oneTimeUsable,
+          oneTimeUsable: this.oneTimeUsable ? 1 : 0,
           expireDate: this.expireDate,
         }
-
         this.$axios
           .$put(this.sendPath, data)
           .then(() => {

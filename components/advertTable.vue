@@ -185,7 +185,6 @@
           class="elevation-1"
         >
           <template slot="items" slot-scope="props">
-
             <td>
               <v-checkbox
                 v-model="props.selected"
@@ -195,7 +194,7 @@
             </td>
             <td class="text-xs-left">{{ getProperty(props, 'item.id') }}</td>
             <td v-if="isAdmin" class="text-xs-left">{{ sender(props) }}</td>
-            <td v-if="isAdmin" class="text-xs-left">{{  getProperty(props, 'item.advert.description', '-')  }}</td>
+            <td v-if="isAdmin" class="text-xs-left">{{ getProperty(props, 'item.advert.description', '-') }}</td>
             <td class="text-xs-right">{{ getProperty(props, 'item.advert.title', '-') }}</td>
             <template v-if="type.type=='loans'">
               <td class="text-xs-left">{{ getPrice(getProperty(props, 'item.price', '')) }}</td>
@@ -480,7 +479,7 @@
         return !!_.get(item, 'advert.instant', _.get(item, 'instant', false)) ? 'فوری' : 'غیر فوری'
       },
       changeInstant(id, val) {
-        if(this.isAdmin) {
+        if (this.isAdmin) {
           this.tableLoader = true;
           let method = val === 1 ? `/${this.panel}/adverts/${id}/instantIt` : `/${this.panel}/adverts/${id}/unInstantIt`;
           this.$axios.$put(method).then((res) => {
@@ -491,14 +490,15 @@
           }).catch(err => {
             this.tableLoader = false;
           })
-        }else if(confirm('آیا مطمئن هستید می خواید این آگهی را فوری کنید؟')){
+        } else if (confirm('آیا مطمئن هستید می خواید این آگهی را فوری کنید؟')) {
           this.tableLoader = true;
           let method = val === 1 ? `/${this.panel}/adverts/${id}/instantPaymentLink` : `/${this.panel}/adverts/${id}/unInstantIt`;
-          this.$axios.$put(method).then((res) => {
-            let index = _.findIndex(this.list, {id: id});
-            this.list[index].instant = val;
-            this.tableLoader = false;
-            item.instant = val;
+          let data = {
+            port: 'zarinpal'
+          }
+          this.$axios.$put(method, data).then((res) => {
+            let link = _.get(res, 'data.paymentLink', '#')
+            window.location = link
           }).catch(err => {
             this.tableLoader = false;
           })

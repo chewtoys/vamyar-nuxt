@@ -75,13 +75,6 @@
             <td class="text-xs-right">{{ (props.item.oneTimeUsage ? 'بله' : 'خیر') }}</td>
             <td class="text-xs-right">{{ jDate(props.item.expireDate) }}</td>
             <td class="text-xs-left">
-              <nuxt-link title="ویرایش" :to=" uri + '/edit/' + props.item.id" class="mx-1">
-                <v-icon
-                  small
-                >
-                  edit
-                </v-icon>
-              </nuxt-link>
               <v-icon
                 class="mx-1"
                 small
@@ -183,8 +176,14 @@
     },
     methods: {
       jDate(val) {
-        return val;
-        return moment(val, 'YYYY-M-D HH:mm:ss').format('jYYYY/jM/jD HH:mm');
+        if (!val) return '-';
+        try {
+          let m = moment(val, 'YYYY-M-D HH:mm:ss')
+          return (m.isValid()) ? m.format('jYYYY/jM/jD HH:mm') : val;
+        } catch (err) {
+          //console.log(err, val)
+          return val;
+        }
       },
       getPrice(price) {
         return Helper.priceFormat(price)

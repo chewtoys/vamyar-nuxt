@@ -81,7 +81,7 @@ export default {
       rejectUnauthorized: false
     }),
     //port: 443,
-    debug: true,
+    debug: false,
     //proxyHeaders: false,
     //mode: 'no-cors',
     //credentials: false

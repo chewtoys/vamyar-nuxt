@@ -14,7 +14,10 @@
         >
           <p>{{message}}</p>
           <p>کد پیگیری پرداخت: {{trackingCode}}</p>
-          <v-btn :to="redirectPath"><v-icon>forward</v-icon>ادامه فرایند</v-btn>
+          <v-btn :to="redirectPath">
+            <v-icon>forward</v-icon>
+            ادامه فرایند
+          </v-btn>
         </v-alert>
 
         <v-alert
@@ -42,7 +45,11 @@
     },
     computed: {
       getDecodedUri() {
-        return {response: JSON.parse(this.query.response), data: JSON.parse(this.query.data)}
+        try {
+          return {response: JSON.parse(this.query.response), data: JSON.parse(this.query.data)}
+        } catch (err) {
+          return []
+        }
       },
       status() {
         return _.has(this.getDecodedUri, 'response.data.paymentInfo.trackingCode');
