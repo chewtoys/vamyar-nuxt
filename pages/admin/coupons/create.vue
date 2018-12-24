@@ -121,7 +121,7 @@
     }),
     watch: {
       date() {
-        console.log(this.expireDate)
+        //console.log(this.expireDate)
       }
     },
     computed:
@@ -139,7 +139,7 @@
         expireDate() {
           let jalali = this.date;
           let gregorian = moment(jalali, 'jYYYY/jM/jD HH:mm').format('YYYY-M-D HH:mm:ss') ;
-          console.log(jalali, gregorian)
+          //console.log(jalali, gregorian)
           return gregorian;
         }
       }
@@ -148,7 +148,7 @@
       this.$validator.localize("fa", this.dictionary);
       this.$axios.$get('/admin/users', {params: {number: 5000}}).then(res => {
         this.allUsersList = res.data;
-        console.log(this.usersList)
+        //console.log(this.usersList)
       })
     }
     ,
@@ -162,12 +162,12 @@
           code: this.code,
           discount: this.discount,
           userId: this.userId,
-          oneTimeUsable: this.oneTimeUsable,
+          oneTimeUsable: this.oneTimeUsable ? 1 : 0 ,
           expireDate: this.expireDate,
         }
 
         this.$axios
-          .$put(this.updateMethod, data)
+          .$post(this.updateMethod, data)
           .then(() => {
             let status = true
             if (status) {

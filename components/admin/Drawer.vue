@@ -133,6 +133,7 @@
       ],
       adminSection: [
         {title: "لیست اشتراک ها", icon: "inbox", to: "/admin/subscriptions"},
+        {title: "لیست کوپون ها", icon: "inbox", to: "/admin/coupons"},
         {title: "مدیرها", icon: "inbox", to: "/admin/moderators"},
       ],
       access: [

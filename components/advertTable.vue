@@ -195,6 +195,7 @@
             </td>
             <td class="text-xs-left">{{ getProperty(props, 'item.id') }}</td>
             <td v-if="isAdmin" class="text-xs-left">{{ sender(props) }}</td>
+            <td v-if="isAdmin" class="text-xs-left">{{  getProperty(props, 'item.advert.description', '-')  }}</td>
             <td class="text-xs-right">{{ getProperty(props, 'item.advert.title', '-') }}</td>
             <template v-if="type.type=='loans'">
               <td class="text-xs-left">{{ getPrice(getProperty(props, 'item.price', '')) }}</td>

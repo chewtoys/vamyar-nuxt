@@ -183,8 +183,8 @@
     },
     methods: {
       jDate(val) {
-        return moment(val, 'YYYY-M-D HH:mm:ss').format('jYYYY/jM/jD HH:mm:ss');
-
+        return val;
+        return moment(val, 'YYYY-M-D HH:mm:ss').format('jYYYY/jM/jD HH:mm');
       },
       getPrice(price) {
         return Helper.priceFormat(price)
