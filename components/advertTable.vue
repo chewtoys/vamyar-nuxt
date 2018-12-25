@@ -234,14 +234,14 @@
                 </v-btn>
                 <v-list>
                   <v-list-tile
-                    @click="changeInstant(getProperty(props, 'item.id'),1,props.item,getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', ''))"
+                    @click="changeInstant(getProperty(props, 'item.advert.id'),1,props.item,getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', ''))"
                   >
                     <v-list-tile-title>فوری</v-list-tile-title>
                   </v-list-tile>
                 </v-list>
                 <v-list>
                   <v-list-tile
-                    @click="changeInstant(getProperty(props, 'item.id'),0,props.item,getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', ''))"
+                    @click="changeInstant(getProperty(props, 'item.advert.id'),0,props.item,getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', ''))"
                   >
                     <v-list-tile-title>غیر فوری</v-list-tile-title>
                   </v-list-tile>
