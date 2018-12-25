@@ -1,3 +1,5 @@
+process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
+
 const pkg = require('./package')
 const nodeExternals = require('webpack-node-externals')
 import webpack from 'webpack'
@@ -76,12 +78,12 @@ export default {
     //proxyHeaders: false,
     //changeOrigin: true,
     changeOrigin: true,
-    baseURL: "http://api.vamyar.org",
+    baseURL: "https://api.vamyar.org",
     httpsAgent: new https.Agent({
       rejectUnauthorized: false
     }),
     //port: 443,
-    debug: false,
+    debug: true,
     //proxyHeaders: false,
     //mode: 'no-cors',
     //credentials: false

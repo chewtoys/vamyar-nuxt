@@ -33,7 +33,7 @@
 </template>
 <script>
 
-  const root = 'http://api.vamyar.org:8080'
+  const root = 'https://api.vamyar.org'
   export default {
     props: ["value", 'label', 'type'],
     /*
