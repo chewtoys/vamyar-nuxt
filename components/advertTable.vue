@@ -259,21 +259,21 @@
                 </v-btn>
                 <v-list>
                   <v-list-tile
-                    @click="changeTradeStatus(getProperty(props, 'item.id'),0)"
+                    @click="changeTradeStatus(getProperty(props, 'item.advert.id'),0)"
                   >
                     <v-list-tile-title>باز</v-list-tile-title>
                   </v-list-tile>
                 </v-list>
                 <v-list>
                   <v-list-tile
-                    @click="changeTradeStatus(getProperty(props, 'item.id'),1)"
+                    @click="changeTradeStatus(getProperty(props, 'item.advert.id'),1)"
                   >
                     <v-list-tile-title>در حال معامله</v-list-tile-title>
                   </v-list-tile>
                 </v-list>
                 <v-list>
                   <v-list-tile
-                    @click="changeTradeStatus(getProperty(props, 'item.id'),2)"
+                    @click="changeTradeStatus(getProperty(props, 'item.advert.id'),2)"
                   >
                     <v-list-tile-title>بسته شده</v-list-tile-title>
                   </v-list-tile>
@@ -292,14 +292,14 @@
                 </v-btn>
                 <v-list>
                   <v-list-tile
-                    @click="changeVerified(getProperty(props, 'item.advertableId'),1,props.item)"
+                    @click="changeVerified(getProperty(props, 'item.advert.id'),1,props.item)"
                   >
                     <v-list-tile-title>تایید شده</v-list-tile-title>
                   </v-list-tile>
                 </v-list>
                 <v-list>
                   <v-list-tile
-                    @click="changeVerified(getProperty(props, 'item.advertableId'),0,props.item)"
+                    @click="changeVerified(getProperty(props, 'item.advert.id'),0,props.item)"
                   >
                     <v-list-tile-title>تایید نشده</v-list-tile-title>
                   </v-list-tile>
