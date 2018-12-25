@@ -40,7 +40,7 @@
         store.commit('loanType/setAndProcessData', loanTypeData.data || []);
 
         // get advert data
-        let getPath = `/admin/${formType.type}/${id}`;
+        let getPath = `/user/${formType.type}/${id}`;
         let query = {
           include: 'guaranteeTypes'
         }
