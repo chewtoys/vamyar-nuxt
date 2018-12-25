@@ -450,15 +450,6 @@
         })
           .catch((error) => {
             // catch and show error
-
-            //console.log(1, _.get(error, 'response.data.error', 'no res.data'), 3, _.get(error, 'response.data.error.message', 'no data'))
-            if (_.isArray(_.get(error, 'response.data.error.message', ''))) {
-              _.forEach(_.get(error, 'response.data.error.message', []), (value, key) => {
-                this.toast(value, "error")
-              })
-            } else {
-              this.toast(_.get(error, 'response.data.error.message', {error}), "error")
-            }
             this.submit_loader = false
           })
       },
