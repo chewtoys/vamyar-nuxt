@@ -142,8 +142,8 @@
             </td>
             <td>
               <nuxt-link title="مشاهده"
-                 :to=" `${uri}/${getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', '')}/show/${props.item.advertableId}`"
-                 class="mx-1">
+                         :to=" `${uri}/${getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', '')}/show/${props.item.advertableId}`"
+                         class="mx-1">
                 <v-icon
                   small
                 >
@@ -151,8 +151,8 @@
                 </v-icon>
               </nuxt-link>
               <nuxt-link title="ویرایش"
-                 :to="`${uri}/${getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', '')}/edit/${props.item.advertableId}`"
-                 class="mx-1">
+                         :to="`${uri}/${getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', '')}/edit/${props.item.advertableId}`"
+                         class="mx-1">
                 <v-icon
                   small
                 >
@@ -259,21 +259,21 @@
                 </v-btn>
                 <v-list>
                   <v-list-tile
-                    @click="changeTradeStatus(getProperty(props, 'item.advert.id'),0)"
+                    @click="changeTradeStatus(getProperty(props, 'item.advert.id'),0,getProperty(props, 'item.id'))"
                   >
                     <v-list-tile-title>باز</v-list-tile-title>
                   </v-list-tile>
                 </v-list>
                 <v-list>
                   <v-list-tile
-                    @click="changeTradeStatus(getProperty(props, 'item.advert.id'),1)"
+                    @click="changeTradeStatus(getProperty(props, 'item.advert.id'),1,getProperty(props, 'item.id'))"
                   >
                     <v-list-tile-title>در حال معامله</v-list-tile-title>
                   </v-list-tile>
                 </v-list>
                 <v-list>
                   <v-list-tile
-                    @click="changeTradeStatus(getProperty(props, 'item.advert.id'),2)"
+                    @click="changeTradeStatus(getProperty(props, 'item.advert.id'),2,getProperty(props, 'item.id'))"
                   >
                     <v-list-tile-title>بسته شده</v-list-tile-title>
                   </v-list-tile>
@@ -292,14 +292,14 @@
                 </v-btn>
                 <v-list>
                   <v-list-tile
-                    @click="changeVerified(getProperty(props, 'item.advert.id'),1,props.item)"
+                    @click="changeVerified(getProperty(props, 'item.id'),1,props.item)"
                   >
                     <v-list-tile-title>تایید شده</v-list-tile-title>
                   </v-list-tile>
                 </v-list>
                 <v-list>
                   <v-list-tile
-                    @click="changeVerified(getProperty(props, 'item.advert.id'),0,props.item)"
+                    @click="changeVerified(getProperty(props, 'item.id'),0,props.item)"
                   >
                     <v-list-tile-title>تایید نشده</v-list-tile-title>
                   </v-list-tile>
@@ -451,12 +451,18 @@
           this.tableLoader = false;
         });
       },
-      changeTradeStatus(id, type, item) {
+      changeTradeStatus(id, type, itemId = null) {
+        console.log(id, type, itemId)
         this.tableLoader = true;
-        let method = `/${this.panel}/${this.type.type}/${id}/changeTradeStatus/${type}`
+        let method = `/${this.panel}/adverts/${id}/changeTradeStatus/${type}`
         this.$axios.$put(method).then((res) => {
-          let index = _.findIndex(this.list, {id: id});
-          this.list[index].tradeStatus = type;
+          if (this.type.type === 'adverts') {
+            let index = _.findIndex(this.list, {id: id});
+            this.list[index].tradeStatus = type;
+          } else if (itemId) {
+            let index = _.findIndex(this.list, {id: itemId});
+            this.list[index].advert.tradeStatus = type;
+          }
           this.tableLoader = false;
         }).catch(err => {
           this.tableLoader = false;
@@ -473,31 +479,35 @@
       },
       tradeStatus(item) {
         let list = this.$store.state.settings.adverts.tradeStatusList;
-        return list[item.tradeStatus || 0];
+        return list[_.get(item, 'tradeStatus', _.get(item, 'advert.tradeStatus'), 0)];
       },
       instant(item) {
         return !!_.get(item, 'advert.instant', _.get(item, 'instant', false)) ? 'فوری' : 'غیر فوری'
       },
-      changeInstant(id, val=1,item=[],type='') {
+      changeInstant(id, val = 1, item = [], type = '') {
         if (this.isAdmin) {
           this.tableLoader = true;
           let method = val === 1 ? `/${this.panel}/adverts/${id}/instantIt` : `/${this.panel}/adverts/${id}/unInstantIt`;
           this.$axios.$put(method).then((res) => {
-            let index = _.findIndex(this.list, {id: id});
+            if (this.type.type === 'adverts') {
+              let index = _.findIndex(this.list, {id: id});
+            } else {
+              let index = _.findIndex(this.list, {advertableId: id});
+            }
             this.list[index].instant = val;
             this.tableLoader = false;
             item.instant = val;
           }).catch(err => {
             this.tableLoader = false;
           })
-        } else if (confirm('آیا مطمئن هستید می خواید این آگهی را فوری کنید؟')) {
+        } else if (confirm('آیا مطمئن هستید می خواهید این آگهی را فوری کنید؟')) {
           let method = val === 1 ? `/${this.panel}/adverts/${id}/instantPaymentLink` : `/${this.panel}/adverts/${id}/unInstantIt`;
           let query = {
             port: 'zarinpal'
           }
           this.$axios.$put(method, query).then((res) => {
             let link = _.get(res, 'data.paymentLink', '#')
-            //window.location = link
+            window.location = link
           }).catch(err => {
             this.tableLoader = false;
           })

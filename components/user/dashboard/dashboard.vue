@@ -19,7 +19,8 @@
               </v-alert>
             </v-card>
             <v-card v-else flat>
-              <v-alert :value="true" type="success">حساب شما دارای اشتراک فعال می باشد.</v-alert>
+              <v-alert :value="true" type="success" icon="star"><span class="px-1">حساب شما دارای اشتراک فعال می باشد.</span>
+              </v-alert>
               <v-alert :value="true" color="info"><p>جزئیات اشتراک شما:</p>
                 <p>عنوان اشتراک: {{planTitle}}</p>
                 <p>دوره ی اشتراک: {{planPeriod}}</p>
@@ -27,8 +28,9 @@
                 <p>انقضای اشتراک: {{planExpire}}</p>
                 <p>هزینه ی اشتراک: {{planPrice}}</p>
                 <p>روز باقی مانده: {{leftDays}}</p></v-alert>
-              <v-alert  v-if="false"  :value="true" color="blue"><p>برای تمدید اشتراک می توانید از لینک زیر اقدام نمایید.</p>
-                <div >
+              <v-alert v-if="false" :value="true" color="blue"><p>
+                برای تمدید اشتراک می توانید از لینک زیر اقدام نمایید.</p>
+                <div>
                   <v-btn to="/user/premium">اشتراک ها</v-btn>
                   <v-btn :to="`/user/premium/${getPlan.id}`">تمدید همین اشتراک</v-btn>
                 </div>
@@ -184,7 +186,7 @@
         return _.get(this.$store.state, 'user.subscription.info.jCreatedAt', '-')
       }, planPrice() {
         return Helper.priceFormat(_.get(this.$store.state, 'user.subscription.price', '-'))
-      },getPlan() {
+      }, getPlan() {
         return _.get(this.$store.state, 'user.subscription', {})
       }, planInfo() {
         return _.get(this.$store.state, 'user.subscription.info', {})

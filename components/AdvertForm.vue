@@ -137,6 +137,7 @@
               v-if="isAllowed('maxAmount')"
               v-validate="'required|numeric'"
               v-model="maxAmount"
+              :hint="maxAmountHint"
               :error-messages="errors.collect('maxAmount')"
               :placeholder="getPlaceholder('maxAmount')"
               box
@@ -285,6 +286,9 @@
     computed: {
       amountHint() {
         return Helper.computeAdvertField('amount', this.amount)
+      },
+      maxAmountHint() {
+        return Helper.computeAdvertField('maxAmount', this.maxAmount)
       },
       priceHint() {
         return Helper.computeAdvertField('price', this.price)

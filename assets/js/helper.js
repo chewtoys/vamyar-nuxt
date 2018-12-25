@@ -63,7 +63,7 @@ const Helper = {
     let fields = CONSTANTS.fieldByType;
     let list = _.get(fields, `${type}.${which}`, {})
     if (isAdmin) {
-      list.push({name: 'description', path: 'description'})
+      list.push({name: 'description', path: 'advert.description'})
     }
     return list;
   }

@@ -42,7 +42,7 @@
         // get advert data
         let getPath = `/user/${formType.type}/${id}`;
         let query = {
-          include: 'guaranteeTypes'
+          include: 'guaranteeTypes,advertable,cities,loanTypes,advert'
         }
         let {data} = await $axios.$get(getPath, {params: query});
         //console.log('get:', getPath, {params: query}, data)
