@@ -1,4 +1,4 @@
-<template> 
+<template>
   <v-layout row wrap>
     <v-flex xs12 sm12>
       <v-card color="white">
@@ -29,7 +29,10 @@
         </v-flex>
       </v-card>
     </v-flex>
-    <v-flex xs12 sm12>
+    <v-flex xs12 sm12 v-if="showPremium">
+      <noSubscriptionAlert :type="this.type"/>
+    </v-flex>
+    <v-flex xs12 sm12 v-if="!showPremium">
       <v-card color="transparent" flat>
         <v-container grid-list-lg fluid>
           <div v-if="loading">
@@ -81,9 +84,8 @@
   import CoSignerRequestsFilters from "~/components/site/adverts/filters/CoSignerRequestsFilters"
   import FinancesFilters from "~/components/site/adverts/filters/FinancesFilters"
   import FinanceRequestsFilters from "~/components/site/adverts/filters/FinanceRequestsFilters"
-
-
   import Helper from "~/assets/js/helper.js"
+  import noSubscriptionAlert from "~/components/site/noSubscriptionAlert.vue"
 
   const number = 15,
     cityMethod = '/cities?number=3000',
@@ -104,6 +106,7 @@
           {title: 'بیشترین نرخ سود', value: 'advertable.interestRate:desc', types: ['coSignerRequest']},
           {title: 'کمترین نرخ سود', value: 'advertable.interestRate:asc', types: ['coSignerRequest']},
         ],
+        showPremium: false,
         type: '',
         sort: 'id:desc',
         commonComputedFilters: [],
@@ -175,6 +178,11 @@
           this.btn_loading = false
           this.paginator = paginator
         } catch (err) {
+          let {status} = _.get(err, 'response', 0);
+          if (status === '401') {
+            this.showPremium = true;
+          }
+
           this.paginator.cursor.nextURL = false
           this.$store.commit("snackbar/setSnack", "آگهی بیشتری وجود ندارد.")
         }
@@ -239,6 +247,10 @@
           this.paginator = _.get(response, 'paginator', [])
         }).catch((err) => {
           //console.log(err)
+          let {status} = _.get(err, 'response', 0);
+          if (status === '401') {
+            this.showPremium = true;
+          }
           this.$store.commit(
             "snackbar/setSnack",
             "مشکلی در گرفتن آگهی ها پیش آمد."
@@ -257,7 +269,8 @@
       CoSignerRequestsFilters,
       FinancesFilters,
       FinanceRequestsFilters,
-      AdvertCard
+      AdvertCard,
+      noSubscriptionAlert
     }
   }
 </script>

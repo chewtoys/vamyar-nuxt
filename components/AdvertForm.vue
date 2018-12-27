@@ -125,8 +125,8 @@
               chips
             />
             <v-text-field
-              v-if="isAllowed('interestRate')"
-              v-validate="'required|numeric'"
+              v-if="isAllowed('interestRate') && forBank"
+              v-validate="'numeric'"
               v-model="interestRate"
               :error-messages="errors.collect('interestRate')"
               box
@@ -154,8 +154,7 @@
               data-vv-name="job"
             />
             <v-text-field
-              v-if="isAllowed('bank')"
-              v-validate="'required'"
+              v-if="isAllowed('bank') && forBank"
               v-model="bank"
               :error-messages="errors.collect('job')"
               box
@@ -409,7 +408,7 @@
 
       // set values in default
       if (this.isEdit) {
-        let editableFields = Helper.getTypeFields(this.formType.type, 'edit',this.isAdmin);
+        let editableFields = Helper.getTypeFields(this.formType.type, 'edit', this.isAdmin);
         _.forEach(editableFields, (value) => {
           //console.log({value}, value.name, value.path)
           _.set(this, [value.name], _.get(this.data, `${value.path}`, ''));
@@ -430,6 +429,11 @@
         return _.get(Helper.getFieldByType(this.formType.type, name, which), 'help', '');
       },
       isAllowed(name) {
+        if (this.slug === 'co-signer-requests') {
+          if (name === 'loanType') {
+            return this.forBank;
+          }
+        }
         let which = this.action;
         let slug = this.slug;
         return Helper.isFieldAllowByAlias(slug, name, which);
@@ -438,7 +442,7 @@
         this.$store.commit("snackbar/setSnack", msg, color)
       },
       sendForm() {
-        let data = Helper.selectDataForSend(this.formType.type, this, this.action,this.isAdmin);
+        let data = Helper.selectDataForSend(this.formType.type, this, this.action, this.isAdmin);
         let req = this.isEdit ? this.$axios.$put(this.sendPath, data) : this.$axios.$post(this.sendPath, data);
         req.then(() => {
           let status = true

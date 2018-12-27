@@ -185,15 +185,7 @@
                               {{ getProperty(item, 'advert.mobile', '')}}
                               <v-icon class="px-1">call</v-icon>
                               </v-btn></b>
-                          <div class="left" v-else>
-                            <v-alert :value="true" type="success">
-                              <p>برای دیدن شماره تماس باید اشتراک داشته باشید. پس از فعال سازی اشتراک به همین آدرس بر خواهید گشت:</p>
-          <v-btn color="warning" :to="premiumLink">
-            <v-icon class="px-1">shopping_cart</v-icon>
-            خرید سریع اشتراک
-          </v-btn>
-        </v-alert>
-                          </div>
+                          <noSubscriptionAlert :to="premiumLink" v-else/>
                         </span>
                       </div>
                     </div>
@@ -233,6 +225,8 @@
   import CopyUrl from "~/components/site/buttons/CopyUrl.vue"
   import Bookmark from "~/components/site/buttons/Bookmark.vue"
   import Helper from "~/assets/js/helper.js"
+  import noSubscriptionAlert from "~/components/site/noSubscriptionAlert.vue"
+
 
   const path = "/site/adverts",
     breadcrumb = "مشاهده‌‌ی آگهی",
@@ -242,7 +236,6 @@
 
   export default {
 
-    components: {NewAdverts, Report, CopyUrl, Bookmark},
     data() {
       return {
         // data
@@ -371,7 +364,7 @@
         return Helper.nl2br(_.get(this, 'item.advert.text', '-'));
       },
       premiumLink() {
-        return `/user/premium?redirect=${decodeURI(this.link)}`
+        this.link
       },
     },
     methods: {
@@ -400,6 +393,7 @@
           this.showPhone = true
         }
       }
-    }
+    },
+    components: {NewAdverts, Report, CopyUrl, Bookmark, noSubscriptionAlert}
   }
 </script>

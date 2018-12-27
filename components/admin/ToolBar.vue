@@ -40,6 +40,7 @@
     data: ({$store}) => ({
       settings: [
         {title: "تنظیمات عمومی سایت", icon: "build", to: "/admin/settings"},
+        {title: "تنظیمات سرور", icon: "settings", to: "/admin/settings/configuration"},
         {title: "خروج", icon: "exit_to_app", to: "/admin/logout"}
       ],
     }),

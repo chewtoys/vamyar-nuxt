@@ -64,7 +64,7 @@ export const
       {text: "برای بانک", value: "forCourt", align: "left"},
       {text: "نوع ضامن", value: "guaranteeTypes", align: "left"},
       {text: "سود", align: "right", value: 'interestRate'},
-      {text: "بانک", align: "right", value: 'bank'},
+      {text: "بانک عامل", align: "right", value: 'bank'},
       {text: "فوری بودن", value: 'instant', align: "left", width: '140px'},
       {text: "وضعیت", value: 'tradeStatus', align: "left", width: '140px'},
       {text: "تایید شده", value: 'verified', align: "left", width: '140px'},
@@ -481,7 +481,7 @@ export const
           title: 'سود'
         }, {
           name: 'bank',
-          title: 'بانک'
+          title: 'بانک عامل'
         }, {
           name: 'loanType',
           title: 'نوع وام'
@@ -531,7 +531,7 @@ export const
         },
         {
           name: 'bank',
-          title: 'بانک',
+          title: 'بانک عامل',
           path: 'bank'
         },
       ],
@@ -643,7 +643,7 @@ export const
   },
   GENERAL_SETTINGS = {
     site: ['closedSiteText', 'isSiteOpen', 'siteTitle', 'siteDescription', 'siteLogo', 'siteFavIcon', 'footerText'],
-    adverts: ['noticeOnAdvertShow', 'noticeBeforeCreateAdvert', 'isImageAllowed'],
+    adverts: ['buySubscriptionHelpLink', 'needSubscriptionText', 'noticeOnAdvertShow', 'noticeBeforeCreateAdvert', 'isImageAllowed'],
     frontpage: ['whatWeDoClip', 'whatWeDo', 'onMedia', 'whyUs', 'whatWeDo', 'noticeBeforeCreateAdvert', 'isImageAllowed', 'headerBgUrl', 'headerText', 'subHeaderText'],
-    pages: ['premiumText', 'panelPremiumText', 'addAdvertHelpText', 'aboutUsText', 'contactUsTable', 'contactUsText', 'rulesText', 'contactUsSuggestionText', 'educationText']
+    pages: ['councilsHelpText', 'premiumText', 'panelPremiumText', 'addAdvertHelpText', 'aboutUsText', 'contactUsTable', 'contactUsText', 'rulesText', 'contactUsSuggestionText', 'educationText']
   }

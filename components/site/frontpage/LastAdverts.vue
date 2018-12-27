@@ -11,18 +11,7 @@
         <v-alert v-if="!showPremium" :value="!!msg " type="warning">
           <span class="p-b--2">خطا: {{msg}}</span>
         </v-alert>
-        <v-alert v-if="showPremium" :value="!!msg" type="success">
-          <span class="p-b--2">{{msg}}</span>
-          <v-spacer/>
-          <v-btn color="warning" :to="premiumLink">
-            <v-icon class="px-1">shopping_cart</v-icon>
-            خرید سریع اشتراک
-          </v-btn>
-          <v-btn to="/pages/plans">
-            <v-icon class="px-1">list</v-icon>
-            پلن ها
-          </v-btn>
-        </v-alert>
+        <noSubscriptionAlert v-if="showPremium"/>
         <div class="text-xs-center">
           <v-progress-circular
             v-if="cardLoader"
@@ -49,6 +38,7 @@
 </template>
 <script>
   import AdvertCard from "~/components/site/adverts/Advert.vue"
+  import noSubscriptionAlert from "~/components/site/noSubscriptionAlert.vue"
 
   const
     path = "/site/adverts",
@@ -58,7 +48,7 @@
 
   export default {
     props: ['title', 'path', 'number', 'link'],
-    components: {AdvertCard},
+    components: {AdvertCard, noSubscriptionAlert},
     data() {
       return {
         showPremium: false,
@@ -98,10 +88,8 @@
           this.msg = 'برای دین این آگهی ها باید اشتراک فعال داشته باشید.'
           this.showPremium = true;
         }
-
         this.cardLoader = false;
       })
-
     }
   }
 </script>

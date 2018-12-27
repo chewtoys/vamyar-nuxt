@@ -108,7 +108,8 @@
   export default {
     data: ({$store}) => ({
       settings: [
-        {title: "تنظیمات سایت", icon: "inbox", to: "/settings"},
+        {title: "تنظیمات سایت", icon: "settings", to: "/settings"},
+        {title: "تنظیمات سرور", icon: "inbox", to: "/settings/configuration"},
         {title: "خروج", icon: "exit_to_app", to: "/admin/logout"}
       ],
       panel: [
