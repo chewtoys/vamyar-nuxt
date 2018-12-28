@@ -72,12 +72,24 @@
                     maxlength="11"
                     minlength="11"
                     type="text"/>
+
+
                   <v-text-field id="formPassword"
                                 v-model="formNewPassword"
                                 prepend-icon="lock"
                                 name="formNewPassword"
                                 label="رمز عبور"
                                 type="password"/>
+
+                  <v-text-field
+                    v-model="introducer"
+                    prepend-icon="phone"
+                    name="introducer"
+                    label="شماره همراه معرف"
+                    counter
+                    maxlength="11"
+                    minlength="11"
+                    type="text"/>
 
                   <v-text-field v-if="sms_sent" v-model="formCode" prepend-icon="textsms"
                                 name="formCode"
@@ -189,6 +201,7 @@
         loginLoader: false,
         formCode: null,
         formMobile: "",
+        introducer: '',
         formNewPassword: "",
         sms_sent: false,
         auth: null,
@@ -241,12 +254,14 @@
       sendCode: function () {
         let resource = register_path
         let username = this.formMobile
+        let introducer = this.introducer
         let password = this.formNewPassword
         let client_secret = this.$store.state.client_secret
         let client_id = this.$store.state.client_id
         let formData = {
           username,
           password,
+          introducer,
           password_confirmation: password,
           client_secret,
           client_id
@@ -262,7 +277,6 @@
             let {status, error} = res.response
             this.msgError(_.get(res, 'response.data.error.message.mobile', 'این شماره معتبر نمی باشد. ممکن است قبلا با این شماره ثبت نام کرده باشید.'))
           })
-
         this.pending = true
         setTimeout(() => {
           this.pending = false

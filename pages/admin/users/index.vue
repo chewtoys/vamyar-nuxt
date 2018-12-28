@@ -200,7 +200,7 @@
         this.loading = true;
         let method = fetchPath;
         let filter = '';
-        if (this.search) filter = `details.firstName=${this.search},details.lastName=${this.search},mobile=${this.search},id=${this.search},email=${this.search}`
+        if (this.search) filter = `mobile=${this.search},id=${this.search},email=${this.search}`
         let {sortBy, descending, page, rowsPerPage} = this.pagination;
         let query = {
           page,

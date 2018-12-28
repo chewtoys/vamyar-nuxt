@@ -10,16 +10,10 @@
           </v-card-title>
           <v-progress-linear v-if="loader" :indeterminate="true"/>
           <v-card-text>
-            <v-card v-if="!isUserPremium" flat>
-              <v-alert :value="true" type="warning">شما اشتراک فعالی ندارید!</v-alert>
-              <v-alert :value="true" type="info"><p>برای تهیه ی اشتراک از لینک زیر اقدام نمایید.</p>
-                <div>
-                  <v-btn to="/user/premium">مشاهده ی اشتراک ها</v-btn>
-                </div>
-              </v-alert>
-            </v-card>
+            <noSubscriptionAlert specialMsg="شما هنوز اشتراک فعالی ندارید!" v-if="!isUserPremium"/>
             <v-card v-else flat>
-              <v-alert :value="true" type="success" icon="star"><span class="px-1">حساب شما دارای اشتراک فعال می باشد.</span>
+              <v-alert :value="true" type="success" icon="star"><span
+                class="px-1">حساب شما دارای اشتراک فعال می باشد.</span>
               </v-alert>
               <v-alert :value="true" color="info"><p>جزئیات اشتراک شما:</p>
                 <p>عنوان اشتراک: {{planTitle}}</p>
@@ -47,15 +41,15 @@
           <v-card-text>
             <v-chip color="success" text-color="white">
               کل آگهی ها
-              <v-avatar class="success darken-4">{{totalAdverts}}</v-avatar>
+              <v-avatar class="success darken-4">{{getStatistics('adverts.all')}}</v-avatar>
             </v-chip>
             <v-chip color="success" text-color="white">
               تیکت ها
-              <v-avatar class="success darken-4">{{totalTickets}}</v-avatar>
+              <v-avatar class="success darken-4">{{getStatistics('tickets.all')}}</v-avatar>
             </v-chip>
             <v-chip color="success" text-color="white">
               مشاوره ها
-              <v-avatar class="success darken-4">{{totalCouncils}}</v-avatar>
+              <v-avatar class="success darken-4">{{getStatistics('councils.all')}}</v-avatar>
             </v-chip>
           </v-card-text>
         </v-card>
@@ -161,14 +155,15 @@
 <script>
   import Helper from '~/assets/js/helper'
   import Cookie from "js-cookie"
+  import noSubscriptionAlert from "~/components/site/noSubscriptionAlert.vue"
 
   const path = "/user/adverts"
 
   export default {
-    components: {},
     data() {
       return {
         loader: false,
+        statistics: [],
         rawData: [],
         bookmarks: false,
         rawAdverts: [],
@@ -227,6 +222,11 @@
         return final;
       }
     },
+    methods: {
+      getStatistics(path, def = '0') {
+        return _.get(this, `statistics.${path}`, def);
+      },
+    },
     mounted() {
       this.loader = true
       this.$axios
@@ -243,15 +243,14 @@
 
       let statistics = '/user/statistics'
       this.$axios.$get(statistics).then(res => {
-        this.totalAdverts = _.get(res, 'data.adverts', '-')
-        this.totalTickets = _.get(res, 'data.tickets', '-')
-        this.totalCouncils = _.get(res, 'data.councils', '-')
+        this.statistics = _.get(res, 'data', '')
       })
 
       let bookmarks = Cookie.get();
       //console.log({bookmarks})
       this.bookmarks = bookmarks;
-    }
+    },
+    components: {noSubscriptionAlert},
   }
 </script>
 

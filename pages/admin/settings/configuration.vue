@@ -2,15 +2,13 @@
   <v-container>
     <v-card>
       <v-card-title>
-        <h3>تنظمیات </h3>
+        <h3>تنظمیات سرور</h3>
         <v-spacer/>
         <v-btn outline color="green" round @click="save" :loading="saveLoading" :pending="savePending">
           ذخیره سازی
         </v-btn>
       </v-card-title>
-
       <v-card-text>
-
         <v-tabs
           slot="extension"
           v-model="tab"
@@ -19,276 +17,82 @@
           color="transparent"
         >
           <v-tab href="#tab-1">
-            تنظیمات  سایت
-          </v-tab>
-          <v-tab href="#tab-2">
-            تنظیمات  آگهی ها
-          </v-tab>
-          <v-tab href="#tab-3">
-            تنظیمات  صفحات
-          </v-tab>
-          <v-tab href="#tab-4">
-            تنظیمات  صفحه ی نخست
-          </v-tab>
-          <v-tab href="#tab-5">
-            تنظیمات  کاربری
+            تنظیمات
           </v-tab>
         </v-tabs>
         <br/>
         <v-divider/>
         <br/>
-
         <v-tabs-items v-model="tab">
           <v-tab-item
             value="tab-1"
           >
-
             <v-text-field
               validate="required"
-              v-model="siteTitle"
-              :error-messages="errors.collect('siteTitle')"
+              v-model="introducingAwardLimit"
+              :error-messages="errors.collect('introducingAwardLimit')"
               box
-              label="عنوان سایت"
-              data-vv-name="siteTitle"
-              required
-            />
-            <v-textarea
-              validate="required"
-              v-model="siteDescription"
-              :error-messages="errors.collect('siteDescription')"
-              box
-              label="توضیحات متا"
-              data-vv-name="siteDescription"
-              auto-grow
-            />
-            <v-checkbox
-              v-model="isSiteOpen"
-              box
-              label="سایت باز باشد؟"
-            />
-
-            <Editor
-              v-if="!isSiteOpen"
-              validate="required"
-              v-model="closedSiteText"
-              :error-messages="errors.collect('closedSiteText')"
-              box
-              label="توضیحات در صورت بسته بودن سایت"
-              data-vv-name="closedSiteText"
-              auto-grow
-            />
-
-            <Editor
-              validate="required"
-              v-model="footerText"
-              :error-messages="errors.collect('footerText')"
-              box
-              label="توضیحات فوتر در صفحه ی نخست"
-              data-vv-name="footerText"
-              auto-grow
-            />
-          </v-tab-item>
-          <v-tab-item
-            value="tab-2"
-          >
-            <Editor
-              validate="required"
-              v-model="needSubscriptionText"
-              :error-messages="errors.collect('needSubscriptionText')"
-              box
-              label="توضیحات آگهی در صورت نداشتن اشتراک"
-              data-vv-name="needSubscriptionText"
-              auto-grow
-            />
-            <Editor
-              validate="required"
-              v-model="noticeOnAdvertShow"
-              :error-messages="errors.collect('noticeOnAdvertShow')"
-              box
-              label="توضیحات در صفحه ی نمایش آگهی"
-              data-vv-name="noticeOnAdvertShow"
-              auto-grow
-            />
-            <Editor
-              validate="required"
-              v-model="noticeBeforeCreateAdvert"
-              :error-messages="errors.collect('noticeBeforeCreateAdvert')"
-              box
-              label="توضیحات در صفحه ی ایجاد آگهی"
-              data-vv-name="noticeBeforeCreateAdvert"
-              auto-grow
-            />
-            <v-text-field
-              v-model="buySubscriptionHelpLink"
-              :error-messages="errors.collect('buySubscriptionHelpLink')"
-              box
-              label="لینک آموزش خرید اشتراک"
-              data-vv-name="buySubscriptionHelpLink"
-              required
-            />
-            <v-checkbox
-              v-model="isImageAllowed"
-              box
-              label="افزودن تصویر برای آگهی ها مجاز است؟"
-            />
-          </v-tab-item>
-          <v-tab-item
-            value="tab-3"
-          >
-
-            <Editor
-              validate="required"
-              v-model="aboutUsText"
-              :error-messages="errors.collect('aboutUsText')"
-              box
-              label="متن صفحه ی درباره ی ما"
-              data-vv-name="aboutUsText"
-              auto-grow
-            />
-            <Editor
-              validate="required"
-              v-model="contactUsText"
-              :error-messages="errors.collect('contactUsText')"
-              box
-              label="متن صفحه‌ي تماس با ما"
-              data-vv-name="contactUsText"
-              auto-grow
-            />
-            <Crud
-              v-model="contactUsTable"
-              :structure="contactUsTableStructure"
-              label="اطلاعات تماس در صفحه ی تماس با ما"
-            />
-            <Editor
-              validate="required"
-              v-model="contactUsSuggestionText"
-              :error-messages="errors.collect('contactUsSuggestionText')"
-              box
-              label="متن قسمت پیشنهادات و انتقادات"
-              data-vv-name="contactUsSuggestionText"
-              auto-grow
-            />
-            <Editor
-              validate="required"
-              v-model="rulesText"
-              :error-messages="errors.collect('rulesText')"
-              box
-              label="متن قوانین"
-              data-vv-name="rulesText"
-              auto-grow
-            />
-            <Editor
-              validate="required"
-              v-model="educationText"
-              :error-messages="errors.collect('educationText')"
-              box
-              label="متن صفحه‌ي آموزش"
-              data-vv-name="educationText"
-              auto-grow
-            />
-            <Editor
-              validate="required"
-              v-model="addAdvertHelpText"
-              :error-messages="errors.collect('addAdvertHelpText')"
-              box
-              label="متن صفحه‌ي آموزش قرار دادن آگهی"
-              data-vv-name="addAdvertHelpText"
-              auto-grow
-            />
-            <Editor
-              validate="required"
-              v-model="premiumText"
-              :error-messages="errors.collect('premiumText')"
-              box
-              label="توضیحات در صفحه ی اشتراک ها"
-              data-vv-name="premiumText"
-              auto-grow
-            />
-            <Editor
-              validate="required"
-              v-model="panelPremiumText"
-              :error-messages="errors.collect('panelPremiumText')"
-              box
-              label="متن صفحه‌ي اشتراک ها در پنل کاربری"
-              data-vv-name="panelPremiumText"
-              auto-grow
-            />
-
-            <Editor
-              validate="required"
-              v-model="councilsHelpText"
-              :error-messages="errors.collect('councilsHelpText')"
-              box
-              label="متن صفحه‌ي مشاوره"
-              data-vv-name="councilsHelpText"
-              auto-grow
-            />
-
-          </v-tab-item>
-          <v-tab-item
-            value="tab-4"
-          >
-            <Crud
-              v-model="onMedia"
-              :structure="mediaStructure"
-              label="ما در رسانه ها"
-            />
-
-            <Crud
-              v-model="whyUs"
-              :structure="whyUsStructure"
-              label="چرا ما؟"
-            />
-            <Crud
-              v-model="whatWeDo"
-              :structure="whatWeDoStructure"
-              label="چه کارهایی در وامیار انجام می شود؟"
-            />
-
-            <v-text-field
-              validate="required"
-              v-model="whatWeDoClip"
-              :error-messages="errors.collect('whatWeDoClip')"
-              box
-              label="آدرس فایل کلیپ"
-              data-vv-name="whatWeDoClip"
+              label="محدودیت پاداش معرفی"
+              data-vv-name="introducingAwardLimit"
               required
             />
             <v-text-field
               validate="required"
-              v-model="headerBgUrl"
-              :error-messages="errors.collect('headerBgUrl')"
+              v-model="introducingAwardDiscount"
+              :error-messages="errors.collect('introducingAwardDiscount')"
               box
-              label="آدرس بکگراند هدر"
-              data-vv-name="headerBgUrl"
-              required
+              label="میزان تخفیف برای معرفی"
+              data-vv-name="introducingAwardDiscount"
             />
-
-            <v-textarea
+            <v-text-field
               validate="required"
-              v-model="headerText"
-              :error-messages="errors.collect('headerText')"
+              v-model="councilLink"
+              :error-messages="errors.collect('councilLink')"
               box
-              label="توضیحات هدر در صفحه ی نخست"
-              data-vv-name="headerText"
-              auto-grow
+              label="لینک مشاوره"
+              data-vv-name="councilLink"
             />
-            <v-textarea
+            <v-text-field
               validate="required"
-              v-model="subHeaderText"
-              :error-messages="errors.collect('subHeaderText')"
+              v-model="councilPrice"
+              :error-messages="errors.collect('councilPrice')"
               box
-              label="توضیحات زیر هدر سایت"
-              data-vv-name="subHeaderText"
-              auto-grow
+              label="هزینه ی مشاوره"
+              data-vv-name="councilPrice"
+            />
+            <v-text-field
+              validate="required"
+              v-model="instantPrice"
+              :error-messages="errors.collect('instantPrice')"
+              box
+              label="هزینه ی فوری کردن آگهی"
+              data-vv-name="instantPrice"
+            />
+            <v-text-field
+              validate="required"
+              v-model="allowedLoanRequests"
+              :error-messages="errors.collect('allowedLoanRequests')"
+              box
+              label="تعداد درخواست های وام مجاز"
+              data-vv-name="allowedLoanRequests"
+            />
+            <v-text-field
+              validate="required"
+              v-model="allowedFinanceRequests"
+              :error-messages="errors.collect('allowedFinanceRequests')"
+              box
+              label="تعداد درخواست های سرمایه ی مجاز"
+              data-vv-name="allowedFinanceRequests"
+            />
+            <v-text-field
+              validate="required"
+              v-model="allowedCoSignerRequests"
+              :error-messages="errors.collect('allowedCoSignerRequests')"
+              box
+              label="تعداد درخواست های ضامن مجاز"
+              data-vv-name="allowedCoSignerRequests"
             />
           </v-tab-item>
-          <v-tab-item
-            value="tab-5"
-          >
-
-          </v-tab-item>
-
         </v-tabs-items>
 
       </v-card-text>
@@ -305,103 +109,52 @@
   import Editor from '~/components/elements/Editor'
   import Crud from '~/components/elements/Crud'
 
-  const SAVE_PATH = '/settings'
+  const PATH = '/admin/config',
+    list = [
+      'introducingAwardLimit',
+      'introducingAwardDiscount',
+      'councilLink',
+      'councilPrice',
+      'instantPrice',
+      'allowedLoanRequests',
+      'allowedFinanceRequests',
+      'allowedCoSignerRequests',
+    ];
+
   export default {
     meta: {
-      breadcrumb: 'تنظیمات عمومی',
-      title: 'تنظیمات عمومی سایت'
+      breadcrumb: 'تنظیمات سرور',
+      title: 'تنظیمات سرور'
     },
     data() {
       return {
-
-        mediaStructure: [
-          {title: 'نام رسانه', name: 'name', type: 'text', value: ''},
-          {title: 'توضیحات', name: 'desc', type: 'textarea', value: ''},
-          {title: 'لینک رسانه', name: 'link', type: 'text', value: ''},
-          {title: 'تصویر', name: 'image', type: 'image', value: ''},
-        ],
-        whyUsStructure: [
-          {title: 'عنوان', name: 'title', type: 'text', value: ''},
-          {title: 'توضیحات', name: 'desc', type: 'textarea', value: ''},
-          {title: 'تصویر', name: 'image', type: 'image', value: ''},
-        ],
-        whatWeDoStructure: [
-          {title: 'عنوان', name: 'title', type: 'text', value: ''},
-          {title: 'توضیحات', name: 'desc', type: 'textarea', value: ''},
-          {title: 'تصویر', name: 'image', type: 'image', value: ''},
-        ],
-        contactUsTableStructure: [
-          {title: 'عنوان', name: 'title', type: 'text', value: ''},
-          {title: 'آیکون متریال', name: 'icon', type: 'text', value: ''},
-          {title: 'متن', name: 'text', type: 'editor', value: ''},
-        ],
 
         tab: 'tab-1',
         savePending: false,
         saveLoading: false,
 
+        data: [],
         // settings
-        whatWeDoClip: '',
-        siteTitle: '',
-        siteDescription: '',
-        siteLogo: '',
-        isSiteOpen: '',
-        onMedia: [],
-        whatWeDo: [],
-        whyUs: [],
-        footerText: '',
-        contactUsSuggestionText: '',
-        buySubscriptionHelpLink:'',
-        headerText: '',
-        subHeaderText: '',
-        closedSiteText: '',
-        noticeOnAdvertShow: '',
-        needSubscriptionText: '',
-        noticeBeforeCreateAdvert: '',
-        isImageAllowed: '',
-        aboutUsText: '',
-        contactUsText: '',
-        contactUsTable: '',
-        premiumText: '',
-        addAdvertHelpText: '',
-        panelPremiumText: '',
-        councilsHelpText: '',
-        educationText: '',
-        rulesText: '',
-
-        // adverts
+        introducingAwardLimit: '',
+        introducingAwardDiscount: '',
+        councilLink: '',
+        councilPrice: '',
+        instantPrice: '',
+        allowedLoanRequests: '',
+        allowedFinanceRequests: '',
+        allowedCoSignerRequests: '',
 
         // validator dictionary
         dictionary: {
           attributes: {
-            siteTitle: "عنوان سایت",
-            siteDescription: "توضیحات متا",
-            siteLogo: 'لوگوی سایت',
-            onMedia: 'ما در رسانه ها',
-            whatWeDo: 'ما چه کار می کنیم',
-            headerBgUrl: 'تصویر پس زمینه ی هدر',
-            whatWeDoClip: 'کلیپ ما چه کار می کنیم',
-            whyUs: 'چرا ما',
-            isSiteOpen: 'باز بودن سایت',
-            footerText: 'متن فوتر',
-            headerText: 'متن هدر',
-            subHeaderText: 'متن زیرهدر',
-            closedSiteText: 'متن بسته بودن سایت',
-            addAdvertHelp: 'متن صفحه ی ارتقای حساب',
-            premiumText: 'متن صفحه ی ارتقای حساب',
-            panelPremiumText: 'متن صفحه ی ارتقای حساب پنل کاربران',
-            councilsHelpText: 'متن صفحه ی مشاوره ها',
-            noticeOnAdvertShow: 'متن صفحه ی نمایش آگهی',
-            needSubscriptionText: 'متن نمایش آگهی در صورت نداشتن اشتراک',
-            buySubscriptionHelpLink:'لینک راهنمای خرید آگهی',
-            noticeBeforeCreateAdvert: 'پیام قبل از ایجاد آگهی',
-            isImageAllowed: 'امکان ثبت تصویر در آگهی',
-            aboutUsText: 'متن صفحه ی درباره ی ما',
-            contactUsText: 'متن صفحه ی تماس با ما',
-            contactUsTable: 'اطلاعات صفحه ی تماس با ما',
-            contactUsSuggestionText: 'متن صفحه ی تماس با ما',
-            educationText: 'متن بالای قسمت آموزش',
-            rulesText: 'متن قسمت قوانین',
+            introducingAwardLimit: 'محدودیت پاداش معرفی',
+            introducingAwardDiscount: 'میزان تخفیف برای معرفی',
+            councilLink: 'لینک مشاوره',
+            councilPrice: 'هزینه ی مشاوره',
+            instantPrice: 'هزینه ی فوری کردن آگهی',
+            allowedLoanRequests: 'تعداد درخواست های وام مجاز',
+            allowedFinanceRequests: 'تعداد درخواست های سرمایه ی مجاز',
+            allowedCoSignerRequests: 'تعداد درخواست های ضامن مجاز"'
           }
         }
       }
@@ -421,73 +174,40 @@
             }
           })
       },
-      sendForm: function () {
-        let groups = Helper.getGeneralSettingsGroup();
-        _.forEach(groups, (Keys, groupKey) => {
-          let data = {};
-          _.forEach(Keys, (name) => {
-            data[name] = _.get(this, name, null);
-          })
-          if (_.has(this.$store.state.settings.data, groupKey)) {
-            this.$axios
-              .put(SAVE_PATH + '/' + groupKey,
-                {key: groupKey, value: JSON.stringify(data)}
-              )
-              .then((response) => {
-                // show success and redirect
-                this.$axios.$get('/settings').then((fetchData) => {
-                  if (_.has(fetchData, 'data')) this.$store.commit('settings/setAndProcessData', fetchData.data)
-                  this.$store.commit('snackbar/setSnack', "با موفقیت ثبت شد.", "success")
-                }).catch(err => {
-                  this.$store.commit('snackbar/setSnack', " خطایی رخ داد.", "warning")
-                })
-                //window.location = '/admin/settings';
-                this.saveLoading = false
-              }).catch((error) => {
-              this.saveLoading = false
-            })
-          } else {
-            this.$axios
-              .post(SAVE_PATH,
-                {key: groupKey, value: JSON.stringify(data)}
-              )
-              .then((response) => {
-                // show success and redirect
-                this.$axios.$get('/settings').then((fetchData) => {
-                  if (_.has(fetchData, 'data')) this.$store.commit('settings/setAndProcessData', fetchData.data)
-                  this.$store.commit('snackbar/setSnack', "با موفقیت ثبت شد.", "success")
-                }).catch(err => {
-                  this.$store.commit('snackbar/setSnack', " خطایی رخ داد.", "warning")
-                })
-
-                this.$store.commit('snackbar/setSnack', "با موفقیت ثبت شد.", "success")
-                //window.location = '/admin/settings';
-
-                this.saveLoading = false
-              }).catch((error) => {
-              this.saveLoading = false
-            })
-          }
+      sendForm() {
+        let data = {};
+        _.forEach(list, (name) => {
+          _.set(data, name, _.get(this, name, ''))
+        });
+        console.log({data})
+        this.$axios
+          .$put(this.sendPath, data)
+          .then((response) => {
+            this.saveLoading = false
+          }).catch((error) => {
+          this.saveLoading = false
         })
       }
     },
-    asyncData({store, error}) {
-      // set initial data
-      if (false && (!_.get(store.state.settings, 'data', false) || _.isEmpty(_.get(store.state.settings, 'data', null)))) {
-        return error({
-          statusCode: 503,
-          message: 'در گرفتن تنظیمات مشکلی رخ داد.'
-        })
+    computed: {
+      sendPath() {
+        return PATH
       }
-      let groups = Helper.getGeneralSettingsGroup();
-      let list = {};
-      _.forEach(groups, (values, groupKey) => {
-        _.forEach(values, (name, value) => {
-          //console.log(name, value, _.get(store.state.settings.data, [groupKey, name]))
-          _.set(list, name, _.get(store.state.settings.data, [groupKey, name], ''))
-        })
-      })
-      return list
+    },
+    async asyncData({$axios, store, error}) {
+      // set initial data
+      let method = PATH;
+      try {
+        let {data} = await $axios.$get(method);
+        return {data}
+      } catch (err) {
+        return error({statusCode: 503, message: err})
+      }
+    },
+    mounted() {
+      _.forEach(list, (name) => {
+        _.set(this, name, _.get(this.data, name, ''))
+      });
     },
     components: {Editor, Crud},
   }

@@ -15,27 +15,22 @@
               <tr>
                 <td>آگهی ها
                 </td>
-                <td>{{getAdverts()}}</td>
+                <td>{{getStatistics('adverts.all')}}</td>
               </tr>
               <tr>
                 <td>کاربران
                 </td>
-                <td>{{getAdverts()}}</td>
+                <td>{{getStatistics('users.all')}}</td>
               </tr>
               <tr>
                 <td>اشتراک های خریداری شده
                 </td>
-                <td>{{getAdverts()}}</td>
+                <td>{{getStatistics('subscriptions.all')}}</td>
               </tr>
               <tr>
                 <td>مطالب
                 </td>
-                <td>{{getAdverts()}}</td>
-              </tr>
-              <tr>
-                <td>آموزش ها
-                </td>
-                <td>{{getAdverts()}}</td>
+                <td>{{getStatistics('posts.all')}}</td>
               </tr>
               </tbody>
             </table>
@@ -43,31 +38,26 @@
           <v-flex xs12 sm6>
             <table class="oddTable">
               <tbody>
-                <tr>
-                  <td>آگهی های تایید نشده
-                  </td>
-                  <td>{{getAdverts()}}</td>
-                </tr>
-                <tr>
-                  <td>تیکت های باز
-                  </td>
-                  <td>{{getAdverts()}}</td>
-                </tr>
-                <tr>
-                  <td>اشتراک های خریداری شده
-                  </td>
-                  <td>{{getAdverts()}}</td>
-                </tr>
-                <tr>
-                  <td>مشاوره های پرداخت شده
-                  </td>
-                  <td>{{getAdverts()}}</td>
-                </tr>
-                <tr>
-                  <td>وضعیت سایت
-                  </td>
-                  <td>{{settings('site.isSiteClosed') ? 'بسته' : 'باز'}}</td>
-                </tr>
+              <tr>
+                <td>آگهی های تایید نشده
+                </td>
+                <td>{{getStatistics('adverts.nonVerified')}}</td>
+              </tr>
+              <tr>
+                <td>تیکت های باز
+                </td>
+                <td>{{getStatistics('tickets.open')}}</td>
+              </tr>
+              <tr>
+                <td>مشاوره های پرداخت شده
+                </td>
+                <td>{{getStatistics('councils.all')}}</td>
+              </tr>
+              <tr>
+                <td>وضعیت سایت
+                </td>
+                <td>{{settings('site.isSiteClosed') ? 'بسته' : 'باز'}}</td>
+              </tr>
               </tbody>
             </table>
           </v-flex>
@@ -251,6 +241,7 @@
     data() {
       return {
         loader: false,
+        statistics: [],
         rawData: [],
         rawAdverts: [],
         rawTickets: [],
@@ -345,8 +336,8 @@
       settings(key) {
         return _.get(this.$store.state.settings.data, key, '')
       },
-      getAdverts() {
-        return '-'
+      getStatistics(path, def = '-') {
+        return _.get(this, `statistics.${path}`, def);
       },
       nl2br(text) {
         return Helper.nl2br(text)
@@ -386,11 +377,8 @@
 
       let statistics = '/admin/statistics'
       this.$axios.$get(statistics).then(res => {
-        this.totalAdverts = _.get(res, 'data.adverts', '-')
-        this.totalTickets = _.get(res, 'data.tickets', '-')
-        this.totalCouncils = _.get(res, 'data.councils', '-')
+        this.statistics = _.get(res, 'data', '')
       })
-
       let tickets = '/admin/tickets?number=10'
       this.$axios.$get(tickets).then(res => {
         this.rawTickets = _.get(res, 'data', [])
