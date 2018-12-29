@@ -115,15 +115,11 @@
       panel: [
         {title: "لیست کاربران", icon: "inbox", to: "/admin/users"},
         {title: "لاگ کاربران", icon: "inbox", to: "/admin/users/logs"},
+        {title: "لیست نوتیفیکیشن ها", icon: "inbox", to: "/admin/notifications"},
         //{title: "لیست اشتراک های خریداری شده", icon: "inbox", to: "/admin/users/subscriptions"},
         {title: "تیکت ها", icon: "inbox", to: "/admin/tickets"},
-        {title: "دسته بندی تیکت ها", icon: "inbox", to: "/admin/tickets/categories"},
         //{title: "لاگ کاربران", icon: "inbox", to: "/users/logs"},
         {title: "درخواست های مشاوره", icon: "inbox", to: "/admin/councils"},
-        {
-          title: "انواع مشاوره ها" +
-          "", icon: "inbox", to: "/admin/councils/categories"
-        },
         {title: "انتقادات و پیشنهادها", icon: "inbox", to: "/admin/contact-us"},
         //{title: "لیست کاربران", icon: "inbox", to: "/users"},
       ],
@@ -135,6 +131,11 @@
       adminSection: [
         {title: "لیست اشتراک ها", icon: "inbox", to: "/admin/subscriptions"},
         {title: "لیست کوپون ها", icon: "inbox", to: "/admin/coupons"},
+        {title: "دسته بندی تیکت ها", icon: "inbox", to: "/admin/tickets/categories"},
+        {
+          title: "انواع مشاوره ها" + "", icon: "inbox", to: "/admin/councils/categories"
+        },
+        {title: "لیست انواع وام", icon: "inbox", to: "/admin/settings/loan-types"},
         {title: "مدیرها", icon: "inbox", to: "/admin/moderators"},
       ],
       access: [

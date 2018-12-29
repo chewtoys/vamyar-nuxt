@@ -1,9 +1,16 @@
 export const state = () => ({
   data: null,
-
   news: {
     count: 1,
   },
+  notificationTypes: [
+    ' سیستم',
+    ' مدیر',
+    ' شخصی',
+    ' عمومی',
+    'آگهی ها',
+    'آموزش ها',
+  ],
   adverts: {
     tradeStatusList: ['باز', 'درحال معامله', 'بسته شده'],
     count: 99999,
