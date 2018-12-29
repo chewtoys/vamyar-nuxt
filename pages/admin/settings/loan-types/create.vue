@@ -28,10 +28,10 @@
           <form>
             <v-text-field
               v-validate="'required'"
-              v-model="title"
-              :error-messages="errors.collect('title')"
+              v-model="name"
+              :error-messages="errors.collect('name')"
               box
-              data-vv-name="title"
+              data-vv-name="name"
               label="عنوان"
             />
             <v-btn :loading="submit_loader" outline color="accent" round @click="processSubmit">
@@ -47,10 +47,10 @@
 <script>
   import Helper from '~/assets/js/helper'
 
-  const page_title = 'ویرایش دسته بندی',
-    breadcrumb = 'ویرایش دسته بندی',
-    indexPath = '/admin/councils/categories',
-    resourcePath = '/admin/councilRequestTypes'
+  const page_title = 'ثبت دسته بندی جدید',
+    breadcrumb = 'ایجاد دسته بندی',
+    indexPath = '/admin/settings/loan-types',
+    createPath = '/admin/loanTypes'
 
   export default {
     $_veeValidate: {
@@ -63,43 +63,36 @@
     },
     data: () => ({
       page_title,
-      title: null,
+      name: null,
 
       // validator dictionary
       dictionary: {
         attributes: {
-          title: "عنوان دسته بندی",
+          name: "عنوان دسته بندی",
           // custom attributes
         }
       },
       submit_loader: false
     }),
-    mounted() {
-      let method = this.uri;
-      //console.log({method})
-      this.$axios.$get(method).then(res => {
-        this.data = _.get(res, 'data');
-        this.title = _.get(res, 'data.title', '');
-      }).catch(err => {
-        //console.log(err);
-      })
-      this.$validator.localize("fa", this.dictionary)
-    },
     computed:
       {
-        uri() {
-          return `${resourcePath}/${this.id}`;
-        },
         list: function () {
           return indexPath;
         }
+        ,
+        createPath: function () {
+          return createPath;
+        },
       }
     ,
-    async asyncData({params}) {
-      return {
-        id: params.id
-      }
-    },
+    async asyncData({params, store, $axios}) {
+
+    }
+    ,
+    mounted() {
+      this.$validator.localize("fa", this.dictionary)
+    }
+    ,
     methods: {
       toast(msg, color) {
         this.$store.commit("snackbar/setSnack", msg, color)
@@ -107,10 +100,10 @@
       ,
       sendForm() {
         let data = {
-          title: this.title
+          name: this.name
         }
         this.$axios
-          .$put(this.uri, data)
+          .$post(createPath, data)
           .then(() => {
             let status = true
             if (status) {

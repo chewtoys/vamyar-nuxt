@@ -28,10 +28,10 @@
           <form>
             <v-text-field
               v-validate="'required'"
-              v-model="title"
-              :error-messages="errors.collect('title')"
+              v-model="name"
+              :error-messages="errors.collect('name')"
               box
-              data-vv-name="title"
+              data-vv-name="name"
               label="عنوان"
             />
             <v-btn :loading="submit_loader" outline color="accent" round @click="processSubmit">
@@ -47,10 +47,11 @@
 <script>
   import Helper from '~/assets/js/helper'
 
-  const page_title = 'ویرایش دسته بندی',
+  const page_title = 'ویرایش دسته بندی ',
     breadcrumb = 'ویرایش دسته بندی',
-    indexPath = '/admin/councils/categories',
-    resourcePath = '/admin/councilRequestTypes'
+    indexPath = '/admin/settings/loan-types',
+    resourcePath = '/admin/loanTypes',
+    fetchPath = '/loanTypes'
 
   export default {
     $_veeValidate: {
@@ -63,23 +64,23 @@
     },
     data: () => ({
       page_title,
-      title: null,
+      name: null,
 
       // validator dictionary
       dictionary: {
         attributes: {
-          title: "عنوان دسته بندی",
+          name: "عنوان دسته بندی",
           // custom attributes
         }
       },
       submit_loader: false
     }),
     mounted() {
-      let method = this.uri;
+      let method =`${fetchPath}/${this.id}`;
       //console.log({method})
       this.$axios.$get(method).then(res => {
         this.data = _.get(res, 'data');
-        this.title = _.get(res, 'data.title', '');
+        this.name = _.get(res, 'data.name', '');
       }).catch(err => {
         //console.log(err);
       })
@@ -107,7 +108,7 @@
       ,
       sendForm() {
         let data = {
-          title: this.title
+          name: this.name
         }
         this.$axios
           .$put(this.uri, data)
