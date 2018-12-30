@@ -4,23 +4,22 @@
       <v-icon class="px-1">cloud_upload</v-icon>
     </v-btn>
     <v-layout row wrap v-if="showUploader">
-      <v-flex xs12>
-        {{label}}
+      <v-flex xs12 v-html="getLabel">
       </v-flex>
       <v-flex xs12>
-        <label>فایل را انتخاب کنید و پس از آپلود آدرس را کپی کنید و در ادیتور قسمت ویدئو قرار دهید.</label>
-        <input
-          id="file"
-          ref="file"
-          type="file"
-          @change="handleFileUpload()">
         <v-btn :loading="fileLoading" color="info" :disabled="!hasFile"
                @click="submitFile()"><span>
      <v-icon class="px-1">cloud_upload</v-icon>
           آپلود</span>
         </v-btn>
+        <input
+          id="file"
+          ref="file"
+          type="file"
+          @change="handleFileUpload()"/>
       </v-flex>
       <v-flex xs12 v-if="url">
+        <v-text-field v-model="url" readonly/>
         <v-btn
           v-clipboard:copy="url" v-clipboard:success="handleCopyStatus(true)"
           v-clipboard:error="handleCopyStatus(false)" :loading="loading" ripple
@@ -32,7 +31,6 @@
           <v-icon>file_copy</v-icon>
           <span class="px-1">کپی کردن آدرس</span>
         </v-btn>
-        <v-text-field v-model="url" readonly/>
       </v-flex>
       <v-flex v-if="uploadPercentage < 100 && uploadPercentage > 0 " xs12>
         <v-progress-linear v-model="uploadPercentage" color="success"/>
@@ -64,6 +62,9 @@
       }
     },
     computed: {
+      getLabel() {
+        return this.label || '<label>فایل را انتخاب کنید و پس از آپلود آدرس را کپی کنید و در ادیتور قسمت ویدئو قرار دهید.</label>'
+      },
       getType() {
         return 'admin'
       },
