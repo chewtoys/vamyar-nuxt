@@ -6,14 +6,18 @@
          v-model="content"
          v-quill:myQuillEditor="editorOption">
     </div>
+    <videoUploader/>
   </section>
 </template>
 
 <script>
   import Helper from '~/assets/js/helper'
+  import videoUploader from '~/components/elements/videoUploader'
+
+  const baseUrl = "https://api.vamyar.org";
 
   export default {
-    props: ['value', 'label', 'readOnly', 'placeholder'],
+    props: ['value', 'type', 'label', 'readOnly', 'placeholder'],
     data() {
       return {
         editorOption: {
@@ -38,29 +42,49 @@
               ['link', 'image', 'video']
             ],
             imageUpload: {
-              //url: "", // server url
-              //method: "POST", // change query method, default 'POST'
-              //headers: {}, // add custom headers, example { token: 'your-token'}
-              //// personalize successful callback and call next function to insert new url to the editor
-              //callbackOK: (serverResponse, next) => {
-              //  next(serverResponse);
-              //},
-              //// personalize failed callback
-              //callbackKO: (serverError) => {
-              //  alert(serverError);
-              //},
-              //// optional
-              //// add callback when a image have been chosen
-              //checkBeforeSend: (file, next) => {
-              //  console.log(file);
-              //  next(file); // go back to component and send to the server
-              ////}
+              url: this.getUrl, // server url
+              method: "POST", // change query method, default 'POST'
+              headers: {
+                "Content-Type": "multipart/form-data",
+                Authorization: this.getAuthorization
+              }, // add custom headers, example { token: 'your-token'}
+              // personalize successful callback and call next function to insert new url to the editor
+              callbackOK: (serverResponse, next) => {
+                console.log(1, serverResponse)
+                next(serverResponse);
+              },
+              // personalize failed callback
+              callbackKO: (serverError) => {
+                console.log(2, serverError)
+                alert(serverError);
+              },
+              // optional
+              // add callback when a image have been chosen
+              checkBeforeSend: (file, next) => {
+                console.log(3, file, 4, this.getUrl, 5, this.getAuthorization);
+                next(file); // go back to component and send to the server
+              }
             }
           }
         }
       }
     },
     computed: {
+      getType() {
+        return _.get(this, 'type', 'admin')
+      },
+      getMethod() {
+        return this.getType === 'user' ? "/user/images" : "/admin/images";
+      },
+      getAuthToken() {
+        return this.getType === 'user' ? _.get(this.$store.state.user, 'auth', '') : _.get(this.$store.state.admin, 'auth', '')
+      },
+      getUrl() {
+        return this.getType === 'user' ? `${baseUrl}/user/images` : `${baseUrl}/admin/images`
+      },
+      getAuthorization() {
+        return `Bearer ${this.getAuthToken}`;
+      },
       getLabel() {
         return _.get(this, 'label', '')
       },
@@ -71,7 +95,8 @@
           return this.value
         }
       }
-    }
+    },
+    components: {videoUploader}
   }
 </script>
 
