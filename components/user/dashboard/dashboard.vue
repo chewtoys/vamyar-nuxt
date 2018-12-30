@@ -61,7 +61,7 @@
           </v-card-title>
           <v-card-text>
             <v-layout row wrap>
-              <v-flex xs6 sm4 lg2 v-for="item in links" :key="item.id">
+              <v-flex xs6 sm4 lg4 v-for="item in links" :key="item.id">
                 <v-btn
                   large
                   round
