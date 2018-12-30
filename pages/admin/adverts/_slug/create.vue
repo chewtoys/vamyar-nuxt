@@ -35,7 +35,7 @@
         // loan types
         let loanTypeData = await $axios.$get(loanTypeMethod);
         store.commit('loanType/setAndProcessData', loanTypeData.data || []);
-        
+
       } catch (err) {
         console.log(err)
         //return error({statusCode: 503, message: 'مشکل در گرفتن داده های اولیه :('})
