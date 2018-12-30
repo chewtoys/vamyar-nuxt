@@ -22,8 +22,8 @@
                 <v-flex xs12 v-for="field in structure" :key="field.name">
                   <v-text-field box v-if="field.type=='text'" v-model="editedItem[field.name]"
                                 :label="field.title"></v-text-field>
-                  <v-text-field box v-if="field.type=='image'" v-model="editedItem[field.name]"
-                                :label="field.title"></v-text-field>
+                  <ImgUploader box v-if="field.type=='image'" v-model="editedItem[field.name]"
+                               :label="field.title"></ImgUploader>
                   <v-textarea box v-if="field.type=='textarea'" v-model="editedItem[field.name]"
                               :label="field.title"></v-textarea>
                   <Editor box v-if="field.type=='editor'" v-model="editedItem[field.name]"
@@ -49,7 +49,12 @@
       class="elevation-1"
     >
       <template slot="items" slot-scope="props">
-        <td v-for="field in structure" v-html="nl2br(props.item[field.name])"></td>
+        <td v-for="field in structure">
+          <p v-if="field.type=='text'" v-html="props.item[field.name]"></p>
+          <p v-if="field.type=='textarea'" v-html="shortStr(nl2br(props.item[field.name]),30)"></p>
+          <div v-if="field.type=='editor'" v-html="shortStr(props.item[field.name],50)"></div>
+          <v-img  width="100%" v-if="field.type=='image'" :src="props.item[field.name]"/>
+        </td>
 
         <td class="justify-center layout px-0">
           <v-icon
@@ -73,6 +78,7 @@
 <script>
   import Helper from '~/assets/js/helper'
   import Editor from '~/components/elements/Editor'
+  import ImgUploader from '~/components/elements/FileUploader'
 
   export default {
     props: ['value', 'label', 'structure', 'placeholder'],
@@ -109,6 +115,9 @@
       this.initialize()
     },
     methods: {
+      shortStr(str, limit = 50) {
+        return Helper.limitStr(str, limit)
+      },
       nl2br(text) {
         return Helper.nl2br(text)
       },
@@ -144,6 +153,6 @@
         this.close()
       }
     },
-    components: {Editor}
+    components: {Editor, ImgUploader}
   }
 </script>

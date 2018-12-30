@@ -4,24 +4,24 @@
       <v-flex xs12>
         {{label}}
       </v-flex>
-      <v-flex xs8>
-        <input
-          id="file"
-          ref="file"
-          type="file"
-          @change="handleFileUpload()">
+      <v-flex xs12 v-if="!url">
         <v-btn :loading="fileLoading" color="info" :disabled="!hasFile"
                @click="submitFile()"><span>
      <v-icon class="px-1">cloud_upload</v-icon>
           آپلود</span>
         </v-btn>
+        <input
+          id="file"
+          ref="file"
+          type="file"
+          @change="handleFileUpload()"/>
       </v-flex>
-      <v-flex xs4>
-        <div v-if="url">
+      <v-flex xs12 v-if="url">
+        <div >
           <v-btn fab outline small color="warning" @click="remove">
             <v-icon>delete</v-icon>
           </v-btn>
-          <img :src="`${root}/${url}`" :alt="url" class="full">
+          <img :src="`${url}`" :alt="url" class="full">
           <input v-model="url" type="hidden" name="url">
         </div>
       </v-flex>
@@ -113,7 +113,7 @@
           })
           .then((res) => {
             console.log(res, res.data.url)
-            this.url = `${_.get(res, 'data.url', '-')}`
+            this.url =  _.replace(`${root}/${_.get(res, 'data.url', '-')}`, '//', '/')
             this.hasFile = false
             this.file = null
             this.fileLoading = false

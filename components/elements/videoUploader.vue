@@ -133,7 +133,7 @@
           })
           .then((res) => {
             console.log(res, res.data.url)
-            this.url = (`${root}/${_.get(res, 'data.url', '-')}`).replace('//', '/')
+            this.url = _.replace(`${root}/${_.get(res, 'data.url', '-')}`, '//', '/')
             this.hasFile = false
             this.file = null
             this.fileLoading = false
