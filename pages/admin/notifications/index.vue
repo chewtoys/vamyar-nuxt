@@ -70,6 +70,7 @@
               ></v-checkbox>
             </td>
             <td class="text-xs-right">{{ props.item.id }}</td>
+            <td class="text-xs-right">{{ props.item.title }}</td>
             <td class="text-xs-right">{{ props.item.message }}</td>
             <td class="text-xs-right">{{ props.item.type }}</td>
             <td class="text-xs-left">
@@ -103,6 +104,7 @@
     createPath = '/admin/notifications/create',
     headers = [
       {text: '‌شناسه', value: 'id', align: 'right'},
+      {text: 'عنوان', value: 'title', align: 'right'},
       {text: 'پیام', value: 'message', align: 'right'},
       {text: 'نوع پیام', value: 'type', align: 'right'},
       {text: 'عملیات', sortable: false, align: 'left', width: '140px'},

@@ -26,6 +26,15 @@
         <v-divider class="my-3"/>
         <v-flex xs12 md12 sm12 lg12>
           <form>
+            <v-text-field
+              v-validate="'required'"
+              v-model="title"
+              :error-messages="errors.collect('title')"
+              box
+              auto-grow
+              data-vv-name="title"
+              label="عنوان"
+            />
             <v-textarea
               v-validate="'required'"
               v-model="message"
@@ -35,14 +44,7 @@
               data-vv-name="message"
               label="پیام"
             />
-            <v-checkbox
-              v-model="toAll"
-              box
-              label="برای همه ی کاربران"
-            />
-
             <v-autocomplete
-              v-if="!toAll"
               :items="allUsersList"
               v-model="userId"
               :error-messages="errors.collect('userId')"
@@ -50,6 +52,7 @@
               item-value="id"
               item-text="mobile"
               label="کاربر"
+              placeholder="همه ی کاربران"
               data-vv-name="userId"
             />
             <v-combobox
@@ -94,14 +97,15 @@
       page_title,
       date: null,
       message: '',
+      title: '',
       type: '',
       userId: null,
-      toAll: false,
       submit_loader: false,
       allUsersList: [],
       dictionary: {
         attributes: {
           message: "پیام",
+          title: "عنوان",
           userId: "کاربر",
           type: "نوع نوتیف",
           toAll: "برای همه",
@@ -115,13 +119,15 @@
         types() {
           return _.get(this.$store.state, 'settings.notificationTypes', [])
         },
+        toAll() {
+          return !_.get(this, 'userId', false);
+        },
         updateMethod() {
           return this.toAll ? `${createPath}` : `/admin/user/${this.userId}/notifications`;
         },
         list: function () {
           return indexPath;
-        }
-        ,
+        },
         createPath: function () {
           return createPath;
         }
@@ -141,6 +147,7 @@
       ,
       sendForm() {
         let data = {
+          title: this.title,
           message: this.message,
           type: this.discount
         }
@@ -161,13 +168,6 @@
           })
           .catch((error) => {
             // catch and show error
-            this.toast(_.get(error, 'response.data.error.message', {error}), "error")
-            //console.log(1, _.get(error, 'response.data.error', 'no res.data'), 3, _.get(error, 'response.data.error.message', 'no data'))
-            if (_.isArray(_.get(error, 'response.data.error.message', ''))) {
-              _.forEach(_.get(error, 'response.data.error.message', []), (value, key) => {
-                this.toast(value, "error")
-              })
-            }
             this.submit_loader = false
           })
       },

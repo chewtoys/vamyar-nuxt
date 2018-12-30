@@ -12,7 +12,7 @@
   export default {
     data: () => ({
       data: [],
-      formType: null ,
+      formType: [],
       slug: null,
     }),
     async asyncData({params, store, $axios, error}) {
@@ -35,15 +35,14 @@
         // loan types
         let loanTypeData = await $axios.$get(loanTypeMethod);
         store.commit('loanType/setAndProcessData', loanTypeData.data || []);
-
-        //console.log('get:', getPath, {params: query}, data)
-        return {
-          formType,
-          slug,
-        }
+        
       } catch (err) {
         console.log(err)
-        return error({statusCode: 503, message: 'آگهی یافت نشد :('})
+        //return error({statusCode: 503, message: 'مشکل در گرفتن داده های اولیه :('})
+      }
+      return {
+        formType,
+        slug,
       }
     },
     components: {AdvertForm}

@@ -87,10 +87,7 @@
   import Helper from "~/assets/js/helper.js"
   import noSubscriptionAlert from "~/components/site/noSubscriptionAlert.vue"
 
-  const number = 15,
-    cityMethod = '/cities?number=3000',
-    guaranteeMethod = '/guaranteeTypes',
-    loanTypeMethod = '/loanTypes'
+  const number = 15
 
   export default {
     props: ['which', 'initialItems', 'initialPaginator'],
@@ -135,7 +132,6 @@
       this.items = this.initialItems;
       this.paginator = this.initialPaginator;
       this.loading = false;
-
     },
     computed: {
       isAdverts() {
