@@ -1,7 +1,7 @@
 <template>
   <v-container grid-list-xs>
     <v-btn class="left" v-if="!showUploader" @click="showUploader=true" color="success">آپلود ویدئو
-      <v-icon>video</v-icon>
+      <v-icon class="px-1">cloud_upload</v-icon>
     </v-btn>
     <v-layout row wrap v-if="showUploader">
       <v-flex xs12>
@@ -14,8 +14,10 @@
           ref="file"
           type="file"
           @change="handleFileUpload()">
-        <v-btn :loading="fileLoading" :disabled="!hasFile"
-               @click="submitFile()"><span>آپلود</span>
+        <v-btn :loading="fileLoading" color="info" :disabled="!hasFile"
+               @click="submitFile()"><span>
+     <v-icon class="px-1">cloud_upload</v-icon>
+          آپلود</span>
         </v-btn>
       </v-flex>
       <v-flex xs12 v-if="url">
@@ -24,12 +26,13 @@
           v-clipboard:error="handleCopyStatus(false)" :loading="loading" ripple
           class="elevation-2"
           color="success"
+          @click="copy"
           round
         >
           <v-icon>file_copy</v-icon>
           <span class="px-1">کپی کردن آدرس</span>
         </v-btn>
-        <v-text-filed v-model="url" readonly/>
+        <v-text-field v-model="url" readonly/>
       </v-flex>
       <v-flex v-if="uploadPercentage < 100 && uploadPercentage > 0 " xs12>
         <v-progress-linear v-model="uploadPercentage" color="success"/>
@@ -77,6 +80,13 @@
       }
     },
     methods: {
+      copy() {
+        this.loading = true
+        // send to API
+        setTimeout(() => {
+          this.loading = false
+        }, 1000)
+      },
       handleCopyStatus(status) {
         this.copySucceeded = status
       },
@@ -122,7 +132,7 @@
           })
           .then((res) => {
             console.log(res, res.data.url)
-            this.url = `${root}/${_.get(res, 'data.url', '-')}`
+            this.url = (`${root}/${_.get(res, 'data.url', '-')}`).replace('//', '/')
             this.hasFile = false
             this.file = null
             this.fileLoading = false
