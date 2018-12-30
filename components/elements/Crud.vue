@@ -2,11 +2,7 @@
   <div>
     <v-toolbar flat color="white">
       <v-toolbar-title>{{label}}</v-toolbar-title>
-      <v-divider
-        class="mx-2"
-        inset
-        vertical
-      ></v-divider>
+
       <v-spacer></v-spacer>
       <v-dialog v-model="dialog">
         <v-btn slot="activator" color="primary" dark class="mb-2">گزینه ی جدید</v-btn>
@@ -53,7 +49,8 @@
           <p v-if="field.type=='text'" v-html="props.item[field.name]"></p>
           <p v-if="field.type=='textarea'" v-html="shortStr(nl2br(props.item[field.name]),30)"></p>
           <div v-if="field.type=='editor'" v-html="shortStr(props.item[field.name],50)"></div>
-          <v-img  width="100%" v-if="field.type=='image'" :src="props.item[field.name]"/>
+          <v-img :alt="shortStr(props.item[field.name],50)" width="100%" v-if="field.type=='image'"
+                 :src="props.item[field.name]"/>
         </td>
 
         <td class="justify-center layout px-0">
@@ -139,7 +136,7 @@
       close() {
         this.dialog = false
         setTimeout(() => {
-          this.editedItem = Object.assign({}, this.defaultItem)
+          this.editedItem = this.defaultItem
           this.editedIndex = -1
         }, 300)
       },

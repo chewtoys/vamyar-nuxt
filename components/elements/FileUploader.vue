@@ -17,7 +17,7 @@
           @change="handleFileUpload()"/>
       </v-flex>
       <v-flex xs12 v-if="url">
-        <div >
+        <div>
           <v-btn fab outline small color="warning" @click="remove">
             <v-icon>delete</v-icon>
           </v-btn>
@@ -46,7 +46,7 @@
         root,
         file: "",
         hasFile: false,
-        url: this.value,
+        url: '',
         fileLoading: false,
         uploadPercentage: 0
       }
@@ -61,6 +61,9 @@
       getAuthorization() {
         return this.getType === 'user' ? _.get(this.$store.state.user, 'auth', '') : _.get(this.$store.state.admin, 'auth', '')
       },
+    },
+    mounted() {
+      this.url = _.get(this, 'value', null);
     },
     watch: {
       url(val) {
@@ -113,7 +116,7 @@
           })
           .then((res) => {
             console.log(res, res.data.url)
-            this.url =  _.replace(`${root}/${_.get(res, 'data.url', '-')}`, '//', '/')
+            this.url = _.replace(`${root}/${_.get(res, 'data.url', '-')}`, '//', '/')
             this.hasFile = false
             this.file = null
             this.fileLoading = false
