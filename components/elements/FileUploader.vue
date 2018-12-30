@@ -10,8 +10,10 @@
           ref="file"
           type="file"
           @change="handleFileUpload()">
-        <v-btn :loading="fileLoading" :disabled="!hasFile"
-               @click="submitFile()"><span>آپلود</span>
+        <v-btn :loading="fileLoading" color="info" :disabled="!hasFile"
+               @click="submitFile()"><span>
+     <v-icon class="px-1">cloud_upload</v-icon>
+          آپلود</span>
         </v-btn>
       </v-flex>
       <v-flex xs4>
