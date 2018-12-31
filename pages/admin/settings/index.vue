@@ -14,7 +14,7 @@
         <v-tabs
           slot="extension"
           v-model="tab"
-          centered
+          right
           fixed-tabs
           color="transparent"
         >
@@ -236,13 +236,12 @@
               v-model="whatWeDoClip"
               :error-messages="errors.collect('whatWeDoClip')"
               box
-              label="   کلیپ چه کارهایی در وامیار انجام می شود"
+              label="لینک کلیپ صفحه نخست"
               data-vv-name="whatWeDoClip"
               required
             />
             <VideoUploader/>
-
-
+            <br/>
             <FileUploader
               v-model="headerBgUrl"
               box
