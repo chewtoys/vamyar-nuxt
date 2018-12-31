@@ -131,6 +131,7 @@
       adminSection: [
         {title: "لیست اشتراک ها", icon: "inbox", to: "/admin/subscriptions"},
         {title: "لیست کوپون ها", icon: "inbox", to: "/admin/coupons"},
+        {title: "لیست پرداخت ها", icon: "inbox", to: "/admin/receipts"},
         {title: "دسته بندی تیکت ها", icon: "inbox", to: "/admin/tickets/categories"},
         {
           title: "انواع مشاوره ها" + "", icon: "inbox", to: "/admin/councils/categories"

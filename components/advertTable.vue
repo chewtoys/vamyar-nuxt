@@ -545,10 +545,10 @@
         return _.toString(items) || key;
       },
       getForBank(item) {
-        return _.get(item, 'forBank', false) ? 'خیر' : 'بله'
+        return _.get(item, 'forBank', false) ? 'بله' : 'خیر'
       },
       getForCourt(item) {
-        return _.get(item, 'forCourt', false) ? 'خیر' : 'بله'
+        return _.get(item, 'forCourt', false) ? 'بله' : 'خیر'
       },
       getType(key) {
         let list = this.$store.state.settings.coSigner.types;

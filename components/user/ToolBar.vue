@@ -14,6 +14,10 @@
     </v-toolbar-title>
     <v-spacer/>
     <v-menu :nudge-width="100" left class="right-text">
+      <v-toolbar-title>
+       <v-btn to="/user/premium" flat color="transparent"><span class="yellow--text"><v-icon
+         class="px-1">star</v-icon>اشتراک من</span></v-btn>
+      </v-toolbar-title>
       <v-toolbar-title slot="activator">
         <v-icon class="px-1 font-19 grey-text mb-2">settings</v-icon>
         <span class="font-12">{{ welcome }}</span>
@@ -39,7 +43,6 @@
   export default {
     data: ({$store}) => ({
       settings: [
-        {title: "اشتراک من", icon: "inbox", to: "/user/premium"},
         {title: "ویرایش پروفایل", icon: "build", to: "/user/profile/edit"},
         {title: "خروج", icon: "exit_to_app", to: "/user/logout"}
       ],

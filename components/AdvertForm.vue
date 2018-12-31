@@ -267,6 +267,7 @@
           title: "عنوان آگهی",
           city: "شهر",
           job: "شغل",
+          interestRate: "درصد سود",
           bank: "بانک",
           description: "متن یادداشت آگهی",
           text: "متن توضیحات آگهی",
@@ -415,13 +416,17 @@
         }
       }
 
-      // set values in default
-      if (this.isEdit) {
-        let editableFields = Helper.getTypeFields(this.formType.type, 'edit', this.isAdmin);
-        _.forEach(editableFields, (value) => {
-          //console.log({value}, value.name, value.path)
-          _.set(this, [value.name], _.get(this.data, `${value.path}`, ''));
-        })
+      try {
+        // set values in default
+        if (this.isEdit) {
+          let editableFields = Helper.getTypeFields(this.formType.type, 'edit', this.isAdmin);
+          _.forEach(editableFields, (value) => {
+            //console.log({value}, value.name, value.path)
+            _.set(this, [value.name], _.get(this, `data.${value.path}`, ''));
+          })
+        }
+      } catch (err) {
+        console.log(err)
       }
     },
     methods: {
