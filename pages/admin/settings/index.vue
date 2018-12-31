@@ -230,6 +230,25 @@
           <v-tab-item
             value="tab-4"
           >
+
+            <v-text-field
+              validate="required"
+              v-model="whatWeDoClip"
+              :error-messages="errors.collect('whatWeDoClip')"
+              box
+              label="   کلیپ چه کارهایی در وامیار انجام می شود"
+              data-vv-name="whatWeDoClip"
+              required
+            />
+            <VideoUploader/>
+
+
+            <FileUploader
+              v-model="headerBgUrl"
+              box
+              label=" بکگراند هدر"
+            />
+            <br/>
             <Crud
               v-model="onMedia"
               :structure="mediaStructure"
@@ -245,22 +264,6 @@
               v-model="whatWeDo"
               :structure="whatWeDoStructure"
               label="چه کارهایی در وامیار انجام می شود؟"
-            />
-
-            <v-text-field
-              validate="required"
-              v-model="whatWeDoClip"
-              :error-messages="errors.collect('whatWeDoClip')"
-              box
-              label="   کلیپ چه کارهایی در وامیار انجام می شود"
-              data-vv-name="whatWeDoClip"
-              required
-            />
-            <VideoUploader/>
-            <FileUploader
-              v-model="headerBgUrl"
-              box
-              label=" بکگراند هدر"
             />
 
             <v-textarea
