@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <v-card :flat="!hasBox" class="my-1">
     <v-toolbar flat color="white">
       <v-toolbar-title>{{label}}</v-toolbar-title>
 
@@ -70,7 +70,7 @@
         </td>
       </template>
     </v-data-table>
-  </div>
+  </v-card>
 </template>
 <script>
   import Helper from '~/assets/js/helper'
@@ -78,7 +78,7 @@
   import ImgUploader from '~/components/elements/FileUploader'
 
   export default {
-    props: ['value', 'label', 'structure', 'placeholder'],
+    props: ['value', 'box', 'label', 'structure', 'placeholder'],
     data: () => ({
       content: [],
       dialog: false,
@@ -87,6 +87,10 @@
       defaultItem: {}
     }),
     computed: {
+      hasBox() {
+        //console.log(this.box)
+        return !!_.get(this, 'box', false);
+      },
       headers() {
         let headers = [];
         _.forEach(this.structure, (field) => {

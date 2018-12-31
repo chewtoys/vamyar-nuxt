@@ -1,12 +1,14 @@
 <template>
   <section class="container">
-    <label>{{getLabel}}</label>
-    <br/>
-    <div class="quill-editor"
-         v-model="content"
-         v-quill:myQuillEditor="editorOption">
-    </div>
-    <videoUploader/>
+    <v-card :flat="!hasBox" class="py-1">
+      <label>{{getLabel}}</label>
+      <br/>
+      <div class="quill-editor"
+           v-model="content"
+           v-quill:myQuillEditor="editorOption">
+      </div>
+      <videoUploader/>
+    </v-card>
   </section>
 </template>
 
@@ -17,7 +19,7 @@
   const baseUrl = "https://api.vamyar.org";
 
   export default {
-    props: ['value', 'type', 'label', 'readOnly', 'placeholder'],
+    props: ['value', 'box', 'type', 'label', 'readOnly', 'placeholder'],
     data() {
       return {
         editorOption: {
@@ -70,6 +72,10 @@
       }
     },
     computed: {
+      hasBox() {
+        //console.log(this.box)
+        return !!_.get(this, 'box', false);
+      },
       getType() {
         return _.get(this, 'type', 'admin')
       },

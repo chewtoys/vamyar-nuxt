@@ -30,7 +30,7 @@
           <v-tab href="#tab-4">
             تنظیمات  صفحه ی نخست
           </v-tab>
-          <v-tab href="#tab-5">
+          <v-tab v-if="false" href="#tab-5">
             تنظیمات  کاربری
           </v-tab>
         </v-tabs>
@@ -91,6 +91,20 @@
           <v-tab-item
             value="tab-2"
           >
+
+            <v-checkbox
+              v-model="isImageAllowed"
+              box
+              label="افزودن تصویر برای آگهی ها مجاز است؟"
+            />
+            <v-text-field
+              v-model="buySubscriptionHelpLink"
+              :error-messages="errors.collect('buySubscriptionHelpLink')"
+              box
+              label="لینک آموزش خرید اشتراک"
+              data-vv-name="buySubscriptionHelpLink"
+              required
+            />
             <Editor
               validate="required"
               v-model="needSubscriptionText"
@@ -118,19 +132,6 @@
               data-vv-name="noticeBeforeCreateAdvert"
               auto-grow
             />
-            <v-text-field
-              v-model="buySubscriptionHelpLink"
-              :error-messages="errors.collect('buySubscriptionHelpLink')"
-              box
-              label="لینک آموزش خرید اشتراک"
-              data-vv-name="buySubscriptionHelpLink"
-              required
-            />
-            <v-checkbox
-              v-model="isImageAllowed"
-              box
-              label="افزودن تصویر برای آگهی ها مجاز است؟"
-            />
           </v-tab-item>
           <v-tab-item
             value="tab-3"
@@ -155,6 +156,7 @@
               auto-grow
             />
             <Crud
+              box
               v-model="contactUsTable"
               :structure="contactUsTableStructure"
               label="اطلاعات تماس در صفحه ی تماس با ما"
