@@ -26,7 +26,7 @@
         <v-flex xs12 md12 sm12 lg12>
           <form>
             <v-text-field
-              v-validate="'min:6|nullable'"
+              v-validate="'min:6'"
               v-model="password"
               :error-messages="errors.collect('password')"
               box
@@ -67,7 +67,6 @@
               v-model="address"
               :error-messages="errors.collect('address')"
               box
-              v-if="false"
               label="آدرس"
               data-vv-name="address"
               auto-grow
@@ -178,23 +177,24 @@
         };
 
         this.$axios.$put(path, data).then(res => {
-          this.$store.commit("snackbar/setSnack", _.get(error, 'response.data.error.message', "با موفقیت بروز شد."));
+          //this.$store.commit("snackbar/setSnack", _.get(res, 'response.data.error.message', "با موفقیت بروز شد."));
+          this.updateUser();
         }).catch(err => {
-          this.$store.commit("snackbar/setSnack", _.get(error, 'response.data.error.message', "مشکلی در ارسال اطلاعات پیش آمد"));
+          //this.$store.commit("snackbar/setSnack", _.get(err, 'response.data.error.message', "مشکلی در ارسال اطلاعات پیش آمد"));
         })
 
-        this.updateUser();
         this.submit_loader = false;
       },
-      async updateUser() {
-        try {
-          let {data} = await this.$axios.$get("/user/details");
+      updateUser() {
+        this.$axios.$get("/user/details").then(res => {
+          let data = _.get(res, 'data', [])
           if (_.has(data, 'details')) {
             this.$store.commit("user/updateUserInfo", data)
+            this.$router.push('/user')
           }
-        } catch (error) {
-          //console.log('AUTH ERROR', error)
-        }
+        }).catch(error => {
+          console.log(error)
+        })
       },
       submit() {
         this.submit_loader = true;

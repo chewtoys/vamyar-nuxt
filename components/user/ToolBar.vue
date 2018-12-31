@@ -7,19 +7,20 @@
     fixed
     app
   >
-    <v-toolbar-side-icon @click="toggleDrawer"></v-toolbar-side-icon>
+    <v-toolbar-side-icon class='deep-purple--text ' @click="toggleDrawer"></v-toolbar-side-icon>
     <v-toolbar-title>
-      <v-btn to="/user" flat color="transparent"><span class="red--text"><v-icon
+      <v-btn to="/user" flat color="transparent"><span class="deep-purple--text"><v-icon
         class="px-1">dashboard</v-icon>داشبورد</span></v-btn>
     </v-toolbar-title>
-    <v-spacer/>
-    <v-menu :nudge-width="100" left class="right-text">
-      <v-toolbar-title>
-       <v-btn to="/user/premium" flat color="transparent"><span class="yellow--text"><v-icon
+    <v-toolbar-title>
+       <v-btn to="/user/premium" flat color="transparent"><span class="yellow--text text--darken-4"><v-icon
          class="px-1">star</v-icon>اشتراک من</span></v-btn>
       </v-toolbar-title>
-      <v-toolbar-title slot="activator">
-        <v-icon class="px-1 font-19 grey-text mb-2">settings</v-icon>
+    <v-spacer/>
+    <v-menu :nudge-width="100" left class="right-text">
+
+      <v-toolbar-title class="deep-purple--text " slot="activator">
+        <v-icon class="px-1 font-19 deep-purple--text mb-2">settings</v-icon>
         <span class="font-12">{{ welcome }}</span>
       </v-toolbar-title>
       <v-list class="farsi">
