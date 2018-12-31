@@ -71,7 +71,7 @@
                         <div class="pa-2 mx-1 red--text">
                           <v-icon class="pb-1 pl-1 red--text">monetization_on</v-icon>
                           <span><small class="font-14">{{getTitle('amount')}}</small>
-                          <b class="left">{{ amount }} </b>
+                          <b class="left">{{ showField('amount', amount) }} </b>
                         </span>
                         </div>
                         <v-divider/>
@@ -81,7 +81,7 @@
                         <div class="pa-2 mx-1 red--text" v-if="isAllowed('maxAmount')">
                           <v-icon class="pb-1 pl-1 red--text">monetization_on</v-icon>
                           <span><small class="font-14">{{getTitle('maxAmount')}}</small>
-                          <b class="left">{{ maxAmount }} </b>
+                          <b class="left">{{ showField('maxAmount', maxAmount) }} </b>
                         </span>
                         </div>
                         <v-divider/>
@@ -91,7 +91,7 @@
                         <div class="pa-2 mx-1" v-if="isAllowed('price')">
                           <v-icon class="pb-1 pl-1">shopping_cart</v-icon>
                           <span><small class="font-14">{{getTitle('price')}}</small>
-                          <b class="left">{{ price }} </b>
+                          <b class="left">{{ showField('price', price)}} </b>
                         </span>
                         </div>
                         <v-divider/>
@@ -141,7 +141,7 @@
                         <div class="pa-2 mx-1" v-if="isAllowed('paybackTime')">
                           <v-icon class="pb-1 pl-1">keyboard_arrow_left</v-icon>
                           <span> <small class="font-14">{{getTitle('paybackTime')}}</small>
-                          <b class="left">{{ paybackTime ? paybackTime + ' ' : 'توافقی'}}</b>
+                          <b class="left">{{ showField('paybackTime', paybackTime)}}</b>
                         </span>
                         </div>
                         <v-divider/>
@@ -324,13 +324,13 @@
         return _.get(item, 'name', 0);
       },
       price() {
-        return Helper.priceFormat(_.get(this, 'item.price',));
+        return _.get(this, 'item.price',)
       },
       amount() {
-        return Helper.priceFormat(_.get(this, 'item.amount', ''));
+        return _.get(this, 'item.amount', '')
       },
       maxAmount() {
-        return Helper.priceFormat(_.get(this, 'item.maxAmount', ''));
+        return _.get(this, 'item.maxAmount', '')
       },
       job() {
         return _.get(this, 'item.job', '-');
@@ -368,6 +368,9 @@
       },
     },
     methods: {
+      showField(name, val) {
+        return Helper.computeAdvertField(name, val, this.$store)
+      },
       isAllowed(key) {
         return Helper.isFieldAllowByType(this.type.type, key)
       },
