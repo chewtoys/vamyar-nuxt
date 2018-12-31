@@ -147,9 +147,9 @@ const Helper = {
     if (name === 'title') {
       return value || ''
     } else if (name === 'jCreatedAt') {
-      return value || ''
+      return this.dateFormat(value || '')
     } else if (name === 'jUpdatedAt') {
-      return value || ''
+      return this.dateFormat(value || '')
     } else if (name === 'image') {
       return value || ''
     } else if (name === 'description') {
@@ -167,11 +167,11 @@ const Helper = {
     } else if (name === 'amount') {
       return value ? this.priceFormat(value) : 'نامشخص'
     } else if (name === 'maxAmount') {
-      return this.priceFormat(value || '')
+      return value ? this.priceFormat(value || '') : 'توافقی'
     } else if (name === 'job') {
       return value || ''
     } else if (name === 'interestRate') {
-      return value || ''
+      return value ? (val + 'درصد') : ''
     } else if (name === 'paybackTime') {
       return value ? (value + ' سال') : 'توافقی'
     } else if (name === 'bank') {
@@ -216,15 +216,13 @@ const Helper = {
   isPremiumType(type, which = 'create') {
     let list = _.get(CONSTANTS, ['PREMIUMS', which], []);
     return list.includes(type);
-  }
-  ,
+  },
   getRawHeaders(type) {
     return _.get(CONSTANTS.rawHeaders, `${type}`, [{text: 'id'}]);
   },
   getCommonHeaders() {
     return _.get(CONSTANTS, 'COMMON_FIELDS', [{text: 'id'}]);
-  }
-  ,
+  },
   //getAdminRawHeaders(type) {
   //  return _.get(CONSTANTS.adminRawHeaders, `${type}`, [{text: 'id'}]);
   //}
