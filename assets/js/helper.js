@@ -1,5 +1,7 @@
 import * as CONSTANTS from '~/assets/js/constants.js'
 
+const moment = require('moment-jalaali');
+
 const Helper = {
   nl2br(str, is_xhtml = true) {
     // http://kevin.vanzonneveld.net
@@ -195,8 +197,17 @@ const Helper = {
   },
   limitStr(text = "", limit = 30, end = " ...") {
     return text.slice(0, limit) + end
-  }
-  ,
+  },
+  dateFormat(val, inputFormat = 'jYYYY/jM/jD HH:mm:ss', outputFormat = 'jYY/jM/jD HH:mm') {
+    if (!val) return '-';
+    try {
+      let m = moment(val, inputFormat)
+      return (m.isValid()) ? m.format(outputFormat) : val;
+    } catch (err) {
+      //console.log(err, val)
+      return val;
+    }
+  },
   priceFormat(price = null) {
     price = price * 1 // convert to number;
     if (price > 0) return price.toLocaleString("fa-IR") + " ریال"

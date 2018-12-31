@@ -32,7 +32,7 @@
               </td>
               <td><b>{{ show(item, 'title', 'advert.title') }}</b></td>
             </tr>
-            <tr class="hide trrow">
+            <tr sif="item.advertableType || item.advert.advertableType" class="hide trrow">
               <td width="30%">
                 <small>نوع آگهی</small>
               </td>
@@ -79,7 +79,7 @@
                 <small>تاریخ ثبت</small>
               </td>
               <td>
-                <b>{{ item.jCreatedAt || '-' }}</b>
+                <b>{{ getCreatedDate(item.jCreatedAt || '-') }}</b>
               </td>
             </tr>
             </tbody>
@@ -118,6 +118,9 @@
       show(item, path1, path2, def = 'نامشخص') {
         return _.get(item, path1, _.get(item, path2, def));
       },
+      getCreatedDate(val) {
+        return Helper.dateFormat(val);
+      },
       settings(key) {
         return _.get(this.$store.state.settings.data, key, '')
       },
@@ -142,6 +145,7 @@
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     padding: 4px;
   }
+
   .trrow:nth-child(even) td {
     background: rgba(0, 0, 0, 0.01);
   }
