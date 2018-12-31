@@ -133,17 +133,18 @@
               :label="getTitle('interestRate')"
               data-vv-name="interestRate"
             />
-            <v-text-field
-              v-if="isAllowed('maxAmount')"
-              v-validate="'required|numeric'"
-              v-model="maxAmount"
-              :hint="maxAmountHint"
-              :error-messages="errors.collect('maxAmount')"
+            <v-combobox
+              :items="['توافقی']"
               :placeholder="getPlaceholder('maxAmount')"
+              v-if="isAllowed('maxAmount')"
+              v-validate="'required'"
+              v-model="maxAmountName"
+              :error-messages="errors.collect('maxAmount')"
               box
+              :hint="maxAmountHint"
               :label="getTitle('maxAmount')"
               data-vv-name="maxAmount"
-            />
+            ></v-combobox>
             <v-text-field
               v-if="isAllowed('job')"
               v-validate="'required'"
@@ -256,7 +257,7 @@
       priceName: null,
       type: null,
       interestRate: null,
-      maxAmount: null,
+      maxAmountName: null,
       job: null,
       bank: null,
 
@@ -271,7 +272,7 @@
           text: "متن توضیحات آگهی",
           image: "تصویر آگهی",
           amount: "مبلغ وام",
-          maxAmount: "حداکثر ",
+          maxAmount: "حداکثر سرمایه",
           price: "قیمت فروش وام",
           paybackTime: "مدت زمان بازپرداخت",
           guaranteeTypes: "نوع ضامن",
@@ -337,6 +338,14 @@
         },
         set: function (val) {
           this.priceName = val === 0 ? 'توافقی' : val;
+        }
+      },
+      maxAmount: {
+        get: function () {
+          return (this.maxAmountName === 'توافقی') ? 0 : this.maxAmountName;
+        },
+        set: function (val) {
+          this.maxAmountName = val === 0 ? 'توافقی' : val;
         }
       },
       paybackTime: {
