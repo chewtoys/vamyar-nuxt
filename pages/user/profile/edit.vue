@@ -180,7 +180,7 @@
           //this.$store.commit("snackbar/setSnack", _.get(res, 'response.data.error.message', "با موفقیت بروز شد."));
           this.updateUser();
         }).catch(err => {
-          //this.$store.commit("snackbar/setSnack", _.get(err, 'response.data.error.message', "مشکلی در ارسال اطلاعات پیش آمد"));
+          this.$store.commit("snackbar/setSnack", _.get(err, 'response.data.error.message', "مشکلی در ارسال اطلاعات پیش آمد"));
         })
 
         this.submit_loader = false;
