@@ -424,8 +424,8 @@
         if (this.search) filter = `advert.mobile=${this.search},job=${this.search},price=${this.search},maxAmount=${this.search},amount=${this.search},advert.text=${this.search},advert.advertableId=${this.search},advert.id=${this.search},advert.description=${this.search},advert.city.name=${this.search},advert.user.mobile=${this.search},advert.user.email=${this.search}`
         if (this.type.type === 'adverts' && this.search) filter = `mobile=${this.search},advertable.job=${this.search},advertable.price=${this.search},advertable.maxAmount=${this.search},advertable.amount=${this.search},title=${this.search},text=${this.search},advertableId=${this.search},id=${this.search},description=${this.search},city.name=${this.search},user.mobile=${this.search},user.email=${this.search}`
 
-        let include = 'advert.user.details,guaranteeType,advert.city,loanType';
-        if (this.type.type === 'adverts') include = 'user.details,guaranteeType,city,loanType';
+        let include = 'advert.user.details,guaranteeType,guaranteeTypes,advert.city,loanType,loanTypes';
+        if (this.type.type === 'adverts') include = 'user.details,guaranteeType,guaranteeTypes,city,loanType,loanTypes';
         let {sortBy, descending, page, rowsPerPage} = this.pagination;
         let query = {
           page,

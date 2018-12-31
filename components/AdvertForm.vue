@@ -445,6 +445,7 @@
         }
         let which = this.action;
         let slug = this.slug;
+        //console.log(which, slug, name, Helper.isFieldAllowByAlias(slug, name, which))
         return Helper.isFieldAllowByAlias(slug, name, which);
       },
       toast(msg, color = 'info') {

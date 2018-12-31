@@ -83,6 +83,7 @@ export const
     "finance-requests": {
       type: "financeRequests",
       advertType: "financeRequest",
+      alias: "finance-requests",
       title: "درخواست سرمایه گذاری"
     },
     "co-signers": {type: "coSigners", advertType: "coSigner", alias: "co-signers", title: "ضامن"},
