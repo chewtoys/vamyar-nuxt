@@ -252,15 +252,15 @@
               v-model="whatWeDoClip"
               :error-messages="errors.collect('whatWeDoClip')"
               box
-              label="آدرس فایل کلیپ"
+              label="   کلیپ چه کارهایی در وامیار انجام می شود"
               data-vv-name="whatWeDoClip"
               required
             />
-            <VideoUploader />
+            <VideoUploader/>
             <FileUploader
               v-model="headerBgUrl"
               box
-              label="آدرس بکگراند هدر"
+              label=" بکگراند هدر"
             />
 
             <v-textarea
@@ -303,7 +303,7 @@
   import Helper from '~/assets/js/helper'
   import Editor from '~/components/elements/Editor'
   import Crud from '~/components/elements/Crud'
-  import FileUploader  from '~/components/elements/FileUploader'
+  import FileUploader from '~/components/elements/FileUploader'
   import VideoUploader from '~/components/elements/videoUploader'
 
   const SAVE_PATH = '/settings'
@@ -490,6 +490,6 @@
       })
       return list
     },
-    components: {Editor, Crud,VideoUploader,FileUploader},
+    components: {Editor, Crud, VideoUploader, FileUploader},
   }
 </script>
