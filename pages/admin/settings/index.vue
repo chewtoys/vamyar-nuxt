@@ -254,14 +254,11 @@
               data-vv-name="whatWeDoClip"
               required
             />
-            <v-text-field
-              validate="required"
+            <VideoUploader />
+            <FileUploader
               v-model="headerBgUrl"
-              :error-messages="errors.collect('headerBgUrl')"
               box
               label="آدرس بکگراند هدر"
-              data-vv-name="headerBgUrl"
-              required
             />
 
             <v-textarea
@@ -304,6 +301,8 @@
   import Helper from '~/assets/js/helper'
   import Editor from '~/components/elements/Editor'
   import Crud from '~/components/elements/Crud'
+  import FileUploader  from '~/components/elements/FileUploader'
+  import VideoUploader from '~/components/elements/videoUploader'
 
   const SAVE_PATH = '/settings'
   export default {
@@ -351,7 +350,7 @@
         whyUs: [],
         footerText: '',
         contactUsSuggestionText: '',
-        buySubscriptionHelpLink:'',
+        buySubscriptionHelpLink: '',
         headerText: '',
         subHeaderText: '',
         closedSiteText: '',
@@ -393,7 +392,7 @@
             councilsHelpText: 'متن صفحه ی مشاوره ها',
             noticeOnAdvertShow: 'متن صفحه ی نمایش آگهی',
             needSubscriptionText: 'متن نمایش آگهی در صورت نداشتن اشتراک',
-            buySubscriptionHelpLink:'لینک راهنمای خرید آگهی',
+            buySubscriptionHelpLink: 'لینک راهنمای خرید آگهی',
             noticeBeforeCreateAdvert: 'پیام قبل از ایجاد آگهی',
             isImageAllowed: 'امکان ثبت تصویر در آگهی',
             aboutUsText: 'متن صفحه ی درباره ی ما',
@@ -489,6 +488,6 @@
       })
       return list
     },
-    components: {Editor, Crud},
+    components: {Editor, Crud,VideoUploader,FileUploader},
   }
 </script>
