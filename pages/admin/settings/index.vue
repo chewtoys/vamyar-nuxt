@@ -14,8 +14,6 @@
         <v-tabs
           slot="extension"
           v-model="tab"
-          right
-          fixed-tabs
           color="transparent"
         >
           <v-tab href="#tab-1">
