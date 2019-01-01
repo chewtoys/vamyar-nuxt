@@ -21,8 +21,8 @@
           <v-btn fab outline small color="warning" @click="remove">
             <v-icon>delete</v-icon>
           </v-btn>
-          <v-img :src="`${url}`" :alt="url" class="full" contain max-height="200px" />
-          <input v-model="url" type="hidden" name="url" >
+          <v-img :src="`${url}`" :alt="url" class="full" contain max-height="200px"/>
+          <input v-model="url" type="hidden" name="url">
         </div>
       </v-flex>
       <v-flex v-if="uploadPercentage < 100 && uploadPercentage > 0 " xs12>
@@ -115,7 +115,7 @@
           })
           .then((res) => {
             console.log(res, res.data.url)
-            this.url = _.replace(`${root}/${_.get(res, 'data.url', '-')}`, '//', '/')
+            this.url = `${root}${_.get(res, 'data.url', '-')}`
             this.hasFile = false
             this.file = null
             this.fileLoading = false
