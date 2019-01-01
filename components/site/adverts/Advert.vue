@@ -32,7 +32,7 @@
               </td>
               <td><b>{{ show(item, 'title', 'advert.title') }}</b></td>
             </tr>
-            <tr sif="item.advertableType || item.advert.advertableType" class="hide trrow">
+            <tr v-if="which==='adverts'" class="hide trrow">
               <td width="30%">
                 <small>نوع آگهی</small>
               </td>
@@ -102,7 +102,7 @@
         </v-btn>
         <span>بررسی شده</span>
       </v-tooltip>
-      <v-chip>{{ itemType(item) }}</v-chip>
+      <v-chip v-if="which==='adverts'">{{ itemType(item) }}</v-chip>
     </v-card-actions>
   </v-card>
 </template>
@@ -110,7 +110,7 @@
   import Helper from "~/assets/js/helper.js"
 
   export default {
-    props: ["item"],
+    props: ["item", 'which'],
     methods: {
       _has(item, path) {
         return _.has(item, path)
@@ -126,10 +126,10 @@
       },
       // get link
       getLink(_item) {
-        return Helper.getAdvertLink(_item)
+        return Helper.getAdvertLink(_item, this.which)
       },
       itemType(_item) {
-        return Helper.getAdvertType(_item)
+        return Helper.getAdvertType(_item, this.which)
       },
       limitStr(text, limit, end) {
         return Helper.limitStr(text, limit, end)

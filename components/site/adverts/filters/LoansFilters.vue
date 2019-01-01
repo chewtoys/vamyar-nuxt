@@ -41,6 +41,8 @@
             <v-select
               :items="amountList"
               v-model="filter.amount"
+              item-text="name"
+              item-value="value"
               :loading="loading.amount"
               :menu-props="{contentClass:'farsi mx-3'}"
               label="حدود قیمت"
@@ -86,7 +88,7 @@
     },
     computed: {
       getTypeOfLoan() {
-        return !!this.typeOfLoan ;
+        return !!this.typeOfLoan;
       },
       getLabel() {
         return this.label;
@@ -101,7 +103,7 @@
         });
         let arrayList = _.map(all, 'name');
         this.$store.commit('settings/setAmountArray', arrayList);
-        return arrayList;
+        return data;
       },
     },
     mounted() {
@@ -118,13 +120,19 @@
     },
     methods: {
       updateLoanType() {
-        let value = _.get(this, 'filter.loanType');
-        let list = _.get(this.$store.state, 'loanType.data', []);
-        let index = _.findIndex(list, {'name': value});
-        if (index > 0) {
-          let item = list[index];
-          let id = _.get(item, 'id', 0);
-          _.set(this, 'filter.loanTypeValue', id)
+        let value = _.get(this, 'amount', null);
+        if (_.has(value, 'min')) {
+          _.set(this, 'filter.minAmountValue', _.get(value, 'min', ''))
+          _.set(this, 'filter.maxAmountValue', _.get(value, 'max', value))
+        } else {
+          if (value === null) {
+            _.set(this, 'filter.minAmountValue', null)
+            _.set(this, 'filter.maxAmountValue', null)
+          } else {
+            _.set(this, 'filter.amountValue', 0)
+            _.set(this, 'filter.minAmountValue', null)
+            _.set(this, 'filter.maxAmountValue', null)
+          }
         }
         this.emitToParent();
       },

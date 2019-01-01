@@ -4,18 +4,18 @@
       <v-card color="white">
         <AdvertFilters :chooseType="isAdverts" label="فیلتر کنید" v-model="advertFilters"
                        @change="loadAgainCommonAdvertFilter"/>
-        <LoansFilters v-if="canShow('loans')" label="فیلتر وام " v-model="filter" vv-model="loansFilters"
+        <LoansFilters v-if="canShow('loans')" label="فیلتر وام " v-model="filter" ffmodel="loansFilters"
                       @change="loadAgainAdvertFilter"/>
         <LoanRequestsFilters v-if="canShow('loanRequests')" label="فیلتر در خواست وام " v-model="filter"
-                             vv-model="loanRequestsFilters" @change="loadAgainAdvertFilter"/>
-        <CoSignersFilters v-if="canShow('coSigners')" label="فیلتر ضامن ها" v-model="filter" vv-model="coSignersFilters"
+                             ffmodel="loanRequestsFilters" @change="loadAgainAdvertFilter"/>
+        <CoSignersFilters v-if="canShow('coSigners')" label="فیلتر ضامن ها" v-model="filter" ffmodel="coSignersFilters"
                           @change="loadAgainAdvertFilter"/>
         <CoSignerRequestsFilters v-if="canShow('coSignerRequests')" label="فیلتر درخواست ضامن"
-                                 v-model="filter" vv-model="coSignerRequestsFilters" @change="loadAgainAdvertFilter"/>
+                                 v-model="filter" ffmodel="coSignerRequestsFilters" @change="loadAgainAdvertFilter"/>
         <FinancesFilters v-if="canShow('finances')" label="فیلتر سرمایه گذاری ها" v-model="filter"
-                         vv-model="financesFilters" @change="loadAgainAdvertFilter"/>
+                         ffmodel="financesFilters" @change="loadAgainAdvertFilter"/>
         <FinanceRequestsFilters v-if="canShow('financeRequests')" label="فیلتر درخواست سرمایه گذاری "
-                                v-model="filter" vv-model="financeRequestsFilters" @change="loadAgainAdvertFilter"/>
+                                v-model="filter" ffmodel="financeRequestsFilters" @change="loadAgainAdvertFilter"/>
 
         <v-flex xs12 sm6 class="py-2">
           <v-subheader>مرتب سازی بر اساس</v-subheader>
@@ -47,7 +47,7 @@
               lg4
               xl2
             >
-              <AdvertCard :item="item"/>
+              <AdvertCard :item="item" :which="which"/>
             </v-flex>
             <v-alert :value="!!msg" type="warning">
               <span class="p-b--2">خطا: {{msg}}</span>
@@ -196,10 +196,11 @@
         this.loadAgain();
       },
       loadAgainAdvertFilter(filter) {
-        //console.log({filter});
-        let type = _.get(this, 'advertTypeName', null);
+        //console.log(1,{filter});
+        let type = _.get(this, 'advertTypeName', this.which);
         let computedFilter = Helper.getComputedFilter(filter, type);
         _.set(this, 'computedFilters', computedFilter);
+        console.log(computedFilter)
         this.loadAgain();
       },
       // reload as filter changed
@@ -208,24 +209,44 @@
         this.loading = true
         this.items = []
         let method = `/site/${this.which}`
-        let include = 'advertable,city,user.details,loanType,guaranteeType';
-        //console.log(1, this.commonComputedFilters, this.computedFilters);
+        let include = ''
+        if (this.isAdverts) {
+          include = 'advertable,city,user.details,loanType,guaranteeType';
+        } else {
+          include = 'advert,city,user.details,loanTypes,guaranteeTypes';
+        }
+        //console.log(1, this.commonComputedFilters, 2, this.computedFilters);
+
         let filterArray = [];
-        _.forEach(this.commonComputedFilters, function (value, key) {
-          if (value !== null && value !== '' && value !== 'null') {
-            filterArray.push(`${key}=${value}`)
-            console.log(`${key}=${value}`)
-          }
-        })
-        _.forEach(this.computedFilters, function (value, key) {
-          if (value !== null && value !== '' && value !== 'null') {
-            filterArray.push(`advertable.${key}=${value}`)
-            console.log(`advertable.${key}=${value}`, key, value)
-          }
-        })
+        if (this.isAdverts) {
+          _.forEach(this.commonComputedFilters, function (value, key) {
+            if (value !== null && value !== '' && value !== 'null') {
+              filterArray.push(`${key}=${value}`)
+              //console.log(`${key}=${value}`)
+            }
+          })
+          _.forEach(this.computedFilters, function (value, key) {
+            if (value !== null && value !== '' && value !== 'null') {
+              filterArray.push(`advertable.${key}=${value}`)
+              //console.log(`advertable.${key}=${value}`, key, value)
+            }
+          })
+        } else {
+          _.forEach(this.computedFilters, function (value, key) {
+            if (value !== null && value !== '' && value !== 'null') {
+              filterArray.push(`${key}=${value}`)
+              //console.log(`${key}=${value}`, key, value)
+            }
+          })
+        }
         let must = null;
-        if (this.advertTypeName) must = `advertableType=${_.get(Helper.getAdvertTypeByType(this.advertTypeName), 'advertType', this.advertTypeName.slice(0, -1))}`
-        let filter = _.join(filterArray, ',').replace('=<', '<').replace('=>', '>');
+        if (this.isAdverts && this.advertTypeName) {
+          must = `advertableType=${_.get(Helper.getAdvertTypeByType(this.advertTypeName), 'advertType', this.advertTypeName.slice(0, -1))}`
+        } else {
+          must = ``
+        }
+
+        let filter = _.join(filterArray, ',').replace('<=', '<').replace('>=', '>');
         let orederBy = this.sort;
         let query = {
           orederBy,

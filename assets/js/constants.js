@@ -4,7 +4,7 @@ export const
     create: ['coSignerRequests', 'loanRequests', 'financeRequests'],
     show: ['coSigners', 'loans', 'finances'],
   },
-  COMMON_FIELDS = ['title', 'city', 'text', 'desc', 'advertType', 'verified', 'tradeStatus', 'mobile', 'instant', 'description'],
+  COMMON_FIELDS = ['title', 'city', 'text', 'transferable', 'ladderable', 'desc', 'advertType', 'verified', 'tradeStatus', 'mobile', 'instant', 'description'],
   rawHeaders = {
     adverts: [
       {text: "عنوان", align: "right", value: 'advert.title'},
@@ -12,6 +12,7 @@ export const
       {text: "نوع آگهی", value: 'advertType', align: "right"},
       {text: "فوری بودن", value: 'instant', align: "left", width: '140px'},
       {text: "وضعیت", value: 'tradeStatus', align: "left", width: '140px'},
+      {text: "نردبان", value: 'ladderable', align: "left", width: '140px'},
       {text: "تایید شده", value: 'verified', align: "left", width: '140px'},
       {text: "عملیات", align: "left", value: 'loanTypeId', width: '140px', sortable: false}
     ], loans: [
@@ -20,6 +21,7 @@ export const
       {text: "مبلغ وام", value: "amount", align: "left"},
       {text: "فوری بودن", value: 'instant', align: "left", width: '140px'},
       {text: "وضعیت", value: 'tradeStatus', align: "left", width: '140px'},
+      {text: "نردبان", value: 'ladderable', align: "left", width: '140px'},
       {text: "تایید شده", value: 'verified', align: "left", width: '140px'},
       {text: "عملیات", align: "left", value: 'loanTypeId', width: '140px', sortable: false}
     ],
@@ -28,6 +30,7 @@ export const
       {text: "مبلغ وام", value: "amount", align: "left"},
       {text: "فوری بودن", value: 'instant', align: "left", width: '140px'},
       {text: "وضعیت", value: 'tradeStatus', align: "left", width: '140px'},
+      {text: "نردبان", value: 'ladderable', align: "left", width: '140px'},
       {text: "تایید شده", value: 'verified', align: "left", width: '140px'},
       {text: "عملیات", sortable: false, align: "left"}
     ],
@@ -36,6 +39,7 @@ export const
       {text: "حداکثر سرمایه", value: "maxAmount", align: "left"},
       {text: "فوری بودن", value: 'instant', align: "left", width: '140px'},
       {text: "وضعیت", value: 'tradeStatus', align: "left", width: '140px'},
+      {text: "نردبان", value: 'ladderable', align: "left", width: '140px'},
       {text: "تایید شده", value: 'verified', align: "left", width: '140px'},
       {text: "عملیات", align: "left", value: 'loanTypeId', width: '140px', sortable: false}
     ],
@@ -45,6 +49,7 @@ export const
       {text: "شغل", align: "right", value: 'job'},
       {text: "فوری بودن", value: 'instant', align: "left", width: '140px'},
       {text: "وضعیت", value: 'tradeStatus', align: "left", width: '140px'},
+      {text: "نردبان", value: 'ladderable', align: "left", width: '140px'},
       {text: "تایید شده", value: 'verified', align: "left", width: '140px'},
       {text: "عملیات", align: "left", value: 'loanTypeId', width: '140px', sortable: false}
     ],
@@ -55,6 +60,7 @@ export const
       {text: "نوع ضامن", value: "guaranteeTypes", align: "left"},
       {text: "فوری بودن", value: 'instant', align: "left", width: '140px'},
       {text: "وضعیت", value: 'tradeStatus', align: "left", width: '140px'},
+      {text: "نردبان", value: 'ladderable', align: "left", width: '140px'},
       {text: "تایید شده", value: 'verified', align: "left", width: '140px'},
       {text: "عملیات", align: "left", value: 'loanTypeId', width: '140px', sortable: false}
     ],
@@ -67,6 +73,7 @@ export const
       {text: "بانک عامل", align: "right", value: 'bank'},
       {text: "فوری بودن", value: 'instant', align: "left", width: '140px'},
       {text: "وضعیت", value: 'tradeStatus', align: "left", width: '140px'},
+      {text: "نردبان", value: 'ladderable', align: "left", width: '140px'},
       {text: "تایید شده", value: 'verified', align: "left", width: '140px'},
       {text: "عملیات", align: "left", value: 'loanTypeId', width: '140px', sortable: false}
     ],
@@ -111,7 +118,6 @@ export const
       type: true
     }, coSignerRequests: {
       guaranteeTypes: true,
-
     }, finances: {
       maxAmount: [100000, 10000000, 1000000000]
     }, financeRequests: {
@@ -127,6 +133,9 @@ export const
         }, {
           name: 'city',
           title: 'شهر'
+        }, {
+          name: 'transferable',
+          title: 'قابل انتقال'
         }, {
           name: 'text',
           title: 'توضیح آگهی'
@@ -166,6 +175,9 @@ export const
           name: 'city',
           title: 'شهر',
           path: 'advert.cityId'
+        }, {
+          name: 'transferable',
+          title: 'قابل انتقال'
         }, {
           name: 'text',
           title: 'توضیح آگهی',
@@ -215,6 +227,9 @@ export const
           name: 'city',
           title: 'شهر'
         }, {
+          name: 'transferable',
+          title: 'قابل انتقال'
+        }, {
           name: 'text',
           title: 'توضیح آگهی'
         }, {
@@ -246,6 +261,10 @@ export const
           name: 'city',
           title: 'شهر',
           path: 'advert.cityId'
+        }, {
+          name: 'transferable',
+          title: 'قابل انتقال',
+          path: "advert.transferable"
         }, {
           name: 'text',
           title: 'توضیح آگهی',
@@ -285,6 +304,9 @@ export const
           name: 'city',
           title: 'شهر'
         }, {
+          name: 'transferable',
+          title: 'قابل انتقال',
+        }, {
           name: 'text',
           title: 'توضیح آگهی'
         }, {
@@ -308,6 +330,10 @@ export const
           name: 'city',
           title: 'شهر',
           path: 'advert.cityId'
+        }, {
+          name: 'transferable',
+          title: 'قابل انتقال',
+          path: "advert.transferable"
         }, {
           name: 'text',
           title: 'توضیح آگهی',
@@ -337,6 +363,9 @@ export const
           name: 'city',
           title: 'شهر'
         }, {
+          name: 'transferable',
+          title: 'قابل انتقال'
+        }, {
           name: 'text',
           title: 'توضیح آگهی'
         }, {
@@ -363,6 +392,10 @@ export const
           name: 'city',
           title: 'شهر',
           path: 'advert.cityId'
+        }, {
+          name: 'transferable',
+          title: 'قابل انتقال',
+          path: "advert.transferable"
         }, {
           name: 'text',
           title: 'توضیح آگهی',
@@ -396,6 +429,9 @@ export const
           name: 'city',
           title: 'شهر'
         }, {
+          name: 'transferable',
+          title: 'قابل انتقال',
+        }, {
           name: 'text',
           title: 'توضیح آگهی'
         }, {
@@ -424,6 +460,10 @@ export const
           name: 'city',
           title: 'شهر',
           path: 'advert.cityId'
+        }, {
+          name: 'transferable',
+          title: 'قابل انتقال',
+          path: "advert.transferable"
         }, {
           name: 'text',
           title: 'توضیح آگهی',
@@ -459,6 +499,9 @@ export const
         }, {
           name: 'city',
           title: 'شهر'
+        }, {
+          name: 'transferable',
+          title: 'قابل انتقال',
         }, {
           name: 'text',
           title: 'توضیح آگهی'
@@ -497,6 +540,10 @@ export const
           name: 'city',
           title: 'شهر',
           path: 'advert.cityId'
+        }, {
+          name: 'transferable',
+          title: 'قابل انتقال',
+          path: "advert.transferable"
         }, {
           name: 'text',
           title: 'توضیح آگهی',

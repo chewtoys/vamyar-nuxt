@@ -21,32 +21,17 @@
             />
           </div>
         </v-flex>
-        <v-flex xs12 sm3 class="pa-1">
-          <div>
-            <v-select
-              :items="['همه','فقط فوری']"
-              v-model="filter.instant"
-              :loading="loading.instant"
-              :menu-props="{contentClass:'farsi mx-3'}"
-              label="فوری"
-              light
-              flat
-              clearable
-              hide-details
-              solo-inverted
-              append-icon="list"
-              @change="updateInstant"
-            />
-          </div>
-        </v-flex>
-        <v-flex xs12 sm3 class="pa-1">
+
+        <v-flex xs12 sm3 class="pa-1 pt-2">
           <div>
             <v-autocomplete
               :menu-props="{contentClass:'farsi mx-3'}"
               :loading="loading.city"
               :items="city_items"
+              item-text="name"
+              item-value="id"
               :search-input.sync="city_search"
-              v-model="filter.city"
+              v-model="filter.cityIdValue"
               append-icon="location_on"
               clearable
               light
@@ -60,7 +45,7 @@
             />
           </div>
         </v-flex>
-        <v-flex xs12 sm3 class="pr-1 pt-1 pb-1 pl-0">
+        <v-flex xs12 sm3 class="pr-1 ">
           <div>
             <v-text-field
               v-model="filter.titleValue"
@@ -72,6 +57,35 @@
               flat
               clearable
               @change="emitToParent"
+            />
+          </div>
+        </v-flex>
+        <v-flex xs12 sm3 class="pa-1">
+          <div>
+            <v-checkbox
+              v-model="filter.instant"
+              :loading="loading.instant"
+              label="فقط فوری ها"
+              light
+              flat
+              hide-details
+              solo-inverted
+              @change="updateInstant"
+            />
+          </div>
+        </v-flex>
+        <v-flex xs12 sm3 class="pa-1 pt-1 pb-1 pl-0">
+          <div>
+            <v-checkbox
+              v-model="filter.transferable"
+              :loading="loading.value"
+              label="تمام شهرها"
+              light
+              flat
+              clearable
+              hide-details
+              solo-inverted
+              @change="updateTransferable"
             />
           </div>
         </v-flex>
@@ -92,16 +106,18 @@
           advertType: false,
           title: false,
           instant: false,
+          transferable: false,
           city: true,
         },
         filter: {
           advertType: null,
           advertTypeName: null,
           advertTypeValue: null,
-          city: null,
           cityIdValue: null,
           instant: null,
           instantValue: null,
+          transferableValue: null,
+          transferable: null,
           titleValue: null,
         },
         city_search: null,
@@ -126,7 +142,7 @@
 
       },
       city_states() {
-        return _.get(this.$store.state, 'city.arrayList')
+        return _.get(this.$store.state, 'city.data')
       },
     },
     watch: {
@@ -159,28 +175,23 @@
       },
       updateInstant() {
         if (_.get(this, 'filter.instant', false)) {
-          if (_.get(this, 'filter.instant', null) === 'فقط فوری') {
-            _.set(this.filter, 'instantValue', 1);
-          }
-          else {
-            _.set(this.filter, 'instantValue', null);
-          }
+          _.set(this.filter, 'instantValue', 1);
+        }
+        else {
+          _.set(this.filter, 'instantValue', null);
+        }
+        this.emitToParent();
+      },
+      updateTransferable() {
+        if (_.get(this, 'filter.transferable', false)) {
+          _.set(this.filter, 'transferableValue', 1);
+        } else {
+          _.set(this.filter, 'transferableValue', null);
         }
         this.emitToParent();
       },
       updateCity() {
-        if (_.get(this, 'filter.city', false)) {
-          let city = _.get(this, 'filter.city', false);
-          if (city) {
-            let list = _.get(this.$store.state, 'city.data', []);
-            let index = _.findIndex(list, {'name': city});
-            if (index > 0) {
-              let item = list[index];
-              let id = _.get(item, 'id', null);
-              _.set(this.filter, 'cityIdValue', id);
-            }
-          }
-        }
+        _.set(this.filter, 'cityIdValue', id);
         this.emitToParent();
       },
       emitToParent() {

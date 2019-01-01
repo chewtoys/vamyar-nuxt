@@ -39,6 +39,8 @@
           <div>
             <v-select
               :items="amountList"
+              item-text="name"
+              item-value="value"
               v-model="amount"
               :loading="loading.amount"
               :menu-props="{contentClass:'farsi mx-3'}"
@@ -70,16 +72,16 @@
         amount: null,
         loading: {
           paybackTime: false,
-          minAmount: false,
-          maxAmount: false,
+          minAmountValue: false,
+          maxAmountValue: false,
           instant: false,
           loanTypeId: false,
         },
         filter: {
           paybackTime: null,
           amount: null,
-          minAmount: null,
-          maxAmount: null,
+          minAmountValue: null,
+          maxAmountValue: null,
           loanTypeId: null,
           instant: null,
           title: null,
@@ -126,7 +128,7 @@
         });
         let arrayList = _.map(all, 'name');
         this.$store.commit('settings/setAmountArray', arrayList);
-        return arrayList;
+        return data;
       },
     },
     mounted() {
@@ -146,18 +148,25 @@
         return this.range_labels[val]
       },
       updateAmount() {
-        let value = _.get(this, 'filter.amount');
-        let list = _.get(this.$store.state, 'settings.adverts.filters.amount', []);
-        let index = _.findIndex(list, {'name': value});
-        let amount = null;
-        if (index > 0) {
-          let item = list[index];
-          amount = _.get(item, 'value', null);
+        let value = _.get(this, 'amount', null);
+        if (_.has(value, 'min')) {
+          _.set(this, 'filter.minAmountValue', _.get(value, 'min', ''))
+          _.set(this, 'filter.maxAmountValue', _.get(value, 'max', value))
+        } else {
+          if (value === null) {
+            _.set(this, 'filter.minAmountValue', null)
+            _.set(this, 'filter.maxAmountValue', null)
+          } else {
+            _.set(this, 'filter.amountValue', 0)
+            _.set(this, 'filter.minAmountValue', null)
+            _.set(this, 'filter.maxAmountValue', null)
+          }
         }
-        _.set(this, 'filter.amountValue', amount)
         this.emitToParent();
       },
       emitToParent() {
+
+        this.$emit("change", this.filter);
         return this.$emit("input", this.filter);
       },
       // select the proper city

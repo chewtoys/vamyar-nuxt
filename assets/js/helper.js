@@ -83,10 +83,10 @@ const Helper = {
     }
   }
   ,
-  getAdvertLink: function (item) {
+  getAdvertLink: function (item, whichType = null) {
     let types = CONSTANTS.advertTypes
     let advertType = _.get(item, 'advertableType', _.get(item, 'advert.advertableType', ''))
-    let type = _.find(types, {'advertType': advertType})
+    let type = whichType || _.find(types, {'advertType': advertType})
     if (type && type.alias) {
       return "/categories/" + type.alias + "/show/" + _.get(item, 'advertable.id', _.get(item, 'id', 0))
     } else {
@@ -94,10 +94,12 @@ const Helper = {
     }
   }
   ,
-  getAdvertType: function (item) {
+  getAdvertType: function (item, whichType = null, getType = false) {
     let types = CONSTANTS.advertTypes
+    if (whichType) return _.get(_.find(types, {'type': whichType}), 'title', whichType || 'نامشخص');
     let advertType = _.get(item, 'advertableType', _.get(item, 'advert.advertableType', ''));
     //console.log({item,advertType})
+    if (getType) return _.find(types, {'advertType': advertType})
     return _.get(_.find(types, {'advertType': advertType}), 'title', advertType || 'نامشخص');
   },
   getTypeByAdvertType: function (advertType) {
@@ -246,36 +248,40 @@ const Helper = {
   getComputedFilter(obj, type = null) {
     let filter = {}, query = {};
     let maximum = {
-      'amountValue': true,
+      'maxAmountValue': true,
       'paybackTimeValue': true,
-      'maxAmountValue': true
     };
-    let minimum = {};
+    let minimum = {
+      'minAmountValue': true,
+    };
     if (type === null) {
       // common filters
 
       filter = _.pick(obj, ['cityIdValue', 'instantValue', 'titleValue']);
       _.get(filter, 'instantValue', null) === 1 ? _.set(filter, 'instantValue', 'true') : _.set(filter, 'instantValue', '');
     } else if (type === 'loans') {
-      filter = _.pick(obj, ['loanTypeValue', 'amountValue', 'paybackTimeValue']);
+      filter = _.pick(obj, ['loanTypeValue', 'amountValue', 'maxAmountValue', 'minAmountValue', 'paybackTimeValue']);
     } else if (type === 'loanRequests') {
-      filter = _.pick(obj, ['loanTypeValue', 'amountValue', 'paybackTimeValue']);
+      filter = _.pick(obj, ['loanTypeValue', 'amountValue', 'maxAmountValue', 'minAmountValue', 'paybackTimeValue']);
     } else if (type === 'finances') {
       filter = _.pick(obj, ['maxAmountValue']);
     } else if (type === 'financeRequests') {
-      filter = _.pick(obj, ['jobValue', 'maxAmount', 'maxAmountValue']);
+      filter = _.pick(obj, ['jobValue', 'maxAmountValue']);
     } else if (type === 'coSigners') {
       filter = _.pick(obj, ['guaranteeTypeValue']);
     } else if (type === 'coSignerRequests') {
       filter = _.pick(obj, ['guaranteeTypes', 'typeValue']);
     }
-
     let prefix = '';
     _.forEach(filter, (val, key) => {
-      prefix = _.has(maximum, key) ? '<' : (_.has(minimum, key) ? '>' : '');
-      if (val) _.set(query, key.replace('Value', ''), prefix + val)
+      if (val !== null || _.isNumber(val)) {
+        prefix = _.has(maximum, key) ? '<' : (_.has(minimum, key) ? '>' : '');
+        if (type !== 'finances' && type !== 'financeRequests') {
+          key = key.replace('maxAmount', 'amount').replace('minAmount', 'amount')
+        }
+        _.set(query, key.replace('Value', '') + prefix, val)
+      }
     })
-
     //console.log({obj, filter, query});
     return query;
   }

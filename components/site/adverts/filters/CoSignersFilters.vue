@@ -112,6 +112,7 @@
     },
     methods: {
       emitToParent() {
+        this.$emit("change", this.filter);
         return this.$emit("input", this.filter);
       },
 

@@ -61,8 +61,8 @@
             >
             </v-autocomplete>
             <v-checkbox
-              v-if="isAllowed('city')"
-              v-model="allCities"
+              v-if="isAllowed('transferable')"
+              v-model="transferable"
               box
               label="قابل انتقال به سایر شهر ها می باشد."
             />
@@ -242,7 +242,7 @@
       // advert
       title: null,
       city: null,
-      allCities: false,
+      transferable: false,
       description: "",
       text: "",
       mobile: '',
@@ -495,13 +495,7 @@
         return _.get(this.$store.state.settings.data, key, '')
       },
     },
-    watch: {
-      allCities(val) {
-        if (val) {
-          return _.set(this, 'city', 3000);
-        }
-      }
-    },
+    watch: {},
     $_veeValidate: {
       validator: "new"
     }

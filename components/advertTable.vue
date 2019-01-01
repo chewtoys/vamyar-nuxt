@@ -60,6 +60,7 @@
             <td class="text-xs-right">
               <v-menu offset-y>
                 <v-btn
+                  :disabled="!isAdmin && instant(getProperty(props, 'item'),true)"
                   slot="activator"
                   color="primary"
                   outline
@@ -110,6 +111,32 @@
                     @click="changeTradeStatus(getProperty(props, 'item.id'),2)"
                   >
                     <v-list-tile-title>بسته شده</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+              </v-menu>
+            </td>
+            <td class="text-xs-right">
+              <v-menu offset-y>
+                <v-btn
+                  :disabled="!isAdmin && ladderable(getProperty(props, 'item'),true)"
+                  slot="activator"
+                  color="primary"
+                  outline
+                >
+                  {{ ladderable(getProperty(props, 'item')) }}
+                </v-btn>
+                <v-list>
+                  <v-list-tile
+                    @click="changeLadderable(getProperty(props, 'item.id'),1,props.item,getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', ''))"
+                  >
+                    <v-list-tile-title>نردبان کردن</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+                <v-list>
+                  <v-list-tile
+                    @click="changeLadderable(getProperty(props, 'item.id'),0,props.item,getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', ''))"
+                  >
+                    <v-list-tile-title>برداشتن نردبان</v-list-tile-title>
                   </v-list-tile>
                 </v-list>
               </v-menu>
@@ -276,6 +303,32 @@
                     @click="changeTradeStatus(getProperty(props, 'item.advert.id'),2,getProperty(props, 'item.id'))"
                   >
                     <v-list-tile-title>بسته شده</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+              </v-menu>
+            </td>
+
+            <td class="text-xs-right">
+              <v-menu offset-y>
+                <v-btn
+                  slot="activator"
+                  color="primary"
+                  outline
+                >
+                  {{ ladderable(getProperty(props, 'item')) }}
+                </v-btn>
+                <v-list>
+                  <v-list-tile
+                    @click="changeLadderable(getProperty(props, 'item.advert.id'),1,props.item,getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', ''))"
+                  >
+                    <v-list-tile-title>نردبان</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+                <v-list>
+                  <v-list-tile
+                    @click="changeLadderable(getProperty(props, 'item.advert.id'),0,props.item,getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', ''))"
+                  >
+                    <v-list-tile-title>برداشتن نردبان</v-list-tile-title>
                   </v-list-tile>
                 </v-list>
               </v-menu>
@@ -481,14 +534,22 @@
         let list = this.$store.state.settings.adverts.tradeStatusList;
         return list[_.get(item, 'tradeStatus', _.get(item, 'advert.tradeStatus'), 0)];
       },
-      instant(item) {
-        return !!_.get(item, 'advert.instant', _.get(item, 'instant', false)) ? 'فوری' : 'غیر فوری'
+      instant(item, getBoolean = false) {
+        return (getBoolean) ? ( !!_.get(item, 'advert.instant', _.get(item, 'instant', false))) :
+          ( !!_.get(item, 'advert.instant', _.get(item, 'instant', false)) ? 'فوری' : 'غیر فوری')
+      },
+      ladderable(item, getBoolean = false) {
+        return (getBoolean) ? ( !!_.get(item, 'advert.ladderable', _.get(item, 'ladderable', false))) :
+          ( !!_.get(item, 'advert.ladderable', _.get(item, 'ladderable', false)) ? 'فعال' : 'غیر فعال')
       },
       changeInstant(id, val = 1, item = [], type = '') {
         if (this.isAdmin) {
           this.tableLoader = true;
-          let method = val === 1 ? `/${this.panel}/adverts/${id}/instantIt` : `/${this.panel}/adverts/${id}/unInstantIt`;
-          this.$axios.$put(method).then((res) => {
+          let itemType = Helper.getAdvertType(item, null, true);
+          let advertId = _.get(item, 'advertableId', _.get(item, 'id', id))
+          let data = {instant: val === 1  ? 1 : 0}
+          let method = `/${this.panel}/${itemType.type}/${advertId}`;
+          this.$axios.$put(method, {data}).then((res) => {
             if (this.type.type === 'adverts') {
               let index = _.findIndex(this.list, {id: id});
             } else {
@@ -500,7 +561,7 @@
           }).catch(err => {
             this.tableLoader = false;
           })
-        } else if (confirm('آیا مطمئن هستید می خواهید این آگهی را فوری کنید؟')) {
+        } else if (val === 1 && confirm('آیا مطمئن هستید می خواهید این آگهی را فوری کنید؟')) {
           let method = val === 1 ? `/${this.panel}/adverts/${id}/instantPaymentLink` : `/${this.panel}/adverts/${id}/unInstantIt`;
           let query = {
             port: 'zarinpal'
@@ -511,6 +572,42 @@
           }).catch(err => {
             this.tableLoader = false;
           })
+        } else if (val === 2) {
+          alert('امکان غیرفوری کردن وجود ندارد. در صورتی که مصمم هستید با پشتیبان تماس بگیرید.');
+        }
+      },
+      changeLadderable(id, val = 1, item = [], type = '') {
+        if (this.isAdmin) {
+          this.tableLoader = true;
+          let itemType = Helper.getAdvertType(item, null, true);
+          let advertId = _.get(item, 'advertableId', _.get(item, 'id', id))
+          let data = {ladderable: val === 1 ? 1 : 0 }
+          let method = `/${this.panel}/${itemType.type}/${advertId}`;
+          this.$axios.$put(method, {data}).then((res) => {
+            if (this.type.type === 'adverts') {
+              let index = _.findIndex(this.list, {id: id});
+            } else {
+              let index = _.findIndex(this.list, {advertableId: id});
+            }
+            this.list[index].instant = val;
+            this.tableLoader = false;
+            item.instant = val;
+          }).catch(err => {
+            this.tableLoader = false;
+          })
+        } else if (val === 1 && confirm('آیا مطمئن هستید می خواهید این آگهی را نردبان کنید؟')) {
+          let method = val === 1 ? `/${this.panel}/adverts/${id}/ladderPaymentLink` : `/${this.panel}/adverts/${id}/unLadderIt`;
+          let query = {
+            port: 'zarinpal'
+          }
+          this.$axios.$put(method, query).then((res) => {
+            let link = _.get(res, 'data.paymentLink', '#')
+            window.location = link
+          }).catch(err => {
+            this.tableLoader = false;
+          })
+        } else if (val === 2) {
+          alert('امکان برداشتن نردبان وجود ندارد. در صورتی که مصمم هستید با پشتیبان تماس بگیرید.');
         }
       },
       changeVerified(id, val, item, which = null) {

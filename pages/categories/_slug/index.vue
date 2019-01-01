@@ -25,8 +25,7 @@
         slug: '',
         type: null
       }
-    }
-    ,
+    },
     // loading the first items from server
     async asyncData({app, store, params, error, $axios}) {
       let slug = params.slug;
@@ -34,7 +33,7 @@
       let method = `/site/${type.type}`
       let cursor
       cursor = 0
-      let include = 'advertable,city,user.details,loanType,guaranteeType';
+      let include = 'advert,city,user.details,loanTypes,guaranteeTypes';
       let query = {
         number,
         include
