@@ -575,7 +575,7 @@
           let data = {instant: val === 1}
           let method = `/${this.panel}/${itemType.type}/${advertId}`;
 
-          console.log(1, id, val, this.list, item, advertId, itemType)
+          //console.log(1, id, val, this.list, item, advertId, itemType)
 
           this.$axios.$put(method, data).then((res) => {
 
