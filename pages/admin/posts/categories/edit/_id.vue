@@ -200,7 +200,7 @@
         let data = {
           name: this.name,
           parent: this.parent,
-          //description: this.description,
+          description: this.description,
           slug: this.slug,
           image: this.image,
         }
