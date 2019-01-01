@@ -94,21 +94,21 @@
                 </v-btn>
                 <v-list>
                   <v-list-tile
-                    @click="changeTradeStatus(getProperty(props, 'item.id'),0)"
+                    @click="changeTradeStatus(getProperty(props, 'item.id'),getProperty(props, 'item'),0)"
                   >
                     <v-list-tile-title>باز</v-list-tile-title>
                   </v-list-tile>
                 </v-list>
                 <v-list>
                   <v-list-tile
-                    @click="changeTradeStatus(getProperty(props, 'item.id'),1)"
+                    @click="changeTradeStatus(getProperty(props, 'item.id'),getProperty(props, 'item'),1)"
                   >
                     <v-list-tile-title>در حال معامله</v-list-tile-title>
                   </v-list-tile>
                 </v-list>
                 <v-list>
                   <v-list-tile
-                    @click="changeTradeStatus(getProperty(props, 'item.id'),2)"
+                    @click="changeTradeStatus(getProperty(props, 'item.id'),getProperty(props, 'item'),2)"
                   >
                     <v-list-tile-title>بسته شده</v-list-tile-title>
                   </v-list-tile>
@@ -286,21 +286,21 @@
                 </v-btn>
                 <v-list>
                   <v-list-tile
-                    @click="changeTradeStatus(getProperty(props, 'item.advert.id'),0,getProperty(props, 'item.id'))"
+                    @click="changeTradeStatus(getProperty(props, 'item.advert.id'),getProperty(props, 'item'),0,getProperty(props, 'item.id'))"
                   >
                     <v-list-tile-title>باز</v-list-tile-title>
                   </v-list-tile>
                 </v-list>
                 <v-list>
                   <v-list-tile
-                    @click="changeTradeStatus(getProperty(props, 'item.advert.id'),1,getProperty(props, 'item.id'))"
+                    @click="changeTradeStatus(getProperty(props, 'item.advert.id'),getProperty(props, 'item'),1,getProperty(props, 'item.id'))"
                   >
                     <v-list-tile-title>در حال معامله</v-list-tile-title>
                   </v-list-tile>
                 </v-list>
                 <v-list>
                   <v-list-tile
-                    @click="changeTradeStatus(getProperty(props, 'item.advert.id'),2,getProperty(props, 'item.id'))"
+                    @click="changeTradeStatus(getProperty(props, 'item.advert.id'),getProperty(props, 'item'),2,getProperty(props, 'item.id'))"
                   >
                     <v-list-tile-title>بسته شده</v-list-tile-title>
                   </v-list-tile>
@@ -417,6 +417,9 @@
       tableLoader: false,
     }),
     computed: {
+      isAdverts() {
+        return this.type.type === 'adverts'
+      },
       panel() {
         return this.which === 'admin' ? 'admin' : 'user';
       },
@@ -466,6 +469,7 @@
       }
     },
     methods: {
+
       getAdvertType(advertType) {
         return Helper.getTypeByAdvertType(advertType);
       },
@@ -504,7 +508,7 @@
           this.tableLoader = false;
         });
       },
-      changeTradeStatus(id, type, itemId = null) {
+      changeTradeStatus(id,item, type, itemId = null) {
         //console.log(id, type, itemId)
         if (this.isAdmin) {
           this.tableLoader = true;
@@ -513,14 +517,15 @@
           let data = {tradeStatus: val === 1 ? 1 : 0}
           let method = `/${this.panel}/${itemType.type}/${advertId}`;
           this.$axios.$put(method, data).then((res) => {
-            if (this.type.type === 'adverts') {
-              let index = _.findIndex(this.list, {id: id});
+            let index = 0;
+            if (this.isAdverts) {
+              index = _.findIndex(this.list, {id: id});
             } else {
-              let index = _.findIndex(this.list, {advertableId: id});
+              index = _.findIndex(this.list, {id: advertId});
             }
-            this.list[index].instant = val;
+            let path = this.isAdverts ? 'tradeStatus' : 'advert.tradeStatus'
+            _.set(this.list[index], path, val);
             this.tableLoader = false;
-            item.tradeStatus = val;
           }).catch(err => {
             this.tableLoader = false;
           })
@@ -567,20 +572,27 @@
           this.tableLoader = true;
           let itemType = Helper.getAdvertType(item, null, true);
           let advertId = _.get(item, 'advertableId', _.get(item, 'id', id))
-          let data = {instant: val === 1 ? 1 : 0}
+          let data = {instant: val === 1}
           let method = `/${this.panel}/${itemType.type}/${advertId}`;
+
+          console.log(1, id, val, this.list, item, advertId, itemType)
+
           this.$axios.$put(method, data).then((res) => {
-            if (this.type.type === 'adverts') {
-              let index = _.findIndex(this.list, {id: id});
+
+            let index = 0;
+            if (this.isAdverts) {
+              index = _.findIndex(this.list, {id: id});
             } else {
-              let index = _.findIndex(this.list, {advertableId: id});
+              index = _.findIndex(this.list, {id: advertId});
             }
-            this.list[index].instant = val;
+            let path = this.isAdverts ? 'instant' : 'advert.instant'
+            _.set(this.list[index], path, val);
+
             this.tableLoader = false;
-            item.instant = val;
           }).catch(err => {
             this.tableLoader = false;
           })
+
         } else if (val === 1 && confirm('آیا مطمئن هستید می خواهید این آگهی را فوری کنید؟')) {
           let method = val === 1 ? `/${this.panel}/adverts/${id}/instantPaymentLink` : `/${this.panel}/adverts/${id}/unInstantIt`;
           let query = {
@@ -604,14 +616,17 @@
           let data = {ladderable: val === 1 ? 1 : 0}
           let method = `/${this.panel}/${itemType.type}/${advertId}`;
           this.$axios.$put(method, data).then((res) => {
-            if (this.type.type === 'adverts') {
-              let index = _.findIndex(this.list, {id: id});
+
+            let index = 0;
+            if (this.isAdverts) {
+              index = _.findIndex(this.list, {id: id});
             } else {
-              let index = _.findIndex(this.list, {advertableId: id});
+              index = _.findIndex(this.list, {id: advertId});
             }
-            this.list[index].instant = val;
+
+            let path = this.isAdverts ? 'ladderable' : 'advert.ladderable'
+            _.set(this.list[index], path, val);
             this.tableLoader = false;
-            item.ladderable = val;
           }).catch(err => {
             this.tableLoader = false;
           })
