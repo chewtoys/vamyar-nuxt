@@ -667,7 +667,6 @@
             this.tableLoader = false;
           })
         }
-
       },
       sender(props) {
         return _.get(props.item, 'advert.user.details.firstName',
