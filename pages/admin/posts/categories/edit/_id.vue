@@ -151,10 +151,10 @@
     }
     ,
     mounted() {
-      this.$validator.localize("fa", this.dictionary)
       this.$axios.$get(fetchPath).then(res => {
+        let fetched = _.get(res, 'data', []);
         let final = [];
-        _.forEach(res, (cat, i) => {
+        _.forEach(fetched, (cat, i) => {
           final.push({id: cat.id, name: cat.name});
           if (_.has(cat, 'children')) {
             let childs = this.getChilds(cat)
@@ -175,6 +175,23 @@
     }
     ,
     methods: {
+      getChilds(cat) {
+        if (_.has(cat, 'children')) {
+          let items = [];
+          _.forEach(cat.children, (subCat, i) => {
+            items.push({id: subCat.id, name: subCat.name});
+            if (_.has(subCat, 'children')) {
+              let childs = this.getChilds(subCat)
+              _.forEach(childs, (child) => {
+                items.push({id: child.id, name: child.name});
+              })
+            }
+          })
+          return items;
+        } else {
+          return [];
+        }
+      },
       toast(msg, color) {
         this.$store.commit("snackbar/setSnack", msg, color)
       }

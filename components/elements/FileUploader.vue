@@ -21,14 +21,13 @@
           <v-btn fab outline small color="warning" @click="remove">
             <v-icon>delete</v-icon>
           </v-btn>
-          <img :src="`${url}`" :alt="url" class="full">
-          <input v-model="url" type="hidden" name="url">
+          <v-img :src="`${url}`" :alt="url" class="full" contain max-height="200px" />
+          <input v-model="url" type="hidden" name="url" >
         </div>
       </v-flex>
       <v-flex v-if="uploadPercentage < 100 && uploadPercentage > 0 " xs12>
         <v-progress-linear v-model="uploadPercentage" color="success"/>
       </v-flex>
-
     </v-layout>
     <v-divider color="black"/>
   </v-container>

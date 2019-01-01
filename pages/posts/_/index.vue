@@ -55,19 +55,20 @@
         </template>
         <template v-if="posts.length > 0">
           <v-subheader>مطالب</v-subheader>
-          <v-layout row wrap>
-            <v-card>
-              <v-flex v-for="item in posts || []" :key="item.id" xs6 sm4 md3>
-                <v-card flat color="grey lighten-2" :to="showPath + '/' + item.slug">
+          <v-container >
+            <v-layout row wrap grid-list>
+              <v-flex v-for="item in posts || []" :key="item.id" xs12 sm6 lg4>
+                <v-card flat color="lighten-2" :to="showPath + '/' + item.slug">
                   <v-card-title><h3>{{item.name || 'بدون عنوان'}}</h3></v-card-title>
-                  <v-card-media
+                  <v-img
                     :src="item.image"
                     :lazy-src="lazy"
-                    height="300"
-                    width="300"
+                    max-height="300px"
+                    contain
+                    class="full"
                   />
                   <v-card-text>
-                    <div v-html=""></div>
+                    <div v-html="showPost(item.text)"></div>
                   </v-card-text>
                   <v-card-actions>
                     <v-btn color="info" outline round>
@@ -77,8 +78,8 @@
                   </v-card-actions>
                 </v-card>
               </v-flex>
-            </v-card>
-          </v-layout>
+            </v-layout>
+          </v-container>
         </template>
       </v-card-text>
     </v-card>
@@ -86,6 +87,8 @@
 </template>
 <script>
   import Copy from "~/components/site/buttons/CopyUrl.vue"
+  import Helper from "~/assets/js/helper"
+
 
   export default {
 
@@ -100,7 +103,7 @@
         path: '',
         showPath: '/posts/show',
         category: [],
-        lazy: "http://placehold.it/60",
+        lazy: "http://placehold.it/160",
         src: "http://placehold.it/600x300",
       }
     },
@@ -145,6 +148,11 @@
     computed: {
       currentPath() {
         return `/posts/${this.rootSlug}`;
+      }
+    },
+    methods: {
+      showPost(text) {
+        return Helper.limitStr(text, 100)
       }
     },
     mounted() {

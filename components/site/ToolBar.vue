@@ -3,9 +3,9 @@
     <no-ssr>
   <span>
     <v-toolbar v-scroll="onScroll" flat :color="menuColor" class="white grey--text" app>
-      <v-btn flat color="transparent" class="white--text" to="/">
+      <v-btn flat color="transparent" class="pa-1 white--text" to="/">
         <v-icon v-if="!siteLogo" class="deep-purple--text font-16 pl-1">polymer</v-icon>
-        <v-img v-if="siteLogo" width="70px" height="80%" :src="siteLogo"/>
+        <v-img v-if="siteLogo" width="70px"  :src="siteLogo"/>
         <v-toolbar-title>
           <h1 class="deep-purple--text font-18 text-shadow-3">{{ title }}</h1>
         </v-toolbar-title>
