@@ -9,7 +9,6 @@
         <v-flex text-xs-center>
           <h1 class="font-50">{{settings('frontpage.headerText')}}</h1>
           <div><h2 class="font-22 pt-2">{{settings('frontpage.subHeaderText')}}</h2></div>
-          <div><h3 class="font-20 pt-1">تا بحال <span>{{ count }}</span> کاربر به وامیار اعتماد کرده اند</h3></div>
           <div class="mt-5 ">
             <v-btn large to="/user" color="deep-orange lighten-2">
               <v-icon class="pl-1">label_important</v-icon>

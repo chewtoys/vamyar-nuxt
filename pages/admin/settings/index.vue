@@ -50,6 +50,11 @@
               data-vv-name="siteTitle"
               required
             />
+            <FileUploader
+              v-model="siteLogo"
+              box
+              label="لوگوی سایت"
+            />
             <v-textarea
               validate="required"
               v-model="siteDescription"
