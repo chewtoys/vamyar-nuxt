@@ -508,13 +508,14 @@
           this.tableLoader = false;
         });
       },
-      changeTradeStatus(id,item, type, itemId = null) {
+      changeTradeStatus(id, item, type, itemId = null) {
         //console.log(id, type, itemId)
+        let val = type;
         if (this.isAdmin) {
           this.tableLoader = true;
           let itemType = Helper.getAdvertType(item, null, true);
           let advertId = _.get(item, 'advertableId', _.get(item, 'id', id))
-          let data = {tradeStatus: val === 1 ? 1 : 0}
+          let data = {tradeStatus: val}
           let method = `/${this.panel}/${itemType.type}/${advertId}`;
           this.$axios.$put(method, data).then((res) => {
             let index = 0;
@@ -648,14 +649,25 @@
       changeVerified(id, val, item, which = null) {
         if (this.isAdmin) {
           this.tableLoader = true;
-          let method = `/${this.panel}/${which ? which : this.type.type}/${id}`
-          this.$axios.$put(method, {verified: val}).then((res) => {
-            item.verified = val;
+          let itemType = Helper.getAdvertType(item, null, true);
+          let advertId = _.get(item, 'advertableId', _.get(item, 'id', id))
+          let data = {verified: val === 1}
+          let method = `/${this.panel}/${itemType.type}/${advertId}`;
+          this.$axios.$put(method, data).then((res) => {
+            let index = 0;
+            if (this.isAdverts) {
+              index = _.findIndex(this.list, {id: id});
+            } else {
+              index = _.findIndex(this.list, {id: advertId});
+            }
+            let path = this.isAdverts ? 'verified' : 'advert.verified'
+            _.set(this.list[index], path, val);
             this.tableLoader = false;
           }).catch(err => {
             this.tableLoader = false;
           })
         }
+
       },
       sender(props) {
         return _.get(props.item, 'advert.user.details.firstName',
