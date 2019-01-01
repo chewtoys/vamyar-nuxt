@@ -2,16 +2,15 @@
   <span>
     <no-ssr>
   <span>
-
     <v-toolbar v-scroll="onScroll" flat :color="menuColor" class="white grey--text" app>
       <v-btn flat color="transparent" class="white--text" to="/">
-        <v-icon class="deep-purple--text font-16 pl-1">polymer</v-icon>
+        <v-icon v-if="!siteLogo" class="deep-purple--text font-16 pl-1">polymer</v-icon>
+        <v-img v-if="siteLogo" width="70px" height="80%" :src="siteLogo"/>
         <v-toolbar-title>
           <h1 class="deep-purple--text font-18 text-shadow-3">{{ title }}</h1>
         </v-toolbar-title>
       </v-btn>
       <v-divider vertical/>
-
       <v-toolbar-items key="t1" v-if="showQuickAccess">
         <v-btn to="/categories/loans" flat>وام ها</v-btn>
         <v-btn to="/categories/co-signers" flat>ضامن ها</v-btn>
@@ -146,6 +145,9 @@
       menuColor() {
         return this.showQuickAccess ? 'yellow lighten-5' : 'white'
       },
+      siteLogo() {
+        return this.settings('site.siteLogo') || false;
+      },
       isMobile() {
         return this.$vuetify.breakpoint.smAndDown
       },
@@ -197,7 +199,9 @@
       this.drawer = !this.isMobile
     },
     methods: {
-
+      settings(key) {
+        return _.get(this.$store.state.settings.data, key, '')
+      },
       onScroll(e) {
         let top = this.offsetTop = window.pageYOffset || document.documentElement.scrollTop
         this.showQuickAccess = this.offsetTop > 500;
