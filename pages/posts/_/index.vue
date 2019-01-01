@@ -103,8 +103,8 @@
         path: '',
         showPath: '/posts/show',
         category: [],
-        lazy: "http://placehold.it/160",
-        src: "http://placehold.it/600x300",
+        lazy: "https://placehold.it/160",
+        src: "https://placehold.it/600x300",
       }
     },
     async asyncData({params, route, store, $axios, error}) {
