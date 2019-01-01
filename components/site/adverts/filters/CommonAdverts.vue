@@ -3,6 +3,21 @@
     <v-subheader>{{getLabel}}</v-subheader>
     <v-card class="elevation-0 pa-2" color="transparent" light>
       <v-layout rwo wrap>
+        <v-flex xs12 sm3 class="pa-1 ">
+          <div>
+            <v-text-field
+              v-model="filter.search"
+              :loading="loading.search"
+              solo-inverted
+              label="جست و جو"
+              append-icon="label"
+              light
+              flat
+              clearable
+              @change="updateSearch"
+            />
+          </div>
+        </v-flex>
         <v-flex v-if="getChooseType" xs12 sm3 class="pa-1">
           <div>
             <v-select
@@ -21,8 +36,7 @@
             />
           </div>
         </v-flex>
-
-        <v-flex xs12 sm3 class="pa-1 pt-2">
+        <v-flex xs12 sm3 class="pa-1">
           <div>
             <v-autocomplete
               :menu-props="{contentClass:'farsi mx-3'}"
@@ -45,23 +59,8 @@
             />
           </div>
         </v-flex>
-        <v-flex xs12 sm3 class="pr-1 ">
-          <div>
-            <v-text-field
-              v-model="filter.titleValue"
-              :loading="loading.title"
-              solo-inverted
-              label="عنوان"
-              append-icon="label"
-              light
-              flat
-              clearable
-              @change="emitToParent"
-            />
-          </div>
-        </v-flex>
-        <v-flex xs12 sm3 class="pa-1">
-          <div>
+        <v-flex xs12 sm3 class="pr-1 pa-0">
+          <span>
             <v-checkbox
               v-model="filter.instant"
               :loading="loading.instant"
@@ -72,10 +71,6 @@
               solo-inverted
               @change="updateInstant"
             />
-          </div>
-        </v-flex>
-        <v-flex xs12 sm3 class="pa-1 pt-1 pb-1 pl-0">
-          <div>
             <v-checkbox
               v-model="filter.transferable"
               :loading="loading.value"
@@ -87,7 +82,7 @@
               solo-inverted
               @change="updateTransferable"
             />
-          </div>
+          </span>
         </v-flex>
       </v-layout>
     </v-card>
@@ -103,6 +98,7 @@
     data() {
       return {
         loading: {
+          search: false,
           advertType: false,
           title: false,
           instant: false,
@@ -119,7 +115,9 @@
           transferableValue: null,
           transferable: null,
           titleValue: null,
+          textValue: null,
         },
+        search: '',
         city_search: null,
         city_items: [],
       }
@@ -139,7 +137,6 @@
           titles.push(item.title)
         })
         return titles
-
       },
       city_states() {
         return _.get(this.$store.state, 'city.data')
@@ -165,6 +162,11 @@
       })
     },
     methods: {
+      updateSearch() {
+        _.set(this, 'filter.titleValue', this.search);
+        _.set(this, 'filter.textValue', this.search);
+        this.emitToParent();
+      },
       updateAdvertType() {
         if (_.get(this, 'filter.advertType', false)) {
           let type = _.get(_.find(Helper.getTypeByAlias(), {'title': _.get(this, 'filter.advertType', false)}), 'type', 'loan');

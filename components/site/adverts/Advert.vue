@@ -126,10 +126,10 @@
       },
       // get link
       getLink(_item) {
-        return Helper.getAdvertLink(_item, this.which)
+        return Helper.getAdvertLink(_item, this.which === 'adverts' ? null : this.which)
       },
       itemType(_item) {
-        return Helper.getAdvertType(_item, this.which)
+        return Helper.getAdvertType(_item, this.which === 'adverts' ? null : this.which)
       },
       limitStr(text, limit, end) {
         return Helper.limitStr(text, limit, end)

@@ -178,13 +178,11 @@
           if (status === '401') {
             this.showPremium = true;
           }
-
           this.paginator.cursor.nextURL = false
           this.$store.commit("snackbar/setSnack", "آگهی بیشتری وجود ندارد.")
         }
         this.btn_loading = false
-      }
-      ,
+      },
       loadAgainCommonAdvertFilter(filter) {
         //console.log(filter);
         let typeName = _.get(filter, 'advertTypeName', null);
@@ -268,10 +266,10 @@
           if (status === '401') {
             this.showPremium = true;
           }
-          this.$store.commit(
-            "snackbar/setSnack",
-            "مشکلی در گرفتن آگهی ها پیش آمد."
-          )
+          //this.$store.commit(
+          //  "snackbar/setSnack",
+          //  "مشکلی در گرفتن آگهی ها پیش آمد."
+          //)
         })
         //this.items = data;
         this.loading = false
