@@ -167,11 +167,11 @@
     }
     ,
     mounted() {
-      //this.pagination = {
-      //  sortBy: 'id',
-      //  descending: true,
-      //  rowsPerPage: 25,
-      //}
+      this.pagination = {
+        sortBy: 'id',
+        descending: true,
+        rowsPerPage: 25,
+      }
     }
     ,
     watch: {

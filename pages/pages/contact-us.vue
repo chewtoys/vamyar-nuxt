@@ -132,7 +132,7 @@
       submitForm() {
         this.$validator.validateAll().then(result => {
           if (result) {
-            alert('true')
+            //alert('true')
             return this.sendForm()
           } else {
             this.$store.commit('snackbar/setSnack', "برخی فیلد ها مشکل دارند.", "warning")
@@ -157,7 +157,7 @@
               // show success and redirect
               this.toast("با موفقیت ثبت شد.", "success")
               this.saveLoading = false
-              this.$router.push(this.list)
+              //this.$router.push(this.list)
             } else {
               this.toast(" خطایی رخ داد.", "warning")
               this.saveLoading = false
