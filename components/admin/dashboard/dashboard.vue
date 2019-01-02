@@ -23,6 +23,21 @@
                 <td>{{getStatistics('adverts.instant')}}</td>
               </tr>
               <tr>
+                <td>آگهی های باز
+                </td>
+                <td>{{getStatistics('adverts.open')}}</td>
+              </tr>
+              <tr>
+                <td>آگهی های در حال معامله
+                </td>
+                <td>{{getStatistics('adverts.inTrading')}}</td>
+              </tr>
+              <tr>
+                <td>آگهی های معامله شده
+                </td>
+                <td>{{getStatistics('adverts.traded')}}</td>
+              </tr>
+              <tr>
                 <td>تعداد کل آگهی ها
                 </td>
                 <td>{{getStatistics('adverts.all')}}</td>
@@ -65,14 +80,44 @@
             <table class="oddTable">
               <tbody>
               <tr>
-                <td>کاربران
+                <td>تعداد کاربران
                 </td>
                 <td>{{getStatistics('users.all')}}</td>
               </tr>
               <tr>
-                <td>اشتراک های خریداری شده
+                <td>کاربرانی که امروز ثبت نام کرده اند
                 </td>
-                <td>{{getStatistics('subscriptions.all')}}</td>
+                <td>{{getStatistics('users.today')}}</td>
+              </tr>
+              <tr>
+                <td>کاربرانی که این ماه ثبت نام کرده اند
+                </td>
+                <td>{{getStatistics('users.lastMonth')}}</td>
+              </tr>
+              <tr>
+                <td>مشترکین ویژه
+                </td>
+                <td>{{getStatistics('users.subscribed')}}</td>
+              </tr>
+              <tr>
+                <td>درآمد حاصل از اشتراک
+                </td>
+                <td>{{price(getStatistics('incomes.subscriptions'))}}</td>
+              </tr>
+              <tr>
+                <td>درآمد حاصل از فوری کردن آگهی
+                </td>
+                <td>{{price(getStatistics('incomes.instantAdverts'))}}</td>
+              </tr>
+              <tr>
+                <td>درآمد حاصل از نردبان کردن
+                </td>
+                <td>{{price(getStatistics('incomes.ladderAdverts'))}}</td>
+              </tr>
+              <tr>
+                <td>درآمد حاصل از خرید مشاوره
+                </td>
+                <td>{{price(getStatistics('incomes.councilsAdverts'))}}</td>
               </tr>
               <tr>
                 <td>مطالب
@@ -382,6 +427,9 @@
       },
       nl2br(text) {
         return Helper.nl2br(text)
+      },
+      price(val) {
+        return Helper.priceFormat(val,'-')
       },
       ticketMethodsPriority(id) {
         return _.get(this.$store.state.settings.tickets.prioritiesArray, id, '')

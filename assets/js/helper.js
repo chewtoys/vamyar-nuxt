@@ -210,10 +210,10 @@ const Helper = {
       return val;
     }
   },
-  priceFormat(price = null) {
+  priceFormat(price = null, instead = false) {
     price = price * 1 // convert to number;
     if (price > 0) return price.toLocaleString("fa-IR") + " ریال"
-    return "توافقی"
+    return instead ? instead  : "توافقی"
   },
   isPremiumType(type, which = 'create') {
     let list = _.get(CONSTANTS, ['PREMIUMS', which], []);

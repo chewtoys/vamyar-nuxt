@@ -180,7 +180,7 @@
       }, planStart() {
         return _.get(this.$store.state, 'user.subscription.info.jCreatedAt', '-')
       }, planPrice() {
-        return Helper.priceFormat(_.get(this.$store.state, 'user.subscription.price', '-'))
+        return Helper.priceFormat(_.get(this.$store.state, 'user.subscription.price', '-'),'')
       }, getPlan() {
         return _.get(this.$store.state, 'user.subscription', {})
       }, planInfo() {

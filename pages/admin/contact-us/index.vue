@@ -189,9 +189,6 @@
         this.title = item.title;
         this.dialog = true;
       },
-      getPrice(price) {
-        return Helper.priceFormat(price)
-      },
       deleteItems() {
         if (confirm('آیا مطمئن هستید که می خواهید این موارد را حذف کنید؟')) {
           _.forEach(this.selected, (obj, key) => {
