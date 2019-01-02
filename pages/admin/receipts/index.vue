@@ -69,11 +69,12 @@
             <td class="text-xs-right">{{ paidBy(props.item) }}</td>
             <td class="text-xs-right">{{ getPrice(props.item.amount) }}</td>
             <td v-if="props.item.transaction!==null" class="text-xs-right">
-              <p>{{getProperty(props.item, 'transaction.refId','-') }} : ''</p>
-              <p>{{getProperty(props.item, 'transaction.status','-') }} : ''</p>
-              <p>{{getProperty(props.item, 'transaction.ip','-') }} : ''</p>
+              <p>{{getProperty(props.item, 'transaction.refId','-') }} : 'مرجع'</p>
+              <p>{{getProperty(props.item, 'transaction.status','-') }} : 'وضعیت'</p>
+              <p>{{getProperty(props.item, 'transaction.ip','-') }} : 'آیپی'</p>
+              <p>{{getProperty(props.item, 'transaction.cart_number','-') }} : 'شماره کارت'</p>
             </td>
-            <td v-else>
+            <td v-if="props.item.transaction===null">
               {{props.item.transactionId || '-'}}
             </td>
             <td class="text-xs-right">{{ status(props.item) }}</td>
