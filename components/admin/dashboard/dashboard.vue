@@ -12,8 +12,18 @@
           <v-flex xs12 sm6>
             <table class="oddTable">
               <tbody>
+              <tr class="red--text">
+                <td>آگهی های تایید نشده
+                </td>
+                <td>{{getStatistics('adverts.nonVerified')}}</td>
+              </tr>
               <tr>
-                <td>آگهی ها
+                <td>آگهی های فوری
+                </td>
+                <td>{{getStatistics('adverts.instant')}}</td>
+              </tr>
+              <tr>
+                <td>تعداد کل آگهی ها
                 </td>
                 <td>{{getStatistics('adverts.all')}}</td>
               </tr>
@@ -47,11 +57,13 @@
                 </td>
                 <td>{{getStatistics('financeRequests.all')}}</td>
               </tr>
-              <tr>
-                <td>آگهی ها
-                </td>
-                <td>{{getStatistics('adverts.all')}}</td>
-              </tr>
+
+              </tbody>
+            </table>
+          </v-flex>
+          <v-flex xs12 sm6>
+            <table class="oddTable">
+              <tbody>
               <tr>
                 <td>کاربران
                 </td>
@@ -67,17 +79,6 @@
                 </td>
                 <td>{{getStatistics('posts.all')}}</td>
               </tr>
-              </tbody>
-            </table>
-          </v-flex>
-          <v-flex xs12 sm6>
-            <table class="oddTable">
-              <tbody>
-              <tr>
-                <td>آگهی های تایید نشده
-                </td>
-                <td>{{getStatistics('adverts.nonVerified')}}</td>
-              </tr>
               <tr>
                 <td>تیکت های باز
                 </td>
@@ -87,6 +88,11 @@
                 <td>مشاوره های پرداخت شده
                 </td>
                 <td>{{getStatistics('councils.all')}}</td>
+              </tr>
+              <tr>
+                <td>اشتراک های فعال
+                </td>
+                <td>{{getStatistics('subscriptions.activeSubscriptions')}}</td>
               </tr>
               <tr>
                 <td>وضعیت سایت

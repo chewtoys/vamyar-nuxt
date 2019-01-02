@@ -8,7 +8,7 @@
     <v-list color="second">
       <v-list-tile class="pb-2" to="/">
         <v-list-tile-avatar>
-          <img :src="site.logo">
+          <img :src="siteLogo">
         </v-list-tile-avatar>
         <v-list-tile-title class="text-justify rtl">صفحه‌ی نخست</v-list-tile-title>
       </v-list-tile>
@@ -76,7 +76,15 @@
         {title: "سوالات متداول", icon: "book", to: "/user/adverts/sarmaye"}
       ]
     }),
+    methods: {
+      getSettings(key) {
+        return _.get(this.$store.state.settings.data, key, '')
+      }
+    },
     computed: {
+      siteLogo() {
+        return this.getSettings('site.siteLogo');
+      },
       advertTypes: function () {
         return Helper.getTypes();
       },
