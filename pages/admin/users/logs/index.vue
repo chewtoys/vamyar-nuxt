@@ -108,7 +108,7 @@
               </nuxt-link>
             </td>
           </template>
-          <v-alert slot="no-results" :value="true" color="danger" icon="warning">
+          <v-alert slot="no-results" :value="true" color="info" icon="warning">
             نتیجه ای برای "{{ search }}" یافت نشد.
           </v-alert>
         </v-data-table>
@@ -126,7 +126,6 @@
   breadcrumb = 'لاگ کاربران سایت',
     indexPath = '/admin/users/logs',
     fetchPath = '/admin/user-logs',
-    createPath = '/admin/users/create',
     headers = [
       {text: '‌شناسه', value: 'id', align: 'right'},
       {text: 'آیپی', value: 'email', align: 'right'},
@@ -142,42 +141,56 @@
       title: page_title,
       breadcrumb: breadcrumb
     },
-    data: () => ({
-      data: [],
-      totalData: 10,
-      loading: true,
-      pagination: {page: 1}, //pagination is for vuetify - paginator is for API
-      paginator: {totalPages: 1}, //pagination is for vuetify - paginator is for API
-      page_title,
-      selected: [],
-      search: '',
-    }),
+    data() {
+      return {
+        data: [],
+        totalData: 10,
+        loading: true,
+        pagination: {page: 1}, //pagination is for vuetify - paginator is for API
+        paginator: {totalPages: 1}, //pagination is for vuetify - paginator is for API
+        page_title,
+        selected: [],
+        search: '',
+      }
+    }
+    ,
     computed: {
       pages() {
         return _.get(this.paginator, 'totalPages', 1)
-      },
+      }
+      ,
       uri() {
         return fetchPath;
-      },
+      }
+      ,
       headers() {
         return headers;
       }
-    },
+    }
+    ,
     mounted() {
       this.pagination = {
         sortBy: 'id',
         descending: true,
         rowsPerPage: 25,
       }
-    },
+    }
+    ,
     watch: {
-
+      search(val) {
+        this.switchPage();
+      }
+      ,
       pagination: {
         handler() {
           this.switchPage();
         }
-      },
-    },
+        ,
+        deep: true
+      }
+      ,
+    }
+    ,
     methods: {
 
       switchPage() {
@@ -213,17 +226,20 @@
         } catch (err) {
           console.log(err)
         }
-      },
+      }
+      ,
       getProperty(item, path, def = '') {
         return _.get(item, path, def);
-      },
+      }
+      ,
       deleteItems() {
         if (confirm('آیا مطمئن هستید که می خواهید این موارد را حذف کنید؟')) {
           _.forEach(this.selected, (obj, key) => {
             this.deleteById(_.get(obj, 'id', ''));
           })
         }
-      },
+      }
+      ,
       deleteItem(id) {
         if (confirm('آیا مطمئن هستید که می خواهید این مورد را حذف کنید؟')) {
           this.deleteById(id)
