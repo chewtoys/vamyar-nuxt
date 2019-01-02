@@ -43,32 +43,51 @@
               ['clean'],
               ['link', 'image', 'video']
             ],
-            imageUpload: {
-              url: this.getUrl, // server url
-              method: "POST", // change query method, default 'POST'
-              headers: {
-                "Content-Type": "multipart/form-data",
-                Authorization: this.getAuthorization
-              }, // add custom headers, example { token: 'your-token'}
-              // personalize successful callback and call next function to insert new url to the editor
+            /*
+            imageUploadd: {
+              customUploader: (file, callback) => {
+                this.uploadImage(file, callback);
+              },
               callbackOK: (serverResponse, next) => {
-                console.log(1, serverResponse)
+                //console.log(1, serverResponse)
                 next(serverResponse);
               },
               // personalize failed callback
               callbackKO: (serverError) => {
-                console.log(2, serverError)
-                alert(serverError);
+                console.log(serverError)
+                //alert(serverError);
               },
-              // optional
-              // add callback when a image have been chosen
               checkBeforeSend: (file, next) => {
-                console.log(3, file, 4, this.getUrl, 5, this.getAuthorization);
+                //console.log(3, file, 4, this.getUrl, 5, this.getAuthorization);
                 next(file); // go back to component and send to the server
               }
             }
+        */
           }
         }
+      }
+    },
+    methods: {
+      uploadImage(file, callback) {
+        let formData = new FormData()
+        formData.append("image", file)
+        const Authorization = this.getAuthorization;
+        let method = this.getMethod;
+        this.$axios
+          .$post(method, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization
+            }
+          })
+          .then((res) => {
+            let final = `${baseUrl}/${_.get(res, 'data.url', '-')}`
+            console.log(2, final, callback.call(final))
+
+          })
+          .catch((err) => {
+            console.log(err)
+          })
       }
     },
     computed: {

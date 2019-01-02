@@ -80,7 +80,7 @@
               outline
               ripple
               block
-              :to="item.link"
+              :to="'/admin/'+item.link"
               :color="item.color"
             >
               <v-icon class="px-1">{{item.icon || 'note_add' }}</v-icon>

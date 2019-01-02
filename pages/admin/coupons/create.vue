@@ -45,7 +45,6 @@
             />
             <v-autocomplete
               :items="allUsersList"
-              v-validate="'required'"
               v-model="userId"
               :error-messages="errors.collect('userId')"
               box

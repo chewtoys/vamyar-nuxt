@@ -21,8 +21,7 @@
           <v-btn fab outline small color="warning" @click="remove">
             <v-icon>delete</v-icon>
           </v-btn>
-          <v-img :src="`${url}`" :alt="url" class="full" contain max-height="200px"/>
-          <input v-model="url" type="hidden" name="url">
+          <v-img :src="url" class="full" contain max-height="200px"/>
         </div>
       </v-flex>
       <v-flex v-if="uploadPercentage < 100 && uploadPercentage > 0 " xs12>
@@ -61,18 +60,15 @@
         return this.getType === 'user' ? _.get(this.$store.state.user, 'auth', '') : _.get(this.$store.state.admin, 'auth', '')
       },
     },
-    mounted() {
-      this.url = _.get(this, 'value', null);
-    },
     watch: {
+      value(val) {
+        this.url = _.get(this, 'value', null);
+      },
       url(val) {
         this.$emit("input", val)
       }
     },
     methods: {
-      /*
-               Handles a change on the file upload
-               */
       remove() {
         this.file = null
         this.url = null
@@ -114,7 +110,7 @@
             }.bind(this)
           })
           .then((res) => {
-            console.log(res, res.data.url)
+            //console.log(res, res.data.url)
             this.url = `${root}${_.get(res, 'data.url', '-')}`
             this.hasFile = false
             this.file = null

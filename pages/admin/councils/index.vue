@@ -68,7 +68,7 @@
             <td class="text-xs-right">{{ props.item.title }}</td>
             <td class="text-xs-right">{{ props.item.job }}</td>
             <td class="text-xs-right">{{ props.item.city }}</td>
-            <td class="text-xs-right">{{ props.item.requestType }}</td>
+            <td class="text-xs-right">{{ requestType(props.item.requestType) }}</td>
             <td class="text-xs-right">{{ nl2br(props.item.requestText) }}</td>
 
             <td class="text-xs-left">
@@ -169,7 +169,14 @@
       },
     },
     methods: {
-      nl2br(val){
+
+      requestType(req) {
+        //let list = this.$store.state.councilTypes.data;
+        //let index = _.findIndex(list, {id});
+        //let item = list[index];
+        return _.get(req, 'title', '');
+      },
+      nl2br(val) {
         return Helper.nl2br(val);
       },
       getPrice(price) {
