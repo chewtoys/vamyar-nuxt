@@ -334,8 +334,8 @@ const Helper = {
           .replace('minMaxAmount', 'maxAmount')
           .replace('maxMaxAmount', 'maxAmount')
           .replace('guaranteeTypeId', 'guaranteeType.id')
-
-        _.set(query, key.replace('Value', '') + prefix, val)
+          .replace('Value', '')
+        _.set(query, key + prefix, val)
       }
     })
     //console.log({obj, filter, query});

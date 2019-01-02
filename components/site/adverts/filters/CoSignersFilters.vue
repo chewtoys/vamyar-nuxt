@@ -69,9 +69,27 @@
         },
         filter: {
           guaranteeTypeIdValue: null,
+          forBank: null,
           forBankValue: null,
+          forCourt: null,
           forCourtValue: null,
         },
+      }
+    },
+    watch: {
+      forCourt(val) {
+        if (val) {
+          _.set(this, 'filter.forCourtValue', 1);
+        } else {
+          _.set(this, 'filter.forCourtValue', null);
+        }
+      },
+      forBank(val) {
+        if (val) {
+          _.set(this, 'filter.forBankValue', 1);
+        } else {
+          _.set(this, 'filter.forBankValue', null);
+        }
       }
     },
     computed: {
