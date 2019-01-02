@@ -69,7 +69,7 @@
             <td class="text-xs-right">{{ props.item.job }}</td>
             <td class="text-xs-right">{{ getCity(props.item) }}</td>
             <td class="text-xs-right">{{ requestType(props.item.requestType) }}</td>
-            <td class="text-xs-right">{{ nl2br(props.item.requestText) }}</td>
+            <td class="text-xs-right" v-html="nl2br(props.item.requestText)"></td>
 
             <td class="text-xs-left">
               <v-icon
