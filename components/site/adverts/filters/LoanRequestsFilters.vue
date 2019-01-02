@@ -7,7 +7,7 @@
           <div>
             <v-select
               :items="loanTypeList"
-              v-model="loanTypeValue"
+              v-model="loanTypeIdValue"
               :loading="loading.loanType"
               :menu-props="{contentClass:'farsi mx-3'}"
               label="نوع وام"
@@ -81,7 +81,7 @@
           amount: null,
           minAmountValue: null,
           maxAmountValue: null,
-          loanTypeValue: null,
+          loanTypeIdValue: null,
           instant: null,
           title: null,
         },

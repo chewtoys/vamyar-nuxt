@@ -718,13 +718,19 @@
         }
       },
       sender(props) {
-        return _.get(props.item, 'advert.user.details.firstName',
+        if (_.has(props.item, 'advert.adminId') || _.has(props.item, 'adminId')) {
+          let id = _.get(props.item, 'advert.adminId', 'نامشخص') || '-';
+          return `مدیر: ` + id
+        }
+        return 'کاربر: ' + _.get(props.item, 'advert.user.details.firstName',
           _.get(props.item, 'advert.user.mobile',
             _.get(props.item, 'advert.user.email',
               _.get(props.item, 'user.details.firstName',
                 _.get(props.item, 'user.mobile',
                   _.get(props.item, 'user.email',
-                    _.get(props.item, 'advert.user.id', 'بدون مشخصات')))))))
+                    _.get(props.item, 'advert.adminId',
+                      _.get(props.item, 'adminId',
+                        _.get(props.item, 'advert.user.id', 'بدون مشخصات')))))))))
       },
       getGuaranteeTypes(key) {
         let items = [];

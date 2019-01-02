@@ -310,9 +310,9 @@ const Helper = {
       filter = _.pick(obj, ['cityIdValue', 'instantValue', 'titleValue']);
       _.get(filter, 'instantValue', null) === 1 ? _.set(filter, 'instantValue', 'true') : _.set(filter, 'instantValue', '');
     } else if (type === 'loans') {
-      filter = _.pick(obj, ['loanTypeValue', 'amountValue', 'maxAmountValue', 'minAmountValue', 'paybackTimeValue']);
+      filter = _.pick(obj, ['loanTypeIdValue', 'amountValue', 'maxAmountValue', 'minAmountValue', 'paybackTimeValue']);
     } else if (type === 'loanRequests') {
-      filter = _.pick(obj, ['loanTypeValue', 'amountValue', 'maxAmountValue', 'minAmountValue', 'paybackTimeValue']);
+      filter = _.pick(obj, ['loanTypeIdValue', 'amountValue', 'maxAmountValue', 'minAmountValue', 'paybackTimeValue']);
     } else if (type === 'finances') {
       filter = _.pick(obj, ['maxAmountValue']);
     } else if (type === 'financeRequests') {

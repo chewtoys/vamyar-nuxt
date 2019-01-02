@@ -9,7 +9,7 @@
               :items="loanTypeList"
               item-text="name"
               item-value="id"
-              v-model="filter.loanTypeValue"
+              v-model="filter.loanTypeIdValue"
               :loading="loading.loanType"
               :menu-props="{contentClass:'farsi mx-3'}"
               label="نوع وام"
@@ -85,7 +85,7 @@
           minAmountValue: null,
           maxAmountValue: null,
           loanType: null,
-          loanTypeValue: null,
+          loanTypeIdValue: null,
         },
 
       }

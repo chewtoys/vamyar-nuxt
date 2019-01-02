@@ -54,7 +54,7 @@
                     <div class="full text-justify py-3">
                       <h3>توجه داشته باشید:</h3>
                       <v-alert type="info" :value="settings('adverts.noticeOnAdvertShow')!==''">
-                        <div class="font-13" v-html=" settings('adverts.noticeOnAdvertShow') "></div>
+                        <div class="pa-1 pt-4 font-13" v-html=" settings('adverts.noticeOnAdvertShow') "></div>
                       </v-alert>
                     </div>
                     <v-divider/>
@@ -151,7 +151,7 @@
                         <div class="pa-2 mx-1" v-if="isAllowed('guaranteeTypes')">
                           <v-icon class="pb-1 pl-1">how_to_reg</v-icon>
                           <span><small class="font-14">{{getTitle('guaranteeTypes')}}</small><b
-                            class="left">{{ getGuaranteeType }}</b></span>
+                            class="left">{{ getGuaranteeType || '-' }}</b></span>
                         </div>
                         <v-divider/>
                       </template>
@@ -255,7 +255,7 @@
       let slug = params.slug
       let method = `/site/${type.type}/${id}`
       let query = {
-        include: 'advert.user.details,advert.city,guaranteeTypes'
+        include: 'advert.user.details,advert.city,loanType,guaranteeType,guaranteeTypes'
       }
 
       try {

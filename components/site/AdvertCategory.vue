@@ -60,6 +60,11 @@
                 indeterminate
               ></v-progress-circular>
             </div>
+            <div v-if="!loading && items.length < 1 " class="text-xs-center">
+              <v-alert :value="!!msg" type="info">
+                <span class="p-b--2">در حال حاضر آگهی ثبت شده ای موجود نمی باشد</span>
+              </v-alert>
+            </div>
           </v-layout>
         </v-container>
       </v-card>
