@@ -410,8 +410,8 @@
       if (!this.isAdmin && !this.isEdit) {
         let hasAccess = _.get(this.$store.state, 'user.hasSubscription', false);
         if (isPremium && !hasAccess) {
-          //  this.$store.commit('snackbar/setSnack', 'متاسفانه شما دسترسی لازم برای ثبت این آگهی را ندارید.', 'warning');
-          //    this.$router.push(`/user/premium?redirect=${this.link}`);
+          this.$store.commit('snackbar/setSnack', 'متاسفانه شما دسترسی لازم برای ثبت این آگهی را ندارید.', 'warning');
+          this.$router.push(`/user/premium?redirect=${this.link}`);
         }
       }
       try {

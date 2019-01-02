@@ -319,15 +319,22 @@ const Helper = {
     } else if (type === 'financeRequests') {
       filter = _.pick(obj, ['jobValue', 'maxMaxAmountValue', 'minMaxAmountValue']);
     } else if (type === 'coSigners') {
-      filter = _.pick(obj, ['guaranteeTypeValue']);
+      filter = _.pick(obj, ['guaranteeTypeIdValue', 'forBankValue', 'forCourtValue']);
     } else if (type === 'coSignerRequests') {
-      filter = _.pick(obj, ['guaranteeTypes', 'typeValue']);
+      filter = _.pick(obj, ['guaranteeTypeIdValue', 'forBankValue', 'forCourtValue']);
     }
     let prefix = '';
     _.forEach(filter, (val, key) => {
       if (val !== null || _.isNumber(val)) {
         prefix = _.has(maximum, key) ? '<' : (_.has(minimum, key) ? '>' : '');
-        key = key.replace('maxAmount', 'amount').replace('minAmount', 'amount').replace('minMaxAmount', 'maxAmount').replace('maxMaxAmount', 'maxAmount')
+        // replace keys
+        key = key
+          .replace('maxAmount', 'amount')
+          .replace('minAmount', 'amount')
+          .replace('minMaxAmount', 'maxAmount')
+          .replace('maxMaxAmount', 'maxAmount')
+          .replace('guaranteeTypeId', 'guaranteeType.id')
+
         _.set(query, key.replace('Value', '') + prefix, val)
       }
     })

@@ -24,7 +24,9 @@
           <div>
             <v-select
               :items="guaranteeTypesList"
-              v-model="guaranteeTypes"
+              item-text="name"
+              item-value="id"
+              v-model="filter.guaranteeTypeIdValue"
               :loading="loading.guaranteeTypes"
               :menu-props="{contentClass:'farsi mx-3'}"
               label="ضمانت"
@@ -58,31 +60,28 @@
           guaranteeTypes: false
         },
         filter: {
-          guaranteeTypes: null,
-          typeValue: null,
+          guaranteeTypeIdValue: null,
+          forBankValue: null,
+          forBank: null,
+          forCourtValue: null,
+          forCourt: null,
         },
       }
     },
     watch: {
-      type(val) {
-        let list = _.get(this.$store.state, 'settings.coSigner.types', []);
-        let index = _.findIndex(list, {'name': val});
-        let id = 0;
-        if (index > 0) {
-          let item = list[index];
-          id = _.get(item, 'id', 0);
+      forCourt(val) {
+        if (val) {
+          _.set(this, 'filter.forCourtValue', 1);
+        } else {
+          _.set(this, 'filter.forCourtValue', null);
         }
-        _.set(this, 'filter.loanTypeValue', id)
       },
-      guaranteeTypes(val) {
-        let list = _.get(this.$store.state, 'guaranteeType.data', []);
-        let index = _.findIndex(list, {'name': val});
-        let value = null;
-        if (index > 0) {
-          let item = list[index];
-          value = _.get(item, 'id', null);
+      forBank(val) {
+        if (val) {
+          _.set(this, 'filter.forBankValue', 1);
+        } else {
+          _.set(this, 'filter.forBankValue', null);
         }
-        _.set(this, 'filter.guaranteeTypes', value)
       }
     },
     computed: {
@@ -93,7 +92,7 @@
         return _.get(this.$store.state, 'settings.coSigner.typeArray')
       },
       guaranteeTypesList() {
-        return _.get(this.$store.state, 'guaranteeType.arrayList', []);
+        return _.get(this.$store.state, 'guaranteeType.data', []);
       },
     },
     mounted() {

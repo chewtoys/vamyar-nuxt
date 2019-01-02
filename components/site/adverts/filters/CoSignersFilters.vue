@@ -1,30 +1,15 @@
 <template>
   <v-flex xs12 md12>
     <v-subheader>{{getLabel}}</v-subheader>
-    <v-card class="elevation-0 pa-2" color="transparent" light>
+    <v-card class="elevation-0 pa-2" flat color="transparent" light>
       <v-layout rwo wrap>
-        <v-flex xs12 sm4 class="pa-1">
-          <div>
-            <v-select
-              :items="typeList"
-              v-model="type"
-              :loading="loading.typeValue"
-              :menu-props="{contentClass:'farsi mx-3'}"
-              label="نوع"
-              light
-              flat
-              hide-details
-              solo-inverted
-              append-icon="list"
-              @change="emitToParent"
-            />
-          </div>
-        </v-flex>
         <v-flex xs12 sm4 class="pr-1 pt-1 pb-1 pl-0">
           <div>
             <v-select
               :items="guaranteeTypesList"
-              v-model="guaranteeTypes"
+              item-text="name"
+              item-value="id"
+              v-model="filter.guaranteeTypeIdValue"
               :loading="loading.guaranteeTypes"
               :menu-props="{contentClass:'farsi mx-3'}"
               label="ضمانت"
@@ -37,7 +22,32 @@
             />
           </div>
         </v-flex>
-
+        <v-flex xs12 sm2 lg2 class="pa-1">
+          <v-checkbox
+            v-model="filter.forCourt"
+            :loading="loading.value"
+            label="برای دادگاه"
+            light
+            flat
+            clearable
+            hide-details
+            solo-inverted
+            @change="emitToParent"
+          />
+        </v-flex>
+        <v-flex xs12 sm2 lg2 class="pa-1">
+          <v-checkbox
+            v-model="filter.forBank"
+            :loading="loading.value"
+            label="برای بانک"
+            light
+            flat
+            clearable
+            hide-details
+            solo-inverted
+            @change="emitToParent"
+          />
+        </v-flex>
       </v-layout>
     </v-card>
   </v-flex>
@@ -58,43 +68,18 @@
           guaranteeTypes: false
         },
         filter: {
-          guaranteeTypeValue: null,
-          typeValue: null,
+          guaranteeTypeIdValue: null,
+          forBankValue: null,
+          forCourtValue: null,
         },
-
-      }
-    },
-    watch: {
-      type(val) {
-        let list = _.get(this.$store.state, 'settings.coSigner.types', []);
-        let index = _.findIndex(list, {'name': val});
-        let id = 0;
-        if (index > 0) {
-          let item = list[index];
-          id = _.get(item, 'id', 0);
-        }
-        _.set(this, 'filter.typeValue', id)
-      },
-      guaranteeTypes(val) {
-        let list = _.get(this.$store.state, 'guaranteeType.data', []);
-        let index = _.findIndex(list, {'name': val});
-        let value = null;
-        if (index > 0) {
-          let item = list[index];
-          value = _.get(item, 'id', null);
-        }
-        _.set(this, 'filter.guaranteeTypeValue', value)
       }
     },
     computed: {
       getLabel() {
         return this.label;
       },
-      typeList() {
-        return _.get(this.$store.state, 'settings.coSigner.typeArray')
-      },
       guaranteeTypesList() {
-        return _.get(this.$store.state, 'guaranteeType.arrayList', []);
+        return _.get(this.$store.state, 'guaranteeType.data', []);
       },
     },
     mounted() {
@@ -108,7 +93,6 @@
       }).catch(err => {
         console.log(err)
       })
-
     },
     methods: {
       emitToParent() {

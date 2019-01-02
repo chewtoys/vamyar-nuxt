@@ -748,12 +748,6 @@
       getForCourt(item) {
         return _.get(item, 'forCourt', false) ? 'بله' : 'خیر'
       },
-      getType(key) {
-        let list = this.$store.state.settings.coSigner.types;
-        let index = _.findIndex(list, {id: key});
-        let item = list[index];
-        return _.get(item, 'name', '');
-      },
       deleteItems(type = null) {
         if (confirm('آیا مطمئن هستید که می خواهید این موارد را حذف کنید؟')) {
           _.forEach(this.selected, (obj, key) => {
