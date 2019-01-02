@@ -66,9 +66,14 @@
               ></v-checkbox>
             </td>
             <td class="text-xs-right">{{ props.item.id }}</td>
-            <td class="text-xs-right">{{ props.item.title }}</td>
-            <td class="text-xs-right">{{ props.item.message }}</td>
-            <td class="text-xs-right">{{ props.item.type }}</td>
+            <td class="text-xs-right">{{ paidBy(props.item) }}</td>
+            <td class="text-xs-right">{{ price(props.item.amount) }}</td>
+            <td class="text-xs-right">{{ transaction(props.item) }}</td>
+            <td class="text-xs-right">{{ status(props.item) }}</td>
+            <td class="text-xs-right">{{ price(props.item.discount) }}</td>
+            <td class="text-xs-right">{{ paymentable(props.item) }}</td>
+            <td class="text-xs-right">{{ (props.item.jCreatedAt) }}</td>
+            <td class="text-xs-right">{{ (props.item.jUpdatedAt) }}</td>
             <td class="text-xs-left">
               <v-icon
                 class="mx-1"
@@ -100,9 +105,15 @@
     indexPath = '/admin/receipts',
     headers = [
       {text: '‌شناسه', value: 'id', align: 'right'},
-      {text: 'عنوان', value: 'title', align: 'right'},
-      {text: 'پیام', value: 'message', align: 'right'},
-      {text: 'نوع پیام', value: 'type', align: 'right'},
+      {text: 'پرداخت کننده', value: 'userId', align: 'right'},
+      {text: 'مبلغ', value: 'amount', align: 'right'},
+      {text: 'شناسه', value: 'transactionId', align: 'right'},
+      {text: 'استثنا', value: 'exception', align: 'right'},
+      {text: 'وضعیت پرداخت', value: 'paid', align: 'right'},
+      {text: 'تخفیف', value: 'discount', align: 'right'},
+      {text: 'نوع پرداخت', value: 'paymentable', align: 'right'},
+      {text: 'شروع پرداخت', value: 'jCreatedAt', align: 'right'},
+      {text: 'آخرین تغییر وضعیت', value: 'jUpdatedAt', align: 'right'},
       {text: 'عملیات', sortable: false, align: 'left', width: '140px'},
     ]
 
@@ -146,6 +157,7 @@
           let method = fetchMethod;
           let {sortBy, descending, page, rowsPerPage} = this.pagination;
           let query = {
+            include: 'user.details',
             page,
             orderBy: `${sortBy || 'id'}:${descending ? 'desc' : 'asc'}`,
             number: rowsPerPage,
@@ -168,6 +180,13 @@
       },
     },
     methods: {
+      paidBy(item){
+
+      },
+      status(item){},
+      price(item){},
+      transaction(item){},
+      paymentable(item){},
       jDate(val) {
         if (!val) return '-';
         try {
