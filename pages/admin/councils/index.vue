@@ -38,6 +38,7 @@
           select-all
           :headers="headers"
           :items="data"
+          hide-actions
           :loading="loading"
           :search="search"
           :pagination.sync="pagination"
