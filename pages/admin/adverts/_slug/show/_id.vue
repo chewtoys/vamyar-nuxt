@@ -15,8 +15,16 @@
                 بازگشت
               </v-btn>
               <v-btn :loading="submit_loader" outline color="accent" round :to="editLink">
-                <v-icon class="px-1">save</v-icon>
+                <v-icon class="px-1">edit</v-icon>
                 ویرایش
+              </v-btn>
+              <v-btn :loading="verify_loader" outline color="warning" round @click="verify">
+                <v-icon class="px-1">compare_arrows</v-icon>
+                {{verified}}
+              </v-btn>
+              <v-btn outline color="info" round :to="createLink">
+                <v-icon class="px-1">create</v-icon>
+                ثبت جدید
               </v-btn>
             </v-toolbar>
           </div>
@@ -27,7 +35,10 @@
           <table id="showAdvert">
             <tr v-for="item in properties">
               <td>{{item.title}}</td>
-              <td>{{item.value}}</td>
+              <td v-if="item.name==='image' && item.value">
+                <v-img :to="item.value" :src="item.value" max-width="400px"/>
+              </td>
+              <td v-else v-html="item.value || '-'"></td>
             </tr>
           </table>
         </v-flex>
@@ -52,7 +63,9 @@
     },
 
     data: () => ({
+      verify_loader: false,
       properties: [],
+      data: [],
       submit_loader: false,
       page_title: 'مشاهده ی جزئیات آگهی',
       snack_color: "info"
@@ -61,64 +74,31 @@
       editLink: function () {
         return `${list}/${this.slug}/edit/${this.id}`;
       },
+      createLink: function () {
+        return `${list}/${this.slug}/create`;
+      },
+      putMethod: function () {
+        return `/admin/${this.formType.type}/${this.id}`;
+      },
       list: function () {
         return `${list}/${this.slug}`;
       },
-      title() {
-        return Helper.priceFormat(_.get(this, 'data.advert.title', '-'));
+      verified() {
+        if (_.has(this, 'data.advert.verified')) {
+          let val = this.data.advert.verified;
+          //console.log(val)
+          return val ? 'تایید شده' : 'تایید نشده';
+        }
+        return 'نامشخص'
       },
-      mobile() {
-        return (_.get(this, 'data.advert.mobile', '-'));
-      },
-      image() {
-        return Helper.priceFormat(_.get(this, 'data.advert.image', '-'));
-      },
-      paybackTime() {
-        return Helper.priceFormat(_.get(this, 'data.paybackTime', '-'));
-      },
-      interestRate() {
-        return Helper.priceFormat(_.get(this, 'data.interestRate', '-'));
-      },
-      bank() {
-        return Helper.priceFormat(_.get(this, 'data.bank', '-'));
-      },
-      editPath: function () {
-        return `/admin/${this.formType.type}/${this.id}`;
-      },
-      city() {
-        let list = this.$store.state.city.data;
-        let index = _.findIndex(list, {'id': this.data.advert.cityId});
-        let item = list[index];
-        return _.get(item, 'name', '');
-      },
-      loanType() {
-        let list = this.$store.state.loanType.data;
-        let index = _.findIndex(list, {'id': this.data.loanTypeId});
-        let item = list[index];
-        return _.get(item, 'name', 0);
-      },
-      price() {
-        return Helper.priceFormat(_.get(this, 'data.price', '-'));
-      },
-      amount() {
-        return Helper.priceFormat(_.get(this, 'data.amount', '-'));
-      },
-      maxAmount() {
-        return Helper.priceFormat(_.get(this, 'data.maxAmount', '-'));
-      },
-      job() {
-        return Helper.priceFormat(_.get(this, 'data.job', '-'));
-      },
-      text() {
-        return Helper.nl2br(_.get(this, 'data.advert.text', '-'));
-      },
-      guaranteeTypes() {
-        let items = [];
-        _.forEach(this.data.guaranteeTypes, (item) => {
-          items.push(item.name)
-        })
-        return _.join(items, ', ')
-      },
+    },
+    watch: {
+      data: {
+        deep: true,
+        handler() {
+          this.verified
+        }
+      }
     },
     async asyncData({params, store, $axios, error}) {
       let id = params.id;
@@ -144,42 +124,46 @@
         store.commit('loanType/setAndProcessData', loanTypeData.data || []);
 
 
-        // get advert data
-        let getPath = `/admin/${formType.type}/${id}`;
-        let query = {
-          include: 'user.details,guaranteeType,city,loanType'
-        }
-        let {data} = await $axios.$get(getPath, {params: query});
-        //console.log('get:', getPath, {params: query}, data)
         return {
           page_title,
           formType,
-          data,
           slug,
           id,
         }
-
       } catch (err) {
         //console.log('error', error)
         return error({statusCode: 404, message: 'آگهی یافت نشد :('})
       }
     },
     mounted() {
-      let data = this.data;
-      let editable = Helper.getTypeFields(this.formType.type, 'edit');
-      //console.log({editable});
-      let properties = [];
-      editable.forEach((field) => {
-        //console.log(field.name)
-        //let path = field.path;
-        //let value = _.get(this, field.name, '-');
-        properties.push({title: field.title, name: field.name, value: _.get(this, field.name, '-')});
-      })
-      //console.log({properties});
-      this.properties = properties;
+      this.initialLoading();
     },
     methods: {
-
+      initialLoading() {
+        let getPath = `/admin/${this.formType.type}/${this.id}`;
+        let query = {
+          include: 'advert.user.details,guaranteeTypes,guaranteeType,advert.city,loanType,loanTypes'
+        }
+        this.$axios.$get(getPath, {params: query}).then(result => {
+          _.set(this, 'data', _.get(result, 'data', []))
+          let data = this.data;
+          let properties = Helper.computeAdvertData(data, this.$store, this.$axios, this.formType.type);
+          this.properties = _.get(properties, 'properties', []);
+        });
+      },
+      verify() {
+        this.verify_loader = true;
+        let newVal = !(_.get(this, 'data.advert.verified', false))
+        let method = this.putMethod;
+        let data = {verified: newVal}
+        this.$axios.$put(method, data).then(res => {
+          this.initialLoading();
+          this.verify_loader = false;
+        }).catch(err => {
+          this.verify_loader = false;
+          console.log({err})
+        })
+      },
       toast(msg, color) {
         this.$store.commit("snackbar/setSnack", msg, color)
       },

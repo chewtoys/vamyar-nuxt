@@ -1,13 +1,15 @@
 <template>
   <v-flex xs12 md12>
     <v-subheader>{{getLabel}}</v-subheader>
-    <v-card class="elevation-0 pa-2" color="transparent" light>
+    <v-card class="elevation-0 pa-2" flat color="transparent" light>
       <v-layout rwo wrap>
         <v-flex xs12 sm4 class="pa-1">
           <div>
             <v-select
               :items="loanTypeList"
-              v-model="filter.loanType"
+              item-text="name"
+              item-value="id"
+              v-model="filter.loanTypeValue"
               :loading="loading.loanType"
               :menu-props="{contentClass:'farsi mx-3'}"
               label="نوع وام"
@@ -17,7 +19,7 @@
               hide-details
               solo-inverted
               append-icon="list"
-              @change="updateLoanType"
+              @change="emitToParent"
             />
           </div>
         </v-flex>
@@ -80,6 +82,8 @@
           paybackTimeValue: null,
           amount: null,
           amountValue: null,
+          minAmountValue: null,
+          maxAmountValue: null,
           loanType: null,
           loanTypeValue: null,
         },
@@ -94,7 +98,7 @@
         return this.label;
       },
       loanTypeList() {
-        return _.get(this.$store.state, 'loanType.arrayList')
+        return _.get(this.$store.state, 'loanType.data')
       },
       amountList() {
         let data = _.get(this.$store.state, 'settings.adverts.filters.amount', []);
@@ -119,7 +123,7 @@
 
     },
     methods: {
-      updateLoanType() {
+      updateAmount() {
         let value = _.get(this, 'amount', null);
         if (_.has(value, 'min')) {
           _.set(this, 'filter.minAmountValue', _.get(value, 'min', ''))
@@ -134,18 +138,6 @@
             _.set(this, 'filter.maxAmountValue', null)
           }
         }
-        this.emitToParent();
-      },
-      updateAmount() {
-        let value = _.get(this, 'filter.amount');
-        let list = _.get(this.$store.state, 'settings.adverts.filters.amount', []);
-        let index = _.findIndex(list, {'name': value});
-        let amount = null;
-        if (index > 0) {
-          let item = list[index];
-          amount = _.get(item, 'value', null);
-        }
-        _.set(this, 'filter.amountValue', amount)
         this.emitToParent();
       },
       emitToParent() {

@@ -1,22 +1,10 @@
 <template>
   <v-flex xs12 md12>
     <v-subheader>{{getLabel}}</v-subheader>
-    <v-card class="elevation-0 pa-2" color="transparent" light>
+    <v-card class="elevation-0 pa-2" flat color="transparent" light>
       <v-layout rwo wrap>
-        <v-flex xs12 sm3 class="pa-1 ">
-          <div>
-            <v-text-field
-              v-model="filter.search"
-              :loading="loading.search"
-              solo-inverted
-              label="جست و جو"
-              append-icon="label"
-              light
-              flat
-              clearable
-              @change="updateSearch"
-            />
-          </div>
+        <v-flex xs12>
+
         </v-flex>
         <v-flex v-if="getChooseType" xs12 sm3 class="pa-1">
           <div>
@@ -36,6 +24,21 @@
             />
           </div>
         </v-flex>
+        <v-flex xs12 sm3 class="pa-1 ">
+          <div>
+            <v-text-field
+              v-model="filter.search"
+              :loading="loading.search"
+              solo-inverted
+              label="جست و جو"
+              append-icon="label"
+              light
+              flat
+              clearable
+              @change="updateSearch"
+            />
+          </div>
+        </v-flex>
         <v-flex xs12 sm3 class="pa-1">
           <div>
             <v-autocomplete
@@ -50,7 +53,7 @@
               clearable
               light
               no-data-text="شهری یافت نشد"
-              label="همه‌ی شهر ها"
+              label="انتخاب شهر"
               flat
               hide-no-data
               hide-details
@@ -59,30 +62,30 @@
             />
           </div>
         </v-flex>
-        <v-flex xs12 sm3 class="pr-1 pa-0">
-          <span>
-            <v-checkbox
-              v-model="filter.instant"
-              :loading="loading.instant"
-              label="فقط فوری ها"
-              light
-              flat
-              hide-details
-              solo-inverted
-              @change="updateInstant"
-            />
-            <v-checkbox
-              v-model="filter.transferable"
-              :loading="loading.value"
-              label="تمام شهرها"
-              light
-              flat
-              clearable
-              hide-details
-              solo-inverted
-              @change="updateTransferable"
-            />
-          </span>
+        <v-flex xs12 sm1>
+          <v-checkbox
+            v-model="filter.instant"
+            :loading="loading.instant"
+            label=" فوری "
+            light
+            flat
+            hide-details
+            solo-inverted
+            @change="updateInstant"
+          />
+        </v-flex>
+        <v-flex xs12 sm2>
+          <v-checkbox
+            v-model="filter.transferable"
+            :loading="loading.value"
+            label="تمام شهرها"
+            light
+            flat
+            clearable
+            hide-details
+            solo-inverted
+            @change="updateTransferable"
+          />
         </v-flex>
       </v-layout>
     </v-card>
@@ -203,11 +206,7 @@
       // select the proper city
       querySelections(v) {
         _.set(this.loading, 'city', true)
-        // Simulated ajax query
-
-        this.city_items = this.city_states.filter(e => {
-          return (e || "").toLowerCase().indexOf((v || "").toLowerCase()) > -1
-        })
+        this.city_items = this.city_states
         _.set(this.loading, 'city', false)
       },
     }

@@ -28,7 +28,6 @@
             <tr v-for="item in properties">
               <td>{{item.title}}</td>
               <td>{{item.value}}</td>
-
             </tr>
           </table>
         </v-flex>

@@ -457,12 +457,15 @@
       sendForm() {
         let data = Helper.selectDataForSend(this.formType.type, this, this.action, this.isAdmin);
         let req = this.isEdit ? this.$axios.$put(this.sendPath, data) : this.$axios.$post(this.sendPath, data);
-        req.then(() => {
+        req.then((res) => {
           let status = true
           if (status) {
             // show success and redirect
             this.toast("با موفقیت ثبت شد.", "success")
             this.submit_loader = false
+            let showPath = this.list;
+            if (_.has(res, 'data.id') && _.get(res, 'data.id', 0) > 0) showPath = `/admin/adverts/${this.formType.alias}/show/${_.get(res, 'data.id', '')}`
+            if (this.isAdmin) return this.$router.push(showPath)
             this.$router.push(this.list)
           } else {
             this.toast(" خطایی رخ داد.", "warning")

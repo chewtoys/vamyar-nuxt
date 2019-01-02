@@ -4,22 +4,6 @@ const moment = require('moment-jalaali');
 
 const Helper = {
   nl2br(str, is_xhtml = true) {
-    // http://kevin.vanzonneveld.net
-    // +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-    // +   improved by: Philip Peterson
-    // +   improved by: Onno Marsman
-    // +   improved by: Atli Þór
-    // +   bugfixed by: Onno Marsman
-    // +      input by: Brett Zamir (http://brett-zamir.me)
-    // +   bugfixed by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-    // +   improved by: Brett Zamir (http://brett-zamir.me)
-    // +   improved by: Maximusya
-    // *     example 1: nl2br('Kevin\nvan\nZonneveld');
-    // *     returns 1: 'Kevin<br />\nvan<br />\nZonneveld'
-    // *     example 2: nl2br("\nOne\nTwo\n\nThree\n", false);
-    // *     returns 2: '<br>\nOne<br>\nTwo<br>\n<br>\nThree<br>\n'
-    // *     example 3: nl2br("\nOne\nTwo\n\nThree\n", true);
-    // *     returns 3: '<br />\nOne<br />\nTwo<br />\n<br />\nThree<br />\n'
     const breakTag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br ' + '/>' : '<br>'; // Adjust comment to avoid issue on phpjs.org display
     return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
   }
@@ -108,39 +92,61 @@ const Helper = {
   },
   getAdvertTypeByType: function (type) {
     let types = CONSTANTS.advertTypes
-    return _.find(types, {'type': type});
+    return _.find(types, {'type': type}).title;
   },
   /*
   @which = 'advert' || 'special' : advert for /adverts/~ routes
    */
-  computeAdvertData: function (item, store, axios, which = 'advert') {
+  translateFieldName(name) {
+    let list = CONSTANTS.COMMON_FIELD_TITLE;
+    return _.get(list, name, name)
+  },
+  computeAdvertData: function (item, store, axios, which = 'adverts') {
 
     let types = CONSTANTS.advertTypes;
     let advertableType = _.get(item, 'advertableType', _.get(item, 'advert.advertableType', ''));
-    let type = _.get(_.find(types, {'advertType': advertableType}), 'type', advertableType || 'loans');
+    let type = _.get(_.find(types, {'advertType': advertableType}), 'type', advertableType || '');
     let editable = this.getTypeFields(type, 'edit');
     let properties = [];
     let computed = {};
     let commonFields = CONSTANTS.COMMON_FIELDS;
-    _.concat(commonFields, editable).forEach((field) => {
+    let fieldsArray = _.concat(commonFields, editable);
+    //(field) => {
+    //  console.log(field)
+    //  _.get(field, 'name', field)
+    //});
+    fieldsArray.forEach((field) => {
       let name = _.get(field, 'name', field);
-      let title = _.get(field, 'title', field);
-      let path = _.get(item, _.get(field, 'path', _.get(field, 'name', name)), name);
-      if (which === 'advert') {
-        if (commonFields.includes(name)) {
-          path = _.get(field, 'path', _.get(field, 'name', name)).replace('advert.', '');
+      if (!_.find(properties, {name})) {
+        let title = _.get(field, 'title', this.translateFieldName(field));
+        let path = _.get(item, _.get(field, 'path', _.get(field, 'name', name)), name);
+        if (which === 'adverts') {
+          if (commonFields.includes(name)) {
+            path = name;
+          } else {
+            path = `advertable.${name}`;
+          }
         } else {
-          path = 'advertable.' + _.get(field, 'path', _.get(field, 'name', name)).replace('advert.', '');
+          if (commonFields.includes(name)) {
+            path = `advert.${name}`;
+          } else {
+            path = name;
+          }
         }
+        let initValue = _.get(item, path, '')
+        // exceptions
+        if (name === 'advertType') initValue = type;
+
+        let value = this.computeAdvertField(name, initValue, store);
+
+        //console.log({name, path, initValue, value});
+        _.set(computed, name, value)
+        properties.push({
+          title,
+          name,
+          value
+        });
       }
-      let value = this.computeAdvertField(name, _.get(item, path, ''), store);
-      console.log({name, value});
-      _.set(computed, name, value)
-      properties.push({
-        title,
-        name,
-        value
-      });
     })
     //console.log({properties});
     return this.properties = {base: item, computed, properties};
@@ -163,33 +169,68 @@ const Helper = {
     } else if (name === 'mobile') {
       return value || ''
     } else if (name === 'user') {
-      return value || ''
+      let details = {
+        'نام': _.get(value, 'details.firstName', '-') || '-',
+        'نام خانوادگی': _.get(value, 'details.lastName', '-') || '-',
+        'شماره موبایل': _.get(value, 'mobile', '-') || '-',
+        'ایمیل': _.get(value, 'email', '-') || '-',
+        'شناسه': _.get(value, 'id', '-') || '-',
+      }
+      let arr = []
+      _.forEach(details, (title, val) => {
+        arr.push(`${val}: ${title}`)
+      })
+      return this.nl2br(_.join(arr, '\n'))
     } else if (name === 'price') {
       return value ? this.priceFormat(value) : 'توافقی'
-    } else if (name === 'amount') {
+    }
+    else if (name === 'amount') {
       return value ? this.priceFormat(value) : 'نامشخص'
     } else if (name === 'maxAmount') {
-      return value ? this.priceFormat(value || '') : 'توافقی'
+      return value ? this.priceFormat(value) : 'توافقی'
     } else if (name === 'job') {
       return value || ''
+    } else if (name === 'image') {
+      return value || ''
+    } else if (name === 'advertType') {
+      return this.getAdvertTypeByType(value || '')
     } else if (name === 'interestRate') {
       return value ? (val + 'درصد') : ''
+    } else if (name === 'tradeStatus') {
+      let list = _.get(store, 'state.settings.adverts.tradeStatusList', ['باز', 'درحال معامله', 'بسته شده']);
+      return list[value] || 'نا مشخص';
+    } else if (name === 'instant') {
+      return value ? 'بله' : 'خیر'
+    } else if (name === 'verified') {
+      return value ? 'بله' : 'خیر'
+    } else if (name === 'ladderable') {
+      return value ? 'بله' : 'خیر'
+    } else if (name === 'transferable') {
+      return value ? 'بله' : 'خیر'
+    } else if (name === 'forBank') {
+      return value ? 'بله' : 'خیر'
+    } else if (name === 'forCourt') {
+      return value ? 'بله' : 'خیر'
     } else if (name === 'paybackTime') {
       return value ? (value + ' سال') : 'توافقی'
     } else if (name === 'bank') {
       return (value || '')
-    } else if (name === 'loanType') {
+    } else if (name === 'loanType' || name === 'loanTypes') {
       let list = _.get(store, 'state.loanType.data', []);
       let index = _.findIndex(list, {'id': value});
       let item = _.get(list, [index], {});
       return _.get(item, 'name', 'نامشخص');
     } else if (name === 'city') {
-      if (!_.isNumber(value)) return value;
+      if (!_.isNumber(value)) {
+        //console.log({value})
+        return _.get(value, 'name', value);
+      }
       let list = _.get(store, 'state.city.data', []);
       let index = _.findIndex(list, {'id': value});
       let item = _.get(list, [index], {});
+      //console.log({list, value})
       return _.get(item, 'name', '');
-    } else if (name === 'guaranteeTypes') {
+    } else if (name === 'guaranteeTypes' || name === 'guaranteeType') {
       let items = [];
       _.forEach(value, (item) => {
         items.push(item.name)
@@ -199,7 +240,8 @@ const Helper = {
   },
   limitStr(text = "", limit = 30, end = " ...") {
     return text.slice(0, limit) + end
-  },
+  }
+  ,
   dateFormat(val, inputFormat = 'jYYYY/jM/jD HH:mm:ss', outputFormat = 'jYY/jM/jD HH:mm') {
     if (!val) return '-';
     try {
@@ -209,26 +251,31 @@ const Helper = {
       //console.log(err, val)
       return val;
     }
-  },
+  }
+  ,
   priceFormat(price = null, instead = false) {
     price = price * 1 // convert to number;
     if (price > 0) return price.toLocaleString("fa-IR") + " ریال"
-    return instead ? instead  : "توافقی"
-  },
+    return instead ? instead : "تعیین نشده"
+  }
+  ,
   isPremiumType(type, which = 'create') {
     let list = _.get(CONSTANTS, ['PREMIUMS', which], []);
     return list.includes(type);
-  },
+  }
+  ,
   getRawHeaders(type) {
     return _.get(CONSTANTS.rawHeaders, `${type}`, [{text: 'id'}]);
-  },
+  }
+  ,
   getCommonHeaders() {
     return _.get(CONSTANTS, 'COMMON_FIELDS', [{text: 'id'}]);
-  },
-  //getAdminRawHeaders(type) {
-  //  return _.get(CONSTANTS.adminRawHeaders, `${type}`, [{text: 'id'}]);
-  //}
-  //,
+  }
+  ,
+//getAdminRawHeaders(type) {
+//  return _.get(CONSTANTS.adminRawHeaders, `${type}`, [{text: 'id'}]);
+//}
+//,
   getGeneralSettingsGroup() {
     return CONSTANTS.GENERAL_SETTINGS;
   }
@@ -244,7 +291,8 @@ const Helper = {
       _.set(all, 'description', _.get(that, 'description', ''))
     }
     return all;
-  },
+  }
+  ,
   getComputedFilter(obj, type = null) {
     let filter = {}, query = {};
     let maximum = {

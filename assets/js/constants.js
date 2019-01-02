@@ -4,7 +4,21 @@ export const
     create: ['coSignerRequests', 'loanRequests', 'financeRequests'],
     show: ['coSigners', 'loans', 'finances'],
   },
-  COMMON_FIELDS = ['title', 'city', 'text', 'transferable', 'ladderable', 'desc', 'advertType', 'verified', 'tradeStatus', 'mobile', 'instant', 'description'],
+  COMMON_FIELDS = ['title', 'city', 'user', 'text', 'ladderable','transferable', 'advertType', 'verified', 'tradeStatus', 'mobile', 'instant', 'description'],
+  COMMON_FIELD_TITLE = {
+    'title': 'عنوان',
+    'city': 'شهر',
+    'user': 'کاربر',
+    'text': 'توضیحات',
+    'ladderable': "نردبان",
+    'transferable': "قابل انتقال",
+    'advertType': "نوع آگهی",
+    'verified': "تایید شده",
+    'tradeStatus': "وضعیت",
+    'mobile': "موبایل",
+    'instant': "فوری",
+    'description': "یادداشت ادمین"
+  },
   rawHeaders = {
     adverts: [
       {text: "عنوان", align: "right", value: 'advert.title'},

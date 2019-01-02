@@ -6,7 +6,7 @@
           <v-toolbar-title>{{ pageTitle }}</v-toolbar-title>
           <v-spacer/>
           <v-btn
-            v-if="type.type!=='adverts'"
+            v-if="!isAdverts"
             color="red" outline light round class="mb-2"
             @click="deleteItems">
             <v-icon
@@ -16,7 +16,7 @@
             </v-icon>
             حذف انتخاب شده ها
           </v-btn>
-          <v-btn v-if="type.type!=='adverts'" :to="uri+`/create`" color="green" outline light round class="mb-2">
+          <v-btn v-if="!isAdverts" :to="uri+`/create`" color="green" outline light round class="mb-2">
             <v-icon class="mx-1" small>create</v-icon>
             ثبت جدید
           </v-btn>
@@ -24,13 +24,31 @@
         <v-card-title>
           جست‌و‌جو
           <v-spacer></v-spacer>
+
           <v-text-field
             v-model="search"
             append-icon="search"
-            label="چیزی بنویسید"
+            label="جست و جو در عنوان و متن توضیحات"
             single-line
             hide-details
           ></v-text-field>
+
+          <AdvertFilters :chooseType="isAdverts" label="فیلتر کنید" v-model="advertFilters"
+                         @change="loadAgainCommonAdvertFilter"/>
+          <LoansFilters v-if="canShow('loans')" label="فیلتر وام " v-model="filter"
+                        @change="loadAgainAdvertFilter"/>
+          <LoanRequestsFilters v-if="canShow('loanRequests')" label="فیلتر در خواست وام " v-model="filter"
+                               @change="loadAgainAdvertFilter"/>
+          <CoSignersFilters v-if="canShow('coSigners')" label="فیلتر ضامن ها" v-model="filter"
+                            @change="loadAgainAdvertFilter"/>
+          <CoSignerRequestsFilters v-if="canShow('coSignerRequests')" label="فیلتر درخواست ضامن"
+                                   v-model="filter" @change="loadAgainAdvertFilter"/>
+          <FinancesFilters v-if="canShow('finances')" label="فیلتر سرمایه گذاری ها" v-model="filter"
+                           @change="loadAgainAdvertFilter"/>
+          <FinanceRequestsFilters v-if="canShow('financeRequests')" label="فیلتر درخواست سرمایه گذاری " v-model="filter"
+                                  @change="loadAgainAdvertFilter"/>
+
+
         </v-card-title>
         <v-data-table
           v-if="type.type==='adverts'"
@@ -400,6 +418,15 @@
   </div>
 </template>
 <script>
+  import AdvertCard from "~/components/site/adverts/Advert.vue"
+  import AdvertFilters from "~/components/site/adverts/filters/CommonAdverts.vue"
+  import LoansFilters from "~/components/site/adverts/filters/LoansFilters"
+  import LoanRequestsFilters from "~/components/site/adverts/filters/LoanRequestsFilters"
+  import CoSignersFilters from "~/components/site/adverts/filters/CoSignersFilters"
+  import CoSignerRequestsFilters from "~/components/site/adverts/filters/CoSignerRequestsFilters"
+  import FinancesFilters from "~/components/site/adverts/filters/FinancesFilters"
+  import FinanceRequestsFilters from "~/components/site/adverts/filters/FinanceRequestsFilters"
+
   import Helper from "~/assets/js/helper.js"
 
   export default {
@@ -412,6 +439,11 @@
       selected: [],
       pages: 1,
       page: 1,
+      commonComputedFilters: [],
+      computedFilters: [],
+      advertTypeName: null,
+      advertFilters: {},
+      filter: {},
       search: '',
       submit_loader: false,
       tableLoader: false,
@@ -448,6 +480,7 @@
       }
     },
     mounted() {
+      this.advertTypeName = this.type.type;
       this.pagination = {
         sortBy: 'id',
         page: 1,
@@ -469,7 +502,27 @@
       }
     },
     methods: {
-
+      loadAgainCommonAdvertFilter(filter) {
+        //console.log(filter);
+        let typeName = _.get(filter, 'advertTypeName', null);
+        if (typeName) {
+          _.set(this, 'advertTypeName', typeName);
+        }
+        let computedFilter = Helper.getComputedFilter(filter);
+        _.set(this, 'commonComputedFilters', computedFilter);
+        //this.loadAgain();
+      },
+      loadAgainAdvertFilter(filter) {
+        //console.log(1,{filter});
+        let type = _.get(this, 'advertTypeName', this.which);
+        let computedFilter = Helper.getComputedFilter(filter, type);
+        _.set(this, 'computedFilters', computedFilter);
+        //console.log(computedFilter)
+        //this.loadAgain();
+      },
+      canShow(type) {
+        return _.get(this, 'advertTypeName', '') === type;
+      },
       getAdvertType(advertType) {
         return Helper.getTypeByAdvertType(advertType);
       },
@@ -554,7 +607,7 @@
         return _.get(item, path, alias)
       },
       verified(item) {
-        return _.get(item,'verified',_.get(item,'advert.verified','')) ? 'تایید شده' : 'تایید نشده';
+        return _.get(item, 'verified', _.get(item, 'advert.verified', '')) ? 'تایید شده' : 'تایید نشده';
       },
       tradeStatus(item) {
         let list = this.$store.state.settings.adverts.tradeStatusList;
@@ -722,6 +775,15 @@
           this.$store.commit('snackbar/setSnack', _.get(err, 'response.data.error.message', 'مشکلی در حذف کردن پیش آمد'), 'error')
         })
       }
+    },
+    components: {
+      AdvertFilters,
+      LoansFilters,
+      LoanRequestsFilters,
+      CoSignersFilters,
+      CoSignerRequestsFilters,
+      FinancesFilters,
+      FinanceRequestsFilters,
     }
   }
 </script>

@@ -7,8 +7,8 @@
           <div>
             <v-select
               :items="loanTypeList"
-              v-model="loanType"
-              :loading="loading.loanTypeId"
+              v-model="loanTypeValue"
+              :loading="loading.loanType"
               :menu-props="{contentClass:'farsi mx-3'}"
               label="نوع وام"
               light
@@ -72,17 +72,16 @@
         amount: null,
         loading: {
           paybackTime: false,
-          minAmountValue: false,
-          maxAmountValue: false,
+          amount: false,
           instant: false,
-          loanTypeId: false,
+          loanType: false,
         },
         filter: {
           paybackTime: null,
           amount: null,
           minAmountValue: null,
           maxAmountValue: null,
-          loanTypeId: null,
+          loanTypeValue: null,
           instant: null,
           title: null,
         },
@@ -93,16 +92,7 @@
       }
     },
     watch: {
-      loanType(val) {
-        let list = _.get(this.$store.state, 'loanType.data', []);
-        let index = _.findIndex(list, {'name': val});
-        let id = 0;
-        if (index > 0) {
-          let item = list[index];
-          id = _.get(item, 'id', 0);
-        }
-        _.set(this, 'filters.loanTypeId', id)
-      },
+
       amount(val) {
         let list = _.get(this.$store.state, 'settings.adverts.filters.amountArray', []);
         let index = _.findIndex(list, {'name': val});
@@ -119,7 +109,7 @@
         return this.label;
       },
       loanTypeList() {
-        return _.get(this.$store.state, 'loanType.arrayList')
+        return _.get(this.$store.state, 'loanType.data')
       },
       amountList() {
         let data = _.get(this.$store.state, 'settings.adverts.filters.amount', []);

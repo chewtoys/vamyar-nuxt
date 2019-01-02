@@ -193,16 +193,26 @@
         try {
           this.loading = true;
           let method = fetchPath;
-          let filter = '';
-          if (this.search) filter = `user.details.firstName=${this.search},user.details.lastName=${this.search},user.mobile=${this.search},id=${this.search},user.email=${this.search},ip=${this.search},resourceName=${this.search},resourceId=${this.search},description=${this.search}`
+          let filter = [];
+
           let {sortBy, descending, page, rowsPerPage} = this.pagination;
           let query = {
             page,
             orderBy: `${sortBy || 'id'}:${descending ? 'desc' : 'asc'}`,
             number: rowsPerPage,
             include: 'user.details',
-            filter
           }
+          if (this.search) {
+            filter = `user.details.firstName=${this.search},user.details.lastName=${this.search},user.mobile=${this.search},id=${this.search},user.email=${this.search},ip=${this.search},resourceName=${this.search},resourceId=${this.search},description=${this.search}`
+            let value = this.search;
+            query = {}
+            _.set(query, 'id', value)
+            _.set(query, 'ip', value)
+            _.set(query, 'resourceName', value)
+            _.set(query, 'resourceId', value)
+            _.set(query, 'description', value)
+          }
+
           //console.log({method, query, paginator: this.paginator}, {sortBy, descending, page, rowsPerPage});
           this.$axios.$get(method, {
             params: query

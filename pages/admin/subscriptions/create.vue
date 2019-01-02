@@ -151,7 +151,7 @@
           data: this.data,
         }
         this.$axios
-          .$put(this.updateMethod, data)
+          .$post(this.updateMethod, data)
           .then(() => {
             let status = true
             if (status) {

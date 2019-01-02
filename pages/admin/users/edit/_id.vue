@@ -290,7 +290,7 @@
       },
       addSubscription() {
         let subscriptionId = _.get(this.newSubscription, 'id', null);
-        let addMethod = `/admin/user/${this.id}/subscriptions`;
+        let addMethod = `/admin/users/${this.id}/subscriptions`;
         this.$axios.$post(addMethod, {subscription: subscriptionId}).then(res => {
           console.log(res);
           this.$store.commit('snackbar/setSnack', 'با موفقیت افزوده شد');
@@ -300,7 +300,7 @@
       },
       addDays() {
         let addDays = this.days;
-        let addMethod = `/admin/user/${this.id}/subscriptions/${_.get(this.currentSubscriptionId, 'id', null)}`
+        let addMethod = `/admin/users/${this.id}/subscriptions/${_.get(this.currentSubscriptionId, 'id', null)}`
         this.$axios.$post(addMethod, {
           addDays,
           // subscription: _.get(this.currentSubscriptionId, 'id', null)
@@ -312,7 +312,7 @@
         })
       },
       removeSubscription() {
-        let addMethod = `/admin/user/${this.id}/subscriptions/${_.get(this.currentDeleteSubscriptionId, 'id', null)}`
+        let addMethod = `/admin/users/${this.id}/subscriptions/${_.get(this.currentDeleteSubscriptionId, 'id', null)}`
         this.$axios.$delete(addMethod).then(res => {
           console.log(res);
           this.$store.commit('snackbar/setSnack', 'با موفقیت حذف شد');

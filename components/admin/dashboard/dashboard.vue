@@ -150,7 +150,7 @@
         </v-layout>
       </v-card-text>
     </v-card>
-    <v-card>
+    <v-card  class="my-1">
       <v-card-title>
         <v-subheader>
           دسترسی سریع
@@ -176,7 +176,7 @@
         </v-layout>
       </v-card-text>
     </v-card>
-    <v-card>
+    <v-card  class="my-1">
       <v-card-title>
         <v-subheader>
           آخرین آگهی های ثبت شده
@@ -197,7 +197,7 @@
                       <tbody class="oddTable">
                       <tr>
                         <td>نوع آگهی</td>
-                        <td>{{item.type || '-'}}</td>
+                        <td>{{getProperty(item, 'type.title', '-')}}</td>
                       </tr>
                       <tr>
                         <td>وضعیت</td>
@@ -220,7 +220,7 @@
                       <tr>
                         <td>
                           <v-btn color="success"
-                                 :to="`/admin/adverts/${item.advertType }s/show/${item.advertableId}`">
+                                 :to="`/admin/adverts/${item.type.alias}/show/${item.advertableId}`">
                             <v-icon class="px-1">navigate_before</v-icon>
                             مشاهده
                           </v-btn>
@@ -229,7 +229,7 @@
                       <tr>
                         <td>
                           <v-btn color="warning"
-                                 :to="`/admin/adverts/${item.advertType}s/edit/${item.advertableId}`">
+                                 :to="`/admin/adverts/${item.type.alias}/edit/${item.advertableId}`">
                             <v-icon class="px-1">edit</v-icon>
                             ویرایش
                           </v-btn>
@@ -245,7 +245,7 @@
         </v-expansion-panel>
       </v-card-text>
     </v-card>
-    <v-card>
+    <v-card class="my-1">
       <v-card-title>
         <v-subheader>
           آخرین تیکت های ثبت شده
@@ -364,7 +364,7 @@
           pushyItem.verified = _.get(item, 'verified', false) ? 'تایید شده' : 'هنوز تایید نشده';
           pushyItem.jCreatedAt = _.get(item, 'jCreatedAt', '-');
           pushyItem.advertType = _.get(item, 'advertableType', _.get(item, 'advert.advertableType', ''));
-          pushyItem.type = Helper.getAdvertType(item);
+          pushyItem.type = Helper.getAdvertType(item, null, true);
 
           final.push(pushyItem)
         })
@@ -419,6 +419,9 @@
       }
     },
     methods: {
+      getProperty(item, path, def = '') {
+        return _.get(item, path, def)
+      },
       settings(key) {
         return _.get(this.$store.state.settings.data, key, '')
       },
@@ -429,7 +432,7 @@
         return Helper.nl2br(text)
       },
       price(val) {
-        return Helper.priceFormat(val,'-')
+        return Helper.priceFormat(val, '-')
       },
       ticketMethodsPriority(id) {
         return _.get(this.$store.state.settings.tickets.prioritiesArray, id, '')
