@@ -41,7 +41,6 @@
           :items="data"
           :loading="loading"
           :search="search"
-          :pagination.sync="pagination"
           :total-items="totalData"
           :rows-per-page-items="[5,10,25,100]"
           no-results-text="هیچ موردی ثبت نشده است."
@@ -112,7 +111,7 @@
           </v-alert>
         </v-data-table>
         <div class="text-xs-center pt-2">
-          <v-pagination v-model="pagination.page" @click="switchPage" :length="pages"></v-pagination>
+          <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
         </div>
       </div>
     </v-card>
@@ -122,7 +121,7 @@
   import Helper from "~/assets/js/helper.js"
 
   const page_title = 'لیست لاگ ها',
-  breadcrumb = 'لاگ کاربران سایت',
+    breadcrumb = 'لاگ کاربران سایت',
     indexPath = '/admin/users/logs',
     fetchPath = '/admin/user-logs',
     headers = [
@@ -178,6 +177,13 @@
     watch: {
       search(val) {
         this.switchPage();
+      },
+      pagination: {
+        handler() {
+          this.switchPage();
+        }
+        ,
+        deep: true
       }
       ,
     }
