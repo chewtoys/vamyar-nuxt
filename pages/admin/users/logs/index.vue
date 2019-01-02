@@ -106,7 +106,7 @@
               </nuxt-link>
             </td>
           </template>
-          <v-alert slot="no-results" :value="true" color="error" icon="warning">
+          <v-alert slot="no-results" :value="true" color="danger" icon="warning">
             نتیجه ای برای "{{ search }}" یافت نشد.
           </v-alert>
         </v-data-table>
@@ -207,9 +207,9 @@
           this.totalData = _.get(response, 'paginator.totalCount', 0)
 
           //  console.log('on response: ', this.totalData, this.paginator, this.data, {response})
-        }).catch((error) => {
+        }).catch((err) => {
 
-          //console.log(error, method, query, this.paginator);
+          //console.log(err, method, query, this.paginator);
         }).then(() => {
           this.loading = false;
         })
