@@ -20,32 +20,32 @@
               <tr>
                 <td>وام
                 </td>
-                <td>{{getStatistics('adverts.all')}}</td>
+                <td>{{getStatistics('loans.all')}}</td>
               </tr>
               <tr>
                 <td>درخوست وام
                 </td>
-                <td>{{getStatistics('adverts.all')}}</td>
+                <td>{{getStatistics('loanRequests.all')}}</td>
               </tr>
               <tr>
                 <td>ضامن
                 </td>
-                <td>{{getStatistics('adverts.all')}}</td>
+                <td>{{getStatistics('coSigners.all')}}</td>
               </tr>
               <tr>
                 <td>درخواست ضمانت
                 </td>
-                <td>{{getStatistics('adverts.all')}}</td>
+                <td>{{getStatistics('coSignerRequests.all')}}</td>
               </tr>
               <tr>
                 <td>سرمایه گذار
                 </td>
-                <td>{{getStatistics('adverts.all')}}</td>
+                <td>{{getStatistics('finances.all')}}</td>
               </tr>
               <tr>
                 <td>درخواست سرمایه گذاری
                 </td>
-                <td>{{getStatistics('adverts.all')}}</td>
+                <td>{{getStatistics('financeRequests.all')}}</td>
               </tr>
               <tr>
                 <td>آگهی ها
