@@ -188,7 +188,7 @@
         return Helper.nl2br(val)
       },
       getCity(item) {
-        return _.get(item, 'city.name', _.get(_find(_.get(this.$store.state.city, 'data', []), {id: item.cityId}), 'name', item.cityId));
+        return _.get(item, 'city.name', _.get(_.find(_.get(this.$store.state.city, 'data', []), {id: item.cityId}), 'name', item.cityId));
       },
       requestType(id) {
         let list = this.$store.state.councilTypes.data;
