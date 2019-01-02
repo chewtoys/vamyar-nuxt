@@ -71,10 +71,10 @@
               </nuxt-link>
             </td>
             <td class="text-xs-right">
-              {{ getProperty(props.item,'ip') }}
+              {{ getProperty(props.item, 'ip') }}
             </td>
             <td class="text-xs-right">
-              {{ getProperty(props.item,'description') }}
+              {{ getProperty(props.item, 'description') }}
             </td>
             <td class="text-xs-right">
               <p>
@@ -92,13 +92,14 @@
               </p>
             </td>
             <td class="text-xs-right">
-              {{ getProperty(props.item,'user.verified') ? 'فعال' : 'غیر فعال' }}
+              {{ getProperty(props.item, 'user.verified') ? 'فعال' : 'غیر فعال' }}
             </td>
             <td class="text-xs-right">
               {{ props.item.jUpdatedAt }}
             </td>
             <td class="text-xs-left">
-              <nuxt-link title="مشاهده کاربر" :to=" '/admin/user/edit/' + getProperty(props.item,'userId')" class="mx-1">
+              <nuxt-link title="مشاهده کاربر" :to=" '/admin/user/edit/' + getProperty(props.item,'userId')"
+                         class="mx-1">
                 <v-icon
                   small
                 >
@@ -122,7 +123,7 @@
   import Helper from "~/assets/js/helper.js"
 
   const page_title = 'لیست لاگ ها'
-    breadcrumb = 'لاگ کاربران سایت',
+  breadcrumb = 'لاگ کاربران سایت',
     indexPath = '/admin/users/logs',
     fetchPath = '/admin/user-logs',
     createPath = '/admin/users/create',
@@ -170,50 +171,48 @@
       }
     },
     watch: {
-      search(val) {
-        this.switchPage();
-      },
+
       pagination: {
         handler() {
           this.switchPage();
-        },
-        deep: true
+        }
       },
-    },
-    async asyncData({params, store, $axios}) {
-
     },
     methods: {
 
       switchPage() {
-        this.loading = true;
-        let method = fetchPath;
-        let filter = '';
-        if (this.search) filter = `user.details.firstName=${this.search},user.details.lastName=${this.search},user.mobile=${this.search},id=${this.search},user.email=${this.search},ip=${this.search},resourceName=${this.search},resourceId=${this.search},description=${this.search}`
-        let {sortBy, descending, page, rowsPerPage} = this.pagination;
-        let query = {
-          page,
-          orderBy: `${sortBy || 'id'}:${descending ? 'desc' : 'asc'}`,
-          number: rowsPerPage,
-          include: 'user.details',
-          filter
+        try {
+          this.loading = true;
+          let method = fetchPath;
+          let filter = '';
+          if (this.search) filter = `user.details.firstName=${this.search},user.details.lastName=${this.search},user.mobile=${this.search},id=${this.search},user.email=${this.search},ip=${this.search},resourceName=${this.search},resourceId=${this.search},description=${this.search}`
+          let {sortBy, descending, page, rowsPerPage} = this.pagination;
+          let query = {
+            page,
+            orderBy: `${sortBy || 'id'}:${descending ? 'desc' : 'asc'}`,
+            number: rowsPerPage,
+            include: 'user.details',
+            filter
+          }
+          //console.log({method, query, paginator: this.paginator}, {sortBy, descending, page, rowsPerPage});
+          this.$axios.$get(method, {
+            params: query
+          }).then((response) => {
+
+            this.paginator = _.get(response, 'paginator', {})
+            this.data = _.get(response, 'data', [])
+            this.totalData = _.get(response, 'paginator.totalCount', 0)
+
+            //  console.log('on response: ', this.totalData, this.paginator, this.data, {response})
+          }).catch((err) => {
+
+            //console.log(err, method, query, this.paginator);
+          }).then(() => {
+            this.loading = false;
+          })
+        } catch (err) {
+          console.log(err)
         }
-        //console.log({method, query, paginator: this.paginator}, {sortBy, descending, page, rowsPerPage});
-        this.$axios.$get(method, {
-          params: query
-        }).then((response) => {
-
-          this.paginator = _.get(response, 'paginator', {})
-          this.data = _.get(response, 'data', [])
-          this.totalData = _.get(response, 'paginator.totalCount', 0)
-
-          //  console.log('on response: ', this.totalData, this.paginator, this.data, {response})
-        }).catch((err) => {
-
-          //console.log(err, method, query, this.paginator);
-        }).then(() => {
-          this.loading = false;
-        })
       },
       getProperty(item, path, def = '') {
         return _.get(item, path, def);
