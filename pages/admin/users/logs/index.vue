@@ -36,6 +36,7 @@
           v-model="selected"
           item-key="id"
           select-all
+          hide-actions
           :headers="headers"
           :items="data"
           :loading="loading"
@@ -70,10 +71,10 @@
               </nuxt-link>
             </td>
             <td class="text-xs-right">
-              {{ props.item.ip }}
+              {{ getProperty(props.item,'ip') }}
             </td>
             <td class="text-xs-right">
-              {{ props.item.description }}
+              {{ getProperty(props.item,'description') }}
             </td>
             <td class="text-xs-right">
               <p>
@@ -91,13 +92,13 @@
               </p>
             </td>
             <td class="text-xs-right">
-              {{ props.item.user.verified ? 'فعال' : 'غیر فعال' }}
+              {{ getProperty(props.item,'user.verified') ? 'فعال' : 'غیر فعال' }}
             </td>
             <td class="text-xs-right">
               {{ props.item.jUpdatedAt }}
             </td>
             <td class="text-xs-left">
-              <nuxt-link title="مشاهده کاربر" :to=" '/admin/user/edit/' + props.item.userId" class="mx-1">
+              <nuxt-link title="مشاهده کاربر" :to=" '/admin/user/edit/' + getProperty(props.item,'userId')" class="mx-1">
                 <v-icon
                   small
                 >

@@ -18,6 +18,41 @@
                 <td>{{getStatistics('adverts.all')}}</td>
               </tr>
               <tr>
+                <td>وام
+                </td>
+                <td>{{getStatistics('adverts.all')}}</td>
+              </tr>
+              <tr>
+                <td>درخوست وام
+                </td>
+                <td>{{getStatistics('adverts.all')}}</td>
+              </tr>
+              <tr>
+                <td>ضامن
+                </td>
+                <td>{{getStatistics('adverts.all')}}</td>
+              </tr>
+              <tr>
+                <td>درخواست ضمانت
+                </td>
+                <td>{{getStatistics('adverts.all')}}</td>
+              </tr>
+              <tr>
+                <td>سرمایه گذار
+                </td>
+                <td>{{getStatistics('adverts.all')}}</td>
+              </tr>
+              <tr>
+                <td>درخواست سرمایه گذاری
+                </td>
+                <td>{{getStatistics('adverts.all')}}</td>
+              </tr>
+              <tr>
+                <td>آگهی ها
+                </td>
+                <td>{{getStatistics('adverts.all')}}</td>
+              </tr>
+              <tr>
                 <td>کاربران
                 </td>
                 <td>{{getStatistics('users.all')}}</td>
