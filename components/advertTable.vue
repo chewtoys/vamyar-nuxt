@@ -660,7 +660,7 @@
             } else {
               index = _.findIndex(this.list, {id: advertId});
             }
-            let path = this.isAdverts ? 'verified' : 'advert.verified'
+            let path = this.isAdverts ? 'advert.verified' : 'verified'
             _.set(this.list[index], path, val);
             this.tableLoader = false;
           }).catch(err => {
