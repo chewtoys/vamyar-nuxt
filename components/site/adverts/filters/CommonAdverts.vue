@@ -6,7 +6,7 @@
         <v-flex xs12>
 
         </v-flex>
-        <v-flex v-if="getChooseType" xs12 sm3 class="pa-1">
+        <v-flex v-if="getChooseType" xs12 sm4 class="pa-1">
           <div>
             <v-select
               :items="getAdvertTypeList"
@@ -39,7 +39,7 @@
             />
           </div>
         </v-flex>
-        <v-flex xs12 sm3 class="pa-1">
+        <v-flex xs12 sm2 class="pa-1">
           <div>
             <v-autocomplete
               :menu-props="{contentClass:'farsi mx-3'}"

@@ -308,7 +308,6 @@ const Helper = {
     };
     if (type === null) {
       // common filters
-
       filter = _.pick(obj, ['cityIdValue', 'instantValue', 'titleValue']);
       _.get(filter, 'instantValue', null) === 1 ? _.set(filter, 'instantValue', 'true') : _.set(filter, 'instantValue', '');
     } else if (type === 'loans') {

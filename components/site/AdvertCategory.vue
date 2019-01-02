@@ -203,7 +203,7 @@
         let type = _.get(this, 'advertTypeName', this.which);
         let computedFilter = Helper.getComputedFilter(filter, type);
         _.set(this, 'computedFilters', computedFilter);
-        console.log(computedFilter)
+        //console.log(computedFilter)
         this.loadAgain();
       },
       // reload as filter changed
