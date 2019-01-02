@@ -88,10 +88,9 @@
       </div>
     </v-card>
     <v-dialog v-model="dialog" width="600px">
-      <v-btn slot="activator" color="primary" dark>Open Dialog</v-btn>
       <v-card>
         <v-card-title>
-          <span class="headline">title</span>
+          <span class="headline">{{title}}</span>
         </v-card-title>
         <v-card-text>
           <div v-html="text"></div>
