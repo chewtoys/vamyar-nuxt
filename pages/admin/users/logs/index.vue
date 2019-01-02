@@ -16,7 +16,7 @@
             </v-icon>
             حذف انتخاب شده ها
           </v-btn>
-          <v-btn v-if="false" :to="uri+`/create`" color="green" outline light round class="mb-2">
+          <v-btn v-if="false" :to="uri + '/create'" color="green" outline light round class="mb-2">
             <v-icon class="mx-1" small>create</v-icon>
             ثبت جدید
           </v-btn>
@@ -79,16 +79,15 @@
             <td class="text-xs-right">
               <p>
                 <small>موبایل:</small>
-                {{ getProperty(props, 'item.user.mobile', '-') }}
+                {{ getProperty(props.item, 'user.mobile', '-') }}
               </p>
               <p>
                 <small>نام و نام خانوادگی:</small>
-                {{getProperty(props, 'item.user.details.firstName') + ' ' + getProperty(props, 'item.user.details.firstName', '-')
-                }}
+                {{getProperty(props.item, 'user.details.firstName') + ' ' + getProperty(props, 'item.user.details.firstName', '-')}}
               </p>
               <p>
                 <small>ایمیل:</small>
-                {{getProperty(props, 'item.user.email', '-') }}
+                {{getProperty(props.item, 'user.email', '-') }}
               </p>
             </td>
             <td class="text-xs-right">
@@ -122,16 +121,16 @@
 <script>
   import Helper from "~/assets/js/helper.js"
 
-  const page_title = 'لیست لاگ ها'
+  const page_title = 'لیست لاگ ها',
   breadcrumb = 'لاگ کاربران سایت',
     indexPath = '/admin/users/logs',
     fetchPath = '/admin/user-logs',
     headers = [
       {text: '‌شناسه', value: 'id', align: 'right'},
-      {text: 'آیپی', value: 'email', align: 'right'},
-      {text: 'توضیحات', value: 'mobile', align: 'right'},
-      {text: ' کاربر', value: 'lastName', align: 'right'},
-      {text: 'وضعیت حساب', value: 'verified', align: 'right'},
+      {text: 'آیپی', value: 'ip', align: 'right'},
+      {text: 'توضیحات', value: 'user.mobile', align: 'right'},
+      {text: ' کاربر', value: 'user.lastName', align: 'right'},
+      {text: 'وضعیت حساب', value: 'user.verified', align: 'right'},
       {text: 'تاریخ', value: 'jUpdatedAt', align: 'right'},
       {text: 'عملیات', sortable: false, align: 'left', width: '140px'},
     ]
@@ -139,7 +138,7 @@
   export default {
     meta: {
       title: page_title,
-      breadcrumb: breadcrumb
+      breadcrumb
     },
     data() {
       return {
@@ -169,11 +168,11 @@
     }
     ,
     mounted() {
-      this.pagination = {
-        sortBy: 'id',
-        descending: true,
-        rowsPerPage: 25,
-      }
+      //this.pagination = {
+      //  sortBy: 'id',
+      //  descending: true,
+      //  rowsPerPage: 25,
+      //}
     }
     ,
     watch: {
@@ -192,7 +191,6 @@
     }
     ,
     methods: {
-
       switchPage() {
         try {
           this.loading = true;
@@ -210,18 +208,16 @@
           //console.log({method, query, paginator: this.paginator}, {sortBy, descending, page, rowsPerPage});
           this.$axios.$get(method, {
             params: query
-          }).then((response) => {
+          }).then(response => {
 
             this.paginator = _.get(response, 'paginator', {})
             this.data = _.get(response, 'data', [])
             this.totalData = _.get(response, 'paginator.totalCount', 0)
-
-            //  console.log('on response: ', this.totalData, this.paginator, this.data, {response})
-          }).catch((err) => {
-
-            //console.log(err, method, query, this.paginator);
-          }).then(() => {
             this.loading = false;
+            //  console.log('on response: ', this.totalData, this.paginator, this.data, {response})
+          }).catch(err => {
+            this.loading = false;
+            //console.log(err, method, query, this.paginator);
           })
         } catch (err) {
           console.log(err)
@@ -257,7 +253,7 @@
           this.$store.commit('snackbar/setSnack', 'با موفقیت حذف شد', 'success')
           this.selected = [];
         }).catch((err) => {
-          this.$store.commit('snackbar/setSnack', _.get(err, 'response.data.error.message', 'مشکلی در حذف کردن پیش آمد'))
+          //this.$store.commit('snackbar/setSnack', _.get(err, 'response.data.error.message', 'مشکلی در حذف کردن پیش آمد'))
         })
       }
     }
