@@ -216,6 +216,7 @@ const Helper = {
     } else if (name === 'bank') {
       return (value || '')
     } else if (name === 'loanType' || name === 'loanTypes') {
+      if (_.has(value, 'name')) return value.name;
       let items = [];
       _.forEach(value, (item) => {
         items.push(item.name)
