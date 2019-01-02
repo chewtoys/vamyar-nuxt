@@ -257,7 +257,7 @@
           this.$store.commit('snackbar/setSnack', 'با موفقیت حذف شد', 'success')
           this.selected = [];
         }).catch((err) => {
-          this.$store.commit('snackbar/setSnack', _.get(err, 'response.data.error.message', 'مشکلی در حذف کردن پیش آمد'), 'error')
+          this.$store.commit('snackbar/setSnack', _.get(err, 'response.data.error.message', 'مشکلی در حذف کردن پیش آمد'))
         })
       }
     }
