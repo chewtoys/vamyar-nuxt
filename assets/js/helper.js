@@ -216,10 +216,11 @@ const Helper = {
     } else if (name === 'bank') {
       return (value || '')
     } else if (name === 'loanType' || name === 'loanTypes') {
-      let list = _.get(store, 'state.loanType.data', []);
-      let index = _.findIndex(list, {'id': value});
-      let item = _.get(list, [index], {});
-      return _.get(item, 'name', 'نامشخص');
+      let items = [];
+      _.forEach(value, (item) => {
+        items.push(item.name)
+      })
+      return _.join(items, ', ')
     } else if (name === 'city') {
       if (!_.isNumber(value)) {
         //console.log({value})
