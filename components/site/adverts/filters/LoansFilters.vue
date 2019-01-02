@@ -31,6 +31,7 @@
               solo-inverted
               label="حداکثر مدت بازپرداخت"
               append-icon="label"
+              hint="سال به عدد"
               light
               flat
               clearable

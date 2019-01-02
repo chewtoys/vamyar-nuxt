@@ -1,16 +1,18 @@
 <template>
   <v-flex xs12 md12>
     <v-subheader>{{getLabel}}</v-subheader>
-    <v-card class="elevation-0 pa-2" color="transparent" light>
+    <v-card class="elevation-0 pa-2" flat color="transparent" light>
       <v-layout rwo wrap>
         <v-flex xs12 sm4 class="pa-1">
           <div>
             <v-select
               :items="amountList"
+              item-text="name"
+              item-value="value"
               v-model="filter.maxAmount"
               :loading="loading.maxAmount"
               :menu-props="{contentClass:'farsi mx-3'}"
-              label="حدود قیمت"
+              label="حداکثر سرمایه"
               light
               flat
               hide-details
@@ -39,7 +41,9 @@
         },
         filter: {
           maxAmount: null,
-          maxAmountValue: null
+          maxAmountValue: null,
+          maxMaxAmountValue: null,
+          minMaxAmountValue: null,
         },
       }
     },
@@ -54,7 +58,7 @@
         });
         let arrayList = _.map(all, 'name');
         this.$store.commit('settings/setAmountArray', arrayList);
-        return arrayList;
+        return data;
       },
     },
     mounted() {
@@ -71,15 +75,20 @@
     methods: {
 
       updateMaxAmount() {
-        let value = _.get(this, 'filter.maxAmount');
-        let list = _.get(this.$store.state, 'settings.adverts.filters.amount', []);
-        let index = _.findIndex(list, {'name': value});
-        let amount = null;
-        if (index > 0) {
-          let item = list[index];
-          amount = _.get(item, 'value', null);
+        let value = _.get(this, 'maxAmount', null);
+        if (_.has(value, 'min')) {
+          _.set(this, 'filter.minMaxAmountValue', _.get(value, 'min', ''))
+          _.set(this, 'filter.maxMaxAmountValue', _.get(value, 'max', value))
+        } else {
+          if (value === null) {
+            _.set(this, 'filter.minMaxAmountValue', null)
+            _.set(this, 'filter.maxMaxAmountValue', null)
+          } else {
+            _.set(this, 'filter.maxAmountValue', 0)
+            _.set(this, 'filter.minMaxAmountValue', null)
+            _.set(this, 'filter.maxMaxAmountValue', null)
+          }
         }
-        _.set(this, 'filter.maxAmountValue', amount)
         this.emitToParent();
       },
       emitToParent() {

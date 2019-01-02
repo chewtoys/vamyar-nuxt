@@ -299,10 +299,12 @@ const Helper = {
     let filter = {}, query = {};
     let maximum = {
       'maxAmountValue': true,
+      'maxMaxAmountValue': true,
       'paybackTimeValue': true,
     };
     let minimum = {
       'minAmountValue': true,
+      'minMaxAmountValue': true,
     };
     if (type === null) {
       // common filters
@@ -314,9 +316,9 @@ const Helper = {
     } else if (type === 'loanRequests') {
       filter = _.pick(obj, ['loanTypeIdValue', 'amountValue', 'maxAmountValue', 'minAmountValue', 'paybackTimeValue']);
     } else if (type === 'finances') {
-      filter = _.pick(obj, ['maxAmountValue']);
+      filter = _.pick(obj, ['maxMaxAmountValue', 'minMaxAmountValue']);
     } else if (type === 'financeRequests') {
-      filter = _.pick(obj, ['jobValue', 'maxAmountValue']);
+      filter = _.pick(obj, ['jobValue', 'maxMaxAmountValue', 'minMaxAmountValue']);
     } else if (type === 'coSigners') {
       filter = _.pick(obj, ['guaranteeTypeValue']);
     } else if (type === 'coSignerRequests') {
@@ -326,9 +328,7 @@ const Helper = {
     _.forEach(filter, (val, key) => {
       if (val !== null || _.isNumber(val)) {
         prefix = _.has(maximum, key) ? '<' : (_.has(minimum, key) ? '>' : '');
-        if (type !== 'finances' && type !== 'financeRequests') {
-          key = key.replace('maxAmount', 'amount').replace('minAmount', 'amount')
-        }
+        key = key.replace('maxAmount', 'amount').replace('minAmount', 'amount').replace('minMaxAmount', 'maxAmount').replace('maxMaxAmount', 'maxAmount')
         _.set(query, key.replace('Value', '') + prefix, val)
       }
     })
