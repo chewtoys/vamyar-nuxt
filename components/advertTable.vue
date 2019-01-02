@@ -554,7 +554,7 @@
         return _.get(item, path, alias)
       },
       verified(item) {
-        return item.verified ? 'تایید شده' : 'تایید نشده';
+        return _.get(item,'verified',_.get(item,'advert.verified','')) ? 'تایید شده' : 'تایید نشده';
       },
       tradeStatus(item) {
         let list = this.$store.state.settings.adverts.tradeStatusList;
@@ -650,17 +650,13 @@
         if (this.isAdmin) {
           this.tableLoader = true;
           let itemType = Helper.getAdvertType(item, null, true);
-          let advertId = _.get(item, 'advertableId', _.get(item, 'id', id))
+          let advertId = id;
           let data = {verified: val === 1}
           let method = `/${this.panel}/${itemType.type}/${advertId}`;
           this.$axios.$put(method, data).then((res) => {
-            let index = 0;
-            if (this.isAdverts) {
-              index = _.findIndex(this.list, {id: id});
-            } else {
-              index = _.findIndex(this.list, {id: advertId});
-            }
-            let path = this.isAdverts ? 'advert.verified' : 'verified'
+            let index = _.findIndex(this.list, {id: advertId});
+            console.log(22, id, advertId, index)
+            let path = this.isAdverts ? 'verified' : 'advert.verified'
             _.set(this.list[index], path, val);
             this.tableLoader = false;
           }).catch(err => {
