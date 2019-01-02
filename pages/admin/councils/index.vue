@@ -67,7 +67,7 @@
             <td class="text-xs-right">{{ props.item.id }}</td>
             <td class="text-xs-right">{{ props.item.title }}</td>
             <td class="text-xs-right">{{ props.item.job }}</td>
-            <td class="text-xs-right">{{ props.item.city }}</td>
+            <td class="text-xs-right">{{ getCity(props.item) }}</td>
             <td class="text-xs-right">{{ requestType(props.item.requestType) }}</td>
             <td class="text-xs-right">{{ nl2br(props.item.requestText) }}</td>
 
@@ -94,6 +94,7 @@
 
   const page_title = 'لیست درخواست مشاوره ها',
     fetchMethod = '/admin/councils',
+    cityMethod = '/cities?number=3000',
     breadcrumb = 'مشاوره ها',
     indexPath = '/admin/councils',
     headers = [
@@ -168,8 +169,24 @@
         deep: true
       },
     },
-    methods: {
+    async asyncData({params, store, $axios}) {
+      try {
+        // city
+        let cityData = await $axios.$get(cityMethod);
+        store.commit('city/setAndProcessData', cityData.data || []);
 
+        // loan types
+        // let councilTypes = await
+        //   $axios.$get(councilRequestTypes);
+        // store.commit('councilTypes/setAndProcessData', councilTypes.data || []);
+      } catch (error) {
+        console.log('error', error)
+      }
+    },
+    methods: {
+      getCity(item) {
+        return _.get(item, 'city.name', _.get(_.find(_.get(this.$store.state.city, 'data', []), {id: item.cityId}), 'name', item.cityId));
+      },
       requestType(req) {
         //let list = this.$store.state.councilTypes.data;
         //let index = _.findIndex(list, {id});

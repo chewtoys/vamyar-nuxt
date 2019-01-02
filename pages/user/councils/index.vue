@@ -53,7 +53,7 @@
           </template>
           <template slot="items" slot-scope="props">
             <td class="text-xs-right">
-              <v-btn color="success" :to="props.item.link">لینک شما: {{ props.item.link }}</v-btn>
+              <v-btn color="success" target="_blank" :href="props.item.link">لینک شما: {{ props.item.link }}</v-btn>
             </td>
             <td class="text-xs-right">{{ props.item.title }}</td>
             <td class="text-xs-right">
@@ -168,8 +168,8 @@
     async asyncData({params, store, $axios}) {
       try {
         // city
-        //let cityData = await $axios.$get(cityMethod);
-        //store.commit('city/setAndProcessData', cityData.data || []);
+        let cityData = await $axios.$get(cityMethod);
+        store.commit('city/setAndProcessData', cityData.data || []);
 
         // loan types
         // let councilTypes = await
@@ -177,10 +177,6 @@
         // store.commit('councilTypes/setAndProcessData', councilTypes.data || []);
       } catch (error) {
         console.log('error', error)
-      }
-      return {
-        //cities: _.get(store.state, 'city.arrayList', []),
-        //requestTypeList: _.get(store.state, 'councilTypes.arrayList', []),
       }
     },
     methods: {
