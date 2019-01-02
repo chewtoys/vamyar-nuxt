@@ -67,10 +67,17 @@
             </td>
             <td class="text-xs-right">{{ props.item.id }}</td>
             <td class="text-xs-right">{{ paidBy(props.item) }}</td>
-            <td class="text-xs-right">{{ price(props.item.amount) }}</td>
-            <td class="text-xs-right">{{ transaction(props.item) }}</td>
+            <td class="text-xs-right">{{ getPrice(props.item.amount) }}</td>
+            <td v-if="props.item.transaction!==null" class="text-xs-right">
+              <p>{{getProperty(props.item, 'transaction.refId','-') }} : ''</p>
+              <p>{{getProperty(props.item, 'transaction.status','-') }} : ''</p>
+              <p>{{getProperty(props.item, 'transaction.ip','-') }} : ''</p>
+            </td>
+            <td v-else>
+              {{props.item.transactionId || '-'}}
+            </td>
             <td class="text-xs-right">{{ status(props.item) }}</td>
-            <td class="text-xs-right">{{ price(props.item.discount) }}</td>
+            <td class="text-xs-right">{{ getPrice(props.item.discount) }}</td>
             <td class="text-xs-right">{{ paymentable(props.item) }}</td>
             <td class="text-xs-right">{{ (props.item.jCreatedAt) }}</td>
             <td class="text-xs-right">{{ (props.item.jUpdatedAt) }}</td>
@@ -180,13 +187,17 @@
       },
     },
     methods: {
-      paidBy(item){
-
+      getProperty(item, path, def = '') {
+        return _.get(item, path, def)
       },
-      status(item){},
-      price(item){},
-      transaction(item){},
-      paymentable(item){},
+      paidBy(item) {
+        return _.get(item, 'user.mobile', item.userId)
+      },
+      status(item) {
+        return _.get(item, 'paid', '') ? 'پرداخت شده' : 'معلق';
+      },
+      paymentable(item) {
+      },
       jDate(val) {
         if (!val) return '-';
         try {
