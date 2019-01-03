@@ -65,7 +65,9 @@
         >
           <template slot="items" slot-scope="props">
 
-            <td class="text-xs-left">{{ getProperty(props, 'item.id') }}</td>
+            <td :class="`text-xs-left ${isDeleted(props.item) ? 'deletedAdvert' :''}`">{{ getProperty(props, 'item.id')
+              }}
+            </td>
             <td v-if="isAdmin" class="text-xs-left">{{ sender(props) }}</td>
             <td v-if="isAdmin" class="text-xs-left">{{ getProperty(props, 'item.description', '') }}</td>
             <td class="text-xs-right">{{ getProperty(props, 'item.title', '-') }}</td>
@@ -237,7 +239,7 @@
                 hide-details
               ></v-checkbox>
             </td>
-            <td class="text-xs-left">{{ getProperty(props, 'item.id') }}</td>
+            <td :class="`text-xs-left ${isDeleted(props.item) ? 'deletedAdvert' :''}`">{{ getProperty(props, 'item.id') }}</td>
             <td v-if="isAdmin" class="text-xs-left">{{ sender(props) }}</td>
             <td v-if="isAdmin" class="text-xs-left">{{ getProperty(props, 'item.advert.description', '-') }}</td>
             <td class="text-xs-right">{{ getProperty(props, 'item.advert.title', '-') }}</td>
@@ -722,8 +724,7 @@
         if (_.has(props.item, 'advert.adminId') || _.has(props.item, 'adminId')) {
           let id = _.get(props.item, 'advert.adminId', _.get(props.item, 'adminId', 'نامشخص')) || '-';
           msg = `مدیر` + '\n' + 'شناسه: ' + id
-        }else
-        {
+        } else {
           msg = `کاربر` + '\n' + 'موبایل: ' + _.get(props.item, 'user.mobile', _.get(props.item, 'advert.user.mobile', '-'))
         }
         return msg;
@@ -743,6 +744,9 @@
       },
       getForCourt(item) {
         return _.get(item, 'forCourt', false) ? 'بله' : 'خیر'
+      },
+      isDeleted(item) {
+        return !!(_.get(item, 'jDeletedAt', null) )
       },
       deleteItems(type = null) {
         if (confirm('آیا مطمئن هستید که می خواهید این موارد را حذف کنید؟')) {
