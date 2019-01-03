@@ -170,7 +170,7 @@ const Helper = {
       return value || ''
     } else if (name === 'user') {
       let details = {
-        'ایجاد شده توسط کاربر': _.get(value, 'id', false) ? 'بله' : 'خیر',
+        //'کاربر': _.get(value, 'id', false) ? 'بله' : 'خیر',
         'نام': _.get(value, 'details.firstName', '-') || '-',
         'نام خانوادگی': _.get(value, 'details.lastName', '-') || '-',
         'شماره موبایل': _.get(value, 'mobile', '-') || '-',
@@ -184,8 +184,7 @@ const Helper = {
       return this.nl2br(_.join(arr, '\n'))
     } else if (name === 'adminId') {
       let details = {
-        'ایجاد شده توسط  مدیر': value ? 'بله' : 'خیر',
-        'شناسه': value || "-",
+        'شناسه': value,
       }
       let arr = []
       _.forEach(details, (title, val) => {

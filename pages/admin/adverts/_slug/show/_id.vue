@@ -38,12 +38,14 @@
               <td v-if="item.name==='image' && item.value">
                 <v-img :to="item.value" :src="item.value" max-width="400px"/>
               </td>
-              <td v-if="item.name==='jDeletedAt'">
-                {{getProperty(data, 'advert.jDeletedAt', getProperty(data, 'jDeletedAt', value))}}
+              <td v-else-if="item.name==='jDeletedAt'">
+                {{getProperty(data, 'advert.jDeletedAt', getProperty(data, 'jDeletedAt', item.value))}}
               </td>
-              <td v-if="item.name==='adminId' || item.name==='user'">
-                <p v-if="data && data.advert && data.advert.adminId" v-html="item.value || '-'"></p>
-                <p v-if="data && data.advert && data.advert.userId" v-html="item.value || '-'"></p>
+              <td v-else-if="item.name==='adminId'">
+                <p v-if="data && data.advert && data.advert.adminId" v-html="item.value"></p>
+              </td>
+              <td v-else-if="item.name==='user'">
+                <p v-if="data && data.advert && data.advert.userId" v-html="item.value"></p>
               </td>
               <td v-else v-html="item.value || '-'"></td>
             </tr>
