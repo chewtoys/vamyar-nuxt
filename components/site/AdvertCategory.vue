@@ -252,7 +252,7 @@
           must = ``
         }
 
-        let filter = _.join(filterArray, ',').replace('<=', '<').replace('>=', '>').replace('__', '.').replace('true', '1').replace('false', '0');
+        let filter = _.join(filterArray, ',').replace('<=', '<').replace('>=', '>').replace('__', '.').replace('true', '1').replace(true, '1').replace(false, '0').replace('false', '0');
         let orederBy = this.sort;
         let query = {
           orederBy,
