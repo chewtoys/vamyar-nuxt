@@ -787,3 +787,9 @@
     }
   }
 </script>
+<style>
+  .deletedAdvert {
+    color: red;
+    border-right:1px solid;
+  }
+</style>
