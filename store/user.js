@@ -7,6 +7,8 @@ export const state = () => ({
   subscription: {
     period: 0,
     left: 0,
+    endDate: '',
+    jEndDate: '',
     title: null,
   },
   subscriptions: []
@@ -20,6 +22,9 @@ export const mutations = {
     if (_.isArray(data) && data.length > 0) {
       state.subscription = data[0];
       state.subscription.period = _.get(data[0], 'period', 0);
+      state.subscription.left = Helper.diffDate(_.get(data[0], 'info.jCreatedAt', 0), _.get(data[0], 'info.endDate.date', 0));
+      state.subscription.endDate = _.get(data[0], 'info.endDate.date', 0);
+      state.subscription.jEndDate = Helper.dateFormat(_.get(data[0], 'info.endDate.date', ''), 'YYYY/M/D HH:mm:ss', 'jYYYY/jM/jD HH:mm:ss');
       state.subscriptions = data;
       state.hasSubscription = true;
     } else {

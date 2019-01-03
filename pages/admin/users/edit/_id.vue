@@ -83,7 +83,7 @@
               label="تصویر کاربر"
             />
 
-            <v-card color="lime" v-if="hasSubscription" class="my-4">
+            <v-card color="lime lighten-3" v-if="hasSubscription" class="my-4">
               <v-card-title>جزئیات اشتراک این کاربر</v-card-title>
               <table class="oddTable">
                 <tbody v-for="plan in userSubscriptions" :key="plan.id">
@@ -301,7 +301,7 @@
       addDays() {
         let addDays = this.days;
         let addMethod = `/admin/users/${this.id}/subscriptions/${_.get(this.currentSubscriptionId, 'id', null)}`
-        this.$axios.$post(addMethod, {
+        this.$axios.$put(addMethod, {
           addDays,
           // subscription: _.get(this.currentSubscriptionId, 'id', null)
         }).then(res => {

@@ -32,12 +32,12 @@
                 <span calss="white--text">فوری</span>
                 <v-icon left class="white--text">label</v-icon>
               </v-chip>
-              <v-chip v-if="getProperty(item, 'advert.advert.verified',false)" label color="green" text-color="white">
+              <v-chip v-if="getProperty(item, 'advert.verified',false)" label color="green" text-color="white">
                 <span calss="white--text">بررسی شده</span>
                 <v-icon left class="white--text">security</v-icon>
               </v-chip>
-              <v-chip v-if="false" label color="cyan" text-color="white">
-                <span calss="white--text">لیبل های دیگر</span>
+              <v-chip v-if="getProperty(item, 'advert.tradeStatus',0)===1" label color="cyan" text-color="white">
+                <span calss="white--text">در حال معامله</span>
                 <v-icon left class="white--text">star</v-icon>
               </v-chip>
             </span>
@@ -178,14 +178,17 @@
                       <div class="pa-2 mx-1">
                         <v-icon class="pb-1 pl-1 pt-2">contact_phone</v-icon>
                         <span><small class="font-14 pt-2">شماره موبایل</small>
+                          <v-alert :value="true" v-if="getProperty(item, 'advert.tradeStatus',false)">
+                            این اگهی در حال معامله است در صورت توافق طرفین اگهی حذف می شود
+                          </v-alert>
                           <b class="left"
-                             v-if="getProperty(item, 'advert.mobile', false)">
+                             v-else-if="getProperty(item, 'advert.mobile', false)">
                             <v-btn round outline color="info"
                                    :href="`tel:${getProperty(item, 'advert.mobile', '')}`">
                               {{ getProperty(item, 'advert.mobile', '')}}
                               <v-icon class="px-1">call</v-icon>
                               </v-btn></b>
-                          <noSubscriptionAlert :to="premiumLink" v-else/>
+                          <noSubscriptionAlert v-else :to="premiumLink"/>
                         </span>
                       </div>
                     </div>
