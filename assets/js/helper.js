@@ -170,11 +170,22 @@ const Helper = {
       return value || ''
     } else if (name === 'user') {
       let details = {
+        'ایجاد شده توسط کاربر': _.get(value, 'id', false) ? 'بله' : 'خیر',
         'نام': _.get(value, 'details.firstName', '-') || '-',
         'نام خانوادگی': _.get(value, 'details.lastName', '-') || '-',
         'شماره موبایل': _.get(value, 'mobile', '-') || '-',
         'ایمیل': _.get(value, 'email', '-') || '-',
         'شناسه': _.get(value, 'id', '-') || '-',
+      }
+      let arr = []
+      _.forEach(details, (title, val) => {
+        arr.push(`${val}: ${title}`)
+      })
+      return this.nl2br(_.join(arr, '\n'))
+    } else if (name === 'adminId') {
+      let details = {
+        'ایجاد شده توسط  مدیر': value ? 'بله' : 'خیر',
+        'شناسه': value || "-",
       }
       let arr = []
       _.forEach(details, (title, val) => {

@@ -4,11 +4,12 @@ export const
     create: ['coSignerRequests', 'loanRequests', 'financeRequests'],
     show: ['coSigners', 'loans', 'finances'],
   },
-  COMMON_FIELDS = ['title', 'city', 'user', 'text', 'ladderable', 'jCreatedAt', 'jDeletedAt', 'jUpdatedAt', 'ladderable', 'transferable', 'advertType', 'verified', 'tradeStatus', 'mobile', 'instant', 'description'],
+  COMMON_FIELDS = ['title', 'city', 'user', 'adminId', 'text', 'ladderable', 'jCreatedAt', 'jDeletedAt', 'jUpdatedAt', 'ladderable', 'transferable', 'advertType', 'verified', 'tradeStatus', 'mobile', 'instant', 'description'],
   COMMON_FIELD_TITLE = {
     'title': 'عنوان',
     'city': 'شهر',
     'user': 'کاربر',
+    'adminId': 'مدیریت',
     'text': 'توضیحات',
     'jCreatedAt': 'تاریخ ایجاد',
     'jDeletedAt': 'تاریخ حذف',

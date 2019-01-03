@@ -38,6 +38,13 @@
               <td v-if="item.name==='image' && item.value">
                 <v-img :to="item.value" :src="item.value" max-width="400px"/>
               </td>
+              <td v-if="item.name==='jDeletedAt'">
+                {{getProperty(data, 'advert.jDeletedAt', getProperty(data, 'jDeletedAt', value))}}
+              </td>
+              <td v-if="item.name==='adminId' || item.name==='user'">
+                <p v-if="data && data.advert && data.advert.adminId" v-html="item.value || '-'"></p>
+                <p v-if="data && data.advert && data.advert.userId" v-html="item.value || '-'"></p>
+              </td>
               <td v-else v-html="item.value || '-'"></td>
             </tr>
           </table>
@@ -139,6 +146,9 @@
       this.initialLoading();
     },
     methods: {
+      getProperty(item, path, def = '') {
+        return _.get(item, path, def)
+      },
       initialLoading() {
         let getPath = `/admin/${this.formType.type}/${this.id}`;
         let query = {
