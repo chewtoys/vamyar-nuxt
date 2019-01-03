@@ -9,7 +9,7 @@
     <v-list color="second">
       <v-list-tile class="pb-2" to="/">
         <v-list-tile-avatar>
-          <img :src="siteLogo">
+          <v-icon class="pl-1">home</v-icon>
         </v-list-tile-avatar>
         <v-list-tile-title class="text-justify rtl">صفحه‌ی نخست</v-list-tile-title>
       </v-list-tile>

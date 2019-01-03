@@ -172,7 +172,6 @@
             this.submit_loader = false
           })
           .catch((error) => {
-
             this.submit_loader = false
           })
       }

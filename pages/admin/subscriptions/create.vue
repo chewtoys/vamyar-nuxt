@@ -147,7 +147,7 @@
           title: this.title,
           price: this.price,
           period: this.period,
-          special: this.special,
+          special: this.special ? 1 : 0,
           data: this.data,
         }
         this.$axios
@@ -157,7 +157,6 @@
             this.toast("با موفقیت ثبت شد.", "success")
             this.submit_loader = false
             this.$router.push(indexPath)
-            this.toast(" خطایی رخ داد.", "warning")
             this.submit_loader = false
           })
           .catch((error) => {
