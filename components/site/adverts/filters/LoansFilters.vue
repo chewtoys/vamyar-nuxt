@@ -43,12 +43,12 @@
           <div>
             <v-select
               :items="amountList"
-              v-model="filter.amount"
+              v-model="amount"
               item-text="name"
               item-value="value"
               :loading="loading.amount"
               :menu-props="{contentClass:'farsi mx-3'}"
-              label="حدود قیمت"
+              label="حدود مبلغ وام"
               light
               flat
               clearable
@@ -81,8 +81,6 @@
         },
         filter: {
           paybackTimeValue: null,
-          amount: null,
-          amountValue: null,
           minAmountValue: null,
           maxAmountValue: null,
           loanType: null,

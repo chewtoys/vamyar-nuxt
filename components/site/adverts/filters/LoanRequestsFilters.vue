@@ -45,7 +45,7 @@
               v-model="amount"
               :loading="loading.amount"
               :menu-props="{contentClass:'farsi mx-3'}"
-              label="حدود قیمت"
+              label="حدود مبلغ وام"
               light
               flat
               hide-details
@@ -79,30 +79,13 @@
         },
         filter: {
           paybackTime: null,
-          amount: null,
           minAmountValue: null,
           maxAmountValue: null,
           loanTypeIdValue: null,
-          instant: null,
-          title: null,
         },
         city_search: null,
         city_items: [],
 
-
-      }
-    },
-    watch: {
-
-      amount(val) {
-        let list = _.get(this.$store.state, 'settings.adverts.filters.amountArray', []);
-        let index = _.findIndex(list, {'name': val});
-        let value = null;
-        if (index > 0) {
-          let item = list[index];
-          value = _.get(item, 'value', null);
-        }
-        _.set(this, 'filters.amount', value)
       }
     },
     computed: {
