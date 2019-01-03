@@ -44,9 +44,9 @@
           :items="data"
           :loading="loading"
           :search="search"
-          :pagination.sync="pagination"
+          hide-actions
           :total-items="totalData"
-          :rows-per-page-items="[5,10,25,100]"
+          :rows-per-page-items="[25,100]"
           no-results-text="هیچ موردی ثبت نشده است."
           class="elevation-1"
         >
