@@ -196,26 +196,14 @@
         this.$axios
           .$post(method, data)
           .then(() => {
-            let status = true
-            if (status) {
-              // show success and redirect
-              this.toast("با موفقیت ثبت شد.", "success")
-              this.submit_loader = false
-              this.$router.push(indexPath)
-            } else {
-              this.toast(" خطایی رخ داد.", "warning")
-              this.submit_loader = false
-            }
+            // show success and redirect
+            this.toast("با موفقیت ثبت شد.", "success")
+            this.submit_loader = false
+            this.$router.push(indexPath)
+            this.submit_loader = false
           })
           .catch((error) => {
-            // catch and show error
-            this.toast(_.get(error, 'response.data.error.message', {error}), "error")
-            //console.log(1, _.get(error, 'response.data.error', 'no res.data'), 3, _.get(error, 'response.data.error.message', 'no data'))
-            if (_.isArray(_.get(error, 'response.data.error.message', ''))) {
-              _.forEach(_.get(error, 'response.data.error.message', []), (value, key) => {
-                this.toast(value, "error")
-              })
-            }
+            // catch and show erro
             this.submit_loader = false
           })
       }

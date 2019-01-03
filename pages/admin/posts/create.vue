@@ -44,7 +44,7 @@
             />
             <v-treeview label="والد"
                         selectable
-                        v-model="parent"
+                        v-model="parentName"
                         transition
                         :items="categories"
                         :loading="categoryLoading"
@@ -94,7 +94,8 @@
       breadcrumb: breadcrumb
     },
     data: () => ({
-      parent: [],
+      final: [],
+      parentName: [],
       content: '',
       image: null,
       title: '',
@@ -114,12 +115,22 @@
           parentId: "والد",
           // custom attributes
         },
-
       },
-
     }),
+    watch: {
+      parentName(val) {
+        let id = _.first(val)
+        console.log(val, id)
+        if(this.final.includes(id)){
+
+        }
+      }
+    },
     computed:
       {
+        parent() {
+          return this.final
+        },
         list: function () {
           return indexPath;
         }
@@ -138,8 +149,7 @@
       }).catch(err => {
         console.log(err)
       })
-    }
-    ,
+    },
     methods: {
       toast(msg, color) {
         this.$store.commit("snackbar/setSnack", msg, color)
