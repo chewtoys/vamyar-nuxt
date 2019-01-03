@@ -109,13 +109,13 @@
                   <td>
                     <small>تاریخ انقضا</small>
                   </td>
-                  <td>{{getProperty(plan, 'info.jCreatedAt', '-')}}</td>
+                  <td>{{formatDate(getProperty(plan, 'info.endDate.date', '-'))}}</td>
                 </tr>
                 <tr>
                   <td>
                     <small>روزهای باقی مانده</small>
                   </td>
-                  <td>{{getProperty(plan, 'info.remained', '-')}}</td>
+                  <td>{{getProperty(plan, 'info.remainedDays', '-')}}</td>
                 </tr>
                 </tbody>
               </table>
@@ -260,6 +260,9 @@
       }
     },
     methods: {
+      formatDate(jdate){
+        return Helper.dateFormat(jdate, 'YYYY/M/D HH:mm:ss', 'jYYYY/jM/jD HH:mm:ss');
+      },
       getProperty(item, path, val) {
         return _.get(item, path, val);
       },
