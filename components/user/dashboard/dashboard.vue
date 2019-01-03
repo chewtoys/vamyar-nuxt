@@ -186,7 +186,7 @@
       }, planInfo() {
         return _.get(this.$store.state, 'user.subscription.info', {})
       }, planExpire() {
-        return _.get(this.$store.state, 'user.subscription.info.jEndAt', '-')
+        return _.get(this.$store.state, 'user.subscription.expireDate', '-')
       }, leftDays() {
         return _.get(this.$store.state, 'user.subscription.left', '0‌') + ' روز'
       },
