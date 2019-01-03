@@ -200,9 +200,11 @@
       },
       loadAgainAdvertFilter(filter) {
         //console.log(1,{filter});
+        this.filter = ''
         let type = _.get(this, 'advertTypeName', this.which);
         let computedFilter = Helper.getComputedFilter(filter, type);
         _.set(this, 'computedFilters', computedFilter);
+        _.set(this, 'filter', filter);
         //console.log(computedFilter)
         this.loadAgain();
       },
@@ -244,7 +246,8 @@
         }
         let must = null;
         if (this.isAdverts && this.advertTypeName) {
-          must = `advertableType=${_.get(Helper.getAdvertTypeByType(this.advertTypeName), 'advertType', this.advertTypeName.slice(0, -1))}`
+          let advertableType = _.get(Helper.getAdvertTypeByType(this.advertTypeName), 'advertType', this.advertTypeName.slice(0, -1))
+          must = `advertableType=${advertableType}`
         } else {
           must = ``
         }
@@ -283,7 +286,7 @@
     },
     watch: {
       advertTypeName(val) {
-        console.log(val)
+        //console.log(val)
         this.filter = {}
       }
     },

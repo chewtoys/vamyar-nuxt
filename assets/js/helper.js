@@ -92,7 +92,7 @@ const Helper = {
   },
   getAdvertTypeByType(type) {
     let types = CONSTANTS.advertTypes
-    return _.get(_.find(types, {'type': type}), 'title', type);
+    return _.find(types, {'type': type}) || type;
   },
   /*
   @which = 'advert' || 'special' : advert for /adverts/~ routes
@@ -203,7 +203,7 @@ const Helper = {
     } else if (name === 'image') {
       return value || ''
     } else if (name === 'advertType') {
-      return this.getAdvertTypeByType(value || '')
+      return _.get(this.getAdvertTypeByType(value || ''), 'title', '-')
     } else if (name === 'interestRate') {
       return value ? (val + 'درصد') : ''
     } else if (name === 'tradeStatus') {
@@ -335,13 +335,13 @@ const Helper = {
       filter = _.pick(obj, ['cityIdValue', 'instantValue', 'transferableValue', 'titleValue']);
       _.get(filter, 'instantValue', null) === 1 ? _.set(filter, 'instantValue', 'true') : _.set(filter, 'instantValue', '');
     } else if (type === 'loans') {
-      filter = _.pick(obj, ['loanTypeIdValue', 'amountValue','maxAmountValue', 'minAmountValue', 'paybackTimeValue']);
+      filter = _.pick(obj, ['loanTypeIdValue', 'amountValue', 'maxAmountValue', 'minAmountValue', 'paybackTimeValue']);
     } else if (type === 'loanRequests') {
-      filter = _.pick(obj, ['loanTypeIdValue', 'amountValue','maxAmountValue', 'minAmountValue', 'paybackTimeValue']);
+      filter = _.pick(obj, ['loanTypeIdValue', 'amountValue', 'maxAmountValue', 'minAmountValue', 'paybackTimeValue']);
     } else if (type === 'finances') {
-      filter = _.pick(obj, ['maxAmountValue','maxMaxAmountValue', 'minMaxAmountValue']);
+      filter = _.pick(obj, ['maxAmountValue', 'maxMaxAmountValue', 'minMaxAmountValue']);
     } else if (type === 'financeRequests') {
-      filter = _.pick(obj, ['jobValue', 'maxAmountValue','minAmountValue', 'amountValue']);
+      filter = _.pick(obj, ['jobValue', 'maxAmountValue', 'minAmountValue', 'amountValue']);
     } else if (type === 'coSigners') {
       filter = _.pick(obj, ['guaranteeType__idValue', 'forBankValue', 'forCourtValue']);
     } else if (type === 'coSignerRequests') {
