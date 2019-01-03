@@ -125,8 +125,8 @@
       updateAmount() {
         let value = _.get(this, 'amount', null);
         if (_.has(value, 'min')) {
-          _.set(this, 'filter.minAmountValue', _.get(value, 'min', ''))
-          _.set(this, 'filter.maxAmountValue', _.get(value, 'max', value))
+          _.set(this, 'filter.minAmountValue', _.get(value, 'min', null ) || null )
+          _.set(this, 'filter.maxAmountValue', _.get(value, 'max', null) || null )
         } else {
           if (value === null) {
             _.set(this, 'filter.minAmountValue', null)
