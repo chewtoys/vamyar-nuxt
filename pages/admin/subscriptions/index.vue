@@ -45,9 +45,9 @@
           :items="data"
           :loading="loading"
           :search="search"
-          :pagination.sync="pagination"
+          hide-action
           :total-items="totalData"
-          :rows-per-page-items="[5,10,25,100]"
+          :rows-per-page-items="[25,100]"
           no-results-text="هیچ موردی ثبت نشده است."
           class="elevation-1"
         >
@@ -74,7 +74,7 @@
               <nuxt-link :to="uri + '/edit/' + props.item.id">{{ props.item.title || '-' }}</nuxt-link>
             </td>
             <td class="text-xs-right">{{ getPrice(props.item.price || '-') }}</td>
-            <td class="text-xs-right">{{ (props.item.period || '-') + ' ماه' }}</td>
+            <td class="text-xs-right">{{ (props.item.period || '-') + ' روز' }}</td>
 
             <td class="text-xs-left">
               <nuxt-link title="ویرایش" :to=" uri + '/edit/' + props.item.id" class="mx-1">

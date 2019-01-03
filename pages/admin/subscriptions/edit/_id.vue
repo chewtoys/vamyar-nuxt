@@ -35,7 +35,7 @@
               label="عنوان"
             />
             <v-text-field
-              v-validate="'required'"
+              v-validate="'required|numeric'"
               v-model="period"
               :error-messages="errors.collect('period')"
               box
@@ -43,7 +43,7 @@
               label="دوره"
             />
             <v-text-field
-              v-validate="'required'"
+              v-validate="'required|numeric'"
               v-model="price"
               :error-messages="errors.collect('price')"
               box
@@ -164,26 +164,15 @@
         this.$axios
           .$put(this.updateMethod, data)
           .then(() => {
-            let status = true
-            if (status) {
-              // show success and redirect
-              this.toast("با موفقیت ثبت شد.", "success")
-              this.submit_loader = false
-              this.$router.push(indexPath)
-            } else {
-              this.toast(" خطایی رخ داد.", "warning")
-              this.submit_loader = false
-            }
+
+            // show success and redirect
+            this.toast("با موفقیت ثبت شد.", "success")
+            this.submit_loader = false
+            this.$router.push(indexPath)
+            this.submit_loader = false
           })
           .catch((error) => {
-            // catch and show error
-            this.toast(_.get(error, 'response.data.error.message', {error}), "error")
-            //console.log(1, _.get(error, 'response.data.error', 'no res.data'), 3, _.get(error, 'response.data.error.message', 'no data'))
-            if (_.isArray(_.get(error, 'response.data.error.message', ''))) {
-              _.forEach(_.get(error, 'response.data.error.message', []), (value, key) => {
-                this.toast(value, "error")
-              })
-            }
+
             this.submit_loader = false
           })
       }
