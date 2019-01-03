@@ -71,12 +71,13 @@
             <td v-if="isAdmin" class="text-xs-left">{{ sender(props) }}</td>
             <td v-if="isAdmin" class="text-xs-left">{{ getProperty(props, 'item.description', '') }}</td>
             <td class="text-xs-right">{{ getProperty(props, 'item.title', '-') }}</td>
-            <template>
-              <td class="text-xs-left">{{ getProperty(props, 'item.city.name', '') }}</td>
-              <td class="text-xs-left">
-                {{ getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'title', 'نامشخص') }}
-              </td>
-            </template>
+
+            <td class="text-xs-left">{{ getProperty(props, 'item.city.name', '') }}</td>
+            <td class="text-xs-left">
+              {{ getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'title', 'نامشخص') }}
+            </td>
+            <td class="text-xs-left">{{ getDate(props) }}</td>
+
             <td class="text-xs-right">
               <v-menu offset-y>
                 <v-btn
@@ -239,7 +240,9 @@
                 hide-details
               ></v-checkbox>
             </td>
-            <td :class="`text-xs-left ${isDeleted(props.item) ? 'deletedAdvert' :''}`">{{ getProperty(props, 'item.id') }}</td>
+            <td :class="`text-xs-left ${isDeleted(props.item) ? 'deletedAdvert' :''}`">{{ getProperty(props, 'item.id')
+              }}
+            </td>
             <td v-if="isAdmin" class="text-xs-left">{{ sender(props) }}</td>
             <td v-if="isAdmin" class="text-xs-left">{{ getProperty(props, 'item.advert.description', '-') }}</td>
             <td class="text-xs-right">{{ getProperty(props, 'item.advert.title', '-') }}</td>
@@ -269,7 +272,7 @@
               <td class="text-xs-left">{{ getProperty(props, 'item.interestRate') }}</td>
               <td class="text-xs-left">{{ getProperty(props, 'item.bank') }}</td>
             </template>
-
+            <td class="text-xs-left">{{ getDate(props) }}</td>
             <td class="text-xs-right">
               <v-menu offset-y>
                 <v-btn
@@ -723,11 +726,20 @@
         let msg;
         if (_.has(props.item, 'advert.adminId') || _.has(props.item, 'adminId')) {
           let id = _.get(props.item, 'advert.adminId', _.get(props.item, 'adminId', 'نامشخص')) || '-';
-          msg = `مدیر` + '\n' + 'شناسه: ' + id
+          msg = `توسط مدیر` + '\n' + 'شناسه: ' + id
         } else {
-          msg = `کاربر` + '\n' + 'موبایل: ' + _.get(props.item, 'user.mobile', _.get(props.item, 'advert.user.mobile', '-'))
+          msg = `توسط کاربر` + '\n' + 'موبایل: ' + _.get(props.item, 'user.mobile', _.get(props.item, 'advert.user.mobile', '-'))
         }
-        return msg;
+        return Helper.nl2br(msg);
+      },
+      getDate(props) {
+        let msg = [];
+        if (this.isDeleted(props.item)) {
+          msg.push(`تاریخ حذف: ` + _.get(props.item, 'jDeletedAt', '-'));
+        }
+        msg.push(`تاریخ ایجاد: ` + _.get(props.item, 'jCreatedAt', '-'));
+        msg.push(`تاریخ ویرایش: ` + _.get(props.item, 'jUpdatedAt', '-'));
+        return Helper.nl2br(_.join(msg, '\n'));
       },
       getGuaranteeTypes(key) {
         let items = [];
@@ -790,6 +802,6 @@
 <style>
   .deletedAdvert {
     color: red;
-    border-right:1px solid;
+    border-right: 1px solid;
   }
 </style>
