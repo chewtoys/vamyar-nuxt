@@ -24,8 +24,8 @@
               :items="amountList"
               item-text="name"
               item-value="value"
-              v-model="filter.maxAmount"
-              :loading="loading.maxAmount"
+              v-model="amount"
+              :loading="loading.amount"
               :menu-props="{contentClass:'farsi mx-3'}"
               label="حداکثر سرمایه"
               light
@@ -50,16 +50,15 @@
     props: ['value', 'label'],
     data() {
       return {
+        amount: null,
         loading: {
           jobValue: false,
-          maxAmount: false
+          amount: false
         },
         filter: {
-          jobValue: null,
-          maxAmount: null,
+          //jobValue: null,
           maxAmountValue: null,
-          maxMaxAmountValue: null,
-          minMaxAmountValue: null,
+          minAmountValue: null,
         },
       }
     },
@@ -91,18 +90,19 @@
     methods: {
 
       updateMaxAmount() {
-        let value = _.get(this, 'maxAmount', null);
+        let value = _.get(this, 'amount', null);
+        _.set(this, 'filter.amountValue', null)
         if (_.has(value, 'min')) {
-          _.set(this, 'filter.minMaxAmountValue', _.get(value, 'min', ''))
-          _.set(this, 'filter.maxMaxAmountValue', _.get(value, 'max', value))
+          _.set(this, 'filter.minAmountValue', _.get(value, 'min', null))
+          _.set(this, 'filter.maxAmountValue', _.get(value, 'max', null))
         } else {
           if (value === null) {
-            _.set(this, 'filter.minMaxAmountValue', null)
-            _.set(this, 'filter.maxMaxAmountValue', null)
+            _.set(this, 'filter.minAmountValue', null)
+            _.set(this, 'filter.maxAmountValue', null)
           } else {
-            _.set(this, 'filter.maxAmountValue', 0)
-            _.set(this, 'filter.minMaxAmountValue', null)
-            _.set(this, 'filter.maxMaxAmountValue', null)
+            _.set(this, 'filter.amountValue', 0)
+            _.set(this, 'filter.minAmountValue', null)
+            _.set(this, 'filter.maxAmountValue', null)
           }
         }
         this.emitToParent();

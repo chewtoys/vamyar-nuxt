@@ -32,13 +32,19 @@
               </td>
               <td><b>{{ show(item, 'title', 'advert.title') }}</b></td>
             </tr>
-            <tr class="trrow">
+            <tr v-if="isAllowed('amount')" class="trrow">
               <td width="30%">
                 <small>{{getTitle('amount')}}</small>
               </td>
               <td><b>{{ price(show(item, 'advertable.amount', 'amount', 'توافقی')) }}</b></td>
             </tr>
-            <tr v-if="false && item.advertable && item.advertable.price" class="trrow">
+            <tr v-if="isAllowed('maxAmount')" class="trrow">
+              <td width="30%">
+                <small>{{getTitle('maxAmount')}}</small>
+              </td>
+              <td><b>{{ price(show(item, 'advertable.maxAmount', 'maxAmount', 'توافقی')) }}</b></td>
+            </tr>
+            <tr v-if="isAllowed('price')" class="trrow">
               <td width="30%">
                 <small>{{getTitle('price')}}</small>
               </td>
@@ -52,7 +58,7 @@
                 <b>{{ limitStr(show(item, 'text', 'advert.text'), 250, ' ...') }}</b>
               </td>
             </tr>
-            <tr v-if="item.city || (item.advert && item.advert.cityId)" class="trrow">
+            <tr v-if="isAllowed('city')" class="trrow">
               <td>
                 <small>{{getTitle('city')}}</small>
               </td>
@@ -116,6 +122,10 @@
         let field = list // _.find(list, {name});
         // console.log({type, list, field, name}, this.item, this.which)
         return _.get(field, 'title', name)
+      },
+      isAllowed(name) {
+        let type = _.get(Helper.getAdvertType(this.item, null, true), 'type', this.which)
+        return !!Helper.getFieldByType(type, name)
       },
       _has(item, path) {
         return _.has(item, path)

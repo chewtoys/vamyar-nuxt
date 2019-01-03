@@ -9,7 +9,7 @@
               :items="amountList"
               item-text="name"
               item-value="value"
-              v-model="filter.maxAmount"
+              v-model="maxAmount"
               :loading="loading.maxAmount"
               :menu-props="{contentClass:'farsi mx-3'}"
               label="حداکثر سرمایه"
@@ -35,13 +35,11 @@
     props: ['value', 'label'],
     data() {
       return {
-        amount: '',
+        maxAmount: '',
         loading: {
           maxAmount: false
         },
         filter: {
-          maxAmount: null,
-          maxAmountValue: null,
           maxMaxAmountValue: null,
           minMaxAmountValue: null,
         },
@@ -75,10 +73,13 @@
     methods: {
 
       updateMaxAmount() {
+
         let value = _.get(this, 'maxAmount', null);
+        _.set(this, 'filter.maxAmountValue', null)
+
         if (_.has(value, 'min')) {
-          _.set(this, 'filter.minMaxAmountValue', _.get(value, 'min', ''))
-          _.set(this, 'filter.maxMaxAmountValue', _.get(value, 'max', value))
+          _.set(this, 'filter.minMaxAmountValue', _.get(value, 'min', null))
+          _.set(this, 'filter.maxMaxAmountValue', _.get(value, 'max', null))
         } else {
           if (value === null) {
             _.set(this, 'filter.minMaxAmountValue', null)

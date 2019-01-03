@@ -5,25 +5,8 @@
       <v-layout rwo wrap>
         <v-flex xs12 sm4 class="pa-1">
           <div>
-            <v-select
-              :items="loanTypeList"
-              v-model="loanTypeIdValue"
-              :loading="loading.loanType"
-              :menu-props="{contentClass:'farsi mx-3'}"
-              label="نوع وام"
-              light
-              flat
-              hide-details
-              solo-inverted
-              append-icon="list"
-              @change="emitToParent"
-            />
-          </div>
-        </v-flex>
-        <v-flex xs12 sm4 class="pa-1">
-          <div>
             <v-text-field
-              v-model="filter.paybackTime"
+              v-model="filter.paybackTimeValue"
               :loading="loading.paybackTime"
               solo-inverted
               hint="سال به عدد"
@@ -78,7 +61,7 @@
           loanType: false,
         },
         filter: {
-          paybackTime: null,
+          paybackTimeValue: null,
           minAmountValue: null,
           maxAmountValue: null,
           loanTypeIdValue: null,
@@ -123,6 +106,7 @@
       },
       updateAmount() {
         let value = _.get(this, 'amount', null);
+        _.set(this, 'filter.amountValue', null)
         if (_.has(value, 'min')) {
           _.set(this, 'filter.minAmountValue', _.get(value, 'min', null) || null)
           _.set(this, 'filter.maxAmountValue', _.get(value, 'max', null) || null)

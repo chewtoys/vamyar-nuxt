@@ -77,7 +77,7 @@
 
             />
             <v-text-field
-              v-if="isAllowed('amount')"
+              v-if="isAllowed('amount') && formType.type!=='financeRequests'"
               :hint="amountHint"
               v-validate="'required|numeric'"
               v-model="amount"
@@ -87,6 +87,18 @@
               :label="getTitle('amount')"
               data-vv-name="amount"
             />
+            <v-combobox
+              :items="['توافقی']"
+              :placeholder="getPlaceholder('amount')"
+              v-if="isAllowed('amount') && formType.type==='financeRequests'"
+              v-validate="'required'"
+              v-model="amountName"
+              :error-messages="errors.collect('amount')"
+              box
+              :hint="financeAmountHint"
+              :label="getTitle('amount')"
+              data-vv-name="amount"
+            ></v-combobox>
             <v-combobox
               :items="['توافقی']"
               :placeholder="getPlaceholder('price')"
@@ -252,7 +264,7 @@
       guaranteeTypesName: null, // Computed
       loanTypeName: null,
       paybackTimeName: null,
-      amount: null,
+      amountName: null,
       payback: null,
       priceName: null,
       type: null,
@@ -290,6 +302,9 @@
       },
       maxAmountHint() {
         return Helper.computeAdvertField('maxAmount', this.maxAmount)
+      },
+      financeAmountHint() {
+        return Helper.computeAdvertField('maxAmount', this.amount)
       },
       priceHint() {
         return Helper.computeAdvertField('price', this.price)
@@ -347,6 +362,14 @@
         },
         set: function (val) {
           this.maxAmountName = val === 0 ? 'توافقی' : val;
+        }
+      },
+      amount: {
+        get: function () {
+          return (this.amountName === 'توافقی') ? 0 : this.amountName;
+        },
+        set: function (val) {
+          this.amountName = val === 0 ? 'توافقی' : val;
         }
       },
       paybackTime: {

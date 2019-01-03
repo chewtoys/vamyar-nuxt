@@ -281,6 +281,12 @@
         return true
       }
     },
+    watch: {
+      advertTypeName(val) {
+        console.log(val)
+        this.filter = {}
+      }
+    },
     components: {
       AdvertFilters,
       LoansFilters,
