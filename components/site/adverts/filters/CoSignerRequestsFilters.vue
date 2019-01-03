@@ -3,7 +3,33 @@
     <v-subheader>{{getLabel}}</v-subheader>
     <v-card class="elevation-0 pa-2" flat color="transparent" light>
       <v-layout rwo wrap>
-        <v-flex xs12 sm4 class="pa-1">
+        <v-flex xs12 sm2 lg2 class="pa-1">
+          <v-checkbox
+            v-model="filter.forCourtValue"
+            :loading="loading.value"
+            label="برای دادگاه"
+            light
+            flat
+            clearable
+            hide-details
+            solo-inverted
+            @change="emitToParent"
+          />
+        </v-flex>
+        <v-flex xs12 sm2 lg2 class="pa-1">
+          <v-checkbox
+            v-model="filter.forBankValue"
+            :loading="loading.value"
+            label="برای بانک"
+            light
+            flat
+            clearable
+            hide-details
+            solo-inverted
+            @change="emitToParent"
+          />
+        </v-flex>
+        <v-flex v-if="false" xs12 sm4 class="pa-1">
           <div>
             <v-select
               :items="typeList"

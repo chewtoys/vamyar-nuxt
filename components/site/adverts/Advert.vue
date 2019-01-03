@@ -48,7 +48,7 @@
               <td width="30%">
                 <small>{{getTitle('price')}}</small>
               </td>
-              <td><b class="red--text">{{ price(show(item, 'advertable.price', 'price', 'ثبت نشده')) }}</b></td>
+              <td><b class="">{{ price(show(item, 'advertable.price', 'price', 'ثبت نشده')) }}</b></td>
             </tr>
             <tr class="hide trrow">
               <td>

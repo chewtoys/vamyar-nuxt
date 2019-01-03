@@ -247,7 +247,7 @@
         let must = null;
         if (this.isAdverts && this.advertTypeName) {
           let advertableType = _.get(Helper.getAdvertTypeByType(this.advertTypeName), 'advertType', this.advertTypeName.slice(0, -1))
-          must = `advertableType=${advertableType}`
+          if (advertableType !== 'adverts') must = `advertableType=${advertableType}`
         } else {
           must = ``
         }

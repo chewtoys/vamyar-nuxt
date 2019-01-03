@@ -24,7 +24,7 @@
         </v-flex>
         <v-flex xs12 sm2 lg2 class="pa-1">
           <v-checkbox
-            v-model="filter.forCourt"
+            v-model="filter.forCourtValue"
             :loading="loading.value"
             label="برای دادگاه"
             light
@@ -37,7 +37,7 @@
         </v-flex>
         <v-flex xs12 sm2 lg2 class="pa-1">
           <v-checkbox
-            v-model="filter.forBank"
+            v-model="filter.forBankValue"
             :loading="loading.value"
             label="برای بانک"
             light

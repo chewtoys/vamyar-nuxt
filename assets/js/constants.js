@@ -546,7 +546,7 @@ export const
           title: 'برای بانک'
         }, {
           name: 'forCourt',
-          title: 'برای درگاه'
+          title: 'برای دادگاه'
         }, {
           name: 'interestRate',
           title: 'سود'
