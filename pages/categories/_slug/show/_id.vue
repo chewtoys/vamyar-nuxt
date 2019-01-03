@@ -17,7 +17,6 @@
             </i>
           </v-card-title>
           <div>
-
             <v-divider/>
             <span>
               <v-chip v-if="getProperty(item, 'advert.user.details.lastName', false)" outline label class="black--text">
@@ -30,15 +29,19 @@
             <span class="left">
               <v-chip v-if="isInstant" label color="red" text-color="white">
                 <span calss="white--text">فوری</span>
-                <v-icon left class="white--text">label</v-icon>
+                <v-icon left class="px-2 white--text">label</v-icon>
               </v-chip>
               <v-chip v-if="getProperty(item, 'advert.verified',false)" label color="green" text-color="white">
                 <span calss="white--text">بررسی شده</span>
-                <v-icon left class="white--text">security</v-icon>
+                <v-icon left class="px-2 white--text">security</v-icon>
               </v-chip>
               <v-chip v-if="getProperty(item, 'advert.tradeStatus',0)===1" label color="cyan" text-color="white">
                 <span calss="white--text">در حال معامله</span>
-                <v-icon left class="white--text">star</v-icon>
+                <v-icon left class="px-2 white--text">phone_in_talk</v-icon>
+              </v-chip>
+              <v-chip v-if="getProperty(item, 'advert.transferable',0)===1" label color="yellow" text-color="white">
+                <span calss="white--text">قابل انتقال به سایر شهرها</span>
+                <v-icon left class="px-2 white--text">location_on</v-icon>
               </v-chip>
             </span>
           </div>

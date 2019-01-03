@@ -216,7 +216,7 @@
         if (this.isAdverts) {
           include = 'advertable,city,user.details,loanType,guaranteeType';
         } else {
-          include = 'advert,city,user.details,loanTypes,guaranteeTypes';
+          include = 'advert,advert.city,advert.user.details,loanTypes,guaranteeTypes';
         }
         //console.log(1, this.commonComputedFilters, 2, this.computedFilters);
 

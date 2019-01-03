@@ -35,9 +35,9 @@ const Helper = {
     return _.has(fields, `${type}.${which}`) ? !!(_.find(fields[type][which], {'name': field})) : false;
   }
   ,
-  getFieldByType(type, field, which = 'create') {
+  getFieldByType(type, fieldName, which = 'create') {
     let fields = CONSTANTS.fieldByType;
-    return _.find(_.get(fields, `${type}.${which}`, {}), {'name': field});
+    return _.find(_.get(fields, `${type}.${which}`, {}), {'name': fieldName});
   }
   ,
   getFieldPath(type, field, which = 'edit') {

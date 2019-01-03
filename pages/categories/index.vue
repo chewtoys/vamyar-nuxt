@@ -25,7 +25,7 @@
       let method = `/site/adverts`
       let cursor
       cursor = 0
-      let include = 'advertable,city,user.details,loanType,guaranteeType';
+      let include = 'advertable,city,user.details,loanType,guaranteeTypes';
       let query = {
         number,
         include

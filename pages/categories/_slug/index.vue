@@ -33,7 +33,7 @@
       let method = `/site/${type.type}`
       let cursor
       cursor = 0
-      let include = 'advert,city,user.details,loanTypes,guaranteeTypes';
+      let include = 'advert.city,advert.user.details,loanType,guaranteeTypes';
       let query = {
         number,
         include

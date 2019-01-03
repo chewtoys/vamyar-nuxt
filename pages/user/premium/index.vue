@@ -125,7 +125,7 @@
       planTitle(sub) {
         return _.get(sub, 'title', '-')
       }, planPeriod(sub) {
-        return _.get(sub, 'info.period', '-')
+        return _.get(sub, 'period', '-')
       }, planStart(sub) {
         return _.get(sub, 'info.jCreatedAt', '-')
       }, planPrice(sub) {

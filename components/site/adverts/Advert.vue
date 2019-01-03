@@ -28,31 +28,25 @@
 
             <tr class="trrow">
               <td width="30%">
-                <small>عنوان</small>
+                <small>{{getTitle('title')}}</small>
               </td>
               <td><b>{{ show(item, 'title', 'advert.title') }}</b></td>
             </tr>
-            <tr v-if="which==='adverts'" class="hide trrow">
-              <td width="30%">
-                <small>نوع آگهی</small>
-              </td>
-              <td><b>{{ itemType(item) }}</b></td>
-            </tr>
             <tr class="trrow">
               <td width="30%">
-                <small>مبلغ</small>
+                <small>{{getTitle('amount')}}</small>
               </td>
               <td><b>{{ price(show(item, 'advertable.amount', 'amount', 'توافقی')) }}</b></td>
             </tr>
             <tr v-if="false && item.advertable && item.advertable.price" class="trrow">
               <td width="30%">
-                <small>قیمت</small>
+                <small>{{getTitle('price')}}</small>
               </td>
               <td><b class="red--text">{{ price(item.advertable.price) }}</b></td>
             </tr>
             <tr class="hide trrow">
               <td>
-                <small>توضیحات</small>
+                <small>{{getTitle('text')}}</small>
               </td>
               <td>
                 <b>{{ limitStr(show(item, 'text', 'advert.text'), 250, ' ...') }}</b>
@@ -60,18 +54,10 @@
             </tr>
             <tr v-if="item.city || (item.advert && item.advert.cityId)" class="trrow">
               <td>
-                <small>شهر</small>
+                <small>{{getTitle('city')}}</small>
               </td>
               <td>
                 <b>{{ show(item, 'city.name', 'advert.city.name') }}</b>
-              </td>
-            </tr>
-            <tr class="hidden trrow">
-              <td>
-                <small>ثبت شده توسط</small>
-              </td>
-              <td>
-                <b>{{ show(item, 'advert.user.details.name', 'user.details.name') }}</b>
               </td>
             </tr>
             <tr class="trrow">
@@ -91,13 +77,25 @@
       <v-icon color="blue lighten-5">touch_app</v-icon>
       <v-spacer/>
       <v-tooltip top>
-        <v-btn v-if="item.instant" slot="activator" class="mx-1" icon round color="red" text-color="white">
+        <v-btn v-if="isInstant" slot="activator" class="mx-1" icon round color="red" text-color="white">
           <v-icon class="white--text">whatshot</v-icon>
         </v-btn>
         <span>فوری</span>
       </v-tooltip>
       <v-tooltip top>
-        <v-btn v-if="item.verified" slot="activator" class="mx-1" icon round color="green" text-color="white">
+        <v-btn v-if="isTransferable" slot="activator" class="mx-1" icon round color="yellow" text-color="white">
+          <v-icon class="white--text">location_on</v-icon>
+        </v-btn>
+        <span>قابل انتقال به سایر شهرها</span>
+      </v-tooltip>
+      <v-tooltip top>
+        <v-btn v-if="tradeStatus===1" slot="activator" class="mx-1" icon round color="cyan" text-color="white">
+          <v-icon class="white--text">phone_in_talk</v-icon>
+        </v-btn>
+        <span>در حال معامله</span>
+      </v-tooltip>
+      <v-tooltip top>
+        <v-btn v-if="isVerified" slot="activator" class="mx-1" icon round color="green" text-color="white">
           <v-icon class="white--text">security</v-icon>
         </v-btn>
         <span>بررسی شده</span>
@@ -112,6 +110,13 @@
   export default {
     props: ["item", 'which'],
     methods: {
+      getTitle(name) {
+        let type = _.get(Helper.getAdvertType(this.item, null, true), 'type', this.which)
+        let list = Helper.getFieldByType(type, name)
+        let field = list // _.find(list, {name});
+        // console.log({type, list, field, name}, this.item, this.which)
+        return _.get(field, 'title', name)
+      },
       _has(item, path) {
         return _.has(item, path)
       },
@@ -137,6 +142,20 @@
       price(number) {
         return Helper.priceFormat(number)
       }
+    },
+    computed: {
+      isTransferable() {
+        return _.get(this.item, 'advert.transferable', _.get(this.item, 'transferable', 0));
+      },
+      isInstant() {
+        return _.get(this.item, 'advert.instant', _.get(this.item, 'instant', 0));
+      },
+      isVerified() {
+        return _.get(this.item, 'advert.verified', _.get(this.item, 'verified', 0));
+      },
+      tradeStatus() {
+        return _.get(this.item, 'advert.tradeStatus', _.get(this.item, 'tradeStatus', 0));
+      },
     }
   }
 </script>

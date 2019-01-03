@@ -15,7 +15,7 @@
               <v-alert :value="true" type="success" icon="star"><span
                 class="px-1">حساب شما دارای اشتراک فعال می باشد.</span>
               </v-alert>
-              <v-alert :value="true" color="info"><p>جزئیات اشتراک شما:</p>
+              <v-alert :value="true" color="info"><p>جزئیات اشتراک شما</p>
                 <p>عنوان اشتراک: {{planTitle}}</p>
                 <p>دوره ی اشتراک: {{planPeriod}}</p>
                 <p>شروع اشتراک: {{planStart}}</p>

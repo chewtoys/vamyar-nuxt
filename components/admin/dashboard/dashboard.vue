@@ -188,7 +188,7 @@
             v-for="(item,i) in adverts"
             :key="i"
           >
-            <div slot="header" class="text-right">{{item.title || '-' }} {{item.instant}}</div>
+            <div slot="header" class="text-right">{{item.title || '-' }} <small>{{item.instant}}</small></div>
             <v-card>
               <v-card-text class="grey lighten-4 text-right">
                 <v-layout row wrap>

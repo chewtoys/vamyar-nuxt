@@ -203,7 +203,8 @@ export const
           path: 'advert.cityId'
         }, {
           name: 'transferable',
-          title: 'قابل انتقال'
+          title: 'قابل انتقال',
+          path: 'advert.transferable'
         }, {
           name: 'text',
           title: 'توضیح آگهی',
