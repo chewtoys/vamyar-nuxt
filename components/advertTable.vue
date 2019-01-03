@@ -69,9 +69,9 @@
               }}
             </td>
             <td v-if="isAdmin" class="text-xs-left" v-html="sender(props)"></td>
-            <td v-if="isAdmin" class="text-xs-left">{{ getProperty(props, 'item.description', '') }}</td>
+            <td v-if="false && isAdmin" class="text-xs-left">{{ getProperty(props, 'item.description', '') }}</td>
+            <td class="text-xs-left">{{itemType(props.item)}}</td>
             <td class="text-xs-right">{{ getProperty(props, 'item.title', '-') }}</td>
-
             <td class="text-xs-left">{{ getProperty(props, 'item.city.name', '') }}</td>
             <td class="text-xs-left">
               {{ getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'title', 'نامشخص') }}
@@ -244,7 +244,7 @@
               }}
             </td>
             <td v-if="isAdmin" class="text-xs-left" v-html="sender(props)"></td>
-            <td v-if="isAdmin" class="text-xs-left">{{ getProperty(props, 'item.advert.description', '-') }}</td>
+            <td v-if="false && isAdmin" class="text-xs-left">{{ getProperty(props, 'item.advert.description', '-') }}</td>
             <td class="text-xs-right">{{ getProperty(props, 'item.advert.title', '-') }}</td>
             <template v-if="type.type=='loans'">
               <td class="text-xs-left">{{ getPrice(getProperty(props, 'item.price', '')) }}</td>
@@ -469,11 +469,11 @@
       headers() {
         let id = {text: "شناسه", align: "right", value: 'id'};
         let owner = {text: "ثبت شده توسط", align: "right", value: 'advert.user.id'};
-        let description = {text: "توضیح ادمین", value: "description", align: "left"};
+        //let description = {text: "توضیح ادمین", value: "description", align: "left"};
         let result = [];
         result = Helper.getRawHeaders(this.type.type);
         // console.log(result.length)
-        if (this.isAdmin && result[2].value !== 'description') result.unshift(description);
+        //if (this.isAdmin && result[2].value !== 'description') result.unshift(description);
         if (this.isAdmin && result[1].value !== 'advert.user.id') result.unshift(owner);
         if (result[0].value !== 'id') result.unshift(id);
         return _.uniq(result);
@@ -507,6 +507,9 @@
       }
     },
     methods: {
+      itemType(item) {
+        return Helper.getAdvertType(item)
+      },
       loadAgainCommonAdvertFilter(filter) {
         //console.log(filter);
         let typeName = _.get(filter, 'advertTypeName', null);

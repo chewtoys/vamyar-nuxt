@@ -25,7 +25,8 @@ export const
   },
   rawHeaders = {
     adverts: [
-      {text: "عنوان", align: "right", value: 'advert.title'},
+      {text: "نوع آگهی", align: "right", value: 'advertableType'},
+      {text: "عنوان", align: "right", value: 'title'},
       {text: "شهر", value: "city", align: "left"},
       {text: "نوع آگهی", value: 'advertType', align: "right"},
       {text: "تاریخ", value: 'jCreatedAt', align: "right"},
