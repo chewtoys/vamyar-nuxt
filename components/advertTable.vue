@@ -68,7 +68,7 @@
             <td :class="`text-xs-left ${isDeleted(props.item) ? 'deletedAdvert' :''}`">{{ getProperty(props, 'item.id')
               }}
             </td>
-            <td v-if="isAdmin" class="text-xs-left">{{ sender(props) }}</td>
+            <td v-if="isAdmin" class="text-xs-left" v-html="sender(props)"></td>
             <td v-if="isAdmin" class="text-xs-left">{{ getProperty(props, 'item.description', '') }}</td>
             <td class="text-xs-right">{{ getProperty(props, 'item.title', '-') }}</td>
 
@@ -76,7 +76,7 @@
             <td class="text-xs-left">
               {{ getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'title', 'نامشخص') }}
             </td>
-            <td class="text-xs-left">{{ getDate(props) }}</td>
+            <td class="text-xs-left" v-html="getDate(props)"></td>
 
             <td class="text-xs-right">
               <v-menu offset-y>
@@ -243,7 +243,7 @@
             <td :class="`text-xs-left ${isDeleted(props.item) ? 'deletedAdvert' :''}`">{{ getProperty(props, 'item.id')
               }}
             </td>
-            <td v-if="isAdmin" class="text-xs-left">{{ sender(props) }}</td>
+            <td v-if="isAdmin" class="text-xs-left" v-html="sender(props)"></td>
             <td v-if="isAdmin" class="text-xs-left">{{ getProperty(props, 'item.advert.description', '-') }}</td>
             <td class="text-xs-right">{{ getProperty(props, 'item.advert.title', '-') }}</td>
             <template v-if="type.type=='loans'">
@@ -272,7 +272,7 @@
               <td class="text-xs-left">{{ getProperty(props, 'item.interestRate') }}</td>
               <td class="text-xs-left">{{ getProperty(props, 'item.bank') }}</td>
             </template>
-            <td class="text-xs-left">{{ getDate(props) }}</td>
+            <td class="text-xs-left" v-html="getDate(props)"></td>
             <td class="text-xs-right">
               <v-menu offset-y>
                 <v-btn
