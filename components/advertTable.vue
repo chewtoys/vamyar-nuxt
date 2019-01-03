@@ -724,11 +724,11 @@
       },
       sender(props) {
         let msg;
-        if (_.has(props.item, 'advert.adminId') || _.has(props.item, 'adminId')) {
+        if (_.has(props.item, 'advert.userId') || _.has(props.item, 'userId')) {
+          msg = `توسط کاربر` + '\n' + 'موبایل: ' + _.get(props.item, 'user.mobile', _.get(props.item, 'advert.user.mobile', '-'))
+        } else {
           let id = _.get(props.item, 'advert.adminId', _.get(props.item, 'adminId', 'نامشخص')) || '-';
           msg = `توسط مدیر` + '\n' + 'شناسه: ' + id
-        } else {
-          msg = `توسط کاربر` + '\n' + 'موبایل: ' + _.get(props.item, 'user.mobile', _.get(props.item, 'advert.user.mobile', '-'))
         }
         return Helper.nl2br(msg);
       },
