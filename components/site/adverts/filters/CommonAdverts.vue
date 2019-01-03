@@ -4,7 +4,6 @@
     <v-card class="elevation-0 pa-2" flat color="transparent" light>
       <v-layout rwo wrap>
         <v-flex xs12>
-
         </v-flex>
         <v-flex v-if="getChooseType" xs12 sm4 class="pa-1">
           <div>
@@ -42,12 +41,10 @@
         <v-flex xs12 sm2 class="pa-1">
           <div>
             <v-autocomplete
-              :menu-props="{contentClass:'farsi mx-3'}"
               :loading="loading.city"
               :items="city_items"
               item-text="name"
               item-value="id"
-              :search-input.sync="city_search"
               v-model="filter.cityIdValue"
               append-icon="location_on"
               clearable
@@ -55,8 +52,6 @@
               no-data-text="شهری یافت نشد"
               label="انتخاب شهر"
               flat
-              hide-no-data
-              hide-details
               solo-inverted
               @change="updateCity"
             />
@@ -66,7 +61,7 @@
           <v-checkbox
             v-model="filter.instant"
             :loading="loading.instant"
-            label=" فوری "
+            label=" فوری"
             light
             flat
             hide-details
@@ -122,7 +117,6 @@
         },
         search: '',
         city_search: null,
-        city_items: [],
       }
     },
     computed: {
@@ -141,14 +135,11 @@
         })
         return titles
       },
-      city_states() {
+      city_items() {
         return _.get(this.$store.state, 'city.data')
       },
     },
     watch: {
-      city_search(val) {
-        val && val !== this.filter.city && this.querySelections(val)
-      },
     },
     mounted() {
       _.set(this.loading, 'city', true)
@@ -196,18 +187,11 @@
         this.emitToParent();
       },
       updateCity() {
-        _.set(this.filter, 'cityIdValue', id);
         this.emitToParent();
       },
       emitToParent() {
         this.$emit("change", this.filter);
         return this.$emit("input", this.filter);
-      },
-      // select the proper city
-      querySelections(v) {
-        _.set(this.loading, 'city', true)
-        this.city_items = this.city_states
-        _.set(this.loading, 'city', false)
       },
     }
   }

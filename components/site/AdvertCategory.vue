@@ -223,36 +223,38 @@
         //console.log(1, this.commonComputedFilters, 2, this.computedFilters);
 
         let filterArray = [];
-        if (this.isAdverts) {
-          _.forEach(this.commonComputedFilters, function (value, key) {
-            if (value !== null && value !== '' && value !== 'null') {
+
+
+        _.forEach(this.commonComputedFilters, function (value, key) {
+          if (value !== null && value !== '' && value !== 'null') {
+            if (this.isAdverts) {
               filterArray.push(`${key}=${value}`)
-              //console.log(`${key}=${value}`)
+            } else {
+              filterArray.push(`advert.${key}=${value}`)
             }
-          })
-          _.forEach(this.computedFilters, function (value, key) {
-            if (value !== null && value !== '' && value !== 'null') {
+            //console.log(`${key}=${value}`)
+          }
+        })
+        _.forEach(this.computedFilters, function (value, key) {
+          if (value !== null && value !== '' && value !== 'null') {
+            if (this.isAdverts) {
               filterArray.push(`advertable.${key}=${value}`)
-              //console.log(`advertable.${key}=${value}`, key, value)
-            }
-          })
-        } else {
-          _.forEach(this.computedFilters, function (value, key) {
-            if (value !== null && value !== '' && value !== 'null') {
+            } else {
               filterArray.push(`${key}=${value}`)
-              //console.log(`${key}=${value}`, key, value)
             }
-          })
-        }
-        let must = null;
+            //console.log(`advertable.${key}=${value}`, key, value)
+          }
+        })
+
+        let must = '';
         if (this.isAdverts && this.advertTypeName) {
           let advertableType = _.get(Helper.getAdvertTypeByType(this.advertTypeName), 'advertType', this.advertTypeName.slice(0, -1))
           if (advertableType !== 'adverts') must = `advertableType=${advertableType}`
-        } else {
-          must = ``
         }
 
+
         let filter = _.replace(_.replace(_.replace(_.replace(_.replace(_.replace(_.replace(_.join(filterArray, ','), '<=', '<'), '>=', '>'), '__', '.'), 'true', '1'), 'false', '0'), 'true', '1'), 'false', '0');
+
         let orederBy = this.sort;
         let query = {
           orederBy,

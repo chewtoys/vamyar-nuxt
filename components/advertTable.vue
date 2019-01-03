@@ -33,7 +33,7 @@
             hide-details
           ></v-text-field>
 
-          <AdvertFilters :chooseType="isAdverts" label="فیلتر کنید" v-model="advertFilters"
+          <AdvertFilters v-if="isAdmin" :chooseType="isAdverts" label="فیلتر کنید" v-model="advertFilters"
                          @change="loadAgainCommonAdvertFilter"/>
           <LoansFilters v-if="canShow('loans')" label="فیلتر وام " v-model="filter"
                         @change="loadAgainAdvertFilter"/>
@@ -244,7 +244,8 @@
               }}
             </td>
             <td v-if="isAdmin" class="text-xs-left" v-html="sender(props)"></td>
-            <td v-if="false && isAdmin" class="text-xs-left">{{ getProperty(props, 'item.advert.description', '-') }}</td>
+            <td v-if="false && isAdmin" class="text-xs-left">{{ getProperty(props, 'item.advert.description', '-') }}
+            </td>
             <td class="text-xs-right">{{ getProperty(props, 'item.advert.title', '-') }}</td>
             <template v-if="type.type=='loans'">
               <td class="text-xs-left">{{ getPrice(getProperty(props, 'item.price', '')) }}</td>
@@ -518,6 +519,7 @@
         }
         let computedFilter = Helper.getComputedFilter(filter);
         _.set(this, 'commonComputedFilters', computedFilter);
+        console.log(1, {computedFilter})
         //this.loadAgain();
       },
       loadAgainAdvertFilter(filter) {
@@ -525,11 +527,11 @@
         let type = _.get(this, 'advertTypeName', this.which);
         let computedFilter = Helper.getComputedFilter(filter, type);
         _.set(this, 'computedFilters', computedFilter);
-        //console.log(computedFilter)
+        console.log(2, {computedFilter})
         //this.loadAgain();
       },
       canShow(type) {
-        return _.get(this, 'advertTypeName', '') === type;
+        return this.isAdmin && _.get(this, 'advertTypeName', '') === type;
       },
       getAdvertType(advertType) {
         return Helper.getTypeByAdvertType(advertType);
@@ -538,14 +540,46 @@
         this.loading = true;
         let method = `/${this.panel}/${this.type.type}`;
         let advertableType = this.type.advertType;
-        let filter;
-        if (this.search) filter = `advert.mobile=${this.search},job=${this.search},price=${this.search},maxAmount=${this.search},amount=${this.search},advert.text=${this.search},advert.advertableId=${this.search},advert.id=${this.search},advert.description=${this.search},advert.city.name=${this.search},advert.user.mobile=${this.search},advert.user.email=${this.search}`
-        if (this.type.type === 'adverts' && this.search) filter = `mobile=${this.search},advertable.job=${this.search},advertable.price=${this.search},advertable.maxAmount=${this.search},advertable.amount=${this.search},title=${this.search},text=${this.search},advertableId=${this.search},id=${this.search},description=${this.search},city.name=${this.search},user.mobile=${this.search},user.email=${this.search}`
+        let filter = '', must = ''
+
+        /* search and filter */
+        if (this.search) {
+          filter = this.isAdverts ? `title=${this.search},text=${this.search}` : `advert.title=${this.search},advert.text=${this.search}`
+        } else if (this.commonComputedFilters || this.computedFilters) {
+          let filterArray = [];
+          _.forEach(this.commonComputedFilters, function (value, key) {
+            if (value !== null && value !== '' && value !== 'null') {
+              if (this.isAdverts) {
+                filterArray.push(`${key}=${value}`)
+              } else {
+                filterArray.push(`advert.${key}=${value}`)
+              }
+            }
+          })
+          _.forEach(this.computedFilters, function (value, key) {
+            if (value !== null && value !== '' && value !== 'null') {
+              if (this.isAdverts) {
+                filterArray.push(`advertable.${key}=${value}`)
+              } else {
+                filterArray.push(`${key}=${value}`)
+              }
+            }
+          })
+          filter = _.replace(_.replace(_.replace(_.replace(_.replace(_.replace(_.replace(_.join(filterArray, ','), '<=', '<'), '>=', '>'), '__', '.'), 'true', '1'), 'false', '0'), 'true', '1'), 'false', '0');
+        }
+
+        if (this.isAdverts && this.advertTypeName) {
+          let advertableType = _.get(Helper.getAdvertTypeByType(this.advertTypeName), 'advertType', this.advertTypeName.slice(0, -1))
+          if (advertableType !== 'adverts') must = `advertableType=${advertableType}`
+        }
+
 
         let include = 'advert.user.details,guaranteeType,guaranteeTypes,advert.city,loanType,loanTypes';
-        if (this.type.type === 'adverts') include = 'user.details,guaranteeType,guaranteeTypes,city,loanType,loanTypes';
+        if (this.isAdverts) include = 'advertable,user.details,advertable.guaranteeTypes,city,advertable.loanType';
+
         let {sortBy, descending, page, rowsPerPage} = this.pagination;
         let query = {
+          must,
           page,
           advertableType,
           include,
