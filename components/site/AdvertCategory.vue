@@ -4,18 +4,18 @@
       <v-card color="white">
         <AdvertFilters :chooseType="isAdverts" label="فیلتر کنید" v-model="advertFilters"
                        @change="loadAgainCommonAdvertFilter"/>
-        <LoansFilters v-if="canShow('loans')" label="فیلتر وام " v-model="filter" ffmodel="loansFilters"
+        <LoansFilters v-if="canShow('loans')" label="فیلتر وام " v-model="filter"
                       @change="loadAgainAdvertFilter"/>
         <LoanRequestsFilters v-if="canShow('loanRequests')" label="فیلتر در خواست وام " v-model="filter"
-                             ffmodel="loanRequestsFilters" @change="loadAgainAdvertFilter"/>
-        <CoSignersFilters v-if="canShow('coSigners')" label="فیلتر ضامن ها" v-model="filter" ffmodel="coSignersFilters"
+                             @change="loadAgainAdvertFilter"/>
+        <CoSignersFilters v-if="canShow('coSigners')" label="فیلتر ضامن ها" v-model="filter"
                           @change="loadAgainAdvertFilter"/>
         <CoSignerRequestsFilters v-if="canShow('coSignerRequests')" label="فیلتر درخواست ضامن"
-                                 v-model="filter" ffmodel="coSignerRequestsFilters" @change="loadAgainAdvertFilter"/>
+                                 v-model="filter" @change="loadAgainAdvertFilter"/>
         <FinancesFilters v-if="canShow('finances')" label="فیلتر سرمایه گذاری ها" v-model="filter"
-                         ffmodel="financesFilters" @change="loadAgainAdvertFilter"/>
+                         @change="loadAgainAdvertFilter"/>
         <FinanceRequestsFilters v-if="canShow('financeRequests')" label="فیلتر درخواست سرمایه گذاری "
-                                v-model="filter" ffmodel="financeRequestsFilters" @change="loadAgainAdvertFilter"/>
+                                v-model="filter" @change="loadAgainAdvertFilter"/>
 
         <v-flex xs12 sm6 class="py-2">
           <v-subheader>مرتب سازی بر اساس</v-subheader>
@@ -61,7 +61,7 @@
               ></v-progress-circular>
             </div>
             <div v-if="!loading && items.length < 1 " class="full text-xs-center">
-              <v-alert  :value="true" type="warning" icon="info">
+              <v-alert :value="true" type="warning" icon="info">
                 <span class="p-b--2">در حال حاضر آگهی ثبت شده ای موجود نمی باشد</span>
               </v-alert>
             </div>
@@ -69,7 +69,7 @@
         </v-container>
       </v-card>
     </v-flex>
-    <v-flex v-if="paginator&&paginator.cursor && paginator.cursor.nextURL" xs12 sm12>
+    <v-flex v-if="!loading && items.length && paginator&&paginator.cursor && paginator.cursor.nextURL" xs12 sm12>
       <div class="my-5 text-xs-center">
         <v-btn :loading="btn_loading" round large outline color="info" @click="loadMore">
           <span><v-icon class="px-1">arrow_drop_down</v-icon>نمایش بیشتر</span>
@@ -249,7 +249,7 @@
           must = ``
         }
 
-        let filter = _.join(filterArray, ',').replace('<=', '<').replace('>=', '>');
+        let filter = _.join(filterArray, ',').replace('<=', '<').replace('>=', '>').replace('__', '.').replace('true', '1').replace('false', '0');
         let orederBy = this.sort;
         let query = {
           orederBy,

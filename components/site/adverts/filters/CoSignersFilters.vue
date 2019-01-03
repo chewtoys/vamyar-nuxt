@@ -3,13 +3,13 @@
     <v-subheader>{{getLabel}}</v-subheader>
     <v-card class="elevation-0 pa-2" flat color="transparent" light>
       <v-layout rwo wrap>
-        <v-flex xs12 sm4 class="pr-1 pt-1 pb-1 pl-0">
+        <v-flex xs12  v-if="false"  sm4 class="pr-1 pt-1 pb-1 pl-0">
           <div>
             <v-select
               :items="guaranteeTypesList"
               item-text="name"
               item-value="id"
-              v-model="filter.guaranteeTypeIdValue"
+              v-model="filter.guaranteeType__idValue"
               :loading="loading.guaranteeTypes"
               :menu-props="{contentClass:'farsi mx-3'}"
               label="ضمانت"
@@ -68,28 +68,10 @@
           guaranteeTypes: false
         },
         filter: {
-          guaranteeTypeIdValue: null,
-          forBank: null,
+          guaranteeType__idValue: null,
           forBankValue: null,
-          forCourt: null,
           forCourtValue: null,
         },
-      }
-    },
-    watch: {
-      forCourt(val) {
-        if (val) {
-          _.set(this, 'filter.forCourtValue', 1);
-        } else {
-          _.set(this, 'filter.forCourtValue', null);
-        }
-      },
-      forBank(val) {
-        if (val) {
-          _.set(this, 'filter.forBankValue', 1);
-        } else {
-          _.set(this, 'filter.forBankValue', null);
-        }
       }
     },
     computed: {

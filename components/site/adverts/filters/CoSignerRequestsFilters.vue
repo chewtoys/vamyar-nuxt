@@ -20,13 +20,13 @@
             />
           </div>
         </v-flex>
-        <v-flex xs12 sm4 class="pr-1 pt-1 pb-1 pl-0">
+        <v-flex v-if="false" xs12 sm4 class="pr-1 pt-1 pb-1 pl-0">
           <div>
             <v-select
               :items="guaranteeTypesList"
               item-text="name"
               item-value="id"
-              v-model="filter.guaranteeTypeIdValue"
+              v-model="filter.guaranteeType__idValue"
               :loading="loading.guaranteeTypes"
               :menu-props="{contentClass:'farsi mx-3'}"
               label="ضمانت"
@@ -60,28 +60,10 @@
           guaranteeTypes: false
         },
         filter: {
-          guaranteeTypeIdValue: null,
+          guaranteeType__idValue: null,
           forBankValue: null,
-          forBank: null,
           forCourtValue: null,
-          forCourt: null,
         },
-      }
-    },
-    watch: {
-      forCourt(val) {
-        if (val) {
-          _.set(this, 'filter.forCourtValue', 1);
-        } else {
-          _.set(this, 'filter.forCourtValue', null);
-        }
-      },
-      forBank(val) {
-        if (val) {
-          _.set(this, 'filter.forBankValue', 1);
-        } else {
-          _.set(this, 'filter.forBankValue', null);
-        }
       }
     },
     computed: {

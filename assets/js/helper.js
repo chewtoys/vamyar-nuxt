@@ -78,7 +78,7 @@ const Helper = {
     }
   }
   ,
-  getAdvertType: function (item, whichType = null, getType = false) {
+  getAdvertType(item, whichType = null, getType = false) {
     let types = CONSTANTS.advertTypes
     if (whichType) return _.get(_.find(types, {'type': whichType}), 'title', whichType || 'نامشخص');
     let advertType = _.get(item, 'advertableType', _.get(item, 'advert.advertableType', ''));
@@ -86,13 +86,13 @@ const Helper = {
     if (getType) return _.find(types, {'advertType': advertType})
     return _.get(_.find(types, {'advertType': advertType}), 'title', advertType || 'نامشخص');
   },
-  getTypeByAdvertType: function (advertType) {
+  getTypeByAdvertType(advertType) {
     let types = CONSTANTS.advertTypes
     return _.find(types, {'advertType': advertType});
   },
-  getAdvertTypeByType: function (type) {
+  getAdvertTypeByType(type) {
     let types = CONSTANTS.advertTypes
-    return _.find(types, {'type': type}).title;
+    return _.get(_.find(types, {'type': type}), 'title', type);
   },
   /*
   @which = 'advert' || 'special' : advert for /adverts/~ routes
@@ -308,7 +308,7 @@ const Helper = {
     };
     if (type === null) {
       // common filters
-      filter = _.pick(obj, ['cityIdValue', 'instantValue', 'titleValue']);
+      filter = _.pick(obj, ['cityIdValue', 'instantValue', 'transferableValue', 'titleValue']);
       _.get(filter, 'instantValue', null) === 1 ? _.set(filter, 'instantValue', 'true') : _.set(filter, 'instantValue', '');
     } else if (type === 'loans') {
       filter = _.pick(obj, ['loanTypeIdValue', 'amountValue', 'maxAmountValue', 'minAmountValue', 'paybackTimeValue']);
@@ -319,9 +319,9 @@ const Helper = {
     } else if (type === 'financeRequests') {
       filter = _.pick(obj, ['jobValue', 'maxMaxAmountValue', 'minMaxAmountValue']);
     } else if (type === 'coSigners') {
-      filter = _.pick(obj, ['guaranteeTypeIdValue', 'forBankValue', 'forCourtValue']);
+      filter = _.pick(obj, ['guaranteeType__idValue', 'forBankValue', 'forCourtValue']);
     } else if (type === 'coSignerRequests') {
-      filter = _.pick(obj, ['guaranteeTypeIdValue', 'forBankValue', 'forCourtValue']);
+      filter = _.pick(obj, ['guaranteeType__idValue', 'forBankValue', 'forCourtValue']);
     }
     let prefix = '';
     _.forEach(filter, (val, key) => {
@@ -333,7 +333,6 @@ const Helper = {
           .replace('minAmount', 'amount')
           .replace('minMaxAmount', 'maxAmount')
           .replace('maxMaxAmount', 'maxAmount')
-          .replace('guaranteeTypeId', 'guaranteeType.id')
           .replace('Value', '')
         _.set(query, key + prefix, val)
       }

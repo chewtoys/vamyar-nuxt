@@ -51,7 +51,7 @@
 
         </v-card-title>
         <v-data-table
-          v-if="type.type==='adverts'"
+          v-if="isAdverts"
           hide-actions
           v-model="selected"
           item-key="id"
@@ -718,19 +718,15 @@
         }
       },
       sender(props) {
+        let msg;
         if (_.has(props.item, 'advert.adminId') || _.has(props.item, 'adminId')) {
-          let id = _.get(props.item, 'advert.adminId', 'نامشخص') || '-';
-          return `مدیر: ` + id
+          let id = _.get(props.item, 'advert.adminId', _.get(props.item, 'adminId', 'نامشخص')) || '-';
+          msg = `مدیر` + '\n' + 'شناسه: ' + id
+        }else
+        {
+          msg = `کاربر` + '\n' + 'موبایل: ' + _.get(props.item, 'user.mobile', _.get(props.item, 'advert.user.mobile', '-'))
         }
-        return 'کاربر: ' + _.get(props.item, 'advert.user.details.firstName',
-          _.get(props.item, 'advert.user.mobile',
-            _.get(props.item, 'advert.user.email',
-              _.get(props.item, 'user.details.firstName',
-                _.get(props.item, 'user.mobile',
-                  _.get(props.item, 'user.email',
-                    _.get(props.item, 'advert.adminId',
-                      _.get(props.item, 'adminId',
-                        _.get(props.item, 'advert.user.id', 'بدون مشخصات')))))))))
+        return msg;
       },
       getGuaranteeTypes(key) {
         let items = [];
