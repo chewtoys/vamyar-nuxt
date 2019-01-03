@@ -3,7 +3,7 @@
     <v-subheader>{{getLabel}}</v-subheader>
     <v-card class="elevation-0 pa-2" flat color="transparent" light>
       <v-layout rwo wrap>
-        <v-flex xs12 sm3 class="pr-1 pt-1 pb-1 pl-0">
+        <v-flex v-if="false" xs12 sm3 class="pr-1 pt-1 pb-1 pl-0">
           <div>
             <v-text-field
               v-model="filter.jobValue"
