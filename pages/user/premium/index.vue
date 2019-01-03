@@ -14,12 +14,23 @@
           <v-alert :value="true" type="warning">شما اشتراک فعالی ندارید!</v-alert>
           <v-alert :value="true" type="info">برای تهیه ی اشتراک از زیر اقدام نمایید.</v-alert>
         </v-card>
-        <v-card v-else flat>
-          <v-alert :value="true" type="success">اشتراک شما فعال می باشد.</v-alert>
-          <v-alert :value="true" type="info">اشتراک {{planName}} شما تا تاریخ {{expireDate}} معتبر می باشد.</v-alert>
-        </v-card>
+        <template v-else flat>
+          <v-card flat>
+            <v-alert :value="true" type="success">اشتراک شما فعال می باشد.</v-alert>
+            <v-alert :value="true" type="info">اشتراک {{planName}} شما تا تاریخ {{expireDate}} معتبر می باشد.</v-alert>
+          </v-card>
+          <v-label>لیست اشتراک های شما:</v-label>
+          <v-alert v-for="sub in subscriptions" :key="sub.id" :value="true" color="info">
+            <p>عنوان اشتراک: {{planTitle(sub)}}</p>
+            <p>دوره ی اشتراک: {{planPeriod(sub)}}</p>
+            <p>شروع اشتراک: {{planStart(sub)}}</p>
+            <p>انقضای اشتراک: {{planExpire(sub)}}</p>
+            <p>هزینه ی اشتراک: {{planPrice(sub)}}</p>
+            <p>روز باقی مانده: {{leftDays(sub)}}</p>
+          </v-alert>
+        </template>
         <br>
-        <v-divider />
+        <v-divider/>
         <br>
         <v-card flat>
           <v-card-text>
@@ -28,7 +39,8 @@
           </v-card-text>
           <v-layout row wrap>
             <v-flex class="text-xs-center" sm="4" xs="12" lg="3" v-for="item in plans" :key="item.id">
-              <v-card :raised="!!item.special" hover :to="`/user/premium/${item.id}/?redirect=${encodeURI(redirectPath)}`" ripple :flat="!item.special"
+              <v-card :raised="!!item.special" hover
+                      :to="`/user/premium/${item.id}/?redirect=${encodeURI(redirectPath)}`" ripple :flat="!item.special"
                       :color="item.special ? 'warning lighten-4' : 'grey lighten-4'">
                 <v-card-title>
                   <h5 class="full text-center">{{item.title}}</h5>
@@ -66,6 +78,7 @@
 </template>
 <script>
   import Helper from '~/assets/js/helper'
+  import VLabel from "vuetify/lib/components/VLabel/VLabel";
 
   const
     page_title = "وضعیت اشتراک من",
@@ -74,6 +87,7 @@
 
   export default {
 
+    components: {VLabel},
     meta: {
       breadcrumb,
       title: page_title
@@ -86,7 +100,6 @@
       }
     },
     computed: {
-
       user() {
         return _.get(this.$store.state, 'user', [])
       },
@@ -95,6 +108,9 @@
       },
       expireDate() {
         return _.get(this.$store.state, 'user.subscription.expireDate', 'نامشخص');
+      },
+      subscriptions() {
+        return _.get(this.$store.state, 'user.subscriptions', []);
       },
       planName() {
         return _.get(this.$store.state, 'user.subscription.title', 'نامشخص');
@@ -105,6 +121,24 @@
       }
     },
     methods: {
+
+      planTitle(sub) {
+        return _.get(sub, 'title', '-')
+      }, planPeriod(sub) {
+        return _.get(sub, 'info.period', '-')
+      }, planStart(sub) {
+        return _.get(sub, 'info.jCreatedAt', '-')
+      }, planPrice(sub) {
+        return Helper.priceFormat(_.get(sub, 'price', '-'), '')
+      }, getPlan(sub) {
+        return sub
+      }, planInfo(sub) {
+        return _.get(sub, 'info', {})
+      }, planExpire(sub) {
+        return Helper.dateFormat(_.get(sub, 'info.endDate.date', '-'), 'YYYY/M/D HH:mm:ss', 'jYYYY/jM/jD HH:mm:ss');
+      }, leftDays(sub) {
+        return _.get(sub, 'info.remainedDays', '0‌') + ' روز'
+      },
       settings(key) {
         return _.get(this.$store.state.settings.data, key, '')
       }
