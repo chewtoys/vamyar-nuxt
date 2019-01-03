@@ -97,7 +97,7 @@
                   <td>
                     <small>دوره</small>
                   </td>
-                  <td>{{plan.period}}</td>
+                  <td>{{plan.period}} روزه</td>
                 </tr>
                 <tr>
                   <td>
@@ -115,7 +115,7 @@
                   <td>
                     <small>روزهای باقی مانده</small>
                   </td>
-                  <td>{{getProperty(plan, 'info.remainedDays', '-')}}</td>
+                  <td>{{getProperty(plan, 'info.remainedDays', '-')}} روز</td>
                 </tr>
                 </tbody>
               </table>
