@@ -271,7 +271,6 @@
         let loanTypeData = await $axios.$get(loanTypeMethod);
         store.commit('loanType/setAndProcessData', loanTypeData.data || []);
 
-
         let {data} = await app.$axios.$get(method, {params: query})
         let loading = false
 
@@ -282,7 +281,7 @@
 
         return {item: data, loading, type, slug, params}
       } catch (err) {
-        //console.log(err, method)
+        console.log(err, method)
         return error({
           statusCode: 404,
           message: "متاسفانه آگهی مورد نظر پیدا نشد :("
