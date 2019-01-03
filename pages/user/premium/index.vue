@@ -148,7 +148,7 @@
       }
       ,
       getPeriod(val) {
-        return val + ' ماهه';
+        return val + ' روزه';
       }
     },
     async asyncData({error, params, $axios, store}) {

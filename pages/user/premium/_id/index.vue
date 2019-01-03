@@ -141,7 +141,7 @@
       }
       ,
       getPeriod(val) {
-        return val + ' ماهه';
+        return val + ' روزه';
       },
       getForm() {
         this.loader = true;

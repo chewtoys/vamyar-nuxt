@@ -135,7 +135,7 @@
       }
       ,
       getPeriod(val) {
-        return val + ' ماهه';
+        return val + ' روزه';
       }
     }
     ,

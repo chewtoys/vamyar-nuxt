@@ -41,9 +41,8 @@
           hide-actions
           :loading="loading"
           :search="search"
-          :pagination.sync="pagination"
           :total-items="totalData"
-          :rows-per-page-items="[5,10,25,100]"
+          :rows-per-page-items="[10,25,100]"
           no-results-text="هیچ موردی ثبت نشده است."
           class="elevation-1"
         >
@@ -67,6 +66,12 @@
             </td>
             <td class="text-xs-right">{{ props.item.id }}</td>
             <td class="text-xs-right">{{ props.item.title }}</td>
+            <td class="text-xs-right">
+              <p>شناسه:
+                <nuxt-link :to="`/admin/users/show/${props.item.userId}`">{{props.item.userId}}</nuxt-link>
+              </p>
+              <p>موبایل: {{props.user.mobile}}</p>
+            </td>
             <td class="text-xs-right">{{ props.item.job }}</td>
             <td class="text-xs-right">{{ getCity(props.item) }}</td>
             <td class="text-xs-right">{{ requestType(props.item.requestType) }}</td>
@@ -151,7 +156,7 @@
             page,
             orderBy: `${sortBy || 'id'}:${descending ? 'desc' : 'asc'}`,
             number: rowsPerPage,
-            include: 'city,requestType',
+            include: 'city,user,requestType',
           }
           //console.log({method, query, paginator: this.paginator}, {sortBy, descending, page, rowsPerPage});
           this.$axios.$get(method, {
