@@ -68,9 +68,9 @@
             <td class="text-xs-right">{{ props.item.title }}</td>
             <td class="text-xs-right">
               <p>شناسه:
-                <nuxt-link :to="`/admin/users/show/${props.item.userId}`">{{props.item.userId}}</nuxt-link>
+                <nuxt-link :to="`/admin/users/edit/${props.item.userId}`">{{props.item.userId}}</nuxt-link>
               </p>
-              <p>موبایل: {{props.user.mobile}}</p>
+              <p>موبایل: {{props.item.user.mobile}}</p>
             </td>
             <td class="text-xs-right">{{ props.item.job }}</td>
             <td class="text-xs-right">{{ getCity(props.item) }}</td>
@@ -106,6 +106,7 @@
     headers = [
       {text: '‌شناسه', value: 'id', align: 'right'},
       {text: 'عنوان', value: 'title', align: 'right'},
+      {text: 'کاربر', value: 'userId', align: 'right'},
       {text: 'شغل', value: 'job', align: 'right'},
       {text: 'شهر', value: 'city', align: 'right'},
       {text: 'نوع درخواست', value: 'requestType', align: 'right'},
