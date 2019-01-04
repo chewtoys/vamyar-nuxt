@@ -33,7 +33,8 @@
             hide-details
           ></v-text-field>
 
-          <AdvertFilters v-if="isAdmin" :isAdmin="isAdmin" :chooseType="isAdverts" label="فیلتر کنید" v-model="advertFilters"
+          <AdvertFilters v-if="isAdmin" :isAdmin="isAdmin" :chooseType="isAdverts" label="فیلتر کنید"
+                         v-model="advertFilters"
                          @change="loadAgainCommonAdvertFilter"/>
           <LoansFilters v-if="canShow('loans')" label="فیلتر وام " v-model="filter"
                         @change="loadAgainAdvertFilter"/>
@@ -540,7 +541,7 @@
         this.loading = true;
         let method = `/${this.panel}/${this.type.type}`;
         let advertableType = this.type.advertType;
-        let filter = '', must = ''
+        let filter = null, must = null
 
         /* search and filter */
         if (this.search) {
@@ -575,17 +576,24 @@
 
 
         let include = 'advert.user.details,guaranteeType,guaranteeTypes,advert.city,loanType,loanTypes';
-        if (this.isAdverts) include = 'advertable,user.details,advertable.guaranteeTypes,city,advertable.loanType';
+        if (this.isAdverts) include = 'advertable,user.details,guaranteeTypes,city,loanType';
 
         let {sortBy, descending, page, rowsPerPage} = this.pagination;
-        let query = {
+        let querySubItems = {
           must,
           page,
           include,
           filter,
+        }
+        let query = {
           orderBy: `${sortBy || 'id'}:${descending ? 'desc' : 'asc'}`,
           number: rowsPerPage
         }
+
+        _.forEach(querySubItems, (val, title) => {
+          if (val) _.set(query, title, val)
+        })
+
         this.tableLoader = true;
         //console.log({method, query, paginator: this.paginator}, {sortBy, descending, page, rowsPerPage});
         this.$axios.$get(method, {
