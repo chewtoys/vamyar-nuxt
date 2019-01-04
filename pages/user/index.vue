@@ -13,7 +13,7 @@
 
   export default {
     meta: {
-      title: 'حساب کاربری',
+      title: 'داشبورد',
       breadcrumb: 'پروفایل'
     },
     async asyncData({params, store, $axios, error}) {

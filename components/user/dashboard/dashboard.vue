@@ -174,17 +174,17 @@
     },
     computed: {
       planTitle() {
-        return _.get(this.$store.state, 'user.subscription.title', '-')
+        return _.get(this.$store.state, 'user.subscription.subscriptionPlan.title', '-')
       }, planPeriod() {
-        return _.get(this.$store.state, 'user.subscription.period', '-')
+        return _.get(this.$store.state, 'user.subscription.period', '-') + 'روزه'
       }, planStart() {
-        return _.get(this.$store.state, 'user.subscription.info.jCreatedAt', '-')
+        return _.get(this.$store.state, 'user.subscription.jCreatedAt', '-')
       }, planPrice() {
-        return Helper.priceFormat(_.get(this.$store.state, 'user.subscription.price', '-'),'')
+        return Helper.priceFormat(_.get(this.$store.state, 'user.subscription.subscriptionPlan.price', '-'),'')
       }, getPlan() {
-        return _.get(this.$store.state, 'user.subscription', {})
+        return _.get(this.$store.state, 'user.subscription.subscriptionPlan', {})
       }, planInfo() {
-        return _.get(this.$store.state, 'user.subscription.info', {})
+        return _.get(this.$store.state, 'user.subscription', {})
       }, planExpire() {
         return _.get(this.$store.state, 'user.subscription.expireDate', '-')
       }, leftDays() {

@@ -58,7 +58,7 @@ export const actions = {
             if (_.has(data, 'details')) {
               commit("user/updateUserInfo", data)
             }
-            let subscriptionData = await $axios.$get("/user/subscriptions");
+            let subscriptionData = await $axios.$get("/user/subscriptions",{params:{include:'subscriptionPlan'}});
             if (_.has(subscriptionData, 'data')) {
               commit("user/updateUserSubscription", _.get(subscriptionData, 'data', null))
             }

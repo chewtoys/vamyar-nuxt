@@ -149,7 +149,7 @@
           port: 'zarinpal',
           coupon: this.coupon,
           data: {redirect: this.getSecret},
-          subscription: this.id,
+          subscriptionPlan: this.id,
           //data: {redirect: this.redirectPath}
         }
         this.$axios.$get('/user/subscriptions/paymentLink', {params: query}).then(res => {
@@ -184,14 +184,12 @@
           id,
           data: {
             id,
-            title: 'پلن چهارم !',
-            text: 'توضیحات',
-            price: '9000000',
-            period: '1',
+            title: 'اشتراک یافت نشد!',
+            text: 'لطفا دوباره برگردید و یک گزینه ی صحیح انتخاب کنید',
+            price: '-',
+            period: '-',
             special: 0,
             data: [
-              {title: 'ویژگی اول', desc: 'توضیح اول'},
-              {title: "ویژگی دوم", desc: 'توضیح دوم'}
             ],
           }
         }

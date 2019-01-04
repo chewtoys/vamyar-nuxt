@@ -79,7 +79,7 @@
   const page_title = 'افزودن پلن',
     breadcrumb = 'جدید',
     indexPath = '/admin/subscriptions',
-    createPath = '/admin/subscriptions'
+    createPath = '/admin/subscriptionPlans'
 
   export default {
     $_veeValidate: {
@@ -122,15 +122,12 @@
     computed:
       {
         updateMethod() {
-          return `${indexPath}`;
+          return `${createPath}`;
         },
         list: function () {
           return indexPath;
         }
-        ,
-        createPath: function () {
-          return createPath;
-        },
+
       }
     ,
     mounted() {

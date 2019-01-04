@@ -164,7 +164,6 @@
         this.$axios
           .$put(this.updateMethod, data)
           .then(() => {
-
             // show success and redirect
             this.toast("با موفقیت ثبت شد.", "success")
             this.submit_loader = false

@@ -17,7 +17,7 @@
         <template v-else flat>
           <v-card flat>
             <v-alert :value="true" type="success">اشتراک شما فعال می باشد.</v-alert>
-            <v-alert :value="true" type="info">اشتراک {{planName}} شما تا تاریخ {{expireDate}} معتبر می باشد.</v-alert>
+            <v-alert :value="true" type="info">اشتراک شما تا تاریخ {{expireDate}} معتبر می باشد.</v-alert>
           </v-card>
           <v-label>لیست اشتراک های شما:</v-label>
           <v-alert v-for="sub in subscriptions" :key="sub.id" :value="true" color="info">
@@ -78,7 +78,6 @@
 </template>
 <script>
   import Helper from '~/assets/js/helper'
-  import VLabel from "vuetify/lib/components/VLabel/VLabel";
 
   const
     page_title = "وضعیت اشتراک من",
@@ -86,8 +85,6 @@
     plansMethod = '/site/subscriptions'
 
   export default {
-
-    components: {VLabel},
     meta: {
       breadcrumb,
       title: page_title
@@ -123,21 +120,21 @@
     methods: {
 
       planTitle(sub) {
-        return _.get(sub, 'title', '-')
+        return _.get(sub, 'subscriptionPlan.title', '-')
       }, planPeriod(sub) {
-        return _.get(sub, 'period', '-')
+        return _.get(sub, 'subscriptionPlan.period', '-') + ' روزه '
       }, planStart(sub) {
-        return _.get(sub, 'info.jCreatedAt', '-')
+        return _.get(sub, 'jCreatedAt', '-')
       }, planPrice(sub) {
-        return Helper.priceFormat(_.get(sub, 'price', '-'), '')
+        return Helper.priceFormat(_.get(sub, 'subscriptionPlan.price', '-'), '')
       }, getPlan(sub) {
         return sub
       }, planInfo(sub) {
-        return _.get(sub, 'info', {})
+        return sub
       }, planExpire(sub) {
-        return Helper.dateFormat(_.get(sub, 'info.endDate.date', '-'), 'YYYY/M/D HH:mm:ss', 'jYYYY/jM/jD HH:mm:ss');
+        return Helper.dateFormat(_.get(sub, 'endDate.date', '-'), 'YYYY-M-D HH:mm:ss', 'jYYYY/jM/jD HH:mm:ss');
       }, leftDays(sub) {
-        return _.get(sub, 'info.remainedDays', '0‌') + ' روز'
+        return _.get(sub, 'remainedDays', '0‌') + ' روز '
       },
       settings(key) {
         return _.get(this.$store.state.settings.data, key, '')
@@ -154,7 +151,7 @@
     async asyncData({error, params, $axios, store}) {
       let id = params.id;
       try {
-        let {data} = await $axios.$get(`${plansMethod}`)
+        let {data} = await $axios.$get(`${plansMethod}`,{params:{include:'subscriptionPlan'}})
         return {plans: data}
       } catch (err) {
         //return error({statusCode: 503, message: "مشکلی در گرفتن داده ها رخ داد!"})

@@ -20,16 +20,19 @@ export const mutations = {
     state.info = data
   },
   updateUserSubscription(state, data) {
+    data = _.get(data, 'data', data)
     if (_.isArray(data) && data.length > 0) {
-
       state.subscription = data[0];
-      state.subscription.period = _.get(data[0], 'period', 0);
-      state.subscription.left = _.get(data[0], 'info.remainedDays', 0);
-      state.subscription.endDate = _.get(data[0], 'info.endDate.date', 0);
-      state.subscription.expireDate = Helper.dateFormat(_.get(data[0], 'info.endDate.date', ''), 'YYYY/M/D HH:mm:ss', 'jYYYY/jM/jD HH:mm:ss');
+      state.subscription.period = _.get(data[0], 'subscriptionsPlan.period', 0);
+      state.subscription.left = _.get(data[0], 'remainedDays', 0);
+      state.subscription.title = _.get(data[0], 'subscriptionPlan.title', 0);
+      state.subscription.price = _.get(data[0], 'subscriptionPlan.price', 0);
+      let endDate = _.get((data[0]), 'endDate.date', 0)
+      // console.log({endDate})
+      state.subscription.endDate = endDate;
+      state.subscription.expireDate = Helper.dateFormat(endDate, 'YYYY-M-D HH:mm:ss', 'jYYYY/jM/jD HH:mm:ss');
       state.subscriptions = data;
-      state.hasSubscription = true;
-
+      state.hasSubscription = _.get(data[0], 'active', false);
     } else {
       state.hasSubscription = false;
     }

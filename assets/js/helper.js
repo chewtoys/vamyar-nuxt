@@ -270,6 +270,8 @@ const Helper = {
   },
   dateFormat(val, inputFormat = 'jYYYY/jM/jD HH:mm:ss', outputFormat = 'jYY/jM/jD HH:mm') {
     if (!val) return '-';
+    val = _.replace(val, '.000000', '')
+    //console.log({val})
     try {
       let m = moment(val, inputFormat)
       return (m.isValid()) ? m.format(outputFormat) : val;

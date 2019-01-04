@@ -91,36 +91,36 @@
                   <td>
                     <small>عنوان</small>
                   </td>
-                  <td>{{plan.title}}</td>
+                  <td>{{getProperty(plan, 'subscriptionPlan.title')}}</td>
                 </tr>
                 <tr>
                   <td>
                     <small>دوره</small>
                   </td>
-                  <td>{{plan.period}} روزه</td>
+                  <td>{{getProperty(plan, 'subscriptionPlan.period')}} روزه</td>
                 </tr>
                 <tr>
                   <td>
                     <small>تاریخ فعالسازی</small>
                   </td>
-                  <td>{{getProperty(plan, 'info.jCreatedAt', '-')}}</td>
+                  <td>{{getProperty(plan, 'jCreatedAt', '-')}}</td>
                 </tr>
                 <tr>
                   <td>
                     <small>تاریخ انقضا</small>
                   </td>
-                  <td>{{formatDate(getProperty(plan, 'info.endDate.date', '-'))}}</td>
+                  <td>{{formatDate(getProperty(plan, 'endDate.date', '-'))}}</td>
                 </tr>
                 <tr>
                   <td>
                     <small>روزهای باقی مانده</small>
                   </td>
-                  <td>{{getProperty(plan, 'info.remainedDays', '-')}} روز</td>
+                  <td>{{getProperty(plan, 'remainedDays', '-')}} روز</td>
                 </tr>
                 </tbody>
               </table>
             </v-card>
-            <v-card  color="primary lighten-4" v-if="hasSubscription" class="my-4">
+            <v-card color="primary lighten-4" v-if="hasSubscription" class="my-4">
               <v-card-title>تمدید اشتراک</v-card-title>
               <v-select
                 v-model="currentSubscriptionId"
@@ -260,7 +260,7 @@
       }
     },
     methods: {
-      formatDate(jdate){
+      formatDate(jdate) {
         return Helper.dateFormat(jdate, 'YYYY/M/D HH:mm:ss', 'jYYYY/jM/jD HH:mm:ss');
       },
       getProperty(item, path, val) {
@@ -269,7 +269,7 @@
       initialLoad() {
         let method = this.uri;
         let query = {
-          include: 'details,subscriptions'
+          include: 'details.subscriptions.subscriptionPlan'
         }
         //console.log({method})
         this.$axios.$get(method, {params: query}).then(res => {
@@ -295,7 +295,7 @@
         let subscriptionId = _.get(this.newSubscription, 'id', null);
         let addMethod = `/admin/users/${this.id}/subscriptions`;
         this.$axios.$post(addMethod, {subscription: subscriptionId}).then(res => {
-          console.log(res);
+          //console.log(res);
           this.$store.commit('snackbar/setSnack', 'با موفقیت افزوده شد');
           this.initialLoad()
         }).catch(err => {

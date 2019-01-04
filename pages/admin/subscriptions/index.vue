@@ -108,7 +108,7 @@
   import Helper from "~/assets/js/helper.js"
 
   const page_title = 'لیست اشتراک ها',
-    fetchMethod = '/admin/subscriptions',
+    fetchMethod = '/admin/subscriptionPlans',
     breadcrumb = 'اشتراک ها',
     indexPath = '/admin/subscriptions',
     createPath = '/admin/subscriptions/create',
@@ -140,7 +140,7 @@
         return _.get(this.paginator, 'totalPages', 1)
       },
       uri() {
-        return `${fetchMethod}`;
+        return `${indexPath}`;
       },
       headers() {
         return headers;
@@ -156,32 +156,41 @@
     watch: {
       pagination: {
         handler() {
-          this.loading = true;
-          let method = fetchMethod;
-          let {sortBy, descending, page, rowsPerPage} = this.pagination;
-          let query = {
-            page,
-            orderBy: `${sortBy || 'id'}:${descending ? 'desc' : 'asc'}`,
-            number: rowsPerPage,
-          }
-          //console.log({method, query, paginator: this.paginator}, {sortBy, descending, page, rowsPerPage});
-          this.$axios.$get(method, {
-            params: query
-          }).then((response) => {
-            this.paginator = _.get(response, 'paginator', {})
-            this.data = _.get(response, 'data', [])
-            this.totalData = _.get(response, 'paginator.totalCount', 0)
-            //  console.log('on response: ', this.totalData, this.paginator, this.data, {response})
-          }).catch((error) => {
-            //console.log(error, method, query, this.paginator);
-          }).then(() => {
-            this.loading = false;
-          })
+          this.loadAgain();
         },
         deep: true
       },
     },
     methods: {
+      loadAgain() {
+
+        this.loading = true;
+        let method = fetchMethod;
+        let {sortBy, descending, page, rowsPerPage} = this.pagination;
+        let filter = `id=${this.search},period=${this.search},title=${this.search},description=${this.search}`
+        let query = {
+          page,
+          filter,
+          orderBy: `${sortBy || 'id'}:${descending ? 'desc' : 'asc'}`,
+          number: rowsPerPage,
+        }
+        //console.log({method, query, paginator: this.paginator}, {sortBy, descending, page, rowsPerPage});
+        this.$axios.$get(method, {
+          params: query
+        }).then((response) => {
+          this.paginator = _.get(response, 'paginator', {})
+          this.data = _.get(response, 'data', [])
+          this.totalData = _.get(response, 'paginator.totalCount', 0)
+          //  console.log('on response: ', this.totalData, this.paginator, this.data, {response})
+        }).catch((error) => {
+          this.paginator = {}
+          this.data = []
+          this.totalData = 0
+          //console.log(error, method, query, this.paginator);
+        }).then(() => {
+          this.loading = false;
+        })
+      },
       getPrice(price) {
         return Helper.priceFormat(price)
       },
