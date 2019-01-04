@@ -127,12 +127,12 @@
         store.commit('navigation/setTitle', category.data.name || 'بدون عنوان')
         store.commit('navigation/pushMeta', {breadcrumb})
       } catch (err) {
-        return error({statusCode: 404, message: err})
+        return error({statusCode: 503, message: "این دسته بندی وجود ندارد"})
       }
       try {
         posts = await $axios.$get(postsMethod);
       } catch (err) {
-        return error({statusCode: 404, message: err})
+        //return error({statusCode: 503, message: 'هیچ مطلبی وجود ندارد'})
       }
       return {
         posts: _.get(posts, 'data', []),

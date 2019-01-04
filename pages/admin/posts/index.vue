@@ -176,6 +176,9 @@
             this.totalData = _.get(response, 'paginator.totalCount', 0)
             //  console.log('on response: ', this.totalData, this.paginator, this.data, {response})
           }).catch((error) => {
+            this.paginator = {}
+            this.data = []
+            this.totalData = 0
             //console.log(error, method, query, this.paginator);
           }).then(() => {
             this.loading = false;
