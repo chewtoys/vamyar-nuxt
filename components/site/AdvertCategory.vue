@@ -214,7 +214,7 @@
         this.loading = true
         this.items = []
         let method = `/site/${this.which}`
-        let include = ''
+        let filter = null, must = null, advertableType = this.advertTypeName
         if (this.isAdverts) {
           include = 'advertable,city,user.details,loanType,guaranteeType';
         } else {
@@ -225,44 +225,49 @@
         let filterArray = [];
 
 
-        _.forEach(this.commonComputedFilters, function (value, key) {
+        _.forEach(this.commonComputedFilters, (value, key) => {
           if (value !== null && value !== '' && value !== 'null') {
             if (this.isAdverts) {
               filterArray.push(`${key}=${value}`)
             } else {
               filterArray.push(`advert.${key}=${value}`)
             }
-            //console.log(`${key}=${value}`)
           }
         })
-        _.forEach(this.computedFilters, function (value, key) {
+        _.forEach(this.computedFilters, (value, key) => {
           if (value !== null && value !== '' && value !== 'null') {
             if (this.isAdverts) {
               filterArray.push(`advertable.${key}=${value}`)
             } else {
               filterArray.push(`${key}=${value}`)
             }
-            //console.log(`advertable.${key}=${value}`, key, value)
           }
         })
 
-        let must = '';
         if (this.isAdverts && this.advertTypeName) {
-          let advertableType = _.get(Helper.getAdvertTypeByType(this.advertTypeName), 'advertType', this.advertTypeName.slice(0, -1))
-          if (advertableType !== 'adverts') must = `advertableType=${advertableType}`
+          advertableType = _.get(Helper.getAdvertTypeByType(this.advertTypeName), 'advertType', this.advertTypeName.slice(0, -1))
+          if (advertableType !== 'advert') must = `advertableType=${advertableType}`
         }
 
 
-        let filter = _.replace(_.replace(_.replace(_.replace(_.replace(_.replace(_.replace(_.join(filterArray, ','), '<=', '<'), '>=', '>'), '__', '.'), 'true', '1'), 'false', '0'), 'true', '1'), 'false', '0');
+        filter = _.replace(_.replace(_.replace(_.replace(_.replace(_.replace(_.replace(_.join(filterArray, ','), '<=', '<'), '>=', '>'), '__', '.'), 'true', '1'), 'false', '0'), 'true', '1'), 'false', '0');
 
         let orederBy = this.sort;
-        let query = {
+
+        let querySubItems = {
+          must,
           orederBy,
           include,
           number,
           filter,
-          must
         }
+
+        let query = {}
+
+        _.forEach(querySubItems, (val, title) => {
+          if (val) _.set(query, title, val)
+        })
+
         //console.log({query});
         this.$axios.$get(method, {
           params: query

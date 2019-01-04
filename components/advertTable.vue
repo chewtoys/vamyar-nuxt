@@ -520,16 +520,16 @@
         }
         let computedFilter = Helper.getComputedFilter(filter);
         _.set(this, 'commonComputedFilters', computedFilter);
-        console.log(1, {computedFilter})
-        //this.loadAgain();
+        //console.log(1, {computedFilter})
+        this.switchPage();
       },
       loadAgainAdvertFilter(filter) {
         //console.log(1,{filter});
         let type = _.get(this, 'advertTypeName', this.which);
         let computedFilter = Helper.getComputedFilter(filter, type);
         _.set(this, 'computedFilters', computedFilter);
-        console.log(2, {computedFilter})
-        //this.loadAgain();
+        //console.log(2, {computedFilter})
+        this.switchPage();
       },
       canShow(type) {
         return this.isAdmin && _.get(this, 'advertTypeName', '') === type;
@@ -548,7 +548,7 @@
           filter = this.isAdverts ? `title=${this.search},text=${this.search}` : `advert.title=${this.search},advert.text=${this.search}`
         } else if (this.commonComputedFilters || this.computedFilters) {
           let filterArray = [];
-          _.forEach(this.commonComputedFilters, function (value, key) {
+          _.forEach(this.commonComputedFilters, (value, key) => {
             if (value !== null && value !== '' && value !== 'null') {
               if (this.isAdverts) {
                 filterArray.push(`${key}=${value}`)
@@ -557,7 +557,7 @@
               }
             }
           })
-          _.forEach(this.computedFilters, function (value, key) {
+          _.forEach(this.computedFilters, (value, key) => {
             if (value !== null && value !== '' && value !== 'null') {
               if (this.isAdverts) {
                 filterArray.push(`advertable.${key}=${value}`)
@@ -573,6 +573,7 @@
           advertableType = _.get(Helper.getAdvertTypeByType(this.advertTypeName), 'advertType', this.advertTypeName.slice(0, -1))
           if (advertableType !== 'advert') must = `advertableType=${advertableType}`
         }
+        //console.log(this.advertTypeName)
 
         let include = 'advert.user.details,guaranteeType,guaranteeTypes,advert.city,loanType,loanTypes';
         if (this.isAdverts) include = 'advertable,user.details,guaranteeTypes,city,loanType';
@@ -606,6 +607,9 @@
           this.tableLoader = false;
           //console.log('on response: ', this.paginator, this.pagination)
         }).catch((error) => {
+          this.paginator = {}
+          this.list = []
+          this.totalData = 0
           //console.log(error, method, query, this.paginator);
           this.tableLoader = false;
         });
