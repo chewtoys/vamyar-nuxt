@@ -19,7 +19,7 @@
           </v-btn>
         </v-toolbar>
         <v-card-title>
-          <div v-if="false">
+          <div>
             جست‌و‌جو
             <v-spacer></v-spacer>
             <v-text-field
@@ -66,17 +66,25 @@
               ></v-checkbox>
             </td>
             <td class="text-xs-right">{{ props.item.id }}</td>
-            <td class="text-xs-right">{{ paidBy(props.item) }}</td>
+            <td class="text-xs-right">
+              <p><b>شناسه: </b>
+                <nuxt-link :to="`/admin/users/edit/${getProperty(props.item, 'userId', '-')}`">
+                  {{ getProperty(props.item, 'userId', '-') }}
+                </nuxt-link>
+              </p>
+              <p><b>موبایل: </b>{{ getProperty(props.item, 'user.mobile', '-') }}</p>
+            </td>
             <td class="text-xs-right">{{ getPrice(props.item.amount) }}</td>
             <td v-if="props.item.transaction!==null" class="text-xs-right">
-              <p>{{getProperty(props.item, 'transaction.refId','-') }} : 'مرجع'</p>
-              <p>{{getProperty(props.item, 'transaction.status','-') }} : 'وضعیت'</p>
-              <p>{{getProperty(props.item, 'transaction.ip','-') }} : 'آیپی'</p>
-              <p>{{getProperty(props.item, 'transaction.cart_number','-') }} : 'شماره کارت'</p>
+              <p>{{getProperty(props.item, 'transaction.refId', '-') }} : مرجع</p>
+              <p>{{getProperty(props.item, 'transaction.status', '-') }} : وضعیت</p>
+              <p>{{getProperty(props.item, 'transaction.ip', '-') }} : آیپی</p>
+              <p>{{getProperty(props.item, 'transaction.cart_number', '-') }} : شماره کارت</p>
             </td>
-            <td v-if="props.item.transaction===null">
+            <td v-else-if="props.item.transaction===null">
               {{props.item.transactionId || '-'}}
             </td>
+            <td class="text-xs-right">{{ (props.item.exception) }}</td>
             <td class="text-xs-right">{{ status(props.item) }}</td>
             <td class="text-xs-right">{{ getPrice(props.item.discount) }}</td>
             <td class="text-xs-right">{{ paymentable(props.item) }}</td>
@@ -122,7 +130,7 @@
       {text: 'نوع پرداخت', value: 'paymentable', align: 'right'},
       {text: 'شروع پرداخت', value: 'jCreatedAt', align: 'right'},
       {text: 'آخرین تغییر وضعیت', value: 'jUpdatedAt', align: 'right'},
-      {text: 'عملیات', sortable: false, align: 'left', width: '140px'},
+      //{text: 'عملیات', sortable: false, align: 'left', width: '140px'},
     ]
 
   export default {
@@ -161,33 +169,40 @@
     watch: {
       pagination: {
         handler() {
-          this.loading = true;
-          let method = fetchMethod;
-          let {sortBy, descending, page, rowsPerPage} = this.pagination;
-          let query = {
-            include: 'user.details',
-            page,
-            orderBy: `${sortBy || 'id'}:${descending ? 'desc' : 'asc'}`,
-            number: rowsPerPage,
-          }
-          //console.log({method, query, paginator: this.paginator}, {sortBy, descending, page, rowsPerPage});
-          this.$axios.$get(method, {
-            params: query
-          }).then((response) => {
-            this.paginator = _.get(response, 'paginator', {})
-            this.data = _.get(response, 'data', [])
-            this.totalData = _.get(response, 'paginator.totalCount', 0)
-            //  console.log('on response: ', this.totalData, this.paginator, this.data, {response})
-          }).catch((error) => {
-            //console.log(error, method, query, this.paginator);
-          }).then(() => {
-            this.loading = false;
-          })
+          this.loadAgain()
         },
         deep: true
       },
     },
     methods: {
+      loadAgain() {
+
+        this.loading = true;
+        let method = fetchMethod;
+        let filter = `id=${this.search},userId=${this.search},jUpdateAt=${this.search},jCreatedAt=${this.search},amount=${this.search},transactionId=${this.search},paid=${this.search},discount=${this.search}`;
+        let {sortBy, descending, page, rowsPerPage} = this.pagination;
+        let query = {
+          filter,
+          include: 'user.details',
+          page,
+          orderBy: `${sortBy || 'id'}:${descending ? 'desc' : 'asc'}`,
+          number: rowsPerPage,
+        }
+        //console.log({method, query, paginator: this.paginator}, {sortBy, descending, page, rowsPerPage});
+        this.$axios.$get(method, {
+          params: query
+        }).then((response) => {
+          this.paginator = _.get(response, 'paginator', {})
+          this.data = _.get(response, 'data', [])
+          this.totalData = _.get(response, 'paginator.totalCount', 0)
+          //  console.log('on response: ', this.totalData, this.paginator, this.data, {response})
+        }).catch((error) => {
+          //console.log(error, method, query, this.paginator);
+        }).then(() => {
+          this.loading = false;
+        })
+
+      },
       getProperty(item, path, def = '') {
         return _.get(item, path, def)
       },
