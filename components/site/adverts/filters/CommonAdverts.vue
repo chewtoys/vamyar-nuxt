@@ -9,7 +9,9 @@
           <div>
             <v-select
               :items="getAdvertTypeList"
-              v-model="filter.advertType"
+              item-key="type"
+              item-text="title"
+              v-model="filter.advertTypeName"
               :loading="loading.advertType"
               :menu-props="{contentClass:'farsi mx-3'}"
               label="نوع آگهی"
@@ -19,15 +21,14 @@
               hide-details
               solo-inverted
               append-icon="list"
-              @change="updateAdvertType"
+              @change="updateAdvertTypeName"
             />
           </div>
         </v-flex>
         <v-flex v-if="!isAdmin" xs12 sm3 class="pa-1 ">
           <div>
             <v-text-field
-
-              v-model="filter.search"
+              v-model="search"
               :loading="loading.search"
               solo-inverted
               label="جست و جو"
@@ -96,6 +97,7 @@
     props: ['value', 'label', 'isAdmin', 'chooseType'],
     data() {
       return {
+        search: '',
         loading: {
           search: false,
           advertType: false,
@@ -105,7 +107,6 @@
           city: true,
         },
         filter: {
-          advertType: null,
           advertTypeName: null,
           advertTypeValue: null,
           cityIdValue: null,
@@ -116,7 +117,6 @@
           titleValue: null,
           textValue: null,
         },
-        search: '',
         city_search: null,
       }
     },
@@ -128,11 +128,11 @@
         return this.chooseType || false;
       },
       getAdvertTypeList() {
-        let list = Helper.getTypeByAlias();
+        let list = Helper.getTypes();
         //return list;
         let titles = [];
         _.forEach(list, (item) => {
-          titles.push(item.title)
+          titles.push({title: item.title, type: item.type})
         })
         return titles
       },
@@ -156,17 +156,13 @@
       })
     },
     methods: {
-      updateSearch() {
-        _.set(this, 'filter.titleValue', this.search);
-        _.set(this, 'filter.textValue', this.search);
+      updateSearch(val) {
+        _.set(this, 'filter.titleValue', val);
+        _.set(this, 'filter.textValue', val);
         this.emitToParent();
       },
-      updateAdvertType() {
-        if (_.get(this, 'filter.advertType', false)) {
-          let type = _.get(_.find(Helper.getTypeByAlias(), {'title': _.get(this, 'filter.advertType', false)}), 'type', 'loan');
-          _.set(this, 'filter.advertTypeName', type);
-          _.set(this, 'filter.advertTypeValue', type);
-        }
+      updateAdvertTypeName(val) {
+        _.set(this, 'filter.advertTypeValue', val);
         this.emitToParent();
       },
       updateInstant() {

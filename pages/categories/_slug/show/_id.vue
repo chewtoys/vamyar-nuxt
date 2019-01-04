@@ -210,8 +210,8 @@
               </v-flex>
               <v-flex xs12>
                 <div class="text-left">
-                  <Bookmark/>
-                  <Report/>
+                  <Bookmark  v-if="false"/>
+                  <Report v-if="false"/>
                   <CopyUrl/>
                 </div>
               </v-flex>

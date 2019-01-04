@@ -332,8 +332,7 @@ const Helper = {
     };
     if (type === null) {
       // common filters
-      filter = _.pick(obj, ['cityIdValue', 'instantValue', 'transferableValue', 'titleValue']);
-      _.get(filter, 'instantValue', null) === 1 ? _.set(filter, 'instantValue', 'true') : _.set(filter, 'instantValue', '');
+      filter = _.pick(obj, ['cityIdValue', 'instantValue', 'transferableValue', 'titleValue', 'textValue']);
     } else if (type === 'loans') {
       filter = _.pick(obj, ['loanTypeIdValue', 'amountValue', 'maxAmountValue', 'minAmountValue', 'paybackTimeValue']);
     } else if (type === 'loanRequests') {
