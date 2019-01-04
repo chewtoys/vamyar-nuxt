@@ -570,16 +570,16 @@
         }
 
         if (this.isAdverts && this.advertTypeName) {
-          let advertableType = _.get(Helper.getAdvertTypeByType(this.advertTypeName), 'advertType', this.advertTypeName.slice(0, -1))
+          advertableType = _.get(Helper.getAdvertTypeByType(this.advertTypeName), 'advertType', this.advertTypeName.slice(0, -1))
           if (advertableType !== 'advert') must = `advertableType=${advertableType}`
         }
-
 
         let include = 'advert.user.details,guaranteeType,guaranteeTypes,advert.city,loanType,loanTypes';
         if (this.isAdverts) include = 'advertable,user.details,guaranteeTypes,city,loanType';
 
         let {sortBy, descending, page, rowsPerPage} = this.pagination;
         let querySubItems = {
+          advertableType,
           must,
           page,
           include,
