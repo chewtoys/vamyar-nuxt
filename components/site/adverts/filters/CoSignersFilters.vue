@@ -96,8 +96,12 @@
     },
     methods: {
       emitToParent() {
-        this.$emit("change", this.filter);
-        return this.$emit("input", this.filter);
+        let query = {}
+        _.forEach(this.filter, (val, title) => {
+          if (val || _.isNumber(val)) _.set(query, title, val)
+        })
+        this.$emit("change", query);
+        return this.$emit("input", query);
       },
 
     }

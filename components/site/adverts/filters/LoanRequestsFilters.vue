@@ -123,43 +123,14 @@
         this.emitToParent();
       },
       emitToParent() {
-
-        this.$emit("change", this.filter);
-        return this.$emit("input", this.filter);
-      },
-      // select the proper city
-      querySelections(v) {
-        _.set(this.loading, 'city', true)
-        // Simulated ajax query
-
-        this.city_items = this.city_states.filter(e => {
-          return (e || "").toLowerCase().indexOf((v || "").toLowerCase()) > -1
+        let query = {}
+        _.forEach(this.filter, (val, title) => {
+          if (val || _.isNumber(val)) _.set(query, title, val)
         })
-        _.set(this.loading, 'city', false)
+        this.$emit("change", query);
+        return this.$emit("input", query);
       },
     }
   }
 
-  /*
-  <v-range-slider
-              v-if="false"
-              :tick-labels="range_labels"
-              :min="range_search_min"
-              :max="range_search_max"
-              thumb-label
-              class="ltr"
-              light
-              thumb-size="100"
-              @change="chargeValue()"
-            >
-              <template
-                slot="thumb-label"
-                slot-scope="props"
-              >
-                    <span>
-                      {{ rangeLabels(4 - props.value) }}
-                    </span>
-              </template>
-            </v-range-slider>
-   */
 </script>

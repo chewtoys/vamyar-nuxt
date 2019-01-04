@@ -190,10 +190,8 @@
       },
       loadAgainCommonAdvertFilter(filter) {
         //console.log(filter);
-        let typeName = _.get(filter, 'advertTypeName', null);
-        if (typeName) {
-          _.set(this, 'advertTypeName', typeName);
-        }
+        let typeName = _.get(filter, 'advertTypeName', 'adverts');
+        _.set(this, 'advertTypeName', typeName);
         let computedFilter = Helper.getComputedFilter(filter);
         _.set(this, 'commonComputedFilters', computedFilter);
         this.loadAgain();
@@ -214,7 +212,7 @@
         this.loading = true
         this.items = []
         let method = `/site/${this.which}`
-        let filter = null, must = null, advertableType = this.advertTypeName
+        let filter = null, include = null, must = null, advertableType = this.advertTypeName
         if (this.isAdverts) {
           include = 'advertable,city,user.details,loanType,guaranteeType';
         } else {
@@ -263,7 +261,6 @@
         }
 
         let query = {}
-
         _.forEach(querySubItems, (val, title) => {
           if (val) _.set(query, title, val)
         })
