@@ -581,7 +581,6 @@
         let query = {
           must,
           page,
-          advertableType,
           include,
           filter,
           orderBy: `${sortBy || 'id'}:${descending ? 'desc' : 'asc'}`,
