@@ -75,7 +75,7 @@
               <p><b>موبایل: </b>{{ getProperty(props.item, 'user.mobile', '-') }}</p>
             </td>
             <td class="text-xs-right">{{ getPrice(props.item.amount) }}</td>
-            <td v-if="props.item.transaction!==null" class="text-xs-right">
+            <td v-if="props.item.transaction!==null" class="ltr text-xs-right">
               <p>{{getProperty(props.item, 'transaction.refId', '-') }} : مرجع</p>
               <p>{{getProperty(props.item, 'transaction.status', '-') }} : وضعیت</p>
               <p>{{getProperty(props.item, 'transaction.ip', '-') }} : آیپی</p>
@@ -123,7 +123,7 @@
       {text: '‌شناسه', value: 'id', align: 'right'},
       {text: 'پرداخت کننده', value: 'userId', align: 'right'},
       {text: 'مبلغ', value: 'amount', align: 'right'},
-      {text: 'شناسه', value: 'transactionId', align: 'right'},
+      {text: 'مشخصات', value: 'transactionId', align: 'right'},
       {text: 'استثنا', value: 'exception', align: 'right'},
       {text: 'وضعیت پرداخت', value: 'paid', align: 'right'},
       {text: 'تخفیف', value: 'discount', align: 'right'},
@@ -179,7 +179,8 @@
 
         this.loading = true;
         let method = fetchMethod;
-        let filter = `id=${this.search},userId=${this.search},jUpdateAt=${this.search},jCreatedAt=${this.search},amount=${this.search},transactionId=${this.search},paid=${this.search},discount=${this.search}`;
+        let filter = null
+        if (this.search) filter = `id=${this.search},userId=${this.search},jUpdateAt=${this.search},jCreatedAt=${this.search},amount=${this.search},transactionId=${this.search},paid=${this.search},discount=${this.search}`;
         let {sortBy, descending, page, rowsPerPage} = this.pagination;
         let query = {
           filter,
