@@ -119,17 +119,13 @@
     }),
     watch: {
       parentName(val) {
-        let id = _.first(val)
-        console.log(val, id)
-        if(this.final.includes(id)){
-
-        }
+        //this.parent = val;
       }
     },
     computed:
       {
         parent() {
-          return this.final
+          return this.parentName
         },
         list: function () {
           return indexPath;
