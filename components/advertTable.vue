@@ -33,7 +33,7 @@
             hide-details
           ></v-text-field>
 
-          <AdvertFilters v-if="isAdmin" :chooseType="isAdverts" label="فیلتر کنید" v-model="advertFilters"
+          <AdvertFilters v-if="isAdmin" :isAdmin="isAdmin" :chooseType="isAdverts" label="فیلتر کنید" v-model="advertFilters"
                          @change="loadAgainCommonAdvertFilter"/>
           <LoansFilters v-if="canShow('loans')" label="فیلتر وام " v-model="filter"
                         @change="loadAgainAdvertFilter"/>

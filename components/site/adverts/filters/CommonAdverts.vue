@@ -23,9 +23,10 @@
             />
           </div>
         </v-flex>
-        <v-flex xs12 sm3 class="pa-1 ">
+        <v-flex v-if="!isAdmin" xs12 sm3 class="pa-1 ">
           <div>
             <v-text-field
+
               v-model="filter.search"
               :loading="loading.search"
               solo-inverted
@@ -92,7 +93,7 @@
   const cityMethod = '/cities?number=3000'
 
   export default {
-    props: ['value', 'label', 'chooseType'],
+    props: ['value', 'label', 'isAdmin', 'chooseType'],
     data() {
       return {
         loading: {
