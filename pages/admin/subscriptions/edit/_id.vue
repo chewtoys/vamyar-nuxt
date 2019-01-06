@@ -42,6 +42,15 @@
               data-vv-name="period"
               label="دوره"
             />
+            <Editor
+              validate="required"
+              v-model="text"
+              :error-messages="errors.collect('text')"
+              box
+              label="توضیحات"
+              data-vv-name="text"
+              auto-grow
+            />
             <v-text-field
               v-validate="'required|numeric'"
               v-model="price"
@@ -99,6 +108,7 @@
       title: '',
       period: '',
       special: '',
+      text: '',
       price: null,
       data: {},
       page_title,
@@ -143,6 +153,7 @@
         this.special = _.get(res, 'data.special', '');
         this.period = _.get(res, 'data.period', '');
         this.price = _.get(res, 'data.price', '');
+        this.text = _.get(res, 'data.text', '');
         this.data = _.get(res, 'data.data', '');
       }).catch(err => {
         return this.$store.commit("snackbar/setSnack", 'در گرفتن اطلاعات مشکلی رخ داد');
@@ -159,6 +170,7 @@
           title: this.title,
           price: this.price,
           period: this.period,
+          text: this.text,
           special: this.special,
           data: this.data,
         }

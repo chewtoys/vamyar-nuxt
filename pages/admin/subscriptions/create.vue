@@ -34,6 +34,15 @@
               data-vv-name="title"
               label="عنوان"
             />
+            <Editor
+              validate="required"
+              v-model="text"
+              :error-messages="errors.collect('text')"
+              box
+              label="توضیحات"
+              data-vv-name="text"
+              auto-grow
+            />
             <v-text-field
               v-validate="'required|numeric'"
               v-model="period"
@@ -96,6 +105,7 @@
         {title: 'توضیحات', name: 'desc', type: 'text', value: ''},
       ],
       title: '',
+      text: '',
       period: '',
       special: false,
       price: null,
@@ -142,6 +152,7 @@
       sendForm() {
         let data = {
           title: this.title,
+          text: this.text,
           price: this.price,
           period: this.period,
           special: this.special ? 1 : 0,

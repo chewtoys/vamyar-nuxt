@@ -1,5 +1,5 @@
 <template>
-  <section class="container">
+  <div class="container">
     <v-card :flat="!hasBox" class="py-1">
       <label>{{getLabel}}</label>
       <br/>
@@ -7,9 +7,12 @@
            v-model="content"
            v-quill:myQuillEditor="editorOption">
       </div>
-      <videoUploader/>
+      <div>
+        <videoUploader />
+      </div>
+      <br />
     </v-card>
-  </section>
+  </div>
 </template>
 
 <script>

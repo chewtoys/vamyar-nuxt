@@ -72,8 +72,7 @@
 
   const page_title = "فعال سازی اشتراک ",
     breadcrumb = "فعال سازی",
-    plansMethod = '/site/subscriptions',
-    subscriptionMethod = '/user/subscriptions',
+    plansMethod = '/site/subscriptionPlans',
     info = {
       title: "تایید فعال سازی اشتراک"
     }

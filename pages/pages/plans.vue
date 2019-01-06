@@ -50,7 +50,7 @@
 <script>
   import Helper from '~/assets/js/helper'
 
-  const plansMethod = '/site/subscriptions',
+  const plansMethod = '/site/subscriptionPlans',
     subscriptionMethod = '/user/subscriptionPlans'
 
   export default {
@@ -121,6 +121,7 @@
           $axios.$get(plansMethod)
         return {plans: data}
       } catch (err) {
+        return {plans: []}
         //return error({statusCode: 503, message: "مشکلی در گرفتن داده ها رخ داد!"})
       }
     }

@@ -142,7 +142,7 @@
         setTimeout(() => {
           this.editedItem = this.defaultItem
           this.editedIndex = -1
-        }, 300)
+        }, 30)
       },
 
       save() {
