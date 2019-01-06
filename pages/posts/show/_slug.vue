@@ -4,7 +4,8 @@
       <v-card-text>
         <v-container grid-list-lg>
           <v-layout row wrap>
-            <v-flex xs12>
+            <v-flex lg1></v-flex>
+            <v-flex lg10 class="py-5">
               <v-card color="white">
                 <v-img
                   :aspect="16/9"
@@ -19,7 +20,7 @@
                   <div>
                     <small>دسته بندی: {{category}}</small>
                     <br/>
-                    <small>تاریخ: {{date}}</small>
+                    <small> انتشار: {{date}}</small>
                   </div>
                 </v-card-title>
                 <v-card-text>
@@ -78,7 +79,7 @@
         return _.get(this, 'item.text', 'بدون متن')
       },
       date() {
-        return _.get(this, 'item.jUpdatedAt', 'بدون تاریخ')
+        return Helper.dateFormat(_.get(this, 'item.publishedAt.date', 'بدون تاریخ'))
       },
       category() {
         let cats = _.get(this, 'item.categories', []);
