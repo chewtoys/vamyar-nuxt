@@ -191,20 +191,20 @@
       deleteItems() {
         if (confirm('آیا مطمئن هستید که می خواهید این موارد را حذف کنید؟')) {
           _.forEach(this.selected, (obj, key) => {
-            this.deleteById(_.get(obj, 'id', ''));
+            this.deleteById(_.get(obj, 'slug', ''));
           })
         }
       },
-      deleteItem(id) {
+      deleteItem(slug) {
         if (confirm('آیا مطمئن هستید که می خواهید این مورد را حذف کنید؟')) {
-          this.deleteById(id)
+          this.deleteById(slug)
         }
       },
-      deleteById: function (id) {
+      deleteById: function (slug) {
         let deletePath = `${fetchMethod}/${id}`;
         //console.log(deletePath)
         _.remove(this.data, function (obj) {
-          return _.get(obj, 'id', '') === id;
+          return _.get(obj, 'slug', '') === slug;
         });
 
         this.$axios.$delete(deletePath).then(() => {

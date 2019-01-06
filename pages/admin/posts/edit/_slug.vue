@@ -50,6 +50,17 @@
                         :loading="categoryLoading"
                         item-text="name"
             />
+            <br/>
+            <v-label>تاریخ انتشار را مشخص کنید:</v-label>
+            <no-ssr>
+              <date-picker
+                inputFormat="YYYY-MM-DD HH:mm"
+                format="jYYYY-jMM-jDD HH:mm"
+                :editable="false"
+                type="datetime"
+                v-model="date"></date-picker>
+            </no-ssr>
+            <br/>
             <Img
               v-model="image"
               label="تصویر"
@@ -78,6 +89,7 @@
   import Editor from '~/components/elements/Editor'
   import Img from '~/components/elements/FileUploader'
 
+  const moment = require('moment-jalaali');
   const page_title = 'ویرایش مطلب ',
     breadcrumb = 'ویرایش  ',
     indexPath = '/admin/posts',
@@ -126,8 +138,25 @@
         },
         list: function () {
           return indexPath;
-        }
-        ,
+        },
+
+        expireDate: {
+          get() {
+            let jalali = this.date;
+            let gregorian = moment(jalali, 'jYYYY/jM/jD HH:mm').format('YYYY-M-D HH:mm:ss');
+            return gregorian;
+          },
+          set(val) {
+            if (!val) return '-';
+            try {
+              let m = moment(val, 'YYYY-M-D HH:mm:ss')
+              this.date = (m.isValid()) ? m.format('jYYYY/jM/jD HH:mm') : val;
+            } catch (err) {
+              //console.log(err, val)
+              this.date = val;
+            }
+          }
+        },
         createPath: function () {
           return createPath;
         },
@@ -149,6 +178,7 @@
           this.title = _.get(res, 'data.title', '');
           this.content = _.get(res, 'data.text', '');
           this.slug = _.get(res, 'data.slug', '');
+          this.expireDate = _.get(res, 'data.expireDate', '');
           _.forEach(_.get(res, 'data.categories', ''), (cat) => {
             this.parent.push(cat.id);
             //console.log(cats)

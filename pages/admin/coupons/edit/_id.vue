@@ -100,6 +100,7 @@
     data: () => ({
       page_title,
       id: null,
+      jdate: null,
       date: null,
       code: '',
       userName: '',
@@ -108,7 +109,7 @@
       oneTimeUsable: false,
       submit_loader: false,
       allUsersList: [],
-      data: null ,
+      data: null,
       dictionary: {
         attributes: {
           code: "کد تخفیف",
@@ -123,7 +124,7 @@
     }),
     watch: {
       date() {
-        console.log(this.expireDate)
+        // console.log(this.expireDate)
       }
     },
     computed:

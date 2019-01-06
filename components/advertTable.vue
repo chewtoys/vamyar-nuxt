@@ -540,7 +540,7 @@
       switchPage() {
         this.loading = true;
         let method = `/${this.panel}/${this.type.type}`;
-        let advertableType = this.type.advertType;
+        let advertableType = null;
         let filter = null, must = null
 
         /* search and filter */

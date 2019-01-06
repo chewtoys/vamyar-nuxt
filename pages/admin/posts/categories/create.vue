@@ -63,6 +63,7 @@
               v-model="image"
               label="تصویر"
             />
+
             <v-btn :loading="submit_loader" outline color="accent" round @click="processSubmit">
               <v-icon class="px-1">save</v-icon>
               ذخیره
