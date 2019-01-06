@@ -132,7 +132,7 @@
       }, planInfo(sub) {
         return sub
       }, planExpire(sub) {
-        return Helper.dateFormat(_.get(sub, 'endDate.date', '-'), 'YYYY-M-D HH:mm:ss', 'jYYYY/jM/jD HH:mm:ss');
+        return Helper.dateFormat(sub.endDate || '-', 'YYYY-M-D HH:mm:ss', 'jYYYY/jM/jD HH:mm:ss');
       }, leftDays(sub) {
         return _.get(sub, 'remainedDays', '0‌') + ' روز '
       },
@@ -150,8 +150,13 @@
     },
     async asyncData({error, params, $axios, store}) {
       let id = params.id;
+      let subscriptionData = await $axios.$get("/user/subscriptions", {params: {include: 'subscriptionPlan'}});
+
       try {
-        let {data} = await $axios.$get(`${plansMethod}`,{params:{include:'subscriptionPlan'}})
+        if (_.has(subscriptionData, 'data')) {
+          store.commit("user/updateUserSubscription", _.get(subscriptionData, 'data', null))
+        }
+        let {data} = await $axios.$get(`${plansMethod}`, {params: {include: 'subscriptionPlan'}})
         return {plans: data}
       } catch (err) {
         //return error({statusCode: 503, message: "مشکلی در گرفتن داده ها رخ داد!"})

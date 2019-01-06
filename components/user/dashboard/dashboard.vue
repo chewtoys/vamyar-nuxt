@@ -32,8 +32,7 @@
             </v-card>
           </v-card-text>
         </v-card>
-
-        <v-card class="my-1">
+        <v-card class="my-1 hide">
           <v-card-title>
             <v-subheader>
               آمار شما
@@ -177,7 +176,7 @@
       planTitle() {
         return _.get(this.$store.state, 'user.subscription.subscriptionPlan.title', '-')
       }, planPeriod() {
-        return _.get(this.$store.state, 'user.subscription.period', '-') + 'روزه'
+        return _.get(this.$store.state, 'user.subscription.subscriptionPlan.period', '-') + 'روزه'
       }, planStart() {
         return _.get(this.$store.state, 'user.subscription.jCreatedAt', '-')
       }, planPrice() {
