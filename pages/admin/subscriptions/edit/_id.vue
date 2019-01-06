@@ -154,13 +154,16 @@
         this.period = _.get(res, 'data.period', '');
         this.price = _.get(res, 'data.price', '');
         this.text = _.get(res, 'data.text', '');
-        this.data = _.get(res, 'data.data', '');
+        this.data = this.parseData(_.get(res, 'data.data', ''));
       }).catch(err => {
         return this.$store.commit("snackbar/setSnack", 'در گرفتن اطلاعات مشکلی رخ داد');
       })
     }
     ,
     methods: {
+      parseData(str) {
+        return JSON.parse(str) || str;
+      },
       toast(msg, color) {
         this.$store.commit("snackbar/setSnack", msg, color)
       }

@@ -21,7 +21,7 @@
                             class="my-1 text-center">
                       <strong>{{getPeriod(item.period)}}</strong></v-chip>
                     <section class="my-3">
-                      <div class="full my-2" v-for="property in item.data" :key="property.title">
+                      <div class="full my-2" v-for="property in parseData(item.data)" :key="property.title">
                         <div>
                           <small class="grey--text" v-if="property.title">{{property.title}}</small>
                         </div>
@@ -127,6 +127,9 @@
     }
     ,
     methods: {
+      parseData(str){
+        return JSON.parse(str) || str ;
+      },
       settings(key) {
         return _.get(this.$store.state.settings.data, key, '')
       }
