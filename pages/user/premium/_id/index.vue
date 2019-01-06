@@ -28,7 +28,7 @@
                   <td>
                     <small>توضیحات</small>
                   </td>
-                  <td><strong>{{nl2br(getData(data, 'text', '-'))}}</strong></td>
+                  <td><strong v-html="nl2br(getData(data, 'text', '-'))"></strong></td>
                 </tr>
                 <tr>
                   <td>
@@ -43,6 +43,7 @@
                   <td>
                     <v-text-field
                       v-model="coupon"
+                      :hint="couponHint"
                       placeholder="اگر کد تخفیف دارید اینجا وارد کنید"
                     />
                   </td>
@@ -55,7 +56,7 @@
                 </tr>
                 </tbody>
               </table>
-              <v-btn :href="link" :disabled="!link" block color="success">
+              <v-btn :href="link" :disabled="!link || loader" block color="success">
                 <v-icon class="px-1">forward</v-icon>
                 <b>پرداخت</b>
               </v-btn>
@@ -100,6 +101,12 @@
         let path = _.get(this.$route, 'query.redirect', '');
         return decodeURI(path || "/user");
       },
+      couponHint() {
+        let code = this.coupon;
+        let method = `/site/`;
+        //
+        return ''
+      },
       user() {
         return _.get(this.$store.state, 'user', [])
       },
@@ -120,20 +127,21 @@
     watch: {
       coupon: {
         handler() {
+
           this.getForm();
         }
       }
     },
     methods: {
       getData(item, path, def) {
-        return _.get(item, path, def);
+        return _.get(item, path, def) || (def || '');
       },
       settings(key) {
         return _.get(this.$store.state.settings.data, key, '')
       }
       ,
       nl2br(val) {
-        return Helper.nl2br(val);
+        return Helper.nl2br(val) || '-';
       },
       getPrice(val) {
         return Helper.priceFormat(val);
@@ -160,10 +168,10 @@
             //  console.log(`'${res2}'`);
             //}).catch()
           }
-          console.log(res);
+          //console.log(res);
           this.loader = false;
         }).catch((err) => {
-          console.log({err})
+          //console.log({err})
           //this.$store.commit('snackbar/setSnack', err)
           this.loader = false;
         })
@@ -188,8 +196,7 @@
             price: '-',
             period: '-',
             special: 0,
-            data: [
-            ],
+            data: [],
           }
         }
         //return error({statusCode: 503, message: "مشکلی در گرفتن داده ها رخ داد!"})
