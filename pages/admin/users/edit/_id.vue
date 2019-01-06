@@ -285,7 +285,7 @@
         })
         this.$validator.localize("fa", this.dictionary);
 
-        let subscriptionsMethods = '/site/subscriptions'
+        let subscriptionsMethods = '/site/subscriptionPlans'
         this.$axios.$get(subscriptionsMethods).then(res => {
           this.subscriptionsList = _.get(res, 'data', [])
         }).catch(err => {

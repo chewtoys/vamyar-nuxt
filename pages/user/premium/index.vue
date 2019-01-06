@@ -82,7 +82,7 @@
   const
     page_title = "وضعیت اشتراک من",
     breadcrumb = "اشتراک حساب کاربری",
-    plansMethod = '/site/subscriptions'
+    plansMethod = '/site/subscriptionPlans'
 
   export default {
     meta: {

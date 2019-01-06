@@ -51,7 +51,7 @@
   import Helper from '~/assets/js/helper'
 
   const plansMethod = '/site/subscriptions',
-    subscriptionMethod = '/user/subscriptions'
+    subscriptionMethod = '/user/subscriptionPlans'
 
   export default {
     meta: {

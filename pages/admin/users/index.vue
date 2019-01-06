@@ -227,7 +227,7 @@
         })
       },
       getProperty(item, path, def = '') {
-        return _.get(item, path, def);
+        return _.get(item, path, def) || def;
       },
       deleteItems() {
         if (confirm('آیا مطمئن هستید که می خواهید این موارد را حذف کنید؟')) {

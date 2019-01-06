@@ -1,7 +1,6 @@
 <template>
   <div>
     <v-card color="grey lighten-4">
-
       <v-card-text>
         <v-container grid-list-lg>
           <v-layout row wrap>
@@ -24,7 +23,7 @@
                   </div>
                 </v-card-title>
                 <v-card-text>
-                  <div>{{ text }}</div>
+                  <div v-html="text"></div>
                 </v-card-text>
                 <v-divider/>
                 <v-card-actions class="ltr">
