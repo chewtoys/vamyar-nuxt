@@ -66,11 +66,10 @@
                   large
                   round
                   dark
-                  outline
                   ripple
                   block
                   :to="`/user/adverts/${item.alias}/create`"
-                  color="info"
+                  color="orange"
                 >
                   <v-icon class="px-1">{{item.icon || 'note_add' }}</v-icon>
                   {{item.panelLink}}
@@ -88,6 +87,7 @@
           <v-card-text>
             <v-expansion-panel popout focusable>
               <v-expansion-panel-content
+                v-if="adverts.length"
                 v-for="(item,i) in adverts"
                 :key="i"
               >
@@ -145,6 +145,9 @@
                   </v-card-text>
                 </v-card>
               </v-expansion-panel-content>
+              <v-alert v-else>
+                <p>هیچ آگهی ثبت شده ای یافت نشد!</p>
+              </v-alert>
             </v-expansion-panel>
           </v-card-text>
         </v-card>
@@ -180,7 +183,7 @@
       }, planStart() {
         return _.get(this.$store.state, 'user.subscription.jCreatedAt', '-')
       }, planPrice() {
-        return Helper.priceFormat(_.get(this.$store.state, 'user.subscription.subscriptionPlan.price', '-'),'')
+        return Helper.priceFormat(_.get(this.$store.state, 'user.subscription.subscriptionPlan.price', '-'), '')
       }, getPlan() {
         return _.get(this.$store.state, 'user.subscription.subscriptionPlan', {})
       }, planInfo() {
@@ -236,7 +239,7 @@
           this.loader = false
         })
         .catch(err => {
-          this.$store.commit("snackbar/setSnack", err.message)
+          //this.$store.commit("snackbar/setSnack", err.message)
           this.rawData = [];
           this.loader = false
         })
