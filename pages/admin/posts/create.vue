@@ -50,6 +50,19 @@
                         :loading="categoryLoading"
                         item-text="name"
             />
+
+            <br/>
+            <v-label>تاریخ انتشار را مشخص کنید:</v-label>
+            <no-ssr>
+              <date-picker
+                inputFormat="YYYY-MM-DD HH:mm"
+                format="jYYYY-jMM-jDD HH:mm"
+                :editable="false"
+                type="datetime"
+                v-model="date"></date-picker>
+            </no-ssr>
+            <br/>
+
             <Img
               v-model="image"
               label="تصویر"
@@ -78,6 +91,7 @@
   import Editor from '~/components/elements/Editor'
   import Img from '~/components/elements/FileUploader'
 
+  const moment = require('moment-jalaali');
   const page_title = 'ثبت مطلب جدید',
     breadcrumb = 'مطلب جدید',
     indexPath = '/admin/posts',
@@ -97,6 +111,7 @@
       final: [],
       parentName: [],
       content: '',
+      date: '',
       image: null,
       title: '',
       slug: '',
@@ -124,18 +139,33 @@
     },
     computed:
       {
+        publishedAt: {
+          get() {
+            let jalali = this.date;
+            let gregorian = moment(jalali, 'jYYYY/jM/jD HH:mm').format('YYYY/M/D HH:mm:ss');
+            return gregorian;
+          },
+          set(val) {
+            if (!val) return null;
+            try {
+              let m = moment(val, 'YYYY-M-D HH:mm:ss')
+              this.date = (m.isValid()) ? m.format('jYYYY/jM/jD HH:mm') : val;
+            } catch (err) {
+              //console.log(err, val)
+              this.date = null;
+            }
+          }
+        },
         parent() {
           return this.parentName
         },
         list: function () {
           return indexPath;
-        }
-        ,
+        },
         createPath: function () {
           return createPath;
         },
-      }
-    ,
+      },
     mounted() {
       this.$validator.localize("fa", this.dictionary)
       this.$axios.$get(categoriesMethod).then(res => {
@@ -143,7 +173,7 @@
         this.categories = _.isArray(fetched) ? fetched : [];
         this.categoryLoading = false;
       }).catch(err => {
-        console.log(err)
+        //console.log(err)
       })
     },
     methods: {
@@ -157,6 +187,7 @@
           slug: this.slug,
           image: this.image,
           text: this.content,
+          publishedAt: this.publishedAt,
           categories: this.parent,
         }
         this.$axios

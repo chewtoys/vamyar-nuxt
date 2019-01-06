@@ -2,7 +2,7 @@
   <v-container grid-list-lg>
     <v-layout row wrap>
       <v-flex xs12>
-        <v-card>
+        <v-card class="my-1">
           <v-card-title>
             <v-subheader>
               وضعیت حساب
@@ -32,7 +32,8 @@
             </v-card>
           </v-card-text>
         </v-card>
-        <v-card>
+
+        <v-card class="my-1">
           <v-card-title>
             <v-subheader>
               آمار شما
@@ -53,7 +54,7 @@
             </v-chip>
           </v-card-text>
         </v-card>
-        <v-card>
+        <v-card class="my-1">
           <v-card-title>
             <v-subheader>
               دسترسی سریع
@@ -79,7 +80,7 @@
             </v-layout>
           </v-card-text>
         </v-card>
-        <v-card>
+        <v-card class="my-1">
           <v-card-title>
             <v-subheader>
               آخرین آگهی های شما

@@ -110,6 +110,7 @@
       content: '',
       image: null,
       title: '',
+      date: '',
       slug: '',
       uriSlug: null,
       page_title,
@@ -139,21 +140,20 @@
         list: function () {
           return indexPath;
         },
-
-        expireDate: {
+        publishedAt: {
           get() {
             let jalali = this.date;
-            let gregorian = moment(jalali, 'jYYYY/jM/jD HH:mm').format('YYYY-M-D HH:mm:ss');
+            let gregorian = moment(jalali, 'jYYYY/jM/jD HH:mm').format('YYYY/M/D HH:mm:ss');
             return gregorian;
           },
           set(val) {
-            if (!val) return '-';
+            if (!val) return null;
             try {
               let m = moment(val, 'YYYY-M-D HH:mm:ss')
               this.date = (m.isValid()) ? m.format('jYYYY/jM/jD HH:mm') : val;
             } catch (err) {
               //console.log(err, val)
-              this.date = val;
+              this.date = null;
             }
           }
         },
@@ -178,7 +178,7 @@
           this.title = _.get(res, 'data.title', '');
           this.content = _.get(res, 'data.text', '');
           this.slug = _.get(res, 'data.slug', '');
-          this.expireDate = _.get(res, 'data.expireDate', '');
+          this.publishedAt = _.get(res, 'data.publishedAt.date', '');
           _.forEach(_.get(res, 'data.categories', ''), (cat) => {
             this.parent.push(cat.id);
             //console.log(cats)
@@ -204,6 +204,7 @@
           slug: this.slug,
           image: this.image || null,
           text: this.content,
+          publishedAt: this.publishedAt,
           categories: this.parent,
         }
         this.$axios

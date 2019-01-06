@@ -199,7 +199,7 @@
       deleteItems() {
         if (confirm('آیا مطمئن هستید که می خواهید این موارد را حذف کنید؟')) {
           _.forEach(this.selected, (obj, key) => {
-            this.deleteById(_.get(obj, 'id', ''));
+            this.deleteById(_.get(obj, 'slug', ''));
           })
         }
       },
@@ -212,7 +212,7 @@
         let deletePath = `/admin/posts/${id}`;
         //console.log(deletePath)
         _.remove(this.data, function (obj) {
-          return _.get(obj, 'id', '') === id;
+          return _.get(obj, 'slug', '') === id;
         });
 
         this.$axios.$delete(deletePath).then(() => {

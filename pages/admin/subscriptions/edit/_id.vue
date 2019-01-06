@@ -79,6 +79,7 @@
   const page_title = 'ویرایش پلن ',
     breadcrumb = 'ویرایش  ',
     indexPath = '/admin/subscriptions',
+    resourcePath = '/admin/subscriptionPlans',
     createPath = '/admin/subscriptions'
 
   export default {
@@ -122,7 +123,7 @@
     computed:
       {
         updateMethod() {
-          return `${indexPath}/${this.id}`;
+          return `${resourcePath}/${this.id}`;
         },
         list: function () {
           return indexPath;

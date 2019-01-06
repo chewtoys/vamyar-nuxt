@@ -570,7 +570,7 @@
         }
 
         if (this.isAdverts && this.advertTypeName) {
-          console.log(Helper.getAdvertTypeByType(this.advertTypeName), this.advertTypeName);
+          //console.log(Helper.getAdvertTypeByType(this.advertTypeName), this.advertTypeName);
           advertableType = _.get(Helper.getAdvertTypeByType(this.advertTypeName), 'advertType', this.advertTypeName.slice(0, -1))
           if (advertableType !== 'advert') must = `advertableType=${advertableType}`
         }
