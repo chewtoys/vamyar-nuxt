@@ -7,9 +7,9 @@
         </v-flex>
         <v-flex v-if="getChooseType" xs12 sm4 class="pa-1">
           <div>
-            <v-select
+            <v-autocomplete
               :items="getAdvertTypeList"
-              item-key="type"
+              item-value="type"
               item-text="title"
               v-model="filter.advertTypeName"
               :loading="loading.advertType"
@@ -134,7 +134,7 @@
         _.forEach(list, (item) => {
           titles.push({title: item.title, type: item.type})
         })
-        return list
+        return titles
       },
       city_items() {
         return _.get(this.$store.state, 'city.data')
