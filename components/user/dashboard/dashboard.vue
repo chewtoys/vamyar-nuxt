@@ -69,7 +69,7 @@
                   ripple
                   block
                   :to="`/user/adverts/${item.alias}/create`"
-                  color="orange"
+                  color="success"
                 >
                   <v-icon class="px-1">{{item.icon || 'note_add' }}</v-icon>
                   {{item.panelLink}}
@@ -85,9 +85,8 @@
             </v-subheader>
           </v-card-title>
           <v-card-text>
-            <v-expansion-panel popout focusable>
+            <v-expansion-panel popout focusable v-if="adverts.length">
               <v-expansion-panel-content
-                v-if="adverts.length"
                 v-for="(item,i) in adverts"
                 :key="i"
               >
@@ -145,10 +144,10 @@
                   </v-card-text>
                 </v-card>
               </v-expansion-panel-content>
-              <v-alert v-else>
-                <p>هیچ آگهی ثبت شده ای یافت نشد!</p>
-              </v-alert>
             </v-expansion-panel>
+            <v-alert v-else type="warning" :value="true">
+              <span>هیچ آگهی ثبت شده ای یافت نشد!</span>
+            </v-alert>
           </v-card-text>
         </v-card>
       </v-flex>
