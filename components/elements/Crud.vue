@@ -108,6 +108,9 @@
       dialog(val) {
         val || this.close()
       },
+      value(val) {
+        this.initialize()
+      },
       content(val) {
         this.$emit("input", val)
       }
