@@ -53,13 +53,12 @@
         </v-card-title>
         <v-data-table
           v-if="isAdverts"
-          hide-actions
           v-model="selected"
           item-key="id"
           :headers="headers"
           :loading="tableLoader"
           :items="list"
-          :pagination.sync="pagination"
+          hide-actions
           :total-items="totalData"
           :rows-per-page-items="[10,25,100]"
           class="elevation-1"
@@ -222,7 +221,6 @@
           :headers="headers"
           :loading="tableLoader"
           :items="list"
-          :pagination.sync="pagination"
           :total-items="totalData"
           no-results-text="هیچ موردی ثبت نشده است."
           :rows-per-page-items="[10,25,100]"
