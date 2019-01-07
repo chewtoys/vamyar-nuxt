@@ -214,9 +214,9 @@
         let method = `/site/${this.which}`
         let filter = null, include = null, must = null, advertableType = this.advertTypeName
         if (this.isAdverts) {
-          include = 'advertable,city,user.details,loanType,guaranteeType';
+          include = 'advertable,city,user.details,loanType,guaranteeTypes';
         } else {
-          include = 'advert,advert.city,advert.user.details,loanTypes,guaranteeTypes';
+          include = 'advert,advert.city,advert.user.details,loanType,guaranteeTypes';
         }
         //console.log(1, this.commonComputedFilters, 2, this.computedFilters);
 
@@ -248,7 +248,7 @@
         }
 
 
-        filter = _.replace(_.replace(_.replace(_.replace(_.replace(_.replace(_.replace(_.join(filterArray, ','), '<=', '<'), '>=', '>'), '__', '.'), 'true', '1'), 'false', '0'), 'true', '1'), 'false', '0');
+        filter = _.replace(_.replace(_.replace(_.replace(_.replace(_.replace(_.replace(_.replace(_.replace(_.join(filterArray, ','), '<=', '<'), '>=', '>'), '<=', '<'), '>=', '>'), '__', '.'), 'true', '1'), 'false', '0'), 'true', '1'), 'false', '0');
 
         let orederBy = this.sort;
 
