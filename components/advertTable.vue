@@ -646,8 +646,8 @@
           ( !!_.get(item, 'advert.instant', _.get(item, 'instant', false)) ? 'فوری' : 'غیر فوری')
       },
       ladderable(item, getBoolean = false) {
-        return (getBoolean) ? ( !!_.get(item, 'advert.ladderAt', _.get(item, 'ladderAt', false))) :
-          ( !!_.get(item, 'advert.ladderAt', _.get(item, 'ladderAt', false)) ? 'فعال شده' : 'غیر فعال')
+        return (getBoolean) ? ( !!_.get(item, 'advert.ladderable', _.get(item, 'ladderable', false))) :
+          ( !!_.get(item, 'advert.ladderable', _.get(item, 'ladderable', false)) ? 'فعال شده' : 'غیر فعال')
       },
       changeInstant(id, val = 1, item = [], type = '') {
         if (this.isAdmin) {
