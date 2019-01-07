@@ -154,13 +154,6 @@
                     <v-list-tile-title>نردبان کردن</v-list-tile-title>
                   </v-list-tile>
                 </v-list>
-                <v-list>
-                  <v-list-tile
-                    @click="changeLadderable(getProperty(props, 'item.id'),0,props.item,getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', ''))"
-                  >
-                    <v-list-tile-title>برداشتن نردبان</v-list-tile-title>
-                  </v-list-tile>
-                </v-list>
               </v-menu>
             </td>
             <td class="text-xs-right">
@@ -347,13 +340,6 @@
                     @click="changeLadderable(getProperty(props, 'item.advert.id'),1,props.item,getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', ''))"
                   >
                     <v-list-tile-title>نردبان</v-list-tile-title>
-                  </v-list-tile>
-                </v-list>
-                <v-list>
-                  <v-list-tile
-                    @click="changeLadderable(getProperty(props, 'item.advert.id'),0,props.item,getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', ''))"
-                  >
-                    <v-list-tile-title>برداشتن نردبان</v-list-tile-title>
                   </v-list-tile>
                 </v-list>
               </v-menu>
@@ -675,7 +661,7 @@
       },
       ladderable(item, getBoolean = false) {
         return (getBoolean) ? ( !!_.get(item, 'advert.ladderable', _.get(item, 'ladderable', false))) :
-          ( !!_.get(item, 'advert.ladderable', _.get(item, 'ladderable', false)) ? 'فعال' : 'غیر فعال')
+          ( !!_.get(item, 'advert.ladderable', _.get(item, 'ladderable', false)) ? 'فعال شده' : 'غیر فعال')
       },
       changeInstant(id, val = 1, item = [], type = '') {
         if (this.isAdmin) {

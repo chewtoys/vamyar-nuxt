@@ -296,7 +296,7 @@
       initialLoad() {
         let method = this.uri;
         let query = {
-          include: 'subscriptions.subscriptionPlan'
+          include: 'details,subscriptions.subscriptionPlan'
         }
         this.$axios.$get(method, {params: query}).then(res => {
           this.data = _.get(res, 'data');
@@ -324,7 +324,6 @@
           subscriptionPlan: subscriptionId
         }
         this.$axios.$post(addMethod, data).then(res => {
-
           this.$store.commit('snackbar/setSnack', 'با موفقیت افزوده شد');
           this.initialLoad()
         }).catch(err => {
@@ -337,6 +336,7 @@
           addDays,
           // subscription: _.get(this.currentSubscriptionId, 'id', null)
         }).then(res => {
+          this.$store.commit('snackbar/setSnack', 'با موفقیت انجام شد');
           this.initialLoad()
         }).catch(err => {
         })
@@ -347,14 +347,15 @@
         this.$axios.$put(Method, {
           active: this.currentStatusSubscriptionValue,
         }).then(res => {
+          this.$store.commit('snackbar/setSnack', 'با موفقیت انجام شد');
           this.initialLoad()
         }).catch(err => {
         })
       },
       removeSubscription() {
-        let Method = `/admin/subscriptions/${_.get(this.currentDeleteSubscriptionId, 'id', null)}`
+        let Method = `/admin/subscriptions/${this.currentDeleteSubscriptionId}`
         this.$axios.$delete(Method).then(res => {
-          console.log(res);
+          //console.log(res);
           this.$store.commit('snackbar/setSnack', 'با موفقیت حذف شد');
           this.initialLoad()
         }).catch(err => {
