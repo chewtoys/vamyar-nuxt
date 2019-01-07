@@ -82,11 +82,10 @@
               box
               label="تصویر کاربر"
             />
-
-            <v-card color="" v-if="hasSubscription" class="oddTables my-4">
-              <v-card-title>جزئیات اشتراک این کاربر</v-card-title>
+            <v-subheader>جزئیات اشتراک این کاربر</v-subheader>
+            <v-card v-if="hasSubscription" class="oddTables my-4" v-for="plan in userSubscriptions" :key="plan.id">
               <table class="oddTable">
-                <tbody v-for="plan in userSubscriptions" :key="plan.id">
+                <tbody>
                 <tr>
                   <td>
                     <small>عنوان</small>
