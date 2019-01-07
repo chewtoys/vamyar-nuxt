@@ -598,7 +598,7 @@
           this.tableLoader = false;
           //console.log('on response: ', this.paginator, this.pagination)
         }).catch((error) => {
-          this.paginator = {}
+          this.paginator = {totalPages: 1}
           this.list = []
           this.totalData = 0
           //console.log(error, method, query, this.paginator);

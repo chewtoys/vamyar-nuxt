@@ -18,10 +18,10 @@
       let type = Helper.getTypeByAlias(slug);
       const breadcrumb = Helper.getBreadcrumb(type.title),
         page_title = Helper.getPageTitle(type.title);
-      store.commit("navigation/pushMeta", {breadcrumb, title: page_title});
-      store.commit("navigation/setTitle", page_title);
-      try {
 
+      try {
+        store.commit("navigation/pushMeta", {breadcrumb, title: page_title});
+        store.commit("navigation/setTitle", page_title);
       } catch (err) {
         //error({statusCode: 'این صفحه فعال نمی باشد.'})
       }
