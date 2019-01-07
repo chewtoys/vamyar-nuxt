@@ -213,7 +213,7 @@ const Helper = {
       return value ? 'بله' : 'خیر'
     } else if (name === 'verified') {
       return value ? 'بله' : 'خیر'
-    } else if (name === 'ladderable') {
+    } else if (name === 'ladderAt') {
       return value ? 'بله' : 'خیر'
     } else if (name === 'transferable') {
       return value ? 'بله' : 'خیر'

@@ -4,7 +4,7 @@ export const
     create: ['coSignerRequests', 'loanRequests', 'financeRequests'],
     show: ['coSigners', 'loans', 'finances'],
   },
-  COMMON_FIELDS = ['title', 'city', 'user', 'adminId', 'text', 'ladderable', 'jCreatedAt', 'jDeletedAt', 'jUpdatedAt', 'ladderable', 'transferable', 'advertType', 'verified', 'tradeStatus', 'mobile', 'instant', 'description'],
+  COMMON_FIELDS = ['title', 'city', 'user', 'adminId', 'text', 'ladderAt', 'jCreatedAt', 'jDeletedAt', 'jUpdatedAt', 'transferable', 'advertType', 'verified', 'tradeStatus', 'mobile', 'instant', 'description'],
   COMMON_FIELD_TITLE = {
     'title': 'عنوان',
     'city': 'شهر',
@@ -14,7 +14,7 @@ export const
     'jCreatedAt': 'تاریخ ایجاد',
     'jDeletedAt': 'تاریخ حذف',
     'jUpdatedAt': 'تاریخ بروزرسانی',
-    'ladderable': "نردبان",
+    'ladderAt': "نردبان",
     'transferable': "قابل انتقال",
     'advertType': "نوع آگهی",
     'verified': "تایید شده",
@@ -32,7 +32,7 @@ export const
       {text: "تاریخ", value: 'jCreatedAt', align: "right"},
       {text: "فوری", value: 'instant', align: "left", width: '140px'},
       {text: "وضعیت", value: 'tradeStatus', align: "left", width: '140px'},
-      {text: "نردبان", value: 'ladderable', align: "left", width: '140px'},
+      {text: "نردبان", value: 'ladderAt', align: "left", width: '140px'},
       {text: "تایید شده", value: 'verified', align: "left", width: '140px'},
       {text: "عملیات", align: "left", value: 'loanTypeId', width: '140px', sortable: false}
     ], loans: [
@@ -42,7 +42,7 @@ export const
       {text: "تاریخ", value: 'jCreatedAt', align: "right"},
       {text: "فوری", value: 'instant', align: "left", width: '140px'},
       {text: "وضعیت", value: 'tradeStatus', align: "left", width: '140px'},
-      {text: "نردبان", value: 'ladderable', align: "left", width: '140px'},
+      {text: "نردبان", value: 'ladderAt', align: "left", width: '140px'},
       {text: "تایید شده", value: 'verified', align: "left", width: '140px'},
       {text: "عملیات", align: "left", value: 'loanTypeId', width: '140px', sortable: false}
     ],
@@ -52,7 +52,7 @@ export const
       {text: "تاریخ", value: 'jCreatedAt', align: "right"},
       {text: "فوری", value: 'instant', align: "left", width: '140px'},
       {text: "وضعیت", value: 'tradeStatus', align: "left", width: '140px'},
-      {text: "نردبان", value: 'ladderable', align: "left", width: '140px'},
+      {text: "نردبان", value: 'ladderAt', align: "left", width: '140px'},
       {text: "تایید شده", value: 'verified', align: "left", width: '140px'},
       {text: "عملیات", sortable: false, align: "left"}
     ],
@@ -62,7 +62,7 @@ export const
       {text: "تاریخ", value: 'jCreatedAt', align: "right"},
       {text: "فوری", value: 'instant', align: "left", width: '140px'},
       {text: "وضعیت", value: 'tradeStatus', align: "left", width: '140px'},
-      {text: "نردبان", value: 'ladderable', align: "left", width: '140px'},
+      {text: "نردبان", value: 'ladderAt', align: "left", width: '140px'},
       {text: "تایید شده", value: 'verified', align: "left", width: '140px'},
       {text: "عملیات", align: "left", value: 'loanTypeId', width: '140px', sortable: false}
     ],
@@ -73,7 +73,7 @@ export const
       {text: "تاریخ", value: 'jCreatedAt', align: "right"},
       {text: "فوری", value: 'instant', align: "left", width: '140px'},
       {text: "وضعیت", value: 'tradeStatus', align: "left", width: '140px'},
-      {text: "نردبان", value: 'ladderable', align: "left", width: '140px'},
+      {text: "نردبان", value: 'ladderAt', align: "left", width: '140px'},
       {text: "تایید شده", value: 'verified', align: "left", width: '140px'},
       {text: "عملیات", align: "left", value: 'loanTypeId', width: '140px', sortable: false}
     ],
@@ -85,7 +85,7 @@ export const
       {text: "تاریخ", value: 'jCreatedAt', align: "right"},
       {text: "فوری", value: 'instant', align: "left", width: '140px'},
       {text: "وضعیت", value: 'tradeStatus', align: "left", width: '140px'},
-      {text: "نردبان", value: 'ladderable', align: "left", width: '140px'},
+      {text: "نردبان", value: 'ladderAt', align: "left", width: '140px'},
       {text: "تایید شده", value: 'verified', align: "left", width: '140px'},
       {text: "عملیات", align: "left", value: 'loanTypeId', width: '140px', sortable: false}
     ],
@@ -99,7 +99,7 @@ export const
       {text: "تاریخ", value: 'jCreatedAt', align: "right"},
       {text: "فوری", value: 'instant', align: "left", width: '140px'},
       {text: "وضعیت", value: 'tradeStatus', align: "left", width: '140px'},
-      {text: "نردبان", value: 'ladderable', align: "left", width: '140px'},
+      {text: "نردبان", value: 'ladderAt', align: "left", width: '140px'},
       {text: "تایید شده", value: 'verified', align: "left", width: '140px'},
       {text: "عملیات", align: "left", value: 'loanTypeId', width: '140px', sortable: false}
     ],

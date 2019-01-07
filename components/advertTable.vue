@@ -606,41 +606,25 @@
       changeTradeStatus(id, item, type, itemId = null) {
         //console.log(id, type, itemId)
         let val = type;
-        if (this.isAdmin) {
-          this.tableLoader = true;
-          let itemType = Helper.getAdvertType(item, null, true);
-          let advertId = _.get(item, 'advertableId', _.get(item, 'id', id))
-          let data = {tradeStatus: val}
-          let method = `/${this.panel}/${itemType.type}/${advertId}`;
-          this.$axios.$put(method, data).then((res) => {
-            let index = 0;
-            if (this.isAdverts) {
-              index = _.findIndex(this.list, {id: id});
-            } else {
-              index = _.findIndex(this.list, {id: advertId});
-            }
-            let path = this.isAdverts ? 'tradeStatus' : 'advert.tradeStatus'
-            _.set(this.list[index], path, val);
-            this.tableLoader = false;
-          }).catch(err => {
-            this.tableLoader = false;
-          })
-        } else {
-          this.tableLoader = true;
-          let method = `/${this.panel}/adverts/${id}/changeTradeStatus/${type}`
-          this.$axios.$put(method).then((res) => {
-            if (this.type.type === 'adverts') {
-              let index = _.findIndex(this.list, {id: id});
-              this.list[index].tradeStatus = type;
-            } else if (itemId) {
-              let index = _.findIndex(this.list, {id: itemId});
-              this.list[index].advert.tradeStatus = type;
-            }
-            this.tableLoader = false;
-          }).catch(err => {
-            this.tableLoader = false;
-          })
-        }
+        this.tableLoader = true;
+        let itemType = Helper.getAdvertType(item, null, true);
+        let advertId = _.get(item, 'advertableId', _.get(item, 'id', id))
+        let data = {tradeStatus: val}
+        let method = `/${this.panel}/${itemType.type}/${advertId}`;
+        this.$axios.$put(method, data).then((res) => {
+          let index = 0;
+          if (this.isAdverts) {
+            index = _.findIndex(this.list, {id: id});
+          } else {
+            index = _.findIndex(this.list, {id: advertId});
+          }
+          let path = this.isAdverts ? 'tradeStatus' : 'advert.tradeStatus'
+          _.set(this.list[index], path, val);
+          this.tableLoader = false;
+        }).catch(err => {
+          this.tableLoader = false;
+        })
+
       },
       getPrice(val) {
         return Helper.priceFormat(val)
@@ -660,8 +644,8 @@
           ( !!_.get(item, 'advert.instant', _.get(item, 'instant', false)) ? 'فوری' : 'غیر فوری')
       },
       ladderable(item, getBoolean = false) {
-        return (getBoolean) ? ( !!_.get(item, 'advert.ladderable', _.get(item, 'ladderable', false))) :
-          ( !!_.get(item, 'advert.ladderable', _.get(item, 'ladderable', false)) ? 'فعال شده' : 'غیر فعال')
+        return (getBoolean) ? ( !!_.get(item, 'advert.ladderAt', _.get(item, 'ladderAt', false))) :
+          ( !!_.get(item, 'advert.ladderAt', _.get(item, 'ladderAt', false)) ? 'فعال شده' : 'غیر فعال')
       },
       changeInstant(id, val = 1, item = [], type = '') {
         if (this.isAdmin) {
