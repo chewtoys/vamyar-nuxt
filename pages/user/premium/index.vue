@@ -132,7 +132,7 @@
       }, planInfo(sub) {
         return sub
       }, planExpire(sub) {
-        return Helper.dateFormat(sub.endDate || '-', 'YYYY-M-D HH:mm:ss', 'jYYYY/jM/jD HH:mm:ss');
+        return Helper.dateFormat(_.get(sub, 'endDate.date', '-') || '-', 'YYYY-M-D HH:mm:ss', 'jYYYY/jM/jD HH:mm:ss');
       }, leftDays(sub) {
         return _.get(sub, 'remainedDays', '0‌') + ' روز '
       },
