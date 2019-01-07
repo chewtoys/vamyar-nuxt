@@ -447,14 +447,16 @@
         return this.type.type === 'adverts' ? `/${this.panel}/adverts` : `/${this.panel}/adverts/${this.slug}`;
       },
       headers() {
-        let id = {text: "شناسه", align: "right", value: 'id'};
-        let owner = {text: "ثبت شده توسط", align: "right", value: 'advert.user.id'};
+        let id, owner;
+        id = {text: "شناسه", align: "right", value: 'id'};
+        if (!this.isAdverts) owner = {text: "ثبت شده توسط", align: "right", value: 'advert.userId'};
+        if (this.isAdverts) owner = {text: "ثبت شده توسط", align: "right", value: 'userId'};
         //let description = {text: "توضیح ادمین", value: "description", align: "left"};
         let result = [];
         result = Helper.getRawHeaders(this.type.type);
         // console.log(result.length)
         //if (this.isAdmin && result[2].value !== 'description') result.unshift(description);
-        if (this.isAdmin && result[1].value !== 'advert.user.id') result.unshift(owner);
+        if (this.isAdmin && result[1].text !== 'ثبت شده توسط') result.unshift(owner);
         if (result[0].value !== 'id') result.unshift(id);
         return _.uniq(result);
       },
