@@ -249,11 +249,11 @@
 
         filter = _.replace(_.replace(_.replace(_.replace(_.replace(_.join(filterArray, ','), '<=', '<'), '>=', '>'), '<=', '<'), '>=', '>'), '__', '.');
 
-        let orederBy = this.sort;
+        let orderBy = this.sort;
 
         let querySubItems = {
           must,
-          orederBy,
+          orderBy,
           include,
           number,
           filter,
