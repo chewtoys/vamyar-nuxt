@@ -59,6 +59,7 @@
           :loading="tableLoader"
           :items="list"
           hide-actions
+          :pagination.sync="pagination"
           :rows-per-page-items="[10,25,100]"
           class="elevation-1"
           no-results-text="هیچ موردی ثبت نشده است."
@@ -220,6 +221,7 @@
           :headers="headers"
           :loading="tableLoader"
           :items="list"
+          :pagination.sync="pagination"
           no-results-text="هیچ موردی ثبت نشده است."
           :rows-per-page-items="[10,25,100]"
           class="elevation-1"
