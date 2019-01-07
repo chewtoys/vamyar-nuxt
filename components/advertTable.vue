@@ -566,7 +566,9 @@
               }
             }
           })
-          filter = _.replace(_.replace(_.replace(_.replace(_.replace(_.replace(_.replace(_.join(filterArray, ','), '<=', '<'), '>=', '>'), '__', '.'), 'true', '1'), 'false', '0'), 'true', '1'), 'false', '0');
+
+          filter = _.replace(_.replace(_.replace(_.replace(_.replace(_.replace(_.replace(_.replace(_.replace(_.join(filterArray, ','), '<=', '<'), '>=', '>'), '<=', '<'), '>=', '>'), '__', '.'), 'true', '1'), 'false', '0'), 'true', '1'), 'false', '0');
+
         }
 
         if (this.isAdverts && this.advertTypeName) {
@@ -576,7 +578,7 @@
         }
         //console.log(this.advertTypeName)
 
-        let include = 'advert.user.details,guaranteeType,guaranteeTypes,advert.city,loanType,loanTypes';
+        let include = 'advert.user.details,guaranteeTypes,advert.city,loanType';
         if (this.isAdverts) include = 'advertable,user.details,guaranteeTypes,city,loanType';
 
         let {sortBy, descending, page, rowsPerPage} = this.pagination;

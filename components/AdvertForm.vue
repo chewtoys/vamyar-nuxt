@@ -127,10 +127,8 @@
             <v-combobox
               v-if="isAllowed('guaranteeTypes')"
               v-validate="'required'"
-              v-model="guaranteeTypes"
+              v-model="guaranteeTypesName"
               :items="guaranteeTypesList"
-              item-text="name"
-              item-value="id"
               :error-messages="errors.collect('guaranteeTypes')"
               box
               data-vv-name="guaranteeTypes"
@@ -265,7 +263,7 @@
       image: null,
       forBank: false,
       forCourt: false,
-      guaranteeTypes: [], // Computed
+      guaranteeTypesName: null, // Computed
       loanType: null,
       paybackTimeName: null,
       amountName: null,
@@ -347,7 +345,7 @@
         return _.get(this.$store.state, 'city.data', []);
       },
       guaranteeTypesList() {
-        return _.get(this.$store.state, 'guaranteeType.data', []);
+        return _.get(this.$store.state, 'guaranteeType.arrayList', []);
       },
       loanTypeList() {
         return _.get(this.$store.state, 'loanType.data', []);
@@ -382,6 +380,26 @@
         },
         set: function (val) {
           this.paybackTimeName = val === 0 ? 'توافقی' : val;
+        }
+      },
+      guaranteeTypes: {
+        get: function () {
+          let items = [];
+          let list = this.$store.state.guaranteeType.data;
+          _.forEach(this.guaranteeTypesName, (name) => {
+            let index = _.findIndex(list, {'name': name});
+            let item = list[index];
+            items.push(item.id)
+          })
+          return items || 0;
+        },
+        set: function (objectArrayList) {
+          let list = this.$store.state.guaranteeType.data;
+          let items = [];
+          _.forEach(objectArrayList, (obj) => {
+            items.push(obj.name)
+          })
+          this.guaranteeTypesName = items || [];
         }
       },
       link() {
