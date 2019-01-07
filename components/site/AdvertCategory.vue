@@ -110,7 +110,7 @@
         ],
         showPremium: false,
         type: '',
-        sort: 'ladderable:desc,updatedAt:desc',
+        sort: 'ladderAt:desc',
         commonComputedFilters: [],
         computedFilters: [],
         advertTypeName: null,
