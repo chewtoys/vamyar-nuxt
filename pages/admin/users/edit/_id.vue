@@ -83,7 +83,7 @@
               label="تصویر کاربر"
             />
 
-            <v-card color="lime lighten-3" v-if="hasSubscription" class="my-4">
+            <v-card color="" v-if="hasSubscription" class="oddTables my-4">
               <v-card-title>جزئیات اشتراک این کاربر</v-card-title>
               <table class="oddTable">
                 <tbody v-for="plan in userSubscriptions" :key="plan.id">
@@ -92,6 +92,12 @@
                     <small>عنوان</small>
                   </td>
                   <td>{{getProperty(plan, 'subscriptionPlan.title')}}</td>
+                </tr>
+                <tr>
+                  <td>
+                    <small>وضعیت</small>
+                  </td>
+                  <td>{{getProperty(plan, 'active') ? 'فعال' : 'غیرفعال'}} </td>
                 </tr>
                 <tr>
                   <td>
@@ -125,11 +131,10 @@
               <v-select
                 v-model="currentSubscriptionId"
                 :items="userSubscriptions"
-                item-text="title"
+                item-text="subscriptionPlan.title"
                 item-value="id"
                 label="اشتراکی که میخواهد تمدید کنید را انتخاب کنید"
                 persistent-hint
-                return-object
                 single-line
               ></v-select>
               <v-text-field
@@ -141,16 +146,38 @@
               />
               <v-btn color="info" @click="addDays">افزودن روز به اشتراک</v-btn>
             </v-card>
+            <v-card color="purple lighten-4" v-if="hasSubscription" class="my-4">
+              <v-card-title>تغییر وضعیت اشتراک</v-card-title>
+              <v-select
+                v-model="currentStatusSubscriptionId"
+                :items="userSubscriptions"
+                item-text="subscriptionPlan.title"
+                item-value="id"
+                label="اشتراکی که میخواهید تغییر دهید را انتخاب کنید"
+                persistent-hint
+                single-line
+              ></v-select>
+              <v-select
+                v-model="currentStatusSubscriptionValue"
+                :items="[{title:'فعال',value:true},{title:'غیرفعال',value:false}]"
+                item-text="title"
+                item-value="value"
+                label="وضعیت"
+                persistent-hint
+                single-line
+              ></v-select>
+
+              <v-btn color="info" @click="toggleSubscription">تغییر وضعیت</v-btn>
+            </v-card>
             <v-card color="warning lighten-4" v-if="hasSubscription" class="my-4">
               <v-card-title>حذف اشتراک</v-card-title>
               <v-select
                 v-model="currentDeleteSubscriptionId"
                 :items="userSubscriptions"
-                item-text="title"
+                item-text="subscriptionPlan.title"
                 item-value="id"
                 label="اشتراکی که میخواهد حذف کنید را انتخاب کنید"
                 persistent-hint
-                return-object
                 single-line
               ></v-select>
               <v-btn color="error" @click="removeSubscription">حذف اشتراک</v-btn>
@@ -165,7 +192,6 @@
                 item-value="id"
                 label="اشتراک جدید را انتخاب کنید"
                 persistent-hint
-                return-object
                 single-line
               ></v-select>
               <v-btn color="success" @click="addSubscription">افزودن اشتراک به حساب</v-btn>
@@ -217,6 +243,8 @@
       data: [],
       currentSubscriptionId: '',
       currentDeleteSubscriptionId: '',
+      currentStatusSubscriptionId: '',
+      currentStatusSubscriptionValue: true,
       days: null,
 
       // validator dictionary
@@ -269,9 +297,8 @@
       initialLoad() {
         let method = this.uri;
         let query = {
-          include: 'details.subscriptions.subscriptionPlan'
+          include: 'subscriptions.subscriptionPlan'
         }
-        //console.log({method})
         this.$axios.$get(method, {params: query}).then(res => {
           this.data = _.get(res, 'data');
           this.firstName = _.get(res, 'data.details.firstName', '');
@@ -284,7 +311,6 @@
           //console.log(err);
         })
         this.$validator.localize("fa", this.dictionary);
-
         let subscriptionsMethods = '/site/subscriptionPlans'
         this.$axios.$get(subscriptionsMethods).then(res => {
           this.subscriptionsList = _.get(res, 'data', [])
@@ -292,10 +318,14 @@
         })
       },
       addSubscription() {
-        let subscriptionId = _.get(this.newSubscription, 'id', null);
-        let addMethod = `/admin/users/${this.id}/subscriptions`;
-        this.$axios.$post(addMethod, {subscription: subscriptionId}).then(res => {
-          //console.log(res);
+        let subscriptionId = this.newSubscription;
+        let addMethod = `/admin/subscriptions`;
+        let data = {
+          user: this.id,
+          subscriptionPlan: subscriptionId
+        }
+        this.$axios.$post(addMethod, data).then(res => {
+
           this.$store.commit('snackbar/setSnack', 'با موفقیت افزوده شد');
           this.initialLoad()
         }).catch(err => {
@@ -303,20 +333,28 @@
       },
       addDays() {
         let addDays = this.days;
-        let addMethod = `/admin/users/${this.id}/subscriptions/${_.get(this.currentSubscriptionId, 'id', null)}`
+        let addMethod = `/admin/subscriptions/${this.currentSubscriptionId}`
         this.$axios.$put(addMethod, {
           addDays,
           // subscription: _.get(this.currentSubscriptionId, 'id', null)
         }).then(res => {
-          console.log(res);
-          this.$store.commit('snackbar/setSnack', 'با موفقیت افزوده شد');
+          this.initialLoad()
+        }).catch(err => {
+        })
+      },
+      toggleSubscription() {
+        let Method = `/admin/subscriptions/${this.currentStatusSubscriptionId}`
+        let subscription = _.find(this.userSubscriptions, {id: this.currentStatusSubscriptionId})
+        this.$axios.$put(Method, {
+          active: this.currentStatusSubscriptionValue,
+        }).then(res => {
           this.initialLoad()
         }).catch(err => {
         })
       },
       removeSubscription() {
-        let addMethod = `/admin/users/${this.id}/subscriptions/${_.get(this.currentDeleteSubscriptionId, 'id', null)}`
-        this.$axios.$delete(addMethod).then(res => {
+        let Method = `/admin/subscriptions/${_.get(this.currentDeleteSubscriptionId, 'id', null)}`
+        this.$axios.$delete(Method).then(res => {
           console.log(res);
           this.$store.commit('snackbar/setSnack', 'با موفقیت حذف شد');
           this.initialLoad()

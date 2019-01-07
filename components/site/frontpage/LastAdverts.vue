@@ -4,9 +4,7 @@
       {{ getTitle }}
     </v-subheader>
     <v-spacer/>
-
     <v-card color="transparent" flat>
-
       <v-card-text>
         <v-alert v-if="!showPremium" :value="!!msg " type="warning">
           <span class="p-b--2">خطا: {{msg}}</span>
