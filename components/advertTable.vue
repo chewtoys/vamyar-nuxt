@@ -600,7 +600,7 @@
           }
           this.list = []
           this.totalData = []
-          console.log(error);
+          //console.log(error);
           this.tableLoader = false;
         });
       },
