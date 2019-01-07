@@ -206,7 +206,7 @@
                     <p>عنوان: <b v-html="(item.title)"></b></p>
                     <p>پیام: <b v-html="nl2br(item.message)"></b></p>
                     <p>تاریخ ارسال: <b v-html="(item.jCreatedAt)"></b></p>
-                    <p>تاریخ ارسال: <b v-html="(item.type)"></b></p>
+                    <p>نوع: <b v-html="(item.type)"></b></p>
                   </td>
                 </tr>
                 </tbody>

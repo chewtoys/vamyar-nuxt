@@ -5,7 +5,7 @@
         <v-container grid-list-lg>
           <v-layout row wrap>
             <v-flex lg1></v-flex>
-            <v-flex lg10 class="py-5">
+            <v-flex xs12 sm12 lg10 class="full py-5">
               <v-card color="white">
                 <v-img
                   :aspect="16/9"
@@ -33,6 +33,7 @@
                 <v-divider/>
               </v-card>
             </v-flex>
+            <v-flex lg1></v-flex>
           </v-layout>
         </v-container>
       </v-card-text>
