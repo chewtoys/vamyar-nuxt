@@ -28,7 +28,6 @@ export const
       {text: "نوع آگهی", align: "right", value: 'advertableType'},
       {text: "عنوان", align: "right", value: 'title'},
       {text: "شهر", value: "cityId", align: "left"},
-      {text: "نوع آگهی", value: 'advertType', align: "right"},
       {text: "تاریخ", value: 'CreatedAt', align: "right"},
       {text: "فوری", value: 'instant', align: "left", width: '140px'},
       {text: "وضعیت", value: 'tradeStatus', align: "left", width: '140px'},

@@ -74,9 +74,6 @@
             <td class="text-xs-left">{{itemType(props.item)}}</td>
             <td class="text-xs-right">{{ getProperty(props, 'item.title', '-') }}</td>
             <td class="text-xs-left">{{ getProperty(props, 'item.city.name', '') }}</td>
-            <td class="text-xs-left">
-              {{ getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'title', 'نامشخص') }}
-            </td>
             <td class="text-xs-left" v-html="getDate(props)"></td>
 
             <td class="text-xs-right">
