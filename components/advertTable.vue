@@ -396,11 +396,6 @@
             </td>
 
           </template>
-          <template slot="no-data">
-            <v-alert type="info">
-              <p>هنوز موردی اضافه نشده است. برای افزودن از بالا بر روی جدید کلیک کنید.</p>
-            </v-alert>
-          </template>
         </v-data-table>
         <div class="text-xs-center pt-2">
           <v-pagination total-visible="8" v-model="pagination.page"
@@ -480,7 +475,6 @@
         descending: true,
         rowsPerPage: 25,
       };
-      this.switchPage()
     },
     watch: {
       search(val) {
