@@ -188,7 +188,7 @@
         if (_.get(item, 'subscriptions', []).length < 1) return 'غیر فعال';
         let plans = _.get(item, 'subscriptions', []);
         let active = 'فعال'
-        let period = 'کل روز باقی مانده: ' + _.sum(_.map(plans, 'remainedDays') || [0]) + 'روز'
+        let period = 'جمع روز باقی مانده: ' + _.sum(_.map(plans, 'remainedDays') || [0]) + 'روز'
         let list = [active, period]
         return _.join(list, '<br/>')
       },

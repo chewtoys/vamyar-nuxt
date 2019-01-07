@@ -127,8 +127,10 @@
             <v-combobox
               v-if="isAllowed('guaranteeTypes')"
               v-validate="'required'"
-              v-model="guaranteeTypesName"
+              v-model="guaranteeTypes"
               :items="guaranteeTypesList"
+              item-text="name"
+              item-value="id"
               :error-messages="errors.collect('guaranteeTypes')"
               box
               data-vv-name="guaranteeTypes"
@@ -177,12 +179,14 @@
             <v-autocomplete
               v-if="isAllowed('loanType')"
               v-validate="'required'"
-              v-model="loanTypeName"
+              v-model="loanType"
               :error-messages="errors.collect('loanType')"
               box
               :label="getTitle('loanType')"
               data-vv-name="loanType"
               :items="loanTypeList"
+              item-value="id"
+              item-text="name"
               persistent-hint
             ></v-autocomplete>
             <v-autocomplete
@@ -261,8 +265,8 @@
       image: null,
       forBank: false,
       forCourt: false,
-      guaranteeTypesName: null, // Computed
-      loanTypeName: null,
+      guaranteeTypes: [], // Computed
+      loanType: null,
       paybackTimeName: null,
       amountName: null,
       payback: null,
@@ -343,10 +347,10 @@
         return _.get(this.$store.state, 'city.data', []);
       },
       guaranteeTypesList() {
-        return _.get(this.$store.state, 'guaranteeType.arrayList', []);
+        return _.get(this.$store.state, 'guaranteeType.data', []);
       },
       loanTypeList() {
-        return _.get(this.$store.state, 'loanType.arrayList', []);
+        return _.get(this.$store.state, 'loanType.data', []);
       },
       price: {
         get: function () {
@@ -378,40 +382,6 @@
         },
         set: function (val) {
           this.paybackTimeName = val === 0 ? 'توافقی' : val;
-        }
-      },
-      loanType: {
-        get: function () {
-          let list = this.$store.state.loanType.data;
-          let index = _.findIndex(list, {'name': this.loanTypeName});
-          let item = list[index];
-          return _.get(item, 'id', 0);
-        },
-        set: function (val) {
-          let list = this.$store.state.loanType.data;
-          let index = _.findIndex(list, {'id': val});
-          let item = list[index];
-          this.loanTypeName = item.name;
-        }
-      },
-      guaranteeTypes: {
-        get: function () {
-          let items = [];
-          let list = this.$store.state.guaranteeType.data;
-          _.forEach(this.guaranteeTypesName, (name) => {
-            let index = _.findIndex(list, {'name': name});
-            let item = list[index];
-            items.push(item.id)
-          })
-          return items || 0;
-        },
-        set: function (objectArrayList) {
-          let list = this.$store.state.guaranteeType.data;
-          let items = [];
-          _.forEach(objectArrayList, (obj) => {
-            items.push(obj.name)
-          })
-          this.guaranteeTypesName = items || [];
         }
       },
       link() {
