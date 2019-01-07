@@ -110,10 +110,10 @@
           advertTypeName: null,
           advertTypeValue: null,
           cityIdValue: null,
-          instant: null,
-          instantValue: null,
-          transferableValue: null,
-          transferable: null,
+          instant: false,
+          instantValue: false,
+          transferableValue: false,
+          transferable: false,
           titleValue: null,
           textValue: null,
         },
@@ -167,18 +167,18 @@
       },
       updateInstant() {
         if (_.get(this, 'filter.instant', false)) {
-          _.set(this.filter, 'instantValue', 1);
+          _.set(this.filter, 'instantValue', true);
         }
         else {
-          _.set(this.filter, 'instantValue', null);
+          _.set(this.filter, 'instantValue', false);
         }
         this.emitToParent();
       },
       updateTransferable() {
         if (_.get(this, 'filter.transferable', false)) {
-          _.set(this.filter, 'transferableValue', 1);
+          _.set(this.filter, 'transferableValue', true);
         } else {
-          _.set(this.filter, 'transferableValue', null);
+          _.set(this.filter, 'transferableValue', false);
         }
         this.emitToParent();
       },
