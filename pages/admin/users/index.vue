@@ -187,9 +187,10 @@
       showSubscription(item) {
         if (_.get(item, 'subscriptions', []).length < 1) return 'غیر فعال';
         let plans = _.get(item, 'subscriptions', []);
-        let list = [];
-        let period = 'باقی مانده: ' + _.sum(_.find(plans, ['remainedDays']) || [0]) + 'روز'
-        return _.join(list, '<hr/>')
+        let active = 'فعال'
+        let period = 'کل روز باقی مانده: ' + _.sum(_.map(plans, 'remainedDays') || [0]) + 'روز'
+        let list = [active, period]
+        return _.join(list, '<br/>')
       },
       switchPage() {
         this.loading = true;

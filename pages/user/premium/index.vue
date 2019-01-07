@@ -17,7 +17,7 @@
         <template v-else flat>
           <v-card flat>
             <v-alert :value="true" type="success">اشتراک شما فعال می باشد.</v-alert>
-            <v-alert :value="true" type="info">اشتراک شما تا تاریخ {{expireDate}} معتبر می باشد.</v-alert>
+            <v-alert :value="true" type="info">اشتراک فعال شما تا تاریخ {{expireDateAll}} معتبر می باشد.</v-alert>
           </v-card>
           <v-label>لیست اشتراک های شما:</v-label>
           <v-alert v-for="sub in subscriptions" :key="sub.id" :value="true" color="info">
@@ -105,6 +105,9 @@
       },
       expireDate() {
         return _.get(this.$store.state, 'user.subscription.expireDate', 'نامشخص');
+      },
+      expireDateAll() {
+        return Helper.dateFormat(_.get(_.last(_.get(this.$store.state, 'user.subscriptions', '-')), 'endDate.date', '-'))
       },
       subscriptions() {
         return _.get(this.$store.state, 'user.subscriptions', []);

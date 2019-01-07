@@ -16,12 +16,15 @@
                 class="px-1">حساب شما دارای اشتراک فعال می باشد.</span>
               </v-alert>
               <v-alert :value="true" color="info"><p>جزئیات اشتراک شما</p>
-                <p>عنوان اشتراک: {{planTitle}}</p>
-                <p>دوره ی اشتراک: {{planPeriod}}</p>
+                <p>عنوان اشتراک فعال: {{planTitle}}</p>
+                <p>دوره ی اشتراک فعال: {{planPeriod}}</p>
                 <p>شروع اشتراک: {{planStart}}</p>
                 <p>انقضای اشتراک: {{planExpire}}</p>
+                <p v-if="multipleSub">انقضای اشتراک نهایی: {{planExpireAll}}</p>
                 <p>هزینه ی اشتراک: {{planPrice}}</p>
-                <p>روز باقی مانده: {{leftDays}}</p></v-alert>
+                <p>روز باقی مانده: {{leftDays}}</p>
+                <p v-if="multipleSub">کل روزهای باقی مانده: {{leftDaysAll}}</p>
+              </v-alert>
               <v-alert v-if="false" :value="true" color="blue"><p>
                 برای تمدید اشتراک می توانید از لینک زیر اقدام نمایید.</p>
                 <div>
@@ -175,6 +178,9 @@
       }
     },
     computed: {
+      multipleSub() {
+        return _.get(this.$store.state, 'user.subscriptions', '').length > 1
+      },
       planTitle() {
         return _.get(this.$store.state, 'user.subscription.subscriptionPlan.title', '-')
       }, planPeriod() {
@@ -189,8 +195,12 @@
         return _.get(this.$store.state, 'user.subscription', {})
       }, planExpire() {
         return _.get(this.$store.state, 'user.subscription.expireDate', '-')
+      }, planExpireAll() {
+        return Helper.dateFormat(_.get(_.last(_.get(this.$store.state, 'user.subscriptions', '-')), 'endDate.date', '-'),'YYYY-M-D H:mm')
       }, leftDays() {
         return _.get(this.$store.state, 'user.subscription.left', '0‌') + ' روز'
+      }, leftDaysAll() {
+        return _.sum(_.map(_.get(this.$store.state, 'user.subscriptions', []), 'remainedDays')) + ' روز'
       },
       isUserPremium() {
         return !!_.get(this.$store.state, 'user.hasSubscription', false);
@@ -223,12 +233,15 @@
         //console.log({final})
         return final;
       }
-    },
+    }
+    ,
     methods: {
       getStatistics(path, def = '0') {
         return _.get(this, `statistics.${path}`, def);
-      },
-    },
+      }
+      ,
+    }
+    ,
     mounted() {
       this.loader = true
       this.$axios
@@ -251,8 +264,12 @@
       let bookmarks = Cookie.get();
       //console.log({bookmarks})
       this.bookmarks = bookmarks;
-    },
-    components: {noSubscriptionAlert},
+    }
+    ,
+    components: {
+      noSubscriptionAlert
+    }
+    ,
   }
 </script>
 
