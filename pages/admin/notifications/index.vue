@@ -73,7 +73,7 @@
             <td class="text-xs-right">{{ props.item.id }}</td>
             <td class="text-xs-right">{{ props.item.title }}</td>
             <td class="text-xs-right">{{ props.item.message }}</td>
-            <td class="text-xs-right">{{ props.item.user.mobile }}</td>
+            <td class="text-xs-right">{{ props.item.userId }}</td>
             <td class="text-xs-right">{{ props.item.type }}</td>
             <td class="text-xs-left">
               <v-icon
