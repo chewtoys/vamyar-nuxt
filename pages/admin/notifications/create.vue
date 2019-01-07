@@ -123,7 +123,7 @@
           return !_.get(this, 'userId', false);
         },
         updateMethod() {
-          return this.toAll ? `${createPath}` : `/admin/user/${this.userId}/notifications`;
+          return this.toAll ? `${createPath}` : `/admin/users/${this.userId}/notifications`;
         },
         list: function () {
           return indexPath;
