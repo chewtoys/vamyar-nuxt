@@ -199,10 +199,11 @@
             </v-card>
             <v-subheader>نوتیفیکیشن های این کاربر</v-subheader>
             <v-card>
-              <table class="oddTable">
+              <table class="oddTable" v-if="hasNotifications">
                 <tbody>
-                <tr v-if="hasNotifications" class="my-4" v-for="item in userNotifications" :key="item.id">
+                <tr class="my-4" v-for="item in userNotifications" :key="item.id">
                   <td>
+                    <p>عنوان: <b v-html="(item.title)"></b></p>
                     <p>پیام: <b v-html="nl2br(item.message)"></b></p>
                     <p>تاریخ ارسال: <b v-html="(item.jCreatedAt)"></b></p>
                     <p>تاریخ ارسال: <b v-html="(item.type)"></b></p>
@@ -210,6 +211,7 @@
                 </tr>
                 </tbody>
               </table>
+              <p v-else>نوتیفیکیشنی یافت نشد</p>
             </v-card>
 
             <v-btn :loading="submit_loader" outline color="accent" round @click="processSubmit">
@@ -337,7 +339,7 @@
         let methodNotif = this.uriNotif;
         let queryNotif = {}
         this.$axios.$get(methodNotif, {params: queryNotif}).then(res => {
-          this.userNotifications = _.get(res, 'data');
+          this.userNotifications = _.get(res, 'data', []);
         }).catch(err => {
           //console.log(err);
         })

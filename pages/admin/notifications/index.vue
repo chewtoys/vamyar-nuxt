@@ -73,7 +73,9 @@
             <td class="text-xs-right">{{ props.item.id }}</td>
             <td class="text-xs-right">{{ props.item.title }}</td>
             <td class="text-xs-right">{{ props.item.message }}</td>
-            <td class="text-xs-right">{{ props.item.userId }}</td>
+            <td class="text-xs-right">
+              <nuxt-link :to="`/admin/users/edit/${props.item.userId}`">{{ props.item.userId }}</nuxt-link>
+            </td>
             <td class="text-xs-right">{{ props.item.type }}</td>
             <td class="text-xs-left">
               <v-icon
