@@ -90,6 +90,9 @@
               </p>
             </td>
             <td class="text-xs-right">
+              {{ getProperty(props.item, 'userAgent') }}
+            </td>
+            <td class="text-xs-right">
               {{ getProperty(props.item, 'user.verified') ? 'فعال' : 'غیر فعال' }}
             </td>
             <td class="text-xs-right">
@@ -129,6 +132,7 @@
       {text: 'آیپی', value: 'ip', align: 'right'},
       {text: 'توضیحات', value: 'user.mobile', align: 'right'},
       {text: ' کاربر', value: 'user.lastName', align: 'right'},
+      {text: ' مرورگر', value: 'user.userAgent', align: 'right'},
       {text: 'وضعیت حساب', value: 'user.verified', align: 'right'},
       {text: 'تاریخ', value: 'jUpdatedAt', align: 'right'},
       {text: 'عملیات', sortable: false, align: 'left', width: '140px'},
@@ -208,6 +212,7 @@
             query = {}
             _.set(query, 'id', value)
             _.set(query, 'ip', value)
+            _.set(query, 'userAgent', value)
             _.set(query, 'mobile', value)
             _.set(query, 'resourceName', value)
             _.set(query, 'resourceId', value)

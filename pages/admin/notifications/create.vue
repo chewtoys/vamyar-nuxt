@@ -149,7 +149,7 @@
         let data = {
           title: this.title,
           message: this.message,
-          type: this.discount
+          type: this.type
         }
 
         this.$axios

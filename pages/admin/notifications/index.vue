@@ -23,7 +23,7 @@
           </v-btn>
         </v-toolbar>
         <v-card-title>
-          <div v-if="false">
+          <div>
             جست‌و‌جو
             <v-spacer></v-spacer>
             <v-text-field
@@ -32,6 +32,7 @@
               label="چیزی بنویسید"
               single-line
               hide-details
+              @change="init"
             ></v-text-field>
           </div>
         </v-card-title>
@@ -45,7 +46,7 @@
           :items="data"
           :loading="loading"
           :search="search"
-          :pagination.sync="pagination"
+          
           :total-items="totalData"
           :rows-per-page-items="[5,10,25,100]"
           no-results-text="هیچ موردی ثبت نشده است."
@@ -72,6 +73,7 @@
             <td class="text-xs-right">{{ props.item.id }}</td>
             <td class="text-xs-right">{{ props.item.title }}</td>
             <td class="text-xs-right">{{ props.item.message }}</td>
+            <td class="text-xs-right">{{ props.item.user.mobile }}</td>
             <td class="text-xs-right">{{ props.item.type }}</td>
             <td class="text-xs-left">
               <v-icon
@@ -106,6 +108,7 @@
       {text: '‌شناسه', value: 'id', align: 'right'},
       {text: 'عنوان', value: 'title', align: 'right'},
       {text: 'پیام', value: 'message', align: 'right'},
+      {text: 'کاربر', value: 'userId', align: 'right'},
       {text: 'نوع پیام', value: 'type', align: 'right'},
       {text: 'عملیات', sortable: false, align: 'left', width: '140px'},
     ]
@@ -146,32 +149,40 @@
     watch: {
       pagination: {
         handler() {
-          this.loading = true;
-          let method = fetchMethod;
-          let {sortBy, descending, page, rowsPerPage} = this.pagination;
-          let query = {
-            page,
-            orderBy: `${sortBy || 'id'}:${descending ? 'desc' : 'asc'}`,
-            number: rowsPerPage,
-          }
-          //console.log({method, query, paginator: this.paginator}, {sortBy, descending, page, rowsPerPage});
-          this.$axios.$get(method, {
-            params: query
-          }).then((response) => {
-            this.paginator = _.get(response, 'paginator', {})
-            this.data = _.get(response, 'data', [])
-            this.totalData = _.get(response, 'paginator.totalCount', 0)
-            //  console.log('on response: ', this.totalData, this.paginator, this.data, {response})
-          }).catch((error) => {
-            //console.log(error, method, query, this.paginator);
-          }).then(() => {
-            this.loading = false;
-          })
+          this.init()
         },
         deep: true
       },
     },
     methods: {
+      init() {
+
+        this.loading = true;
+        let method = fetchMethod;
+        let filter = '';
+        let {sortBy, descending, page, rowsPerPage} = this.pagination;
+        if (this.search) filter = `id=${this.search},user.mobile=${this.search},message=${this.search},title=${this.search},type=${this.search},`;
+        let query = {
+          page,
+          filter,
+          orderBy: `${sortBy || 'id'}:${descending ? 'desc' : 'asc'}`,
+          number: rowsPerPage,
+        }
+        //console.log({method, query, paginator: this.paginator}, {sortBy, descending, page, rowsPerPage});
+        this.$axios.$get(method, {
+          params: query
+        }).then((response) => {
+          this.paginator = _.get(response, 'paginator', {})
+          this.data = _.get(response, 'data', [])
+          this.totalData = _.get(response, 'paginator.totalCount', 0)
+          //  console.log('on response: ', this.totalData, this.paginator, this.data, {response})
+        }).catch((error) => {
+          //console.log(error, method, query, this.paginator);
+        }).then(() => {
+          this.loading = false;
+        })
+
+      },
       jDate(val) {
         if (!val) return '-';
         try {
