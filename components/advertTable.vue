@@ -59,7 +59,6 @@
           :loading="tableLoader"
           :items="list"
           hide-actions
-          :total-items="totalData"
           :rows-per-page-items="[10,25,100]"
           class="elevation-1"
           no-results-text="هیچ موردی ثبت نشده است."
@@ -221,7 +220,6 @@
           :headers="headers"
           :loading="tableLoader"
           :items="list"
-          :total-items="totalData"
           no-results-text="هیچ موردی ثبت نشده است."
           :rows-per-page-items="[10,25,100]"
           class="elevation-1"
@@ -421,7 +419,7 @@
     props: ['slug', 'which', 'type', 'pageTitle'],
     data: () => ({
       list: [],
-      totalData: 10,
+      totalData: 1,
       pagination: {}, //pagination is for vuetify - paginator is for API
       paginator: {totalPages: 1}, //pagination is for vuetify - paginator is for API
       selected: [],
@@ -590,10 +588,19 @@
           this.tableLoader = false;
           //console.log('on response: ', this.paginator, this.pagination)
         }).catch((error) => {
-          this.paginator = {totalPages: 1}
+          this.paginator = {
+            totalPages: null,
+            currentPage: null,
+            prevPage: null,
+            nextPage: null,
+            lastPage: null,
+            totalCount: null,
+            limit: null,
+            count: null,
+          }
           this.list = []
-          this.totalData = 0
-          //console.log(error, method, query, this.paginator);
+          this.totalData = []
+          console.log(error);
           this.tableLoader = false;
         });
       },
