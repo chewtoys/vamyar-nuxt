@@ -29,7 +29,7 @@ export const mutations = {
       state.subscription.price = _.get(data[0], 'subscriptionPlan.price', 0);
       let endDate = _.get((data[0]), 'endDate.date', 0)
       // console.log({endDate})
-      state.subscription.endDate = endDate;
+      //state.subscription.endDate = endDate;
       state.subscription.expireDate = Helper.dateFormat(endDate, 'YYYY-M-D HH:mm:ss', 'jYYYY/jM/jD HH:mm:ss');
       state.subscriptions = data;
       state.hasSubscription = _.get(data[0], 'active', false);
