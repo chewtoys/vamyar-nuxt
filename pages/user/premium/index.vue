@@ -153,14 +153,17 @@
     },
     async asyncData({error, params, $axios, store}) {
       let id = params.id;
-
+      let subscriptionData;
       try {
-
-        let subscriptionData = await $axios.$get("/user/subscriptions", {params: {include: 'subscriptionPlan'}});
+        subscriptionData = await $axios.$get("/user/subscriptions", {params: {include: 'subscriptionPlan'}});
         if (_.has(subscriptionData, 'data')) {
           store.commit("user/updateUserSubscription", _.get(subscriptionData, 'data', null))
         }
-        let {data} = await $axios.$get(`${plansMethod}`, {params: {include: 'subscriptionPlan'}})
+      } catch (err) {
+
+      }
+      try {
+        let {data} = await $axios.$get(plansMethod)
         return {plans: data}
       } catch (err) {
         //return error({statusCode: 503, message: "مشکلی در گرفتن داده ها رخ داد!"})
