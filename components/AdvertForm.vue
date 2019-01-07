@@ -447,7 +447,7 @@
           })
         }
       } catch (err) {
-        console.log(err)
+        //console.log(err)
       }
     },
     methods: {
@@ -479,6 +479,7 @@
       },
       sendForm() {
         let data = Helper.selectDataForSend(this.formType.type, this, this.action, this.isAdmin);
+
         let req = this.isEdit ? this.$axios.$put(this.sendPath, data) : this.$axios.$post(this.sendPath, data);
         req.then((res) => {
           let status = true
@@ -514,7 +515,7 @@
             }
           })
           .catch(err => {
-            this.toast(err, "error")
+            // this.toast(err, "error")
           })
       },
       settings(key) {

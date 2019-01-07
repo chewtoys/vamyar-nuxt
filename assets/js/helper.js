@@ -313,7 +313,7 @@ const Helper = {
     //console.log('Fields:', {fields})
     let all = {};
     _.forEach(fields, (name) => {
-      _.set(all, name, _.get(that, name, ''))
+      _.set(all, name, _.get(that, name, null) || null)
     })
     if (isAdmin) {
       _.set(all, 'description', _.get(that, 'description', ''))
