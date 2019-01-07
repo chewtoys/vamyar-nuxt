@@ -63,6 +63,7 @@
           :total-items="totalData"
           :rows-per-page-items="[10,25,100]"
           class="elevation-1"
+          no-results-text="هیچ موردی ثبت نشده است."
         >
           <template slot="items" slot-scope="props">
 
@@ -223,6 +224,7 @@
           :items="list"
           :pagination.sync="pagination"
           :total-items="totalData"
+          no-results-text="هیچ موردی ثبت نشده است."
           :rows-per-page-items="[10,25,100]"
           class="elevation-1"
         >
