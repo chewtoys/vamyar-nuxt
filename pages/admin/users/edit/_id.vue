@@ -125,6 +125,7 @@
                 </tbody>
               </table>
             </v-card>
+
             <v-card color="primary lighten-4" v-if="hasSubscription" class="my-4">
               <v-card-title>تمدید اشتراک</v-card-title>
               <v-select
@@ -196,6 +197,20 @@
               <v-btn color="success" @click="addSubscription">افزودن اشتراک به حساب</v-btn>
               <br/>
             </v-card>
+            <v-subheader>نوتیفیکیشن های این کاربر</v-subheader>
+            <v-card>
+              <table class="oddTable">
+                <tbody>
+                <tr v-if="hasNotifications" class="my-4" v-for="item in userNotifications" :key="item.id">
+                  <td>
+                    <p>پیام: <b v-html="nl2br(item.message)"></b></p>
+                    <p>تاریخ ارسال: <b v-html="(item.jCreatedAt)"></b></p>
+                    <p>تاریخ ارسال: <b v-html="(item.type)"></b></p>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </v-card>
 
             <v-btn :loading="submit_loader" outline color="accent" round @click="processSubmit">
               <v-icon class="px-1">save</v-icon>
@@ -237,6 +252,7 @@
       email: null,
       image: null,
       password: null,
+      userNotifications: [],
       password_confirmation: null,
       subscriptionsList: [],
       data: [],
@@ -270,11 +286,17 @@
         hasSubscription() {
           return !!(_.get(this, 'data.subscriptions', []).length);
         },
+        hasNotifications() {
+          return !!(_.get(this, 'data.notifications', []).length);
+        },
         userSubscriptions() {
           return _.get(this, 'data.subscriptions', []);
         },
         uri() {
           return `${resourcePath}/${this.id}`;
+        },
+        uriNotif() {
+          return `${resourcePath}/${this.id}/notifications`;
         },
         list: function () {
           return indexPath;
@@ -287,6 +309,9 @@
       }
     },
     methods: {
+      nl2br(str) {
+        return Helper.nl2br(str)
+      },
       formatDate(jdate) {
         return Helper.dateFormat(jdate, 'YYYY/M/D HH:mm:ss', 'jYYYY/jM/jD HH:mm:ss');
       },
@@ -296,7 +321,7 @@
       initialLoad() {
         let method = this.uri;
         let query = {
-          include: 'details,subscriptions.subscriptionPlan'
+          include: 'details,subscriptions.subscriptionPlan,notifications'
         }
         this.$axios.$get(method, {params: query}).then(res => {
           this.data = _.get(res, 'data');
@@ -306,6 +331,13 @@
           this.verified = _.get(res, 'data.verified', '');
           this.mobile = _.get(res, 'data.mobile', '');
           this.image = _.get(res, 'data.image', '');
+        }).catch(err => {
+          //console.log(err);
+        })
+        let methodNotif = this.uriNotif;
+        let queryNotif = {}
+        this.$axios.$get(methodNotif, {params: queryNotif}).then(res => {
+          this.userNotifications = _.get(res, 'data');
         }).catch(err => {
           //console.log(err);
         })

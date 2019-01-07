@@ -46,7 +46,7 @@
           :items="data"
           :loading="loading"
           :search="search"
-          
+
           :total-items="totalData"
           :rows-per-page-items="[5,10,25,100]"
           no-results-text="هیچ موردی ثبت نشده است."
@@ -159,12 +159,14 @@
 
         this.loading = true;
         let method = fetchMethod;
-        let filter = '';
+        let filter = null;
+        let include = 'user.details';
         let {sortBy, descending, page, rowsPerPage} = this.pagination;
         if (this.search) filter = `id=${this.search},user.mobile=${this.search},message=${this.search},title=${this.search},type=${this.search},`;
         let query = {
           page,
           filter,
+          include,
           orderBy: `${sortBy || 'id'}:${descending ? 'desc' : 'asc'}`,
           number: rowsPerPage,
         }

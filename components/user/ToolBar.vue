@@ -12,11 +12,29 @@
       <v-btn to="/user" flat color="transparent"><span class="deep-purple--text"><v-icon
         class="px-1">dashboard</v-icon>داشبورد</span></v-btn>
     </v-toolbar-title>
+
     <v-toolbar-title>
        <v-btn to="/user/premium" flat color="transparent"><span class="yellow--text text--darken-4"><v-icon
          class="px-1">star</v-icon>اشتراک من</span></v-btn>
       </v-toolbar-title>
     <v-spacer/>
+    <v-menu class="right-text">
+      <v-toolbar-title class="deep-purple--text " slot="activator">
+        <v-badge color="red">
+      <span slot="badge">{{notifToread}}</span>
+        <v-icon class="px-1 font-19 deep-purple--text mb-2">mail</v-icon>
+    </v-badge>
+      </v-toolbar-title>
+      <v-list class="farsi">
+        <v-list-tile
+          v-for="item in notifications"
+          :key="item.id"
+          @click="readNotif(item.id)"
+        >
+          <v-list-tile-title v-text="item.message"/>
+        </v-list-tile>
+      </v-list>
+    </v-menu>
     <v-menu :nudge-width="100" left class="right-text">
 
       <v-toolbar-title class="deep-purple--text " slot="activator">
@@ -43,6 +61,9 @@
 
   export default {
     data: ({$store}) => ({
+      notifications: [
+        {id: 0, message: 'بدون پیام'},
+      ],
       settings: [
         {title: "ویرایش پروفایل", icon: "build", to: "/user/profile/edit"},
         {title: "خروج", icon: "exit_to_app", to: "/user/logout"}
@@ -74,6 +95,9 @@
       isMobile() {
         return this.$vuetify.breakpoint.smAndDown
       },
+      notifToread() {
+        return _.get(this, 'notifications', []).length || 0;
+      },
       drawer: function () {
         return this.$store.state.navigation.drawer
       },
@@ -90,9 +114,24 @@
       }
     },
     mounted() {
+      this.loadNotifs();
       this.$store.commit('navigation/setDrawer', !this.isMobile);
     },
     methods: {
+      readNotif(id) {
+        if (!id) return null
+        let method = `/user/notifications/${id}/seen`
+        this.$axios.$put(method).then(res => {
+          this.notifications = _.get(res, 'data', [])
+          this.loadNotifs();
+        })
+      },
+      loadNotifs() {
+        let method = '/user/notifications'
+        this.$axios.$get(method).then(res => {
+          this.notifications = _.get(res, 'data', [])
+        })
+      },
       toggleDrawer: function () {
         this.$store.commit('navigation/setDrawer', !this.drawer);
       },
