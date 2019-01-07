@@ -175,8 +175,8 @@
       },
     },
     methods: {
-      loadAgain() {
 
+      loadAgain() {
         this.loading = true;
         let method = fetchMethod;
         let filter = null
