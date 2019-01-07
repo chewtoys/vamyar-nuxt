@@ -8,9 +8,8 @@
             <v-flex xs12 sm12 lg10 class="full py-5">
               <v-card color="white">
                 <v-img
-                  :aspect="16/9"
-                  :lazy-src="lazy"
                   v-if="src"
+                  :lazy-src="lazy"
                   :src="src"
                 />
                 <v-card-title>

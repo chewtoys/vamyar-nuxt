@@ -83,6 +83,12 @@
       <v-icon color="blue lighten-5">touch_app</v-icon>
       <v-spacer/>
       <v-tooltip top>
+        <v-btn v-if="isLadder" slot="activator" class="mx-1" icon round color="brown" text-color="white">
+          <v-icon class="white--text">trending_up</v-icon>
+        </v-btn>
+        <span>نردبان</span>
+      </v-tooltip>
+      <v-tooltip top>
         <v-btn v-if="isInstant" slot="activator" class="mx-1" icon round color="red" text-color="white">
           <v-icon class="white--text">whatshot</v-icon>
         </v-btn>
@@ -159,6 +165,9 @@
       },
       isInstant() {
         return _.get(this.item, 'advert.instant', _.get(this.item, 'instant', 0));
+      },
+      isLadder() {
+        return _.get(this.item, 'advert.ladderable', _.get(this.item, 'ladderable', 0));
       },
       isVerified() {
         return _.get(this.item, 'advert.verified', _.get(this.item, 'verified', 0));

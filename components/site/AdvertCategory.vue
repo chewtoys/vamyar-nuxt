@@ -99,8 +99,8 @@
     data() {
       return {
         sortList: [
-          {title: 'جدیدترین', value: 'id:desc'},
-          {title: 'قدیمی ترین', value: 'id:asc'},
+          {title: 'جدیدترین', value: 'ladderAt:desc'},
+          {title: 'قدیمی ترین', value: 'ladderAt:asc'},
           {title: 'کمترین قیمت', value: 'advertable.amount:asc', types: ['loans', 'loanRequests']},
           {title: 'بیشترین قیمت', value: 'advertable.amount:desc', types: ['loans', 'loanRequests']},
           {title: 'بیشترین سرمایه', value: 'advertable.maxAmount:desc', types: ['finances']},
