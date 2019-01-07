@@ -98,7 +98,7 @@
     props: ['which', 'initialItems', 'initialPaginator'],
     data() {
       return {
-        sortList: [
+        advertsSortList: [
           {title: 'جدیدترین', value: 'ladderAt:desc'},
           {title: 'قدیمی ترین', value: 'ladderAt:asc'},
           {title: 'کمترین قیمت', value: 'advertable.amount:asc', types: ['loans', 'loanRequests']},
@@ -107,6 +107,16 @@
           {title: 'کمترین سرمایه', value: 'advertable.maxAmount:asc', types: ['finances']},
           {title: 'بیشترین نرخ سود', value: 'advertable.interestRate:desc', types: ['coSignerRequest']},
           {title: 'کمترین نرخ سود', value: 'advertable.interestRate:asc', types: ['coSignerRequest']},
+        ],
+        typeSortList: [
+          {title: 'جدیدترین', value: 'advert.ladderAt:desc'},
+          {title: 'قدیمی ترین', value: 'advert.ladderAt:asc'},
+          {title: 'کمترین قیمت', value: 'amount:asc', types: ['loans', 'loanRequests']},
+          {title: 'بیشترین قیمت', value: 'amount:desc', types: ['loans', 'loanRequests']},
+          {title: 'بیشترین سرمایه', value: 'maxAmount:desc', types: ['finances']},
+          {title: 'کمترین سرمایه', value: 'maxAmount:asc', types: ['finances']},
+          {title: 'بیشترین نرخ سود', value: 'interestRate:desc', types: ['coSignerRequest']},
+          {title: 'کمترین نرخ سود', value: 'interestRate:asc', types: ['coSignerRequest']},
         ],
         showPremium: false,
         type: '',
@@ -139,6 +149,9 @@
       this.loading = false;
     },
     computed: {
+      sortList(){
+        return this.isAdverts ? this.advertsSortList :  this.typeSortList ;
+      },
       isAdverts() {
         return (this.which === 'adverts');
       }
