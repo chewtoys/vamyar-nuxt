@@ -30,7 +30,7 @@ export const state = () => ({
     title: "بدون عنوان",
     breadcrumb: null
   },
-  client_secret: "jv9YKifnv9XTznsEO73lXwQqgjHug9wUhtkcAzMX",
+  client_secret: "m3zM4Kl9znNB74F17xEvXPSTCRIIVsJ1V5ymIify",
   client_id: 1,
 });
 
