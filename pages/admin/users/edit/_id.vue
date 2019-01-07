@@ -289,7 +289,7 @@
           return !!(_.get(this, 'data.subscriptions', []).length);
         },
         hasNotifications() {
-          return !!(_.get(this, 'data.notifications', []).length);
+          return !!(_.get(this, 'userNotifications', []).length);
         },
         userSubscriptions() {
           return _.get(this, 'data.subscriptions', []);
