@@ -186,14 +186,9 @@
     methods: {
       showSubscription(item) {
         if (_.get(item, 'subscriptions', []).length < 1) return 'غیر فعال';
-        let subs = _.get(item, 'subscriptions', []);
+        let plans = _.get(item, 'subscriptions', []);
         let list = [];
-        _.forEach(subs, (plan, i) => {
-          let title = "نام اشتراک: " + _.get(plan, 'title', '-')
-          let period = 'کل مدت دوره: ' + _.get(plan, 'period', '-') + 'روز'
-          let registered = 'تاریخ فعالسازی: ' + _.get(plan, 'info.jCreatedAt', '-')
-          list.push(++i + '- ' + period + '<br/>' + title + '<br/>' + registered)
-        })
+        let period = 'باقی مانده: ' + _.sum(_.find(plans, ['remainedDays']) || [0]) + 'روز'
         return _.join(list, '<hr/>')
       },
       switchPage() {

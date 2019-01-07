@@ -180,7 +180,7 @@
         this.loading = true;
         let method = fetchMethod;
         let filter = null
-        if (this.search) filter = `id=${this.search},userId=${this.search},jUpdateAt=${this.search},jCreatedAt=${this.search},amount=${this.search},transactionId=${this.search},paid=${this.search},discount=${this.search}`;
+        if (this.search) filter = `id=${this.search},userId=${this.search},user.mobile=${this.search},jCreatedAt=${this.search},amount=${this.search},transactionId=${this.search},paid=${this.search},discount=${this.search}`;
         let {sortBy, descending, page, rowsPerPage} = this.pagination;
         let query = {
           filter,
