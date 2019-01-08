@@ -74,7 +74,11 @@
     },
     mounted() {
       this.$axios.$get(this.getPath, {
-        params: {include: "advert,advert.city,advert.user.details", number: this.getNumber}
+        params: {
+          orderBy: 'ladderAt:desc',
+          include: "advert,advert.city,advert.user.details",
+          number: this.getNumber
+        }
       }).then(res => {
         this.data = _.get(res, 'data', [])
         this.cardLoader = false;

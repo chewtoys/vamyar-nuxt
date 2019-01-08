@@ -58,6 +58,7 @@
           :headers="headers"
           :loading="tableLoader"
           :items="list"
+          :total-items="paginator.totalItems"
           :disable-initial-sort="true"
           :pagination.sync="paginationSyncer"
           :rows-per-page-items="[10,25,100]"

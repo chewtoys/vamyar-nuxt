@@ -5,13 +5,16 @@
         {{(false && error && error.message ) ? error.message : 'آدرس مورد نظر یافت نشد!'}}
       </div>
       <div v-else-if="statusCode === 401" class="title iransans">
-        {{(false &&  error && error.message ) ? error.message : 'شما به این صفحه دسترسی ندارید!'}}
+        {{(false && error && error.message ) ? error.message : 'شما به این صفحه دسترسی ندارید!'}}
       </div>
       <div v-else-if="statusCode === 403" class="title iransans">
-        {{ (false &&  error && error.message ) ? error.message : 'آیپی شما مجاز نیست. در صورت استفاده از آیپی ایران با پشتیبانی تماس بگیرید.'}}
+        {{ (false && error && error.message ) ? error.message : 'آیپی شما مجاز نیست. در صورت استفاده از آیپی ایران با پشتیبانی تماس بگیرید.'}}
       </div>
       <div v-else-if="statusCode === 500" class="title iransans">
-        {{ (false &&  error && error.message ) ? error.message : 'مشکلی از طرف سرور رخ داد!'}}
+        {{ (false && error && error.message ) ? error.message : 'مشکلی از طرف سرور رخ داد!'}}
+      </div>
+      <div v-else-if="statusCode === 530" class="title iransans">
+        {{ (false && error && error.message ) ? error.message : 'سایت بسته است'}}
       </div>
       <div v-else="" class="title iransans" v-html=" error.message "></div>
       <p class="description">
@@ -56,6 +59,7 @@
         if (code === 403) return "دسترسی امکان پذیر نیست. ۴۰۳"
         if (code === 401) return "عدم دسترسی. ۴۰۱"
         if (code === 500) return "سرور با مشکل روبرو شد. ۵۰۰"
+        if (code === 530) return "سایت بسته است"
         return `مشکلی پیش آمد. ${code}`
       }
     },
