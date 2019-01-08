@@ -1,5 +1,5 @@
 <template>
-  <nuxt/>
+  <nuxt-child keep-alive/>
 </template>
 <script>
   export default {

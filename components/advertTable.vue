@@ -58,8 +58,8 @@
           :headers="headers"
           :loading="tableLoader"
           :items="list"
-          hide-actions
-          :pagination.sync="pagination"
+          :disable-initial-sort="true"
+          :pagination.sync="paginationSyncer"
           :rows-per-page-items="[10,25,100]"
           class="elevation-1"
           no-results-text="هیچ موردی ثبت نشده است."
@@ -214,11 +214,12 @@
           v-model="selected"
           item-key="id"
           select-all
-          hide-actions
+
           :headers="headers"
           :loading="tableLoader"
           :items="list"
-          :pagination.sync="pagination"
+          :disable-initial-sort="true"
+          :pagination.sync="paginationSyncer"
           no-results-text="هیچ موردی ثبت نشده است."
           :rows-per-page-items="[10,25,100]"
           class="elevation-1"
@@ -391,7 +392,6 @@
                 delete
               </v-icon>
             </td>
-
           </template>
         </v-data-table>
         <div class="text-xs-center pt-2">
@@ -424,6 +424,7 @@
       selected: [],
       pages: 1,
       page: 1,
+      paginationSyncer: {},
       commonComputedFilters: [],
       computedFilters: [],
       advertTypeName: null,
@@ -468,14 +469,24 @@
     },
     mounted() {
       this.advertTypeName = this.type.type;
-      this.pagination = {
-        sortBy: 'id',
-        page: 1,
-        descending: true,
-        rowsPerPage: 25,
-      };
+      this.switchPage();
     },
     watch: {
+      paginationSyncer(inp) {
+        //console.log(inp)
+        let reload = false;
+        let list = ['orderBy', 'rowsPerPage', 'descending', 'totalItems'];
+        _.forEach(list, (name) => {
+          let newValue = _.get(inp, name, null);
+          let oldValue = _.get(this.pagination, name, null);
+          if (newValue !== oldValue) {
+            _.set(this.pagination, name, newValue);
+            //console.log(this.pagination, {name, oldValue, newValue})
+            reload = true;
+          }
+        })
+        if (reload) this.switchPage()
+      },
       search(val) {
         this.switchPage();
       },
