@@ -21,9 +21,9 @@
     <v-menu class="right-text">
       <v-toolbar-title class="deep-purple--text " slot="activator">
         <v-badge color="red">
-      <span slot="badge">{{notifToread}}</span>
-        <v-icon class="px-1 font-19 deep-purple--text mb-2">mail</v-icon>
-    </v-badge>
+        <span slot="badge">{{notifToread}}</span>
+        <v-icon :class="`px-1 font-19 mb-2 ` + (notifToread > 1 ? `red--text` : `deep-purple--text`) ">mail</v-icon>
+        </v-badge>
       </v-toolbar-title>
       <v-list class="farsi">
         <v-list-tile
@@ -36,7 +36,6 @@
       </v-list>
     </v-menu>
     <v-menu :nudge-width="100" left class="right-text">
-
       <v-toolbar-title class="deep-purple--text " slot="activator">
         <v-icon class="px-1 font-19 deep-purple--text mb-2">settings</v-icon>
         <span class="font-12">{{ welcome }}</span>
