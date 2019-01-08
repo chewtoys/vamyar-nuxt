@@ -594,7 +594,7 @@
         this.$axios.$get(method, {
           params: query
         }).then((response) => {
-          this.paginator = _.get(response, 'paginator', {totalPages:1})
+          this.paginator = _.get(response, 'paginator', {totalPages: 1})
           this.list = _.get(response, 'data', [])
           this.totalData = _.get(response, 'paginator.totalCount', 0)
           //this.pages = _.get(response, 'paginator.totalPages', 0)
