@@ -396,7 +396,7 @@
         </v-data-table>
         <div class="text-xs-center pt-2">
           <v-pagination total-visible="8" v-model="pagination.page"
-                        :length="paginator.totalPages"></v-pagination>
+                        :length="paginator.totalPages || 1"></v-pagination>
         </div>
       </div>
     </v-card>
@@ -475,7 +475,7 @@
       paginationSyncer(inp) {
         //console.log(inp)
         let reload = false;
-        let list = ['orderBy', 'rowsPerPage', 'descending', 'totalItems'];
+        let list = ['sortBy', 'rowsPerPage', 'descending', 'totalItems'];
         _.forEach(list, (name) => {
           let newValue = _.get(inp, name, null);
           let oldValue = _.get(this.pagination, name, null);
@@ -593,7 +593,7 @@
         this.$axios.$get(method, {
           params: query
         }).then((response) => {
-          this.paginator = _.get(response, 'paginator', {})
+          this.paginator = _.get(response, 'paginator', {totalPages:1})
           this.list = _.get(response, 'data', [])
           this.totalData = _.get(response, 'paginator.totalCount', 0)
           //this.pages = _.get(response, 'paginator.totalPages', 0)
