@@ -64,13 +64,15 @@
                   <td>
                     <small>تخفیف اعمال شده</small>
                   </td>
-                  <td><strong class="red--text">{{getPrice(-1 * discount)}}</strong></td>
+                  <td><strong class="red--text">{{getPrice(discount)}} -</strong></td>
                 </tr>
                 <tr v-if="discount > 0 ">
                   <td>
                     <small>مبلغ قابل پرداخت</small>
                   </td>
-                  <td><strong class="green--text">{{getPrice(getData(data, 'price', '0') - discount)}}</strong></td>
+                  <td><strong
+                    class="green--text">{{getPrice((getData(data, 'price', '0') - discount) > 0 ? (getData(data, 'price', '0') - discount) : 0)}}</strong>
+                  </td>
                 </tr>
                 </tbody>
               </table>
@@ -146,10 +148,10 @@
     methods: {
       checkCode() {
         let code = this.coupon;
-        let method = `/coupon/${code}`
+        let method = `/coupons/${code}`
         this.couponLoading = true;
         this.$axios.$get(method).then(res => {
-          this.discount = _.get(res, 'data.discount', 1);
+          this.discount = _.get(res, 'data.discount', 0);
           this.getForm();
         }).catch(err => {
           this.discount = 0;

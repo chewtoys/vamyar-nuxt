@@ -83,6 +83,7 @@
 
                   <v-text-field
                     v-model="introducer"
+                    v-if="false"
                     prepend-icon="phone"
                     name="introducer"
                     label="شماره همراه معرف"
