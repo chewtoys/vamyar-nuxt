@@ -6,6 +6,11 @@
       <v-dialog v-model="dialog">
         <v-btn slot="activator" color="primary" dark class="mb-2">گزینه ی جدید</v-btn>
         <v-card>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" flat @click="close">لغو</v-btn>
+            <v-btn color="blue darken-1" flat @click="save">ذخیره</v-btn>
+          </v-card-actions>
           <v-card-title>
             <span class="headline">{{ formTitle }}</span>
           </v-card-title>
