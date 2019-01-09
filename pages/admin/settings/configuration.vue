@@ -109,7 +109,7 @@
   import Editor from '~/components/elements/Editor'
   import Crud from '~/components/elements/Crud'
 
-  const PATH = '/admin/config',
+  const PATH = '/admin/configs',
     list = [
       'introducingAwardLimit',
       'introducingAwardDiscount',
