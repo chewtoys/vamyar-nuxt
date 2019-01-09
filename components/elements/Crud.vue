@@ -2,7 +2,6 @@
   <v-card :flat="!hasBox" class="my-1">
     <v-toolbar flat color="white">
       <v-toolbar-title>{{label}}</v-toolbar-title>
-
       <v-spacer></v-spacer>
       <v-dialog v-model="dialog">
         <v-btn slot="activator" color="primary" dark class="mb-2">گزینه ی جدید</v-btn>
@@ -10,7 +9,6 @@
           <v-card-title>
             <span class="headline">{{ formTitle }}</span>
           </v-card-title>
-
           <v-card-text>
             <v-container grid-list-md>
               <v-layout wrap>
@@ -139,13 +137,11 @@
         let index = this.content.indexOf(item)
         if (confirm('آیا مطمن هستید؟')) this.content.splice(index, 1)
       },
-
       close() {
+        this.editedItem = {}
+        this.editedIndex = -1
         this.dialog = false
-        setTimeout(() => {
-          this.editedItem = this.defaultItem
-          this.editedIndex = -1
-        }, 30)
+        //alert('closed')
       },
 
       save() {
