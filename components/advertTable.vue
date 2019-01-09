@@ -138,16 +138,16 @@
             <td class="text-xs-right">
               <v-menu offset-y>
                 <v-btn
-                  :disabled="!isAdmin && ladderable(getProperty(props, 'item'),true)"
+                  :disabled="!isAdmin && priority(getProperty(props, 'item'),true)"
                   slot="activator"
                   color="primary"
                   outline
                 >
-                  {{ ladderable(getProperty(props, 'item')) }}
+                  {{ priority(getProperty(props, 'item')) }}
                 </v-btn>
                 <v-list>
                   <v-list-tile
-                    @click="changeLadderable(getProperty(props, 'item.id'),1,props.item,getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', ''))"
+                    @click="changepriority(getProperty(props, 'item.id'),1,props.item,getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', ''))"
                   >
                     <v-list-tile-title>نردبان کردن</v-list-tile-title>
                   </v-list-tile>
@@ -332,11 +332,11 @@
                   color="primary"
                   outline
                 >
-                  {{ ladderable(getProperty(props, 'item')) }}
+                  {{ priority(getProperty(props, 'item')) }}
                 </v-btn>
                 <v-list>
                   <v-list-tile
-                    @click="changeLadderable(getProperty(props, 'item.advert.id'),1,props.item,getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', ''))"
+                    @click="changepriority(getProperty(props, 'item.advert.id'),1,props.item,getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', ''))"
                   >
                     <v-list-tile-title>نردبان</v-list-tile-title>
                   </v-list-tile>
@@ -657,9 +657,9 @@
         return (getBoolean) ? ( !!_.get(item, 'advert.instant', _.get(item, 'instant', false))) :
           ( !!_.get(item, 'advert.instant', _.get(item, 'instant', false)) ? 'فوری' : 'غیر فوری')
       },
-      ladderable(item, getBoolean = false) {
-        return (getBoolean) ? ( !!_.get(item, 'advert.ladderable', _.get(item, 'ladderable', false))) :
-          ( !!_.get(item, 'advert.ladderable', _.get(item, 'ladderable', false)) ? 'فعال شده' : 'غیر فعال')
+      priority(item, getBoolean = false) {
+        return (getBoolean) ? ( !!_.get(item, 'advert.priority', _.get(item, 'priority', false))) :
+          ( !!_.get(item, 'advert.priority', _.get(item, 'priority', false)) ? 'فعال شده' : 'غیر فعال')
       },
       changeInstant(id, val = 1, item = [], type = '') {
         if (this.isAdmin) {
@@ -702,12 +702,12 @@
           alert('امکان غیرفوری کردن وجود ندارد. در صورتی که مصمم هستید با پشتیبان تماس بگیرید.');
         }
       },
-      changeLadderable(id, val = 1, item = [], type = '') {
-        if (this.isAdmin) {
+      changepriority(id, val = 1, item = [], type = '') {
+        if (this.isAdmin && confirm('آیا مطمئن هستید می خواهید این آگهی را نردبان کنید؟')) {
           this.tableLoader = true;
           let itemType = Helper.getAdvertType(item, null, true);
           let advertId = _.get(item, 'advertableId', _.get(item, 'id', id))
-          let data = {ladderable: val === 1 ? 1 : 0}
+          let data = {priority: 1}
           let method = `/${this.panel}/${itemType.type}/${advertId}`;
           this.$axios.$put(method, data).then((res) => {
 
@@ -717,14 +717,13 @@
             } else {
               index = _.findIndex(this.list, {id: advertId});
             }
-
-            let path = this.isAdverts ? 'ladderable' : 'advert.ladderable'
+            let path = this.isAdverts ? 'priority' : 'advert.priority'
             _.set(this.list[index], path, val);
             this.tableLoader = false;
           }).catch(err => {
             this.tableLoader = false;
           })
-        } else if (val === 1 && confirm('آیا مطمئن هستید می خواهید این آگهی را نردبان کنید؟')) {
+        } else if (!this.isAdmin && confirm('آیا مطمئن هستید می خواهید این آگهی را نردبان کنید؟')) {
           let method = val === 1 ? `/${this.panel}/adverts/${id}/ladderPaymentLink` : `/${this.panel}/adverts/${id}/unLadderIt`;
           let query = {
             port: 'zarinpal'
@@ -735,8 +734,6 @@
           }).catch(err => {
             this.tableLoader = false;
           })
-        } else if (val === 2) {
-          alert('امکان برداشتن نردبان وجود ندارد. در صورتی که مصمم هستید با پشتیبان تماس بگیرید.');
         }
       },
       changeVerified(id, val, item, which = null) {

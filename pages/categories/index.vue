@@ -27,6 +27,7 @@
       cursor = 0
       let include = 'advertable,city,user.details,loanType,guaranteeTypes';
       let query = {
+        orderBy: 'priority:desc',
         number,
         include
       }
