@@ -1,3 +1,4 @@
+export const strict = false
 import cookieparser from "cookieparser"
 
 const guaranteeMethod = '/guaranteeTypes',
