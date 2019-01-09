@@ -201,7 +201,8 @@
         let {data} = await $axios.$get(method);
         return {data}
       } catch (err) {
-        return error({statusCode: 503, message: err})
+        console.log(err)
+        return error({statusCode: 503, message: 'مشکلی در گرفتن داده ها رخ داد!'})
       }
     },
     mounted() {
