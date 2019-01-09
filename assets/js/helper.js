@@ -251,7 +251,8 @@ const Helper = {
     }
   },
   limitStr(text = "", limit = 30, end = " ...") {
-    return text.slice(0, limit) + end
+    if (text) return text.slice(0, limit) + end
+    return text
   }
   ,
   diffDate(date1, date2) {

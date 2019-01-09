@@ -6,10 +6,9 @@
       <v-dialog v-model="dialog">
         <v-btn slot="activator" color="primary" dark class="mb-2">گزینه ی جدید</v-btn>
         <v-card>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" flat @click="close">لغو</v-btn>
-            <v-btn color="blue darken-1" flat @click="save">ذخیره</v-btn>
+          <v-card-actions class="pt-3">
+            <v-btn class="ma-1" round outline color="warning darken-1" @click="close">لغو</v-btn>
+            <v-btn class="ma-1" round outline color="success darken-1" @click="save">ذخیره</v-btn>
           </v-card-actions>
           <v-card-title>
             <span class="headline">{{ formTitle }}</span>
@@ -18,26 +17,41 @@
             <v-container grid-list-md>
               <v-layout wrap>
 
-                <v-flex xs12 v-for="field in structure" :key="field.name">
-                  <v-text-field box v-if="field.type=='text'" v-model="editedItem[field.name]"
-                                :label="field.title"></v-text-field>
-                  <ImgUploader box v-if="field.type=='image'" v-model="editedItem[field.name]"
-                               :label="field.title"></ImgUploader>
-                  <v-textarea box v-if="field.type=='textarea'" v-model="editedItem[field.name]"
-                              :label="field.title"></v-textarea>
-                  <Editor box v-if="field.type=='editor'" v-model="editedItem[field.name]"
-                          :label="field.title"/>
+                <v-flex xs12 v-for="(field,i) in structure" :key="i">
+                  <v-text-field
+                    box
+                    v-if="canBe(field,'text')"
+                    v-model="onStage[getProperty(field,'name')]"
+                    :label="field.title || '-'"
+                  ></v-text-field>
+                  <ImgUploader
+                    box
+                    v-if="canBe(field,'image')"
+                    v-model="onStage[getProperty(field,'name')]"
+                    :label="field.title || '-'"
+                  ></ImgUploader>
+                  <v-textarea
+                    box
+                    v-if="canBe(field,'textarea')"
+                    v-model="onStage[getProperty(field,'name')]"
+                    :label="field.title || '-'"
+                  ></v-textarea>
+                  <Editor
+                    box
+                    v-if="canBe(field,'editor')"
+                    v-model="onStage[getProperty(field,'name')]"
+                    :label="field.title || '-'"
+                  />
 
                 </v-flex>
 
               </v-layout>
             </v-container>
           </v-card-text>
-
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" flat @click="close">لغو</v-btn>
-            <v-btn color="blue darken-1" flat @click="save">ذخیره</v-btn>
+            <v-btn class="ma-1" round outline color="warning darken-1" @click="close">لغو</v-btn>
+            <v-btn class="ma-1" round outline color="success darken-1" @click="save">ذخیره</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -82,18 +96,21 @@
 
   export default {
     props: ['value', 'box', 'label', 'structure', 'placeholder'],
-    data: () => ({
-      content: [],
-      dialog: false,
-      editedIndex: -1,
-      editedItem: {},
-      defaultItem: {}
-    }),
+    data() {
+      return {
+        content: [],
+        dialog: false,
+        editedIndex: -1,
+        onStage: {},
+      }
+    }
+    ,
     computed: {
       hasBox() {
         //console.log(this.box)
         return !!_.get(this, 'box', false);
-      },
+      }
+      ,
       headers() {
         let headers = [];
         _.forEach(this.structure, (field) => {
@@ -101,63 +118,84 @@
         })
         headers.push({text: 'عملیات', sortable: false});
         return headers;
-      },
+      }
+      ,
       formTitle() {
         return this.editedIndex === -1 ? 'گزینه ی جدید' : 'ویرایش'
       }
-    },
-
+    }
+    ,
     watch: {
+      onStage(val) {
+        //alert('onStage')
+        //console.log({val})
+      },
       dialog(val) {
+        //alert('dialog')
         val || this.close()
       },
       value(val) {
+        //alert('new value !')
         this.initialize()
       },
       content(val) {
+        //alert('content!')
         this.$emit("input", val)
       }
     },
-    created() {
+    mounted() {
       this.initialize()
     },
     methods: {
-      shortStr(str, limit = 50) {
+      canBe(field, type) {
+        return _.get(field, 'type', '') == type
+      },
+      getProperty(item, path, def = '0') {
+        return _.get(item, path, def) || 0
+      },
+      shortStr(str = '', limit = 50) {
         return Helper.limitStr(str, limit)
-      },
-      nl2br(text) {
+      }
+      ,
+      nl2br(text = '') {
         return Helper.nl2br(text)
-      },
+      }
+      ,
       initialize() {
         this.content = _.isArray(this.value) ? this.value : [];
-      },
-
+      }
+      ,
       editItem(item) {
         this.editedIndex = this.content.indexOf(item)
-        this.editedItem = Object.assign({}, item)
+        this.onStage = item
         this.dialog = true
-      },
-
+      }
+      ,
       deleteItem(item) {
         let index = this.content.indexOf(item)
         if (confirm('آیا مطمن هستید؟')) this.content.splice(index, 1)
-      },
+      }
+      ,
       close() {
-        this.editedItem = {}
+        this.onStage = {}
         this.editedIndex = -1
         this.dialog = false
-        //alert('closed')
-      },
-
+      }
+      ,
       save() {
         if (this.editedIndex > -1) {
-          Object.assign(this.content[this.editedIndex], this.editedItem)
+          //console.log(this.content[this.editedIndex], this.onStage)
+          _.set(this.content, [this.editedIndex], this.onStage);
         } else {
-          this.content.push(this.editedItem)
+          //console.log(this.editedIndex, this.content, this.onStage)
+          this.content.push(this.onStage)
         }
         this.close()
       }
-    },
-    components: {Editor, ImgUploader}
+    }
+    ,
+    components: {
+      Editor, ImgUploader
+    }
   }
 </script>
