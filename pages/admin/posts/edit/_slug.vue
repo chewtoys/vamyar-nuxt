@@ -175,7 +175,6 @@
         this.categories = _.isArray(fetched) ? fetched : [];
         this.categoryLoading = false;
 
-
         this.$axios.$get(getPostMethod, {params}).then(res => {
           this.title = _.get(res, 'data.title', '');
           this.content = _.get(res, 'data.text', '');
@@ -219,7 +218,6 @@
             this.submit_loader = false
           })
           .catch((error) => {
-
             this.submit_loader = false
           })
       }
