@@ -78,7 +78,7 @@
         ]
       },
       siteSocialLinks() {
-        return (this.settings('site.siteSocialLinks', '[]')) || false;
+        return (this.settings('site.siteSocialLinks', false)) || false;
       }
     }, methods: {
       settings(key, def) {
