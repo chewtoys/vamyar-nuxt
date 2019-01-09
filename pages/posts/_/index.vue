@@ -30,7 +30,7 @@
         </v-layout>
         <template v-if="category.children.length > 0">
           <v-subheader>زیر مجموعه ها</v-subheader>
-          <v-card class="center-text">
+          <v-card class="center-text" flat transparent>
             <v-layout row wrap>
               <v-flex v-for="item in category.children || []" :key="item.id" xs12 sm6 md4>
                 <v-card flat color="grey lighten-2" :to="currentPath + '/' + item.slug">
