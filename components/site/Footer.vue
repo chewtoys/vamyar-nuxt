@@ -28,12 +28,12 @@
       </v-card-text>
 
       <br/>
-      <template v-if="socialLinks">
+      <template v-if="siteSocialLinks">
         <v-card-text class="white--text pt-0">
           <v-container grid-list-lg>
             <v-layout row wrap>
               <v-flex sm12 md12>
-                <v-btn v-for="item in socialLinks" :key="item.name" target="_blank" :href="item.link" depress
+                <v-btn v-for="item in siteSocialLinks" :key="item.name" target="_blank" :href="item.link" depress
                        flat
                 >
                   <v-img
@@ -77,8 +77,8 @@
           {id: 5, title: "اخبار", icon: "whatshot", to: "/posts/news"}
         ]
       },
-      socialLinks() {
-        return JSON.parse(this.settings('site.siteSociaLinks', '[]')) || false;
+      siteSocialLinks() {
+        return JSON.parse(this.settings('site.siteSocialLinks', '[]')) || false;
       }
     }, methods: {
       settings(key, def) {
