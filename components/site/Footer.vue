@@ -29,32 +29,28 @@
 
       <br/>
       <template v-if="siteSocialLinks">
-        <v-card-text class="white--text pt-0 text-center">
-          <v-container grid-list-lg>
-            <v-layout row wrap>
-              <v-flex sm12 md12>
-                <v-card
-                  class="center-text"
-                  v-for="item in siteSocialLinks"
-                  :key="item.name"
-                  target="_blank"
-                  :href="item.link" depress
-                  flat
-                >
-                  <v-img
-                    v-if="item.image"
+        <v-subheader class="full text-center">
+          شبکه های اجتماعی
+        </v-subheader>
+        <v-card class="frontpage whyus pt-5 pb-5 px-2">
+          <v-layout align-center justify-center row>
+            <v-flex v-for="item in siteSocialLinks" :key="item.name" xs12 sm3>
+              <v-card :href="item.link" flat>
+                <div class="text-xs-center">
+                  <v-card-media
                     :src="item.image"
-                    width="100px"
-                    :aspect-ration="1"
-                  />
-                  <br/>
-                  <p v-if="item.name">{{ item.name }}</p>
-                  <p class="font-12" v-if="item.desc" v-html="nl2br(item.desc)"></p>
-                </v-card>
-              </v-flex>
-            </v-layout>
-          </v-container>
-        </v-card-text>
+                    class="text-xs-center circle"
+                    style="height:100px;width:100px;margin: 10px auto"/>
+                  <div class="deep-purple--text text-xs-center">
+                    <h3>{{ item.name }}</h3>
+                  </div>
+                  <div class="grey--text text-xs-center" v-html="nl2br(item.desc)">
+                  </div>
+                </div>
+              </v-card>
+            </v-flex>
+          </v-layout>
+        </v-card>
 
         <br/>
       </template>

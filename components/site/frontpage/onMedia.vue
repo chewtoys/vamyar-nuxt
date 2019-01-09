@@ -6,7 +6,7 @@
     </v-subheader>
     <v-card class="frontpage whyus pt-5 pb-5 px-2">
       <v-layout align-center justify-center row>
-        <v-flex v-for="item in items" :key="item.title" xs12 sm3>
+        <v-flex v-for="item in items" :key="item.name" xs12 sm3>
           <v-card :href="item.link" flat>
             <div class="text-xs-center">
               <v-card-media
