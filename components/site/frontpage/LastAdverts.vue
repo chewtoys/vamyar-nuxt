@@ -75,7 +75,7 @@
     mounted() {
       this.$axios.$get(this.getPath, {
         params: {
-          orderBy: 'ladderAt:desc',
+          orderBy: 'priority:desc',
           include: "advert,advert.city,advert.user.details",
           number: this.getNumber
         }
