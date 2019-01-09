@@ -473,7 +473,11 @@
     },
     mounted() {
       this.advertTypeName = this.type.type;
-      this.switchPage();
+      this.pagination = {
+        sortBy: 'id',
+        descending: true,
+        rowsPerPage: '10',
+      }
     },
     watch: {
       paginationSyncer(inp) {
