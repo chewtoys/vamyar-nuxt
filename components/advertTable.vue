@@ -58,9 +58,9 @@
           :headers="headers"
           :loading="tableLoader"
           :items="list"
-          :total-items="paginator.totalItems"
+          :total-items="totalItems"
           :disable-initial-sort="true"
-          :pagination.sync="paginationSyncer"
+          :pagination.sync="pagination"
           :rows-per-page-items="[10,25,100]"
           class="elevation-1"
           no-results-text="هیچ موردی ثبت نشده است."
@@ -421,7 +421,7 @@
       list: [],
       totalData: 1,
       pagination: {}, //pagination is for vuetify - paginator is for API
-      paginator: {totalPages: 1}, //pagination is for vuetify - paginator is for API
+      paginator: {totalPages: 1, totalCount: 100}, //pagination is for vuetify - paginator is for API
       selected: [],
       pages: 1,
       page: 1,
@@ -436,6 +436,9 @@
       tableLoader: false,
     }),
     computed: {
+      totalItems() {
+        return _.get(this, 'paginator.totalCount', 0);
+      },
       isAdverts() {
         return this.type.type === 'adverts'
       },
@@ -506,9 +509,9 @@
       loadAgainCommonAdvertFilter(filter) {
         //console.log(filter);
         let typeName = _.get(filter, 'advertTypeName', null);
-        if (typeName) {
-          _.set(this, 'advertTypeName', typeName);
-        }
+        // if (typeName) {
+        _.set(this, 'advertTypeName', typeName);
+        //}
         let computedFilter = Helper.getComputedFilter(filter);
         _.set(this, 'commonComputedFilters', computedFilter);
         //console.log(1, {computedFilter})

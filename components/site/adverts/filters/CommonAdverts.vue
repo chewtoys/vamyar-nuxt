@@ -163,6 +163,7 @@
       },
       updateAdvertTypeName(val) {
         _.set(this, 'filter.advertTypeValue', val);
+        _.set(this, 'filter.advertTypeNameValue', val);
         this.emitToParent();
       },
       updateInstant() {

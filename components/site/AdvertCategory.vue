@@ -109,8 +109,8 @@
           {title: 'کمترین نرخ سود', value: 'advertable.interestRate:asc', types: ['coSignerRequest']},
         ],
         typeSortList: [
-          {title: 'جدیدترین', value: 'priority:desc'},
-          {title: 'قدیمی ترین', value: 'priority:asc'},
+          {title: 'جدیدترین', value: 'advert.priority:desc'},
+          {title: 'قدیمی ترین', value: 'advert.priority:asc'},
           {title: 'کمترین قیمت', value: 'amount:asc', types: ['loans', 'loanRequests']},
           {title: 'بیشترین قیمت', value: 'amount:desc', types: ['loans', 'loanRequests']},
           {title: 'بیشترین سرمایه', value: 'maxAmount:desc', types: ['finances']},
