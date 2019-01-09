@@ -46,13 +46,31 @@
                       :hint="couponHint"
                       placeholder="اگر کد تخفیف دارید اینجا وارد کنید"
                     />
+                    <v-btn :loading="couponLoading" @click="checkCode" round outline color="info">
+                      <v-icon class="px-1">
+                        check
+                      </v-icon>
+                      بررسی کد تخفیف
+                    </v-btn>
                   </td>
                 </tr>
                 <tr>
                   <td>
-                    <small>مبلغ</small>
+                    <small>مبلغ کل</small>
                   </td>
-                  <td><strong>{{getPrice(getData(data, 'price', 'اشتراک'))}}</strong></td>
+                  <td><strong>{{getPrice(getData(data, 'price', '-'))}}</strong></td>
+                </tr>
+                <tr v-if="discount > 0 ">
+                  <td>
+                    <small>تخفیف اعمال شده</small>
+                  </td>
+                  <td><strong class="red--text">{{getPrice(-1 * discount)}}</strong></td>
+                </tr>
+                <tr v-if="discount > 0 ">
+                  <td>
+                    <small>مبلغ قابل پرداخت</small>
+                  </td>
+                  <td><strong class="green--text">{{getPrice(getData(data, 'price', '0') - discount)}}</strong></td>
                 </tr>
                 </tbody>
               </table>
@@ -91,21 +109,22 @@
         loader: false,
         info,
         id: '',
+        couponLoading: false,
+        discount: 0,
         link: '',
         form: '',
         coupon: '',
       }
     },
     computed: {
+      couponHint() {
+        if (!this.coupon) return 'کد تخفیف را وارد کنید'
+        if (this.discount > 1) return Helper.priceFormat(this.discount);
+        return 'کد معتبر نمی باشد'
+      },
       getSecret() {
         let path = _.get(this.$route, 'query.redirect', '');
         return decodeURI(path || "/user");
-      },
-      couponHint() {
-        let code = this.coupon;
-        let method = `/site/`;
-        //
-        return ''
       },
       user() {
         return _.get(this.$store.state, 'user', [])
@@ -124,15 +143,21 @@
     mounted() {
       this.getForm();
     },
-    watch: {
-      coupon: {
-        handler() {
-
-          this.getForm();
-        }
-      }
-    },
     methods: {
+      checkCode() {
+        let code = this.coupon;
+        let method = `/coupon/${coupon}`
+        this.couponLoading = true;
+        this.$axios.$get(method).then(res => {
+          this.discount = _.get(res, 'data.discount', 1);
+          this.getForm();
+        }).catch(err => {
+          this.discount = 0;
+          this.getForm();
+        }).finally(() => {
+          this.couponLoading = false;
+        })
+      },
       getData(item, path, def) {
         return _.get(item, path, def) || (def || '');
       },
