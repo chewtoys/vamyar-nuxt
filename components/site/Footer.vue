@@ -78,7 +78,7 @@
         ]
       },
       siteSocialLinks() {
-        return JSON.parse(this.settings('site.siteSocialLinks', '[]')) || false;
+        return (this.settings('site.siteSocialLinks', '[]')) || false;
       }
     }, methods: {
       settings(key, def) {
