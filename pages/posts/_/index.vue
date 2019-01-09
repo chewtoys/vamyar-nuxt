@@ -67,7 +67,8 @@
                   <v-img
                     :src="item.image"
                     :lazy-src="lazy"
-                    max-height="300px"
+                    max-height="100px"
+                    max-width="100%"
                     contain
                     class="full"
                   />
