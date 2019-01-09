@@ -23,7 +23,7 @@
                     v-if="canBe(field,'text')"
                     :value="onStage[getProperty(field,'name')]"
                     :input="field.value"
-                    @cahnge="changeValue(field)"
+                    @change="changeValue(field)"
                     :label="field.title || '-'"
                   ></v-text-field>
                   <ImgUploader
@@ -32,6 +32,7 @@
                     :value="onStage[getProperty(field,'name')]"
                     :input="field.value"
                     :label="field.title || '-'"
+                    @change="changeValue(field)"
                   ></ImgUploader>
                   <v-textarea
                     box
@@ -39,6 +40,7 @@
                     :value="onStage[getProperty(field,'name')]"
                     :input="field.value"
                     :label="field.title || '-'"
+                    @change="changeValue(field)"
                   ></v-textarea>
                   <Editor
                     box
@@ -46,6 +48,7 @@
                     :value="onStage[getProperty(field,'name')]"
                     :input="field.value"
                     :label="field.title || '-'"
+                    @change="changeValue(field)"
                   />
                 </v-flex>
 
@@ -151,8 +154,10 @@
       this.initialize()
     },
     methods: {
-      changeValue(val1, val2 = '') {
-        console.log(val1, val2)
+      changeValue(field) {
+        let name = field.name;
+        let value = field.value;
+        console.log({field, name, value})
       },
       canBe(field, type) {
         return _.get(field, 'type', '') == type
