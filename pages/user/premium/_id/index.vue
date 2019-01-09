@@ -146,7 +146,7 @@
     methods: {
       checkCode() {
         let code = this.coupon;
-        let method = `/coupon/${coupon}`
+        let method = `/coupon/${code}`
         this.couponLoading = true;
         this.$axios.$get(method).then(res => {
           this.discount = _.get(res, 'data.discount', 1);

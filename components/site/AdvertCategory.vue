@@ -120,7 +120,7 @@
         ],
         showPremium: false,
         type: '',
-        sort: 'priority:desc',
+        sort: '',
         commonComputedFilters: [],
         computedFilters: [],
         advertTypeName: null,
@@ -144,6 +144,7 @@
     ,
     mounted() {
       this.advertTypeName = this.which;
+      this.sort = this.isAdverts ? 'priority:desc' : 'advert.priority:desc'
       this.items = this.initialItems;
       this.paginator = this.initialPaginator;
       this.loading = false;

@@ -2,63 +2,39 @@
   <v-card :flat="!hasBox" class="my-1">
     <v-toolbar flat color="white">
       <v-toolbar-title>{{label}}</v-toolbar-title>
+
       <v-spacer></v-spacer>
       <v-dialog v-model="dialog">
         <v-btn slot="activator" color="primary" dark class="mb-2">گزینه ی جدید</v-btn>
         <v-card>
-          <v-card-actions class="pt-3">
-            <v-btn class="ma-1" round outline color="warning darken-1" @click="close">لغو</v-btn>
-            <v-btn class="ma-1" round outline color="success darken-1" @click="save">ذخیره</v-btn>
-          </v-card-actions>
           <v-card-title>
             <span class="headline">{{ formTitle }}</span>
           </v-card-title>
+
           <v-card-text>
             <v-container grid-list-md>
               <v-layout wrap>
 
-                <v-flex xs12 v-for="(field,i) in structure" :key="i">
-                  <v-text-field
-                    box
-                    v-if="canBe(field,'text')"
-                    :value="onStage[getProperty(field,'name')]"
-                    :input="field.value"
-                    @change="changeValue(field)"
-                    :label="field.title || '-'"
-                  ></v-text-field>
-                  <ImgUploader
-                    box
-                    v-if="canBe(field,'image')"
-                    :value="onStage[getProperty(field,'name')]"
-                    :input="field.value"
-                    :label="field.title || '-'"
-                    @change="changeValue(field)"
-                  ></ImgUploader>
-                  <v-textarea
-                    box
-                    v-if="canBe(field,'textarea')"
-                    :value="onStage[getProperty(field,'name')]"
-                    :input="field.value"
-                    :label="field.title || '-'"
-                    @change="changeValue(field)"
-                  ></v-textarea>
-                  <Editor
-                    box
-                    v-if="canBe(field,'editor')"
-                    :value="onStage[getProperty(field,'name')]"
-                    :input="field.value"
-                    :label="field.title || '-'"
-                    @change="changeValue(field)"
-                  />
+                <v-flex xs12 v-for="field in structure" :key="field.name">
+                  <v-text-field box v-if="field.type=='text'" v-model="editedItem[field.name]"
+                                :label="field.title"></v-text-field>
+                  <ImgUploader box v-if="field.type=='image'" v-model="editedItem[field.name]"
+                               :label="field.title"></ImgUploader>
+                  <v-textarea box v-if="field.type=='textarea'" v-model="editedItem[field.name]"
+                              :label="field.title"></v-textarea>
+                  <Editor box v-if="field.type=='editor'" v-model="editedItem[field.name]"
+                          :label="field.title"/>
+
                 </v-flex>
 
               </v-layout>
             </v-container>
           </v-card-text>
+
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn class="ma-1" round outline color="warning darken-1" @click="close">لغو</v-btn>
-            <v-btn class="ma-1" round outline color="success darken-1" @click="save">ذخیره</v-btn>
+            <v-btn color="blue darken-1" flat @click="close">لغو</v-btn>
+            <v-btn color="blue darken-1" flat @click="save">ذخیره</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -103,21 +79,18 @@
 
   export default {
     props: ['value', 'box', 'label', 'structure', 'placeholder'],
-    data() {
-      return {
-        content: [],
-        dialog: false,
-        editedIndex: -1,
-        onStage: {},
-      }
-    }
-    ,
+    data: () => ({
+      content: [],
+      dialog: false,
+      editedIndex: -1,
+      editedItem: {},
+      defaultItem: {}
+    }),
     computed: {
       hasBox() {
         //console.log(this.box)
         return !!_.get(this, 'box', false);
-      }
-      ,
+      },
       headers() {
         let headers = [];
         _.forEach(this.structure, (field) => {
@@ -125,89 +98,64 @@
         })
         headers.push({text: 'عملیات', sortable: false});
         return headers;
-      }
-      ,
+      },
       formTitle() {
         return this.editedIndex === -1 ? 'گزینه ی جدید' : 'ویرایش'
       }
-    }
-    ,
+    },
     watch: {
-      onStage(val) {
-        //alert('onStage')
-        //console.log({val})
-      },
       dialog(val) {
-        //alert('dialog')
         val || this.close()
       },
       value(val) {
-        //alert('new value !')
         this.initialize()
       },
       content(val) {
-        //alert('content!')
         this.$emit("input", val)
       }
     },
-    mounted() {
+    created() {
       this.initialize()
     },
     methods: {
-      changeValue(field) {
-        let name = field.name;
-        let value = field.value;
-        console.log({field, name, value})
-      },
-      canBe(field, type) {
-        return _.get(field, 'type', '') == type
-      },
-      getProperty(item, path, def = '0') {
-        return _.get(item, path, def) || 0
-      },
-      shortStr(str = '', limit = 50) {
+      shortStr(str, limit = 50) {
         return Helper.limitStr(str, limit)
-      }
-      ,
-      nl2br(text = '') {
+      },
+      nl2br(text) {
         return Helper.nl2br(text)
-      }
-      ,
+      },
       initialize() {
         this.content = _.isArray(this.value) ? this.value : [];
-      }
-      ,
+      },
       editItem(item) {
         this.editedIndex = this.content.indexOf(item)
-        this.onStage = item
+        this.editedItem = Object.assign({}, item)
         this.dialog = true
-      }
-      ,
+      },
       deleteItem(item) {
         let index = this.content.indexOf(item)
         if (confirm('آیا مطمن هستید؟')) this.content.splice(index, 1)
-      }
-      ,
+      },
       close() {
-        this.onStage = {}
-        this.editedIndex = -1
         this.dialog = false
-      }
-      ,
+        setTimeout(() => {
+          this.editedItem = this.defaultItem
+          this.editedIndex = -1
+        }, 30)
+      },
       save() {
-        if (this.editedIndex > -1) {
-          //console.log(this.content[this.editedIndex], this.onStage)
-          _.set(this.content, [this.editedIndex], this.onStage);
-        } else {
-          //console.log(this.editedIndex, this.content, this.onStage)
-          this.content.push(this.onStage)
+        try {
+          if (this.editedIndex > -1) {
+            Object.assign(this.content[this.editedIndex], this.editedItem)
+          } else {
+            this.content.push(this.editedItem)
+          }
+          this.close()
+        } catch (err) {
+          console.log(err)
         }
-        this.close()
       }
-    }
-    ,
-    components: {
-      Editor, ImgUploader
-    }
+    },
+    components: {Editor, ImgUploader}
   }
 </script>
