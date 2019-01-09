@@ -142,11 +142,13 @@
         },
         publishedAt: {
           get() {
+            return this.date;
             let jalali = this.date;
             let gregorian = moment(jalali, 'jYYYY/jM/jD HH:mm').format('YYYY/M/D HH:mm:ss');
             return gregorian;
           },
           set(val) {
+            return this.date = val;
             if (!val) return null;
             try {
               let m = moment(val, 'YYYY-M-D HH:mm:ss')
