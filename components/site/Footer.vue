@@ -78,7 +78,8 @@
         ]
       },
       siteSocialLinks() {
-        return (this.settings('site.siteSocialLinks', false)) || false;
+        let list = (this.settings('site.siteSocialLinks', false)) || false
+        return (_.isArray(list) && list.length > 0 ) ? list : false;
       }
     }, methods: {
       settings(key, def) {
