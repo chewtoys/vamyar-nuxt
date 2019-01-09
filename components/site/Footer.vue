@@ -28,6 +28,29 @@
       </v-card-text>
 
       <br/>
+      <template v-if="socilaLinks">
+        <v-card-text class="white--text pt-0">
+          <v-container grid-list-lg>
+            <v-layout row wrap>
+              <v-flex sm12 md12>
+                <v-btn v-for="item in socilaLinks" :key="item.name" target="_blank" :href="item.link" depress
+                       flat
+                >
+                  <v-img
+                    v-if="item.image"
+                    width="100px"
+                    :aspect-ration="1"
+                  />
+                  <span v-if="item.name">{{ item.name }}</span>
+                  <p class="font-12" v-if="item.desc" v-html="nl2br(item.desc)"></p>
+                </v-btn>
+              </v-flex>
+            </v-layout>
+          </v-container>
+        </v-card-text>
+
+        <br/>
+      </template>
       <div v-html="settings('site.footerText')"></div>
       <v-divider/>
 
@@ -39,6 +62,8 @@
   </v-footer>
 </template>
 <script>
+  import Helper from '~/assets/js/helper'
+
   export default {
     data: () => ({}),
     computed: {
@@ -51,10 +76,16 @@
           {id: 4, title: "آموزش ها", icon: "local_library", to: "/posts/instructions"},
           {id: 5, title: "اخبار", icon: "whatshot", to: "/posts/news"}
         ]
+      },
+      socilaLinks() {
+        return JSON.parse(this.settings('site.siteSocilaLinks', '[]')) || false;
       }
     }, methods: {
       settings(key, def) {
         return _.get(this.$store.state.settings.data, key, def) || def
+      },
+      nl2br(text) {
+        return Helper.nl2br(text)
       }
     }
   }

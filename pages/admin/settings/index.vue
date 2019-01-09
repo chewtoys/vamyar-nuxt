@@ -89,6 +89,7 @@
               data-vv-name="siteCopyright"
               auto-grow
             />
+
             <v-checkbox
               v-model="isSiteOpen"
               box
@@ -106,12 +107,6 @@
               auto-grow
             />
 
-            <Crud
-              box
-              v-model="siteSocialLinks"
-              :structure="siteSocialLinksStructure"
-              label="اطلاعات شبکه های اجتماعی"
-            />
             <Editor
               validate="required"
               v-model="footerText"
@@ -120,6 +115,13 @@
               label="توضیحات فوتر در صفحه ی نخست"
               data-vv-name="footerText"
               auto-grow
+            />
+
+            <Crud
+              box
+              v-model="siteSocialLinks"
+              :structure="siteSocialLinksStructure"
+              label="اطلاعات شبکه های اجتماعی"
             />
           </v-tab-item>
           <v-tab-item
