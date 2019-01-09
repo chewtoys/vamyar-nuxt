@@ -25,7 +25,7 @@ export default function ({$axios, store, isClient, redirect, route}) {
   $axios.onError(err => {
     let {status} = _.get(err, 'response', 0);
     let type = _.get(err, 'config.headers.request.method', {err});
-    console.log({type})
+    //console.log({type})
 
     if (status === 401) {
       if (_.startsWith(route.path, '/user')) {

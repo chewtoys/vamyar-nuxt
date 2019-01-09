@@ -1,6 +1,6 @@
 <template>
   <v-container grid-list-md>
-    <v-card color="grey lighten-4">
+    <v-card flat color="transparent">
       <v-card-text>
         <v-layout row wrap>
           <v-flex xs12>
@@ -33,8 +33,10 @@
           <v-card class="center-text" flat transparent>
             <v-layout row wrap>
               <v-flex v-for="item in category.children || []" :key="item.id" xs12 sm6 md4>
-                <v-card flat color="grey lighten-2" :to="currentPath + '/' + item.slug">
-                  <v-card-title><h3>{{item.name || 'بدون عنوان'}}</h3></v-card-title>
+                <v-card color="grey lighten-2" :to="currentPath + '/' + item.slug">
+                  <v-card-title>
+                    <h3>{{item.name || 'بدون عنوان'}}</h3>
+                  </v-card-title>
                   <v-img
                     v-if="item.image"
                     :src="item.image"
@@ -55,11 +57,13 @@
         </template>
         <template v-if="posts.length > 0">
           <v-subheader>مطالب</v-subheader>
-          <v-container >
+          <v-container>
             <v-layout row wrap grid-list>
               <v-flex v-for="item in posts || []" :key="item.id" xs12 sm6 lg4>
-                <v-card flat color="lighten-2" :to="showPath + '/' + item.slug">
-                  <v-card-title><h3>{{item.name || 'بدون عنوان'}}</h3></v-card-title>
+                <v-card color="lighten-2" :to="showPath + '/' + item.slug">
+                  <v-card-title><h3>{{item.title || 'بدون عنوان'}}</h3>
+                    <small>{{item.jPublishedAt || ''}}</small>
+                  </v-card-title>
                   <v-img
                     :src="item.image"
                     :lazy-src="lazy"
