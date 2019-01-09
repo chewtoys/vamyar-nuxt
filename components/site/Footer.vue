@@ -12,7 +12,7 @@
       class="indigo lighten-1 white--text text-center"
     >
 
-      <v-card-text class="white--text pt-0">
+      <v-card-text class="white--text pt-0" light>
         <v-container grid-list-lg>
           <v-layout row wrap>
             <v-flex sm12 md12>
@@ -29,18 +29,15 @@
 
       <br/>
       <template v-if="siteSocialLinks">
-        <v-subheader class="full text-center">
-          شبکه های اجتماعی
-        </v-subheader>
-        <v-card class="frontpage whyus pt-5 pb-5 px-2">
+        <v-card class="frontpage whyus pt-2 pb-2 px-2" color="white" light>
           <v-layout align-center justify-center row>
-            <v-flex v-for="item in siteSocialLinks" :key="item.name" xs12 sm3>
+            <v-flex v-for="item in siteSocialLinks" :key="item.name" xs12 sm2>
               <v-card :href="item.link" flat>
                 <div class="text-xs-center">
-                  <v-card-media
+                  <v-img
                     :src="item.image"
                     class="text-xs-center circle"
-                    style="height:100px;width:100px;margin: 10px auto"/>
+                    style="height:70px;width:70px;margin: 10px auto"/>
                   <div class="deep-purple--text text-xs-center">
                     <h3>{{ item.name }}</h3>
                   </div>
