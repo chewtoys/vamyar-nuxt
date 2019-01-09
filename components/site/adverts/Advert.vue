@@ -167,7 +167,7 @@
         return _.get(this.item, 'advert.instant', _.get(this.item, 'instant', 0));
       },
       isLadder() {
-        return _.get(this.item, 'advert.ladderable', _.get(this.item, 'ladderable', 0));
+        return _.get(this.item, 'advert.ladderAt', _.get(this.item, 'ladderAt', 0));
       },
       isVerified() {
         return _.get(this.item, 'advert.verified', _.get(this.item, 'verified', 0));

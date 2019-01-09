@@ -8,9 +8,7 @@
           ذخیره سازی
         </v-btn>
       </v-card-title>
-
       <v-card-text>
-
         <v-tabs
           slot="extension"
           v-model="tab"
@@ -64,6 +62,33 @@
               data-vv-name="siteDescription"
               auto-grow
             />
+            <v-textarea
+              validate="required"
+              v-model="siteKeywords"
+              :error-messages="errors.collect('siteKeywords')"
+              box
+              label="کلمات کلیدی متا"
+              data-vv-name="siteDescription"
+              auto-grow
+            />
+            <v-textarea
+              validate="required"
+              v-model="siteHtml"
+              :error-messages="errors.collect('siteHtml')"
+              box
+              label="کد html یا javascript دلخواه "
+              data-vv-name="siteHtml"
+              auto-grow
+            />
+            <v-textarea
+              validate="required"
+              v-model="siteCopyright"
+              :error-messages="errors.collect('siteCopyright')"
+              box
+              label="متن کپی رایت"
+              data-vv-name="siteCopyright"
+              auto-grow
+            />
             <v-checkbox
               v-model="isSiteOpen"
               box
@@ -81,6 +106,12 @@
               auto-grow
             />
 
+            <Crud
+              box
+              v-model="siteSocialLinks"
+              :structure="siteSocialLinksStructure"
+              label="اطلاعات شبکه های اجتماعی"
+            />
             <Editor
               validate="required"
               v-model="footerText"
@@ -94,7 +125,6 @@
           <v-tab-item
             value="tab-2"
           >
-
             <v-checkbox
               v-model="isImageAllowed"
               box
@@ -326,6 +356,12 @@
           {title: 'لینک رسانه', name: 'link', type: 'text', value: ''},
           {title: 'تصویر', name: 'image', type: 'image', value: ''},
         ],
+        siteSocialLinksStructure: [
+          {title: 'نام', name: 'name', type: 'text', value: ''},
+          {title: 'توضیحات', name: 'desc', type: 'textarea', value: ''},
+          {title: 'لینک', name: 'link', type: 'text', value: ''},
+          {title: 'تصویر', name: 'image', type: 'image', value: ''},
+        ],
         whyUsStructure: [
           {title: 'عنوان', name: 'title', type: 'text', value: ''},
           {title: 'توضیحات', name: 'desc', type: 'textarea', value: ''},
@@ -350,6 +386,10 @@
         whatWeDoClip: '',
         siteTitle: '',
         siteDescription: '',
+        siteKeywords: '',
+        siteHtml: '',
+        siteCopyright: '',
+        siteSocialLinks: '',
         siteLogo: '',
         isSiteOpen: '',
         onMedia: [],
@@ -382,6 +422,10 @@
           attributes: {
             siteTitle: "عنوان سایت",
             siteDescription: "توضیحات متا",
+            siteKeywords: 'کلمات کلیدی',
+            siteHtml: 'کد اچ تی ام ال',
+            siteCopyright: 'کپی رایت',
+            siteSocialLinks: 'شبکه های اجتماعی',
             siteLogo: 'لوگوی سایت',
             onMedia: 'ما در رسانه ها',
             whatWeDo: 'ما چه کار می کنیم',

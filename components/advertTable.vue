@@ -661,8 +661,8 @@
           ( !!_.get(item, 'advert.instant', _.get(item, 'instant', false)) ? 'فوری' : 'غیر فوری')
       },
       priority(item, getBoolean = false) {
-        return (getBoolean) ? ( !!_.get(item, 'advert.priority', _.get(item, 'priority', false))) :
-          ( !!_.get(item, 'advert.priority', _.get(item, 'priority', false)) ? 'فعال شده' : 'غیر فعال')
+        return (getBoolean) ? ( !!_.get(item, 'advert.ladderAt', _.get(item, 'ladderAt', false))) :
+          ( !!_.get(item, 'advert.ladderAt', _.get(item, 'ladderAt', false)) ? 'فعال شده' : 'غیر فعال')
       },
       changeInstant(id, val = 1, item = [], type = '') {
         if (this.isAdmin) {
@@ -720,7 +720,7 @@
             } else {
               index = _.findIndex(this.list, {id: advertId});
             }
-            let path = this.isAdverts ? 'priority' : 'advert.priority'
+            let path = this.isAdverts ? 'priority' : 'advert.ladderAt'
             _.set(this.list[index], path, val);
             this.tableLoader = false;
           }).catch(err => {

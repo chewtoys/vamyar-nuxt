@@ -716,7 +716,7 @@ export const
     ]
   },
   GENERAL_SETTINGS = {
-    site: ['closedSiteText', 'isSiteOpen', 'siteTitle', 'siteDescription', 'siteLogo', 'siteFavIcon', 'footerText'],
+    site: ['closedSiteText', 'isSiteOpen', 'siteTitle', 'siteDescription', 'siteKeywords', 'siteHtml', 'siteCopyright', 'siteSocialLinks', 'siteLogo', 'siteFavIcon', 'footerText'],
     adverts: ['buySubscriptionHelpLink', 'needSubscriptionText', 'noticeOnAdvertShow', 'noticeBeforeCreateAdvert', 'isImageAllowed'],
     frontpage: ['whatWeDoClip', 'whatWeDo', 'onMedia', 'whyUs', 'whatWeDo', 'noticeBeforeCreateAdvert', 'isImageAllowed', 'headerBgUrl', 'headerText', 'subHeaderText'],
     pages: ['councilsHelpText', 'premiumText', 'panelPremiumText', 'addAdvertHelpText', 'aboutUsText', 'contactUsTable', 'contactUsText', 'rulesText', 'contactUsSuggestionText', 'educationText']

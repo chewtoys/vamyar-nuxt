@@ -175,7 +175,7 @@ const Helper = {
         'نام خانوادگی': _.get(value, 'details.lastName', '-') || '-',
         'شماره موبایل': _.get(value, 'mobile', '-') || '-',
         'ایمیل': _.get(value, 'email', '-') || '-',
-        'شناسه': _.get(value, 'id', '-')  || '-',
+        'شناسه': _.get(value, 'id', '-') || '-',
       }
       let arr = []
       _.forEach(details, (title, val) => {
@@ -214,7 +214,7 @@ const Helper = {
     } else if (name === 'verified') {
       return value ? 'بله' : 'خیر'
     } else if (name === 'ladderAt') {
-      return value ? 'بله' : 'خیر'
+      return value ? (value === 1 ? 'بله' : value) : 'خیر'
     } else if (name === 'transferable') {
       return value ? 'بله' : 'خیر'
     } else if (name === 'forBank') {

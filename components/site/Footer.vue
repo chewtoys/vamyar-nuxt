@@ -28,13 +28,14 @@
       </v-card-text>
 
       <br/>
-      <div v-html="settings('site.footerText')" ></div>
+      <div v-html="settings('site.footerText')"></div>
       <v-divider/>
 
       <v-card-text class="white--text">
-        &copy;2018 — <strong>Vamyar</strong>
+        <strong v-html="settings('site.siteCopyright', 'Vamyar - &copy;2018' )"></strong>
       </v-card-text>
     </v-card>
+    <div v-html="settings('site.siteHtml')" v-if="settings('site.siteHtml')"></div>
   </v-footer>
 </template>
 <script>
@@ -52,8 +53,8 @@
         ]
       }
     }, methods: {
-      settings(key) {
-        return _.get(this.$store.state.settings.data, key, '')
+      settings(key, def) {
+        return _.get(this.$store.state.settings.data, key, def) || def
       }
     }
   }
