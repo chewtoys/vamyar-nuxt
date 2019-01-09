@@ -9,14 +9,14 @@ export default function ({$axios, store, isClient, redirect, route}) {
   }
 
   $axios.setHeader("Content-Type", " application/json");
-  $axios.setHeader('Accept', 'application/json')
+  $axios.setHeader('Accept', 'application/json');
   //$axios.setHeader('Access-Control-Allow-Origin', '*')
   //
   //'Access-Control-Allow-Origin': '*',
   //'Content-Type': 'application/json',
 
   $axios.onRequest(config => {
-    //console.log({1: "DEBUG ON AXIOS :  Request:", config})
+    // console.log({1: "DEBUG ON AXIOS :  Request:", config, type})
   });
   $axios.onResponse(({response}) => {
     //let { code } = response
@@ -24,6 +24,8 @@ export default function ({$axios, store, isClient, redirect, route}) {
   });
   $axios.onError(err => {
     let {status} = _.get(err, 'response', 0);
+    let type = _.get(err, 'config.headers.request.method', {err});
+    console.log({type})
 
     if (status === 401) {
       if (_.startsWith(route.path, '/user')) {
@@ -39,11 +41,19 @@ export default function ({$axios, store, isClient, redirect, route}) {
     if (msgs) {
       //console.log({1: 'DEBUG ON AXIOS :  onError Message:', 3: error.response.data.error.message});
       if (_.isPlainObject(msgs)) {
+
         let msgsArray = []
         _.forEach(msgs, (val, key) => {
           msgsArray.push(val);
         })
-        store.commit('snackbar/setSnack', _.join(msgsArray,' \n '))
+        store.commit('snackbar/setSnack', _.join(['پیام مخفی شونده'], msgsArray, ' \n '))
+      }
+      if (type.length < 1 && _.isPlainObject(msgs)) {
+        let msgsArray = []
+        _.forEach(msgs, (val, key) => {
+          msgsArray.push(val);
+        })
+        store.commit('snackbar/setSnack', _.join(msgsArray, ' \n '))
       } else if (_.isArray(msgs)) {
         store.commit('snackbar/setSnack', _.join(msgs, ', '))
       } else {
@@ -52,5 +62,6 @@ export default function ({$axios, store, isClient, redirect, route}) {
     } else {
       //console.log({1: 'DEBUG ON AXIOS :  onError:', 3: _.get(err, 'response', ''), err})
     }
+
   })
 }
