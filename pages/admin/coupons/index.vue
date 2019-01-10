@@ -44,7 +44,7 @@
           :loading="loading"
           :search="search"
           :pagination.sync="pagination"
-          :total-items="100000"
+          :total-items="1000000"
           :rows-per-page-items="[10,25,100]"
           no-results-text="هیچ موردی ثبت نشده است."
           class="elevation-1"
@@ -68,8 +68,8 @@
               ></v-checkbox>
             </td>
             <td class="text-xs-right">{{ props.item.id }}</td>
-            <td class="text-xs-right">{{ props.item.code }}</td>
             <td class="text-xs-right">{{ props.item.discount ? (props.item.discount + '%') : '-' }}</td>
+            <td class="text-xs-right">{{ props.item.code }}</td>
             <td class="text-xs-right">{{ (props.item.oneTimeUsage ? 'بله' : 'خیر') }}</td>
             <td class="text-xs-right">{{ jDate(props.item.expireDate) }}</td>
             <td class="text-xs-left">

@@ -44,21 +44,25 @@
             />
             <v-autocomplete
               v-validate="'required'"
-              v-model="requestTypeName"
+              v-model="requestType"
               :error-messages="errors.collect('requestType')"
               box
+              item-value="id"
+              item-text="title"
               label="نوع درخواست"
               data-vv-name="requestType"
               :items="requestTypeList"
               persistent-hint
             ></v-autocomplete>
             <v-autocomplete
-              v-model="cityName"
+              v-model="city"
               :error-messages="errors.collect('city')"
               box
               label="شهر"
               data-vv-name="city"
               :items="cities"
+              item-value="id"
+              item-text="name"
               persistent-hint
             />
             <v-textarea
@@ -101,18 +105,14 @@
     }
     ,
     data: () => ({
+      city: '',
       page_title,
       // ticket
       title: null,
       html: "",
       job: "",
-      cityName: null,
-      requestTypeList: [],
-      cities: [],
       requestText: "",
-      requestTypeName: '',
-
-
+      requestType: '',
       // validator dictionary
       dictionary: {
         attributes: {
@@ -130,29 +130,16 @@
       {
         list: function () {
           return indexPath;
-        }
-        ,
+        },
         createPath: function () {
           return createPath;
-        }
-        ,
-        city() {
-          let list = _.get(this.$store.state.city, 'data', []);
-          let cityName = this.cityName;
-          let index = _.findIndex(list, {'name': cityName});
-          if (index > 0) {
-            let item = list[index];
-            return _.get(item, 'id', 0);
-          }
-          return 0;
         },
-        requestType() {
-          let list = this.$store.state.councilTypes.data;
-          let index = _.findIndex(list, {'title': this.requestTypeName});
-          let item = list[index];
-          return _.get(item, 'id', 0);
-        }
-        ,
+        cities() {
+          return _.get(this.$store.state, 'city.data', [])
+        },
+        requestTypeList() {
+          return _.get(this.$store.state, 'councilTypes.data', [])
+        },
       }
     ,
     async asyncData({params, store, $axios}) {
@@ -160,17 +147,13 @@
         // city
         let cityData = await $axios.$get(cityMethod);
         store.commit('city/setAndProcessData', cityData.data || []);
-
         // loan types
         let councilTypes = await
           $axios.$get(councilRequestTypes);
         store.commit('councilTypes/setAndProcessData', councilTypes.data || []);
+
       } catch (error) {
         console.log('error', error)
-      }
-      return {
-        cities: _.get(store.state, 'city.arrayList', []),
-        requestTypeList: _.get(store.state, 'councilTypes.arrayList', []),
       }
     }
     ,
@@ -179,6 +162,7 @@
     }
     ,
     methods: {
+
       toast(msg, color) {
         this.$store.commit("snackbar/setSnack", msg, color)
       }
@@ -194,7 +178,7 @@
           data: {redirect: '/user/councils'},
         }
         this.$axios
-          .$get(createPath, {params:data})
+          .$get(createPath, {params: data})
           .then((res) => {
             let status = true
             if (status) {
@@ -202,7 +186,7 @@
               this.toast("با موفقیت ثبت شد.", "success")
               this.submit_loader = false
               this.html = res;
-              location.href = _.get(res,'data.paymentLink','/user/councils');
+              location.href = _.get(res, 'data.paymentLink', '/user/councils');
               //this.$router.push(indexPath)
             } else {
               this.toast(" خطایی رخ داد.", "warning")

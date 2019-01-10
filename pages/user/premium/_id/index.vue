@@ -64,14 +64,14 @@
                   <td>
                     <small>تخفیف اعمال شده</small>
                   </td>
-                  <td><strong class="red--text">{{getPrice(discount)}} -</strong></td>
+                  <td><strong class="red--text">%{{(discount)}} -</strong></td>
                 </tr>
                 <tr v-if="discount > 0 ">
                   <td>
                     <small>مبلغ قابل پرداخت</small>
                   </td>
                   <td><strong
-                    class="green--text">{{getPrice((getData(data, 'price', '0') - discount) > 0 ? (getData(data, 'price', '0') - discount) : 0)}}</strong>
+                    class="green--text">{{getPrice((getData(data, 'price', '0') - discount/100*getData(data, 'price', '0')) > 0 ? (getData(data, 'price', '0') - discount/100*getData(data, 'price', '0')) : 0)}}</strong>
                   </td>
                 </tr>
                 </tbody>

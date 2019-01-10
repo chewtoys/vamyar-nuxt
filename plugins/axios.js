@@ -24,8 +24,8 @@ export default function ({$axios, store, isClient, redirect, route}) {
   });
   $axios.onError(err => {
     let {status} = _.get(err, 'response', 0);
-    let type = _.get(err, 'config.headers.request.method', {err});
-    //console.log({type})
+    let type = _.get(err, 'config.method', {err});
+
 
     if (status === 401) {
       if (_.startsWith(route.path, '/user')) {
@@ -35,33 +35,37 @@ export default function ({$axios, store, isClient, redirect, route}) {
         store.dispatch('admin/logout')
         redirect('/admin');
       }
+      if (isClient) {
+
+      }
     }
 
+    let msgsArray = []
     let msgs = _.get(err, 'response.data.error.message', false);
     if (msgs) {
       //console.log({1: 'DEBUG ON AXIOS :  onError Message:', 3: error.response.data.error.message});
       if (_.isPlainObject(msgs)) {
-
-        let msgsArray = []
         _.forEach(msgs, (val, key) => {
           msgsArray.push(val);
         })
-        store.commit('snackbar/setSnack', _.join(['پیام مخفی شونده'], msgsArray, ' \n '))
       }
-      if (type.length < 1 && _.isPlainObject(msgs)) {
-        let msgsArray = []
-        _.forEach(msgs, (val, key) => {
-          msgsArray.push(val);
-        })
-        store.commit('snackbar/setSnack', _.join(msgsArray, ' \n '))
-      } else if (_.isArray(msgs)) {
-        store.commit('snackbar/setSnack', _.join(msgs, ', '))
-      } else {
-        store.commit('snackbar/setSnack', _.get(err, 'response.data.error.message.mobile', msgs))
+      console.log({type, status})
+      if (status === 404 && type === 'get') {
+        //store.commit('snackbar/setSnack', _.join(msgsArray, ' \n '))
+      }
+      else {
+        if (_.isPlainObject(msgs)) {
+          store.commit('snackbar/setSnack', _.join(msgsArray, ' \n '))
+        }
+
+        else if (_.isArray(msgs)) {
+          store.commit('snackbar/setSnack', _.join(msgs, ', '))
+        } else {
+          store.commit('snackbar/setSnack', _.get(err, 'response.data.error.message.mobile', msgs))
+        }
       }
     } else {
       //console.log({1: 'DEBUG ON AXIOS :  onError:', 3: _.get(err, 'response', ''), err})
     }
-
   })
 }
