@@ -51,6 +51,7 @@
               item-value="id"
               item-text="mobile"
               label="کاربر"
+              placeholder="همه ی کاربران"
               data-vv-name="userId"
             >
             </v-autocomplete>
@@ -81,7 +82,7 @@
   </v-container>
 </template>
 <script>
-  const moment  = require('moment-jalaali');
+  const moment = require('moment-jalaali');
   const page_title = 'افزودن کد تخفیف جدید',
     breadcrumb = 'کدجدید',
     indexPath = '/admin/coupons',
@@ -137,7 +138,7 @@
         },
         expireDate() {
           let jalali = this.date;
-          let gregorian = moment(jalali, 'jYYYY/jM/jD HH:mm').format('YYYY-M-D HH:mm:ss') ;
+          let gregorian = moment(jalali, 'jYYYY/jM/jD HH:mm').format('YYYY-M-D HH:mm:ss');
           //console.log(jalali, gregorian)
           return gregorian;
         }
@@ -161,7 +162,7 @@
           code: this.code,
           discount: this.discount,
           userId: this.userId,
-          oneTimeUsable: this.oneTimeUsable ? 1 : 0 ,
+          oneTimeUsable: this.oneTimeUsable ? 1 : 0,
           expireDate: this.expireDate,
         }
 
