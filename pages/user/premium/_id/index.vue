@@ -71,7 +71,7 @@
                     <small>مبلغ قابل پرداخت</small>
                   </td>
                   <td><strong
-                    class="green--text">{{getPrice((getData(data, 'price', '0') - discount / 100 * getData(data, 'price', '0')) > 0 ? (getData(data, 'price', '0') - discount / 100 * getData(data, 'price', '0')) : 0)}}</strong>
+                    class="green--text">{{getPrice((getData(data, 'price', '0') - discount / 100 * getData(data, 'price', '0')) > 0 ? 10 *( parseInt(getData(data, 'price', '0') - discount / 100 * getData(data, 'price', '0')) / 10) : 0)}}</strong>
                   </td>
                 </tr>
                 </tbody>

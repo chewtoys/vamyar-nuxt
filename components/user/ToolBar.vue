@@ -12,29 +12,19 @@
       <v-btn to="/user" flat color="transparent"><span class="deep-purple--text"><v-icon
         class="px-1">dashboard</v-icon>داشبورد</span></v-btn>
     </v-toolbar-title>
-
+    <v-toolbar-title>
+      <v-btn class="pt-1 " to="/user/notifications" flat color="transparent">
+       <v-badge :color=" (notifToread > 0 ? `red` : `deep-purple`) ">
+        <v-icon :class=" (notifToread > 0 ? `red--text` : `deep-purple--text`) ">mail</v-icon>
+         <span class="font-8 pa-0" slot="badge">{{notifToread}}</span>
+        </v-badge>
+      </v-btn>
+      </v-toolbar-title>
     <v-toolbar-title>
        <v-btn to="/user/premium" flat color="transparent"><span class="yellow--text text--darken-4"><v-icon
          class="px-1">star</v-icon>اشتراک من</span></v-btn>
       </v-toolbar-title>
     <v-spacer/>
-    <v-menu class="right-text">
-      <v-toolbar-title class="deep-purple--text " slot="activator">
-        <v-badge color="red">
-        <span slot="badge">{{notifToread}}</span>
-        <v-icon :class="`px-1 font-19 mb-2 ` + (notifToread > 0 ? `red--text` : `deep-purple--text`) ">mail</v-icon>
-        </v-badge>
-      </v-toolbar-title>
-      <v-list class="farsi">
-        <v-list-tile
-          v-for="item in notifications"
-          :key="item.id"
-          @click="readNotif(item.id)"
-        >
-          <v-list-tile-title v-text="item.message"/>
-        </v-list-tile>
-      </v-list>
-    </v-menu>
     <v-menu :nudge-width="100" left class="right-text">
       <v-toolbar-title class="deep-purple--text " slot="activator">
         <v-icon class="px-1 font-19 deep-purple--text mb-2">settings</v-icon>
@@ -95,7 +85,7 @@
         return this.$vuetify.breakpoint.smAndDown
       },
       notifToread() {
-        return (_.find(_.get(this, 'notifications', []), {seen: false}) || []).length || 0;
+        return _.get(this.$store.state, 'notifications.unseen', []).length || 0;
       },
       drawer: function () {
         return this.$store.state.navigation.drawer
@@ -117,26 +107,21 @@
       this.$store.commit('navigation/setDrawer', !this.isMobile);
     },
     methods: {
-      readNotif(id) {
-        if (!id) return null
-        let method = `/user/notifications/${id}/seen`
-        this.$axios.$put(method).then(res => {
-          //this.notifications = _.get(res, 'data', [])
-          this.loadNotifs();
-        })
-      },
       loadNotifs() {
         let method = '/user/notifications'
-        let query = {must: "seen!=true"}
+        let query = {orderBy: 'id:desc',number:20000}
         this.$axios.$get(method, {params: query}).then(res => {
-          let data = _.find(_.get(res, 'data', []), {seen: false});
-          if (data.length > 0) this.notifications = data
-        }).catch(err => {
-          this.notifications = [{id: 0, message: 'بدون پیام'}]
+          let data = _.get(res, 'data', []);
+          let unseen = [];
+          _.forEach(data, (obj) => {
+            if (!obj.seen) unseen.push(obj)
+          });
+          this.$store.commit('notifications/setData', data)
+          this.$store.commit('notifications/setUnseen', unseen)
         })
         setTimeout(() => {
           this.loadNotifs()
-        }, 25000)
+        }, 30000)
       },
       toggleDrawer: function () {
         this.$store.commit('navigation/setDrawer', !this.drawer);

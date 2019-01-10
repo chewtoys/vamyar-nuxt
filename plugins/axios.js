@@ -55,23 +55,16 @@ export default function ({$axios, store, isClient, redirect, route}) {
         })
       }
       //console.log({type, status})
-      if (status === 404 && type === 'get') {
-        //console.log(_.includes(path,exceptions),{exceptions, path})
-        if (_.includes(path, exception)) store.commit('snackbar/setSnack', _.join(msgsArray, ' \n '))
-      }
-      else {
+      if (status !== 404 || type !== 'get' || _.includes(path, exceptions)) {
         if (_.isPlainObject(msgs)) {
           store.commit('snackbar/setSnack', _.join(msgsArray, ' \n '), color)
         }
-
         else if (_.isArray(msgs)) {
           store.commit('snackbar/setSnack', _.join(msgs, ', '), color)
         } else {
           store.commit('snackbar/setSnack', _.get(err, 'response.data.error.message.mobile', msgs), color)
         }
       }
-    } else {
-      //console.log({1: 'DEBUG ON AXIOS :  onError:', 3: _.get(err, 'response', ''), err})
     }
   })
 }

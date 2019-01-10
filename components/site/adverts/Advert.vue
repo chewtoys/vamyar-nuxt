@@ -101,7 +101,7 @@
         <span>قابل انتقال به سایر شهرها</span>
       </v-tooltip>
       <v-tooltip top>
-        <v-btn v-if="tradeStatus===1" slot="activator" class="mx-1" icon round color="cyan" text-color="white">
+        <v-btn v-if="hasSubscription && tradeStatus===1" slot="activator" class="mx-1" icon round color="cyan" text-color="white">
           <v-icon class="white--text">phone_in_talk</v-icon>
         </v-btn>
         <span>در حال معامله</span>
@@ -160,6 +160,10 @@
       }
     },
     computed: {
+
+      hasSubscription() {
+        return _.get(this.$store.state, 'user.hasSubscription', false) || false;
+      },
       isTransferable() {
         return _.get(this.item, 'advert.transferable', _.get(this.item, 'transferable', 0));
       },

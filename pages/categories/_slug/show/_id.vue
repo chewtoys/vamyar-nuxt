@@ -35,7 +35,7 @@
                 <span calss="white--text">بررسی شده</span>
                 <v-icon left class="px-2 white--text">security</v-icon>
               </v-chip>
-              <v-chip v-if="getProperty(item, 'advert.tradeStatus',0)===1" label color="cyan" text-color="white">
+              <v-chip v-if="hasSubscription && getProperty(item, 'advert.tradeStatus',0)===1" label color="cyan" text-color="white">
                 <span calss="white--text">در حال معامله</span>
                 <v-icon left class="px-2 white--text">phone_in_talk</v-icon>
               </v-chip>
@@ -181,7 +181,8 @@
                       <div class="pa-2 mx-1">
                         <v-icon class="pb-1 pl-1 pt-2">contact_phone</v-icon>
                         <span><small class="font-14 pt-2">شماره موبایل</small>
-                          <v-alert :value="true" v-if="getProperty(item, 'advert.tradeStatus',false)">
+                          <v-alert :value="true"
+                                   v-if="hasSubscription && getProperty(item, 'advert.tradeStatus',false)">
                             این اگهی در حال معامله است در صورت توافق طرفین اگهی حذف می شود
                           </v-alert>
                           <b class="left"
@@ -210,7 +211,7 @@
               </v-flex>
               <v-flex xs12>
                 <div class="text-left">
-                  <Bookmark  v-if="false"/>
+                  <Bookmark v-if="false"/>
                   <Report v-if="false"/>
                   <CopyUrl/>
                 </div>
@@ -308,6 +309,9 @@
       },
       isInstant() {
         return this.item.advert.instant
+      },
+      hasSubscription() {
+        return _.get(this.$store.state, 'user.hasSubscription', false) || false;
       },
       hasImage() {
         return !!this.settings('adverts.isImageAllowed') && !!this.item.advert.image
