@@ -12,18 +12,13 @@
           <v-card-text>
             <noSubscriptionAlert specialMsg="شما هنوز اشتراک فعالی ندارید!" v-if="!isUserPremium"/>
             <v-card v-else flat>
-              <v-alert :value="true" type="success" icon="star"><span
-                class="px-1">حساب شما دارای اشتراک فعال می باشد.</span>
+              <v-alert :value="true" color="lime accent-3" icon="star"><span
+                class="px-1 grey--text text--darken-2">حساب شما دارای اشتراک فعال می باشد.</span>
               </v-alert>
-              <v-alert :value="true" color="info"><p>جزئیات اشتراک شما</p>
-                <p>عنوان اشتراک فعال: {{planTitle}}</p>
-                <p>دوره ی اشتراک فعال: {{planPeriod}}</p>
+              <v-alert :value="true" color="info" icon="network_check"><p>جزئیات اشتراک شما</p>
+                <p>انقضای اشتراک : {{planExpireAll}}</p>
+                <p> مدت زمان باقی مانده: {{leftDaysAll}}</p>
                 <p>شروع اشتراک: {{planStart}}</p>
-                <p>انقضای اشتراک: {{planExpire}}</p>
-                <p v-if="multipleSub">انقضای اشتراک نهایی: {{planExpireAll}}</p>
-                <p>هزینه ی اشتراک: {{planPrice}}</p>
-                <p>روز باقی مانده: {{leftDays}}</p>
-                <p v-if="multipleSub">کل روزهای باقی مانده: {{leftDaysAll}}</p>
               </v-alert>
               <v-alert v-if="false" :value="true" color="blue"><p>
                 برای تمدید اشتراک می توانید از لینک زیر اقدام نمایید.</p>
@@ -64,7 +59,7 @@
           </v-card-title>
           <v-card-text>
             <v-layout row wrap>
-              <v-flex xs6 sm4 lg4 v-for="item in links" :key="item.id">
+              <v-flex xs12 sm6 lg4 v-for="item in links" :key="item.id">
                 <v-btn
                   large
                   round
@@ -102,7 +97,7 @@
                           <tbody class="oddTable">
                           <tr>
                             <td>نوع آگهی</td>
-                            <td>{{item.type || '-'}}</td>
+                            <td>{{item.type.title || '-'}}</td>
                           </tr>
                           <tr>
                             <td>وضعیت</td>
@@ -125,7 +120,7 @@
                           <tr>
                             <td>
                               <v-btn color="success"
-                                     :to="`/user/adverts/${item.advertType }s/show/${item.advertableId}`">
+                                     :to="`/user/adverts/${item.type.alias }/show/${item.advertableId}`">
                                 <v-icon class="px-1">navigate_before</v-icon>
                                 مشاهده
                               </v-btn>
@@ -134,7 +129,7 @@
                           <tr>
                             <td>
                               <v-btn color="warning"
-                                     :to="`/user/adverts/${item.advertType}s/edit/${item.advertableId}`">
+                                     :to="`/user/adverts/${item.type.alias}/edit/${item.advertableId}`">
                                 <v-icon class="px-1">edit</v-icon>
                                 ویرایش
                               </v-btn>
@@ -162,7 +157,8 @@
   import Cookie from "js-cookie"
   import noSubscriptionAlert from "~/components/site/noSubscriptionAlert.vue"
 
-  const path = "/user/adverts"
+  const path = "/user/adverts",
+    checkLoginPath = '/user/loggedIn'
 
   export default {
     data() {
@@ -196,7 +192,7 @@
       }, planExpire() {
         return _.get(this.$store.state, 'user.subscription.expireDate', '-')
       }, planExpireAll() {
-        return Helper.dateFormat(_.get(_.last(_.get(this.$store.state, 'user.subscriptions', '-')), 'endDate.date', '-'),'YYYY-M-D H:mm')
+        return Helper.dateFormat(_.get(_.last(_.get(this.$store.state, 'user.subscriptions', '-')), 'endDate.date', '-'), 'YYYY-M-D H:mm')
       }, leftDays() {
         return _.get(this.$store.state, 'user.subscription.left', '0‌') + ' روز'
       }, leftDaysAll() {
@@ -226,7 +222,7 @@
           pushyItem.verified = _.get(item, 'verified', false) ? 'تایید شده' : 'هنوز تایید نشده';
           pushyItem.jCreatedAt = _.get(item, 'jCreatedAt', '-');
           pushyItem.advertType = _.get(item, 'advertableType', _.get(item, 'advert.advertableType', ''));
-          pushyItem.type = Helper.getAdvertType(item);
+          pushyItem.type = Helper.getAdvertType(item, null, true);
 
           final.push(pushyItem)
         })
@@ -244,6 +240,21 @@
     ,
     mounted() {
       this.loader = true
+
+      this.$axios
+        .$get(checkLoginPath)
+        .catch
+        (err => {
+          let {status} = _.get(err, 'response', 0);
+          //console.log({err, status})
+          if (status === 404) {
+            this.$store.commit("snackbar/setSnack", 'متاسفانه نشست شما منقضی شده است. لطفا دوباره وارد شوید.')
+            this.$store.dispatch('user/logout')
+            this.$router.push('/user/auth')
+          }
+        })
+
+
       this.$axios
         .$get(path, {params: {include: 'advertable,city,user.details', number: 5, orderBy: 'priority:desc'}})
         .then(response => {
@@ -259,6 +270,12 @@
       let statistics = '/user/statistics'
       this.$axios.$get(statistics).then(res => {
         this.statistics = _.get(res, 'data', '')
+      })
+
+      this.$axios.$get("/user/subscriptions", {params: {include: 'subscriptionPlan'}}).then(res => {
+        if (_.has(res, 'data')) {
+          this.$store.commit("user/updateUserSubscription", _.get(res, 'data', null))
+        }
       })
 
       let bookmarks = Cookie.get();

@@ -4,8 +4,10 @@
       <v-layout row>
         <v-flex xs12 md12 sm12 lg12>
           <v-card dark color="green darken-1" class="pa-3 font-12">
-            <p class="font-14 text-justify">
-              {{settings('adverts.noticeBeforeCreateAdvert')}}
+            <p class="font-14 text-justify"
+               v-if="settings('adverts.noticeBeforeCreateAdvert')"
+               v-html="settings('adverts.noticeBeforeCreateAdvert')"
+            >
             </p>
           </v-card>
         </v-flex>

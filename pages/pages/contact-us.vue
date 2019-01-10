@@ -16,7 +16,7 @@
               <br>
               <form>
                 <v-text-field
-                  v-validate="'required'"
+                  v-validate="''"
                   v-model="title"
                   :error-messages="errors.collect('title')"
                   box
@@ -26,7 +26,7 @@
                   required
                 />
                 <v-text-field
-                  v-validate="'required'"
+                  v-validate="''"
                   v-model="phoneNumber"
                   :error-messages="errors.collect('phoneNumber')"
                   box
@@ -133,7 +133,7 @@
         this.$validator.validateAll().then(result => {
           if (result) {
             //alert('true')
-            return this.sendForm()
+            this.sendForm()
           } else {
             this.$store.commit('snackbar/setSnack', "برخی فیلد ها مشکل دارند.", "warning")
             this.saveLoading = false
@@ -152,30 +152,30 @@
         };
         this.$axios.$post('/site/contact-us', data)
           .then((res) => {
-            let status = true
-            if (status) {
               // show success and redirect
-              this.toast("با موفقیت ثبت شد.", "success")
               this.saveLoading = false
+              this.$store.commit('snackbar/setSnack', 'با تشکر! پیام شما با موفقیت ارسال شد!')
               //this.$router.push(this.list)
-            } else {
-              this.toast(" خطایی رخ داد.", "warning")
-              this.saveLoading = false
+              setTimeout(() => {
+                this.email = null
+                this.phoneNumber = null
+                this.title = null
+                this.text = null
+              }, 300)
             }
-          })
+          )
           .catch((err) => {
-            //this.toast(_.get(err, 'response.data.error.message', _.get(err, 'response.data.message', 'خطای نامشخص!')), "error")
-            this.toast(_.get(err, 'response.data.error.message', _.get(err, 'response.data.message', 'با تشکر از شما. پیامتان ارسال شد!')), "error")
+            this.toast(_.get(err, 'response.data.error.message', _.get(err, 'response.data.message', 'خطای نامشخص!')), "error")
             this.saveLoading = false
           })
       },
 
       toast(msg, color) {
-        this.$store.commit("snackbar/setSnack", msg, color)
-      }, settings(key, def = '') {
+        this.$store.commit("snackbar/setSnack", msg)
+      },
+      settings(key, def = '') {
         return _.get(this.$store.state.settings.data, key, def)
       },
-
       clear() {
         this.name = ""
         this.email = ""

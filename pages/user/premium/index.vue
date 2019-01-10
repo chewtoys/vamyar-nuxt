@@ -141,12 +141,10 @@
       },
       settings(key) {
         return _.get(this.$store.state.settings.data, key, '')
-      }
-      ,
+      },
       getPrice(val) {
         return Helper.priceFormat(val);
-      }
-      ,
+      },
       getPeriod(val) {
         return val + ' روزه';
       }

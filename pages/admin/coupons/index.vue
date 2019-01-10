@@ -71,7 +71,7 @@
             <td class="text-xs-right">{{ props.item.discount ? (props.item.discount + '%') : '-' }}</td>
             <td class="text-xs-right">{{ props.item.code }}</td>
             <td class="text-xs-right">
-              <span v-if="props.item.usserId">
+              <span v-if="props.item.userId">
               <p>شناسه:
                 <nuxt-link :to="`/admin/users/edit/${props.item.userId}`">{{ props.item.userId }}</nuxt-link>
               </p>

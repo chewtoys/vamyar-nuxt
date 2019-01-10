@@ -24,6 +24,8 @@ export default function ({$axios, store, isClient, redirect, route}) {
   });
   $axios.onError(err => {
     let {status} = _.get(err, 'response', 0);
+    let color = 'info'
+    if (status < 400) color = 'success'
     let type = _.get(err, 'config.method', {err});
 
 
@@ -49,19 +51,19 @@ export default function ({$axios, store, isClient, redirect, route}) {
           msgsArray.push(val);
         })
       }
-      console.log({type, status})
+      //console.log({type, status})
       if (status === 404 && type === 'get') {
         //store.commit('snackbar/setSnack', _.join(msgsArray, ' \n '))
       }
       else {
         if (_.isPlainObject(msgs)) {
-          store.commit('snackbar/setSnack', _.join(msgsArray, ' \n '))
+          store.commit('snackbar/setSnack', _.join(msgsArray, ' \n '), color)
         }
 
         else if (_.isArray(msgs)) {
-          store.commit('snackbar/setSnack', _.join(msgs, ', '))
+          store.commit('snackbar/setSnack', _.join(msgs, ', '), color)
         } else {
-          store.commit('snackbar/setSnack', _.get(err, 'response.data.error.message.mobile', msgs))
+          store.commit('snackbar/setSnack', _.get(err, 'response.data.error.message.mobile', msgs), color)
         }
       }
     } else {

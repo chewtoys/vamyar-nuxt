@@ -820,6 +820,7 @@
         this.$axios.$delete(deletePath).then(() => {
           this.$store.commit('snackbar/setSnack', 'با موفقیت حذف شد', 'success')
           this.selected = [];
+          this.initialize()
           this.tableLoader = false;
         }).catch((err) => {
           this.tableLoader = false;

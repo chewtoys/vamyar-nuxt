@@ -150,7 +150,7 @@
         </v-layout>
       </v-card-text>
     </v-card>
-    <v-card  class="my-1">
+    <v-card class="my-1">
       <v-card-title>
         <v-subheader>
           دسترسی سریع
@@ -176,7 +176,7 @@
         </v-layout>
       </v-card-text>
     </v-card>
-    <v-card  class="my-1">
+    <v-card class="my-1">
       <v-card-title>
         <v-subheader>
           آخرین آگهی های ثبت شده
@@ -188,7 +188,9 @@
             v-for="(item,i) in adverts"
             :key="i"
           >
-            <div slot="header" class="text-right">{{item.title || '-' }} <small color="red">{{item.instant}}</small></div>
+            <div slot="header" class="text-right">{{item.title || '-' }}
+              <small color="red">{{item.instant}}</small>
+            </div>
             <v-card>
               <v-card-text class="grey lighten-4 text-right">
                 <v-layout row wrap>
@@ -321,7 +323,8 @@
     cityMethod = '/cities?number=3000',
     guaranteeMethod = '/guaranteeTypes',
     loanTypeMethod = '/loanTypes',
-    ticketCategoriesMethod = '/ticketCategories'
+    ticketCategoriesMethod = '/ticketCategories',
+    checkLoginPath = '/admin/loggedIn'
 
   export default {
     data() {
@@ -465,6 +468,18 @@
           this.$store.commit("snackbar/setSnack", err.message)
           this.rawData = [];
           this.loader = false
+        })
+
+      this.$axios
+        .$get(checkLoginPath)
+        .catch
+        (err => {
+          let {status} = _.get(err, 'response', 0);
+          if (status === 404) {
+            this.$store.commit("snackbar/setSnack", 'متاسفانه نشست شما منقضی شده است. لطفا دوباره وارد شوید.')
+            this.$store.dispatch('admin/logout')
+            this.$router.push('/admin/auth')
+          }
         })
 
       let statistics = '/admin/statistics'
