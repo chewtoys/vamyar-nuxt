@@ -94,7 +94,6 @@
           }
         }
 
-
         this.$axios.$get('site/adverts', query)
           .then(res => {
             //console.log(res.data)
@@ -107,7 +106,7 @@
             })
           })
           .catch(err => {
-            console.log(err)
+            //console.log(err)
           })
           .finally(() => (this.isLoading = false))
 
@@ -117,12 +116,12 @@
             _.forEach(res.data, (item, x) => {
               if (x < 10) {
                 let link = `/posts/show/${item.slug}`
-                this.items.push({name: `${item.title} ('مطالب')`, id: item.id, link})
+                this.items.push({name: `${item.title}`, id: item.id, link})
               }
             })
           })
           .catch(err => {
-            console.log(err)
+            //console.log(err)
           })
           .finally(() => (this.isLoading = false))
       }
