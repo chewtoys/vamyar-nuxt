@@ -162,7 +162,7 @@
           code: this.code,
           discount: this.discount,
           userId: this.userId,
-          oneTimeUsable: this.oneTimeUsable ? 1 : 0,
+          oneTimeUsable: this.oneTimeUsable ,
           expireDate: this.expireDate,
         }
 

@@ -88,7 +88,8 @@ export default {
   },
 
   build: {
-
+    //cache: true,
+    //parallel: true,
     plugins: [
       new webpack.ProvidePlugin({
         '_': 'lodash',

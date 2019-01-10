@@ -207,6 +207,7 @@
                     <p>پیام: <b v-html="nl2br(item.message)"></b></p>
                     <p>تاریخ ارسال: <b v-html="(item.jCreatedAt)"></b></p>
                     <p>نوع: <b v-html="(item.type)"></b></p>
+                    <p>وضعیت: <b v-html="(item.seen ? 'دیده شده' :'در انتظار')"></b></p>
                   </td>
                 </tr>
                 </tbody>
@@ -337,7 +338,7 @@
           //console.log(err);
         })
         let methodNotif = this.uriNotif;
-        let queryNotif = {}
+        let queryNotif = {orderBy: 'id:desc'}
         this.$axios.$get(methodNotif, {params: queryNotif}).then(res => {
           this.userNotifications = _.get(res, 'data', []);
         }).catch(err => {

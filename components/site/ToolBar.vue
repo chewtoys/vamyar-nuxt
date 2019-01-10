@@ -46,13 +46,12 @@
       <v-spacer key="t7"/>
       <v-toolbar-side-icon key="t4" v-if="isMobile" white--text @click.stop="drawer = !drawer"/>
       <v-toolbar-items key="t9" v-if="!showQuickAccess" class="hidden-sm-and-down">
-        <v-btn flat to="/user/adverts/loans/create" class="deep-orange--text font-14">ثبت رایگان آگهی</v-btn>
+        <v-btn flat to="/user" class="deep-orange--text font-14">ثبت رایگان آگهی</v-btn>
       </v-toolbar-items>
 
     </v-toolbar>
 
     <v-navigation-drawer
-
       v-if="isMobile"
       :disable-route-watcher="false"
       v-model="drawer"

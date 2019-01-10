@@ -44,7 +44,7 @@
           :hide-actions="hideActions"
           :pagination.sync="pagination"
           :total-items="totalItems"
-          :rows-per-page-items="[10,25,100]"
+          :rows-per-page-items="[5,10,25,100]"
           no-results-text="هیچ موردی ثبت نشده است."
           class="elevation-1"
         >
@@ -155,7 +155,6 @@
       this.pagination = {
         sortBy: 'id',
         descending: true,
-        rowsPerPage: 25,
       }
     },
     watch: {

@@ -421,7 +421,7 @@
       list: [],
       totalData: 1,
       pagination: {}, //pagination is for vuetify - paginator is for API
-      paginator: {totalPages: 1, totalCount: 100}, //pagination is for vuetify - paginator is for API
+      paginator: {totalPages: 1, totalCount: 0}, //pagination is for vuetify - paginator is for API
       selected: [],
       pages: 1,
       page: 1,

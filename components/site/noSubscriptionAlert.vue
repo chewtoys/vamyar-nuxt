@@ -1,5 +1,5 @@
 <template>
-  <v-alert v-if="showPremium" :value="!!msg" type="success">
+  <v-alert v-if="showPremium" :value="!!msg" type="success" >
     <span class="p-b--2">{{msg}}</span>
     <v-spacer/>
     <v-btn color="warning" :to="premiumLink">

@@ -25,8 +25,11 @@ export default function ({$axios, store, isClient, redirect, route}) {
   $axios.onError(err => {
     let {status} = _.get(err, 'response', 0);
     let color = 'info'
+    let exceptions = ['/coupons']
     if (status < 400) color = 'success'
-    let type = _.get(err, 'config.method', {err});
+    let type = _.get(err, 'config.method', '');
+    let path = _.get(err, 'config.url', '');
+    //console.log({path})
 
 
     if (status === 401) {
@@ -53,7 +56,8 @@ export default function ({$axios, store, isClient, redirect, route}) {
       }
       //console.log({type, status})
       if (status === 404 && type === 'get') {
-        //store.commit('snackbar/setSnack', _.join(msgsArray, ' \n '))
+        //console.log(_.includes(path,exceptions),{exceptions, path})
+        if (_.includes(path, exception)) store.commit('snackbar/setSnack', _.join(msgsArray, ' \n '))
       }
       else {
         if (_.isPlainObject(msgs)) {

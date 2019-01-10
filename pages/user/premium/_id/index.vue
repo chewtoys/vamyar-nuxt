@@ -71,7 +71,7 @@
                     <small>مبلغ قابل پرداخت</small>
                   </td>
                   <td><strong
-                    class="green--text">{{getPrice((getData(data, 'price', '0') - discount/100*getData(data, 'price', '0')) > 0 ? (getData(data, 'price', '0') - discount/100*getData(data, 'price', '0')) : 0)}}</strong>
+                    class="green--text">{{getPrice((getData(data, 'price', '0') - discount / 100 * getData(data, 'price', '0')) > 0 ? (getData(data, 'price', '0') - discount / 100 * getData(data, 'price', '0')) : 0)}}</strong>
                   </td>
                 </tr>
                 </tbody>
@@ -108,6 +108,7 @@
     },
     data() {
       return {
+        hintError: '',
         loader: false,
         info,
         id: '',
@@ -122,7 +123,6 @@
       couponHint() {
         if (!this.coupon) return 'کد تخفیف را وارد کنید'
         if (this.discount > 1) return Helper.priceFormat(this.discount);
-        return 'کد معتبر نمی باشد'
       },
       getSecret() {
         let path = _.get(this.$route, 'query.redirect', '');
@@ -147,6 +147,7 @@
     },
     methods: {
       checkCode() {
+        this.hintError = ''
         let code = this.coupon;
         let method = `/coupons/${code}`
         this.couponLoading = true;
@@ -156,6 +157,7 @@
         }).catch(err => {
           this.discount = 0;
           this.getForm();
+          let msg = _.get(err, 'error.message', 'کد معتبر نمی باشد')
         }).finally(() => {
           this.couponLoading = false;
         })

@@ -74,6 +74,7 @@
             <td class="text-xs-right">
               <nuxt-link :to="`/admin/users/edit/${props.item.userId}`">{{ props.item.userId }}</nuxt-link>
             </td>
+            <td class="text-xs-right">{{ props.item.seen ? 'مشاهده شده' : 'در انتظار دیده شدن' }}</td>
             <td class="text-xs-right">{{ props.item.type }}</td>
             <td class="text-xs-left">
               <v-icon
@@ -107,6 +108,7 @@
       {text: 'عنوان', value: 'title', align: 'right'},
       {text: 'پیام', value: 'message', align: 'right'},
       {text: 'کاربر', value: 'userId', align: 'right'},
+      {text: 'وضعیت', value: 'seen', align: 'right'},
       {text: 'نوع پیام', value: 'type', align: 'right'},
       {text: 'عملیات', sortable: false, align: 'left', width: '140px'},
     ]

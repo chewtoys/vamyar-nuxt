@@ -22,7 +22,7 @@
       <v-toolbar-title class="deep-purple--text " slot="activator">
         <v-badge color="red">
         <span slot="badge">{{notifToread}}</span>
-        <v-icon :class="`px-1 font-19 mb-2 ` + (notifToread > 1 ? `red--text` : `deep-purple--text`) ">mail</v-icon>
+        <v-icon :class="`px-1 font-19 mb-2 ` + (notifToread > 0 ? `red--text` : `deep-purple--text`) ">mail</v-icon>
         </v-badge>
       </v-toolbar-title>
       <v-list class="farsi">
@@ -95,7 +95,7 @@
         return this.$vuetify.breakpoint.smAndDown
       },
       notifToread() {
-        return _.get(this, 'notifications', []).length || 0;
+        return (_.find(_.get(this, 'notifications', []), {seen: false}) || []).length || 0;
       },
       drawer: function () {
         return this.$store.state.navigation.drawer
@@ -121,15 +121,22 @@
         if (!id) return null
         let method = `/user/notifications/${id}/seen`
         this.$axios.$put(method).then(res => {
-          this.notifications = _.get(res, 'data', [])
+          //this.notifications = _.get(res, 'data', [])
           this.loadNotifs();
         })
       },
       loadNotifs() {
         let method = '/user/notifications'
-        this.$axios.$get(method).then(res => {
-          this.notifications = _.get(res, 'data', [])
+        let query = {must: "seen!=true"}
+        this.$axios.$get(method, {params: query}).then(res => {
+          let data = _.find(_.get(res, 'data', []), {seen: false});
+          if (data.length > 0) this.notifications = data
+        }).catch(err => {
+          this.notifications = [{id: 0, message: 'بدون پیام'}]
         })
+        setTimeout(() => {
+          this.loadNotifs()
+        }, 25000)
       },
       toggleDrawer: function () {
         this.$store.commit('navigation/setDrawer', !this.drawer);

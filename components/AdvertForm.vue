@@ -13,7 +13,25 @@
         </v-flex>
       </v-layout>
     </v-card>
-    <v-card color="white" raised light class="mt-5 py-5 px-4">
+    <v-card v-if="!hasAccess" color="white" raised light class="mt-5 py-5 px-4">
+      <v-layout row wrap>
+        <v-flex xs12>
+          <div>
+            <v-alert :value="true" color="info" icon="account_circle" class="text-center">
+              <p> ثبت آگهی در این دسته بندی فقط مختص مشترکین وامیار می باشد</p>
+              <p>پس از فعالسازی اشتراک به همین جا باز می گردید</p>
+              <div>
+                <v-btn color="warning" :to="paylink">
+                  <v-icon class="px-1">flight_takeoff</v-icon>
+                  خرید سریع اشتراک
+                </v-btn>
+              </div>
+            </v-alert>
+          </div>
+        </v-flex>
+      </v-layout>
+    </v-card>
+    <v-card v-if="hasAccess" color="white" raised light class="mt-5 py-5 px-4">
       <v-layout row wrap>
         <v-flex xs12>
           <div>
@@ -255,6 +273,7 @@
     props: ['formType', 'id', 'panel', 'action', 'data'],
     data: () => ({
       slug: '',
+      hasAccess: true,
       // advert
       title: null,
       city: null,
@@ -407,6 +426,9 @@
       link() {
         if (this.isEdit) return `/${this.panel}/adverts/${this.slug}/${this.action}/${this.id}`
         return `/${this.panel}/adverts/${this.slug}/${this.action}`
+      },
+      paylink() {
+        return `/user/premium?redirect=${this.link}`
       }
     },
     mounted() {
@@ -414,16 +436,15 @@
       this.$validator.localize("fa", this.dictionary)
       let mobile = _.get(this.$store, 'state.user.info.mobile');
 
-
       // check if user has no access to create advert
       //let hasAccess = this.$store.state.accesses.loans ;
       let isPremium = Helper.isPremiumType(this.formType.type);
       if (!this.isAdmin && !this.isEdit) {
         _.set(this, 'mobile', mobile);
-        let hasAccess = _.get(this.$store.state, 'user.hasSubscription', false);
-        if (isPremium && !hasAccess) {
+        this.hasAccess = _.get(this.$store.state, 'user.hasSubscription', false);
+        if (isPremium && !this.hasAccess) {
           this.$store.commit('snackbar/setSnack', 'متاسفانه شما دسترسی لازم برای ثبت این آگهی را ندارید.', 'warning');
-          this.$router.push(`/user/premium?redirect=${this.link}`);
+          //this.$router.push(`/user/premium?redirect=${this.link}`);
         }
       }
       try {
