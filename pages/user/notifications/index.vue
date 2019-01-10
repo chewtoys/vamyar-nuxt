@@ -4,7 +4,10 @@
       <v-card-title>
       </v-card-title>
       <v-card-text>
-        <v-timeline>
+        <v-alert :value="true" v-if="!notifications.length" color="info">
+          <p>هیچ اعلانیه های ندارید</p>
+        </v-alert>
+        <v-timeline v-else>
           <v-timeline-item
             v-for="(item,i) in notifications"
             :key="i"
