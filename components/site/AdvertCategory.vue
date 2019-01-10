@@ -206,6 +206,7 @@
         //console.log(filter);
         let typeName = _.get(filter, 'advertTypeName', 'adverts');
         _.set(this, 'advertTypeName', typeName);
+
         let computedFilter = Helper.getComputedFilter(filter);
         _.set(this, 'commonComputedFilters', computedFilter);
         this.loadAgain();

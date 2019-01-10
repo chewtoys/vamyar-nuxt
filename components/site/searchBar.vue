@@ -4,10 +4,7 @@
     :items="items"
     :loading="isLoading"
     :search-input.sync="search"
-    chips
     clearable
-    hide-details
-    hide-selected
     flat
     :dark="isDark"
     :color="getColor"

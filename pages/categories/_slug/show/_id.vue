@@ -18,7 +18,7 @@
           </v-card-title>
           <div>
             <v-divider/>
-            <span>
+            <span v-if="false">
               <v-chip v-if="getProperty(item, 'advert.user.details.lastName', false)" outline label class="black--text">
                 <v-icon right>verified_user</v-icon>
                 <span>ثبت شده توسط
@@ -28,20 +28,21 @@
             </span>
             <span class="left">
               <v-chip v-if="isInstant" label color="red" text-color="white">
+                <v-icon left class=" white--text">label</v-icon>
                 <span calss="white--text">فوری</span>
-                <v-icon left class="px-2 white--text">label</v-icon>
               </v-chip>
               <v-chip v-if="getProperty(item, 'advert.verified',false)" label color="green" text-color="white">
+                <v-icon left class=" white--text">security</v-icon>
                 <span calss="white--text">بررسی شده</span>
-                <v-icon left class="px-2 white--text">security</v-icon>
               </v-chip>
-              <v-chip v-if="hasSubscription && getProperty(item, 'advert.tradeStatus',0)===1" label color="cyan" text-color="white">
+              <v-chip v-if="hasSubscription && getProperty(item, 'advert.tradeStatus',0)===1" label color="cyan"
+                      text-color="white">
+                <v-icon left class=" white--text">phone_in_talk</v-icon>
                 <span calss="white--text">در حال معامله</span>
-                <v-icon left class="px-2 white--text">phone_in_talk</v-icon>
               </v-chip>
               <v-chip v-if="getProperty(item, 'advert.transferable',0)===1" label color="yellow" text-color="white">
+                <v-icon left class=" white--text">location_on</v-icon>
                 <span calss="white--text">قابل انتقال به سایر شهرها</span>
-                <v-icon left class="px-2 white--text">location_on</v-icon>
               </v-chip>
             </span>
           </div>
@@ -56,7 +57,7 @@
                     </span>
                     <div class="full text-justify py-3">
                       <h3>توجه داشته باشید:</h3>
-                      <v-alert type="info" :value="settings('adverts.noticeOnAdvertShow')!==''">
+                      <v-alert color="info" :value="settings('adverts.noticeOnAdvertShow')!==''">
                         <div class="pa-1 pt-4 font-13" v-html=" settings('adverts.noticeOnAdvertShow') "></div>
                       </v-alert>
                     </div>
@@ -174,11 +175,11 @@
                             <v-icon class="pb-1 pl-1">edit</v-icon>
                             توضیحات
                           </small>
-                          <p class="py-2 px-3" v-html="text"></p>
+                          <p class="py-2 px-1" v-html="text"></p>
                         </div>
                         <v-divider/>
                       </template>
-                      <div class="pa-2 mx-1">
+                      <div class="">
                         <v-icon class="pb-1 pl-1 pt-2">contact_phone</v-icon>
                         <span><small class="font-14 pt-2">شماره موبایل</small>
                           <v-alert :value="true"
@@ -204,7 +205,7 @@
           <v-container grid-list-xs>
             <v-layout row wrap>
               <v-flex xs12>
-          <span class="right pa-3">
+          <span class="right">
             <v-icon class="pl-1 pb-1 green--text">pageview</v-icon>
             <span>لطفا قبل از اقدام <nuxt-link class="red--text" to="/pages/rules">قوانین سایت</nuxt-link> را مطالعه فرمایید.</span>
           </span>

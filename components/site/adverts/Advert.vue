@@ -1,5 +1,9 @@
 <template>
   <v-card :to="getLink(item)" height="100%" hover raised ripple>
+    <card-action>
+      <v-spacer></v-spacer>
+      <v-chip v-if="which==='adverts'">{{ itemType(item) }}</v-chip>
+    </card-action>
     <v-card-text>
       <v-layout row wrap>
         <v-flex v-if="!!settings('adverts.isImageAllowed') && !!item.image" xs12 md3>
@@ -48,7 +52,7 @@
               <td width="30%">
                 <small>{{getTitle('price')}}</small>
               </td>
-              <td><b class="">{{ price(show(item, 'advertable.price', 'price', 'ثبت نشده')) }}</b></td>
+              <td v-if="false"><b class="">{{ price(show(item, 'advertable.price', 'price', 'ثبت نشده')) }}</b></td>
             </tr>
             <tr class="hide trrow">
               <td>
@@ -101,7 +105,8 @@
         <span>قابل انتقال به سایر شهرها</span>
       </v-tooltip>
       <v-tooltip top>
-        <v-btn v-if="hasSubscription && tradeStatus===1" slot="activator" class="mx-1" icon round color="cyan" text-color="white">
+        <v-btn v-if="hasSubscription && tradeStatus===1" slot="activator" class="mx-1" icon round color="cyan"
+               text-color="white">
           <v-icon class="white--text">phone_in_talk</v-icon>
         </v-btn>
         <span>در حال معامله</span>
@@ -112,7 +117,7 @@
         </v-btn>
         <span>بررسی شده</span>
       </v-tooltip>
-      <v-chip v-if="which==='adverts'">{{ itemType(item) }}</v-chip>
+
     </v-card-actions>
   </v-card>
 </template>

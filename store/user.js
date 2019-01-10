@@ -39,6 +39,19 @@ export const mutations = {
   },
   updateToken(state, data) {
     state.auth = data
+  },
+  resetUser(state, data) {
+    state.subscription = {
+      period: 0,
+      left: 0,
+      endDate: '',
+      expireDate: '',
+      title: null,
+    }
+    state.hasSubscription = false
+    state.subscriptions = []
+    state.info = null
+    state.auth = null
   }
 }
 
@@ -46,6 +59,7 @@ export const actions = {
   logout: function ({commit}) {
     if (Cookie) Cookie.remove('auth');
     commit("updateToken", null)
+    commit("resetUser", null)
   },
   updateAuth: function ({req, commit}) {
     let accessToken = null

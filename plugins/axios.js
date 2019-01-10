@@ -1,6 +1,6 @@
 export default function ({$axios, store, isClient, redirect, route}) {
   // Authorization
-  if (store.state.admin.auth) {
+  if (store.state.admin.auth && _.includes(route.path, 'admin')) {
     let accessToken = store.state.admin.auth;
     $axios.setHeader("Authorization", `Bearer ${accessToken}`)
   } else if (store.state.user.auth) {
