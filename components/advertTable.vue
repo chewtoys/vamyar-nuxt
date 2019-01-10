@@ -215,12 +215,12 @@
           v-model="selected"
           item-key="id"
           select-all
-
           :headers="headers"
           :loading="tableLoader"
           :items="list"
+          :total-items="totalItems"
+          :pagination.sync="pagination"
           :disable-initial-sort="true"
-          :pagination.sync="paginationSyncer"
           no-results-text="هیچ موردی ثبت نشده است."
           :rows-per-page-items="[10,25,100]"
           class="elevation-1"
@@ -480,20 +480,12 @@
       }
     },
     watch: {
-      paginationSyncer(inp) {
-        //console.log(inp)
-        let reload = false;
-        let list = ['sortBy', 'rowsPerPage', 'descending', 'totalItems'];
-        _.forEach(list, (name) => {
-          let newValue = _.get(inp, name, null);
-          let oldValue = _.get(this.pagination, name, null);
-          if (newValue !== oldValue) {
-            _.set(this.pagination, name, newValue);
-            //console.log(this.pagination, {name, oldValue, newValue})
-            reload = true;
-          }
-        })
-        if (reload) this.switchPage()
+      type: {
+        handler() {
+          //alert('type change!')
+          this.switchPage();
+        },
+        deep: true
       },
       search(val) {
         this.switchPage();

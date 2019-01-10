@@ -32,7 +32,6 @@
               label="چیزی بنویسید"
               single-line
               hide-details
-              @change="init"
             ></v-text-field>
           </div>
         </v-card-title>
@@ -41,13 +40,12 @@
           v-model="selected"
           item-key="id"
           select-all
-          hide-actions
           :headers="headers"
           :items="data"
           :loading="loading"
-          :search="search"
-
-          :total-items="totalData"
+          :hide-actions="hideActions"
+          :pagination.sync="pagination"
+          :total-items="totalItems"
           :rows-per-page-items="[5,10,25,100]"
           no-results-text="هیچ موردی ثبت نشده است."
           class="elevation-1"
@@ -87,9 +85,7 @@
               </v-icon>
             </td>
           </template>
-          <v-alert slot="no-results" :value="true" color="error" icon="warning">
-            نتیجه ای برای "{{ search }}" یافت نشد.
-          </v-alert>
+
         </v-data-table>
         <div class="text-xs-center pt-2">
           <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
@@ -131,6 +127,12 @@
       search: '',
     }),
     computed: {
+      totalItems() {
+        return _.get(this, 'paginator.totalCount', 1000000) || 1000000;
+      },
+      hideActions() {
+        return this.totalItems < 1 || this.totalItems >= 1000000;
+      },
       pages() {
         return _.get(this.paginator, 'totalPages', 1)
       },
@@ -149,15 +151,18 @@
       }
     },
     watch: {
+      search(val) {
+        this.initPage()
+      },
       pagination: {
         handler() {
-          this.init()
+          this.initPage()
         },
         deep: true
       },
     },
     methods: {
-      init() {
+      initPage() {
 
         this.loading = true;
         let method = fetchMethod;

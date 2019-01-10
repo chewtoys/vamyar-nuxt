@@ -23,7 +23,7 @@
           </v-btn>
         </v-toolbar>
         <v-card-title>
-          <div v-if="false">
+          <div>
             جست‌و‌جو
             <v-spacer></v-spacer>
             <v-text-field
@@ -43,12 +43,9 @@
           :headers="headers"
           :items="data"
           :loading="loading"
-          :search="search"
-
-          :total-items="1000000"
+          :hide-actions="hideActions"
           :pagination.sync="pagination"
-          hide-actions
-
+          :total-items="totalItems"
           :rows-per-page-items="[10,25,100]"
           no-results-text="هیچ موردی ثبت نشده است."
           class="elevation-1"
@@ -97,9 +94,7 @@
               </v-icon>
             </td>
           </template>
-          <v-alert slot="no-results" :value="true" color="error" icon="warning">
-            نتیجه ای برای "{{ search }}" یافت نشد.
-          </v-alert>
+
         </v-data-table>
         <div class="text-xs-center pt-2">
           <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
@@ -141,6 +136,12 @@
       search: '',
     }),
     computed: {
+      totalItems() {
+        return _.get(this, 'paginator.totalCount', 1000000) || 1000000;
+      },
+      hideActions() {
+        return this.totalItems < 1 || this.totalItems >= 1000000;
+      },
       pages() {
         return _.get(this.paginator, 'totalPages', 1)
       },
@@ -159,38 +160,48 @@
       }
     },
     watch: {
+      search(val) {
+        this.initPage()
+      },
       pagination: {
         handler() {
-          this.loading = true;
-          let method = fetchMethod;
-          let {sortBy, descending, page, rowsPerPage} = this.pagination;
-          let query = {
-            page,
-            orderBy: `${sortBy || 'id'}:${descending ? 'desc' : 'asc'}`,
-            number: rowsPerPage,
-            include: 'categories'
-          }
-          //console.log({method, query, paginator: this.paginator}, {sortBy, descending, page, rowsPerPage});
-          this.$axios.$get(method, {
-            params: query
-          }).then((response) => {
-            this.paginator = _.get(response, 'paginator', {})
-            this.data = _.get(response, 'data', [])
-            this.totalData = _.get(response, 'paginator.totalCount', 0)
-            //  console.log('on response: ', this.totalData, this.paginator, this.data, {response})
-          }).catch((error) => {
-            this.paginator = {}
-            this.data = []
-            this.totalData = 0
-            //console.log(error, method, query, this.paginator);
-          }).then(() => {
-            this.loading = false;
-          })
+          this.initPage()
         },
         deep: true
       },
     },
     methods: {
+      initPage() {
+        this.loading = true;
+        let method = fetchMethod;
+        let {sortBy, descending, page, rowsPerPage} = this.pagination;
+        let filter = null;
+        if (this.search) filter = `title=${this.search},title=${this.text},id=${this.text},id=${this.slug}`
+        let query = {
+          page,
+          filter,
+          orderBy: `${sortBy || 'id'}:${descending ? 'desc' : 'asc'}`,
+          number: rowsPerPage,
+          include: 'categories'
+        }
+        //console.log({method, query, paginator: this.paginator}, {sortBy, descending, page, rowsPerPage});
+        this.$axios.$get(method, {
+          params: query
+        }).then((response) => {
+          this.paginator = _.get(response, 'paginator', {})
+          this.data = _.get(response, 'data', [])
+          this.totalData = _.get(response, 'paginator.totalCount', 0)
+          //  console.log('on response: ', this.totalData, this.paginator, this.data, {response})
+        }).catch((error) => {
+          this.paginator = {}
+          this.data = []
+          this.totalData = 0
+          //console.log(error, method, query, this.paginator);
+        }).then(() => {
+          this.loading = false;
+        })
+
+      },
       getCategories(item) {
         let cats = item.categories || [];
         let names = []

@@ -225,7 +225,7 @@ const Helper = {
       return value ? (value + ' سال') : 'توافقی'
     } else if (name === 'bank') {
       return (value || '')
-    } else if (name === 'loanType' || name === 'loanTypes') {
+    } else if (name === 'loanType') {
       if (_.has(value, 'name')) return value.name;
       let items = [];
       _.forEach(value, (item) => {
@@ -242,7 +242,7 @@ const Helper = {
       let item = _.get(list, [index], {});
       //console.log({list, value})
       return _.get(item, 'name', '');
-    } else if (name === 'guaranteeTypes' || name === 'guaranteeType') {
+    } else if (name === 'guaranteeTypes') {
       let items = [];
       _.forEach(value, (item) => {
         items.push(item.name)
@@ -251,7 +251,7 @@ const Helper = {
     }
   },
   limitStr(text = "", limit = 30, end = " ...") {
-    if (text) return text.slice(0, limit) + end
+    if (_.isString(text)) return text.slice(0, limit) + end
     return text
   }
   ,

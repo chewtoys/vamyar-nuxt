@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <v-card color="white" raised light class="mt-5 py-5 px-4">
       <div>
         <v-toolbar flat color="white">
@@ -15,7 +14,6 @@
             >delete
             </v-icon>
             حذف انتخاب شده ها
-
           </v-btn>
           <v-btn :to="uri+`/create`" color="green" outline light round class="mb-2">
             <v-icon class="mx-1" small>create</v-icon>

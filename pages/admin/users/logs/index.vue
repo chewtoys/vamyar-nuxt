@@ -36,12 +36,12 @@
           v-model="selected"
           item-key="id"
           select-all
-          hide-actions
           :headers="headers"
           :items="data"
           :loading="loading"
-          :search="search"
-          :total-items="totalData"
+          :disable-initial-sort="true"
+          :pagination.sync="pagination"
+          :total-items="totalItems"
           :rows-per-page-items="[5,10,25,100]"
           no-results-text="هیچ موردی ثبت نشده است."
           class="elevation-1"
@@ -109,9 +109,6 @@
               </nuxt-link>
             </td>
           </template>
-          <v-alert slot="no-results" :value="true" color="info" icon="warning">
-            نتیجه ای برای "{{ search }}" یافت نشد.
-          </v-alert>
         </v-data-table>
         <div class="text-xs-center pt-2">
           <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
@@ -149,7 +146,7 @@
         totalData: 10,
         loading: true,
         pagination: {page: 1}, //pagination is for vuetify - paginator is for API
-        paginator: {totalPages: 1}, //pagination is for vuetify - paginator is for API
+        paginator: {totalPages: 1, totalCount: 100}, //pagination is for vuetify - paginator is for API
         page_title,
         selected: [],
         search: '',
@@ -157,6 +154,12 @@
     }
     ,
     computed: {
+      totalItems() {
+        return _.get(this, 'paginator.totalCount', 0) || 0;
+      },
+      hideActions() {
+        return this.totalItems < 20 || this.totalItems > 1000000;
+      },
       pages() {
         return _.get(this.paginator, 'totalPages', 1)
       }

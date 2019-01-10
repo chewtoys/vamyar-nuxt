@@ -30,7 +30,7 @@
         <v-flex xs12 md12 sm12 lg12>
           <table id="showAdvert">
             <tr v-for="item in properties">
-              <td>{{item.title}}</td>
+              <td v-if="item.name!=='description' && item.name!=='adminId'  ">{{item.title}}</td>
               <td v-if="item.name==='image' && item.value">
                 <v-img :to="item.value" :src="item.value" max-width="400px"/>
               </td>
@@ -118,20 +118,6 @@
       store.commit("navigation/setTitle", page_title);
 
       try {
-
-        // city
-        let cityData = await $axios.$get(cityMethod);
-        store.commit('city/setAndProcessData', cityData.data || []);
-
-        // guarantee
-        let guaranteeData = await $axios.$get(guaranteeMethod);
-        store.commit('guaranteeType/setAndProcessData', guaranteeData.data || []);
-
-        // loan types
-        let loanTypeData = await $axios.$get(loanTypeMethod);
-        store.commit('loanType/setAndProcessData', loanTypeData.data || []);
-
-
         return {
           page_title,
           formType,
@@ -153,7 +139,7 @@
       initialLoading() {
         let getPath = `/user/${this.formType.type}/${this.id}`;
         let query = {
-          include: 'advert.user.details,guaranteeTypes,guaranteeType,advert.city,loanType,loanTypes'
+          include: 'advert.user.details,guaranteeTypes,advert.city,loanType'
         }
         this.$axios.$get(getPath, {params: query}).then(result => {
           _.set(this, 'data', _.get(result, 'data', []))

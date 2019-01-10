@@ -38,10 +38,10 @@
           :headers="headers"
           :items="data"
           :loading="loading"
-          :search="search"
-          hide-actions
-          :total-items="totalData"
-          :rows-per-page-items="[5,10,25,100]"
+          :pagination.sync="pagination"
+          :hide-actions="hideActions"
+          :total-items="totalItems"
+          :rows-per-page-items="[10,25,100]"
           no-results-text="هیچ موردی ثبت نشده است."
           class="elevation-1"
         >
@@ -68,7 +68,8 @@
             <td class="text-xs-right">{{ props.item.email || '-' }}</td>
             <td class="text-xs-right">{{ props.item.phoneNumber || '-' }}</td>
             <td class="text-xs-right">
-              <v-btn @click="showDialog(props.item)">مشاهده متن</v-btn>
+              <p v-html="shorten(props.item.text)"></p>
+              <v-btn @click="showDialog(props.item)">مشاهده پیام کامل</v-btn>
             </td>
 
             <td class="text-xs-left">
@@ -138,6 +139,12 @@
       search: '',
     }),
     computed: {
+      totalItems() {
+        return _.get(this, 'paginator.totalCount', 0) || 0;
+      },
+      hideActions() {
+        return this.totalItems < 1 || this.totalItems >= 1000000;
+      },
       pages() {
         return _.get(this.paginator, 'totalPages', 1)
       },
@@ -172,7 +179,7 @@
           }).then((response) => {
             this.paginator = _.get(response, 'paginator', {})
             this.data = _.get(response, 'data', [])
-            this.totalData = _.get(response, 'paginator.totalCount', 0)
+            this.totalData = _.get(response, 'paginator.totalCount', 1000000)
             //  console.log('on response: ', this.totalData, this.paginator, this.data, {response})
           }).catch((err) => {
             //console.log(error, method, query, this.paginator);
@@ -184,6 +191,10 @@
       },
     },
     methods: {
+
+      shorten(text = '', limit = 50) {
+        return Helper.limitStr(text, limit);
+      },
       showDialog(item) {
         this.text = Helper.nl2br(item.text);
         this.title = item.title;
