@@ -35,7 +35,7 @@
               label="عنوان"
             />
             <v-text-field
-              v-validate="'required'"
+              v-validate="''"
               v-model="slug"
               :error-messages="errors.collect('slug')"
               box
@@ -144,7 +144,7 @@
           get() {
             //return this.date;
             let jalali = this.date;
-            let gregorian = moment(jalali, 'jYYYY/jM/jD HH:mm').format('YYYY/M/D HH:mm:ss');
+            let gregorian = moment(jalali, 'jYYYY/jM/jD HH:mm').format('YYYY-M-D HH:mm:ss');
             return gregorian;
           },
           set(val) {

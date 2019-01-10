@@ -23,7 +23,7 @@
                   </div>
                 </v-card-title>
                 <v-card-text>
-                  <div v-html="text"></div>
+                  <div class="postContentScope" v-html="text"></div>
                 </v-card-text>
                 <v-divider/>
                 <v-card-actions class="ltr">
@@ -86,7 +86,7 @@
         return _.join(_.map(cats, 'name'), ', ')
       },
       src() {
-        return _.get(this, 'item.image', false)
+        return _.get(this, 'item.image', false) || false
       }
     },
     mounted() {

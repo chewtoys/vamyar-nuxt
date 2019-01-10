@@ -412,13 +412,12 @@
       this.$validator.localize("fa", this.dictionary)
       let mobile = _.get(this.$store, 'state.user.info.mobile');
 
-      // set user mobile by default
-      if (!this.isEdit) _.set(this, 'mobile', mobile);
 
       // check if user has no access to create advert
       //let hasAccess = this.$store.state.accesses.loans ;
       let isPremium = Helper.isPremiumType(this.formType.type);
       if (!this.isAdmin && !this.isEdit) {
+        _.set(this, 'mobile', mobile);
         let hasAccess = _.get(this.$store.state, 'user.hasSubscription', false);
         if (isPremium && !hasAccess) {
           this.$store.commit('snackbar/setSnack', 'متاسفانه شما دسترسی لازم برای ثبت این آگهی را ندارید.', 'warning');

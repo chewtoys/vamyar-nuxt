@@ -10,21 +10,28 @@
           <v-card-title>
             <span class="headline">{{ formTitle }}</span>
           </v-card-title>
-
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" flat @click="close">لغو</v-btn>
+            <v-btn color="blue darken-1" flat @click="save">ذخیره</v-btn>
+          </v-card-actions>
           <v-card-text>
             <v-container grid-list-md>
               <v-layout wrap>
 
-                <v-flex xs12 v-for="field in structure" :key="field.name">
-                  <v-text-field box v-if="field.type=='text'" v-model="editedItem[field.name]"
+                <v-flex xs12 v-for="(field,i) in structure" :key="field.name">
+                  <v-text-field box v-if="field.type=='text' && hasField(editedItem,field.name || '' )"
+                                v-model="editedItem[field.name]"
                                 :label="field.title"></v-text-field>
-                  <ImgUploader box v-if="field.type=='image'" v-model="editedItem[field.name]"
+                  <ImgUploader box v-if="field.type=='image' && hasField(editedItem,field.name || '' )"
+                               v-model="editedItem[field.name]"
                                :label="field.title"></ImgUploader>
-                  <v-textarea box v-if="field.type=='textarea'" v-model="editedItem[field.name]"
+                  <v-textarea box v-if="field.type=='textarea' && hasField(editedItem,field.name || '' )"
+                              v-model="editedItem[field.name]"
                               :label="field.title"></v-textarea>
-                  <Editor box v-if="field.type=='editor'" v-model="editedItem[field.name]"
-                          :label="field.title"/>
-
+                  <Editor box v-if="field.type=='editor' && hasField(editedItem,field.name || '' )"
+                          v-model="editedItem[field.name]"
+                          :label="field.title"></Editor>
                 </v-flex>
 
               </v-layout>
@@ -84,6 +91,7 @@
       dialog: false,
       editedIndex: -1,
       editedItem: {},
+      onStage: [],
       defaultItem: {}
     }),
     computed: {
@@ -111,6 +119,7 @@
         this.initialize()
       },
       content(val) {
+        console.log(val)
         this.$emit("input", val)
       }
     },
@@ -118,6 +127,9 @@
       this.initialize()
     },
     methods: {
+      hasField(item, path, def = '') {
+        return _.has(item, path || '_')
+      },
       shortStr(str, limit = 50) {
         return Helper.limitStr(str, limit)
       },
@@ -125,6 +137,12 @@
         return Helper.nl2br(text)
       },
       initialize() {
+        let item = {};
+        _.forEach(this.structure, (field) => {
+          _.set(item, _.get(field, 'name', ''), '')
+        })
+        this.defaultItem = item
+        this.editedItem = item
         this.content = _.isArray(this.value) ? this.value : [];
       },
       editItem(item) {
@@ -137,23 +155,23 @@
         if (confirm('آیا مطمن هستید؟')) this.content.splice(index, 1)
       },
       close() {
+        //alert(2)
         this.dialog = false
-        setTimeout(() => {
-          this.editedItem = this.defaultItem
-          this.editedIndex = -1
-        }, 30)
+        this.editedIndex = -1
+        this.editedItem = this.defaultItem
+        //this.initialize()
       },
       save() {
-        try {
-          if (this.editedIndex > -1) {
-            Object.assign(this.content[this.editedIndex], this.editedItem)
-          } else {
-            this.content.push(this.editedItem)
-          }
-          this.close()
-        } catch (err) {
-          console.log(err)
+        //return this.close();
+        if (this.editedIndex > -1) {
+          //alert(this.editedIndex,JSON.stringify(this.editedItem))
+          console.log(this.content, [this.editedIndex], JSON.stringify(this.editedItem))
+          _.assign(this.content[this.editedIndex], this.editedItem)
+        } else {
+          this.content = _.concat(this.content, this.editedItem)
         }
+        this.close()
+
       }
     },
     components: {Editor, ImgUploader}

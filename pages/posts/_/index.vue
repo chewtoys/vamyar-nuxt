@@ -17,9 +17,10 @@
               <v-spacer/>
               <v-img
                 v-if="category.image"
-                lazy-src="http://place-hold.it/100"
+                lazy-src="https://place-hold.it/100"
                 :src="category.image"
-                width="300px"
+                width="100%"
+                max-height="300px"
               ></v-img>
               <v-card-text>
                 <div v-if="category.description" v-html="category.description"></div>
@@ -30,19 +31,19 @@
         </v-layout>
         <template v-if="category.children.length > 0">
           <v-subheader>زیر مجموعه ها</v-subheader>
-          <v-card class="center-text" flat transparent>
+          <v-card class="center-text" flat color="transparent">
             <v-layout row wrap>
               <v-flex v-for="item in category.children || []" :key="item.id" xs12 sm6 md4>
-                <v-card color="grey lighten-2" :to="currentPath + '/' + item.slug">
+                <v-card :to="currentPath + '/' + item.slug">
                   <v-card-title>
                     <h3>{{item.name || 'بدون عنوان'}}</h3>
                   </v-card-title>
                   <v-img
                     v-if="item.image"
-                    :src="item.image"
+                    :src="item.image || src"
                     :lazy-src="lazy"
-                    height="300"
-                    width="300"
+                    max-height="300px"
+                    width="100%"
                   />
                   <v-card-actions>
                     <v-btn color="info" round>
@@ -61,23 +62,24 @@
             <v-layout row wrap grid-list>
               <v-flex v-for="item in posts || []" :key="item.id" xs12 sm6 lg4>
                 <v-card color="lighten-2" :to="showPath + '/' + item.slug">
-                  <v-card-title><h3>{{item.title || 'بدون عنوان'}}</h3>
-                    <small>{{item.jPublishedAt || ''}}</small>
+                  <v-card-title>
+                    <h3>{{item.title || 'بدون عنوان'}}</h3>
+                    <v-spacer/>
+                    <small>انتشار: {{item.jPublishedAt || ''}}</small>
                   </v-card-title>
                   <v-img
+                    v-if="item.image"
                     :src="item.image"
                     :lazy-src="lazy"
                     max-height="100px"
                     max-width="100%"
-                    contain
-                    class="full"
                   />
                   <v-card-text>
                     <div v-html="showPost(item.text)"></div>
                   </v-card-text>
                   <v-card-actions>
                     <v-btn color="info" outline round>
-                      <span>ادامه</span>
+                      <span>مشاهده مطلب</span>
                       <v-icon class="pl-1">keyboard_arrow_left</v-icon>
                     </v-btn>
                   </v-card-actions>

@@ -35,7 +35,7 @@
               label="عنوان"
             />
             <v-text-field
-              v-validate="'required'"
+              v-validate="''"
               v-model="slug"
               :error-messages="errors.collect('slug')"
               box

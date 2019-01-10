@@ -44,9 +44,12 @@
           :items="data"
           :loading="loading"
           :search="search"
+
+          :total-items="1000000"
+          :pagination.sync="pagination"
           hide-actions
-          :total-items="totalData"
-          :rows-per-page-items="[25,100]"
+
+          :rows-per-page-items="[10,25,100]"
           no-results-text="هیچ موردی ثبت نشده است."
           class="elevation-1"
         >
@@ -74,7 +77,7 @@
             </td>
             <td class="text-xs-right">{{ (props.item.slug || '-') }}</td>
             <td class="text-xs-right">
-              <v-img aspect-ratio="1.7" :src="props.item.image"/>
+              <v-img aspect-ratio="1.7" :src="props.item.image" v-if="props.item.image"/>
             </td>
             <td class="text-xs-right">{{ getCategories(props.item) }}</td>
             <td class="text-xs-left">
