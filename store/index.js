@@ -9,7 +9,6 @@ const guaranteeMethod = '/guaranteeTypes',
   aboutUsMethod = '/site/about-us'
 
 export const state = () => ({
-
   debug: true,
   site: {
     title: "وامیار",

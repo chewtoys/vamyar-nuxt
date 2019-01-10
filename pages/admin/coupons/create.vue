@@ -39,7 +39,7 @@
               v-model="discount"
               :error-messages="errors.collect('discount')"
               box
-              placeholder="ریال"
+              placeholder="درصد"
               data-vv-name="discount"
               label="مقدار تخفیف"
             />
