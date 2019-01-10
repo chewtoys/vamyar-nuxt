@@ -70,6 +70,7 @@
             <td class="text-xs-right">{{ props.item.id }}</td>
             <td class="text-xs-right">{{ props.item.discount ? (props.item.discount + '%') : '-' }}</td>
             <td class="text-xs-right">{{ props.item.code }}</td>
+            <td class="text-xs-right">{{ props.item.userId }}</td>
             <td class="text-xs-right">{{ (props.item.oneTimeUsage ? 'بله' : 'خیر') }}</td>
             <td class="text-xs-right">{{ jDate(props.item.expireDate) }}</td>
             <td class="text-xs-left">
@@ -106,6 +107,7 @@
       {text: '‌شناسه', value: 'id', align: 'right'},
       {text: 'تخفیف', value: 'discount', align: 'right'},
       {text: 'کد', value: 'code', align: 'right'},
+      {text: 'کاربر', value: 'userId', align: 'right'},
       {text: 'یکبار مصرف؟', value: 'oneTimeUsage', align: 'right'},
       {text: 'انقضا', value: 'expireDate', align: 'right'},
       {text: 'عملیات', sortable: false, align: 'left', width: '140px'},
@@ -150,8 +152,10 @@
           this.loading = true;
           let method = fetchMethod;
           let {sortBy, descending, page, rowsPerPage} = this.pagination;
+          let include = 'user'
           let query = {
             page,
+            include,
             orderBy: `${sortBy || 'id'}:${descending ? 'desc' : 'asc'}`,
             number: rowsPerPage,
           }
