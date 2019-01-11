@@ -1,12 +1,11 @@
 <template>
-
-  <v-container fluid v-if="show">
+  <v-container grid-list fluid v-if="show">
     <v-subheader>
       {{ title }}
     </v-subheader>
     <v-card class="frontpage whyus pt-5 pb-5 px-2">
-      <v-layout align-center justify-center row>
-        <v-flex v-for="item in items" :key="item.name" xs12 sm3>
+      <v-layout align-center justify-center row wrap>
+        <v-flex v-for="item in items" :key="item.name" xs6 sm3>
           <v-card :href="item.link" flat>
             <div class="text-xs-center">
               <v-card-media

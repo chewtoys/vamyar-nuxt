@@ -250,7 +250,9 @@
           if (status === 404) {
             this.$store.commit("snackbar/setSnack", 'متاسفانه نشست شما منقضی شده است. لطفا دوباره وارد شوید.')
             this.$store.dispatch('user/logout')
-            this.$router.push('/user/auth')
+            setTimeout(() => {
+              this.$router.push('/user/auth')
+            }, 500)
           }
         })
 

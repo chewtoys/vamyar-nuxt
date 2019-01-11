@@ -35,7 +35,7 @@
                 <v-icon left class=" white--text">security</v-icon>
                 <span calss="white--text">بررسی شده</span>
               </v-chip>
-              <v-chip v-if="hasSubscription && getProperty(item, 'advert.tradeStatus',0)===1" label color="cyan"
+              <v-chip v-if="getProperty(item, 'advert.tradeStatus',0)===1 && getProperty(item, 'advert.mobile',false)" label color="cyan"
                       text-color="white">
                 <v-icon left class=" white--text">phone_in_talk</v-icon>
                 <span calss="white--text">در حال معامله</span>
@@ -213,7 +213,7 @@
                         <v-icon class="pb-1 pl-1 pt-2">contact_phone</v-icon>
                         <span><small class="font-14 pt-2">شماره موبایل</small>
                           <v-alert :value="true"
-                                   v-if="hasSubscription && getProperty(item, 'advert.tradeStatus',false)">
+                                   v-if="(getProperty(item, 'advert.tradeStatus',false)) && ( hasSubscription || getProperty(item, 'advert.mobile', false))">
                             این اگهی در حال معامله است در صورت توافق طرفین اگهی حذف می شود
                           </v-alert>
                           <b class="left"

@@ -1,7 +1,7 @@
 <template>
   <v-app>
-      <ToolBar/>
-      <Drawer/>
+    <ToolBar/>
+    <Drawer/>
     <v-content>
       <v-container fluid>
         <Breadcrumb/>
@@ -18,6 +18,7 @@
   import Footer from "~/components/user/Footer.vue"
   import Snackbar from "~/components/Snackbar.vue"
 
+
   export default {
     head() {
       return {
@@ -30,7 +31,7 @@
           ]
       }
     },
-    middleware: ["httpToHttps","updateSettings", "authenticated", "navigation", "userEditProfile", 'isSiteOpen'],
+    middleware: ["httpToHttps", "updateSettings", "authenticated", "navigation", "userEditProfile", 'isSiteOpen'],
     components: {
       ToolBar,
       Footer,

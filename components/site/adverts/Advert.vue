@@ -105,7 +105,8 @@
         <span>قابل انتقال به سایر شهرها</span>
       </v-tooltip>
       <v-tooltip top>
-        <v-btn v-if="hasSubscription && tradeStatus===1" slot="activator" class="mx-1" icon round color="cyan"
+        <v-btn v-if="hasMobile && tradeStatus===1" slot="activator" class="mx-1" icon round
+               color="cyan"
                text-color="white">
           <v-icon class="white--text">phone_in_talk</v-icon>
         </v-btn>
@@ -127,6 +128,9 @@
   export default {
     props: ["item", 'which'],
     methods: {
+      getProperty(item, path, def = '') {
+        _.get(item, path, def = '-')
+      },
       getTitle(name) {
         let type = _.get(Helper.getAdvertType(this.item, null, true), 'type', this.which)
         let list = Helper.getFieldByType(type, name)
@@ -183,6 +187,9 @@
       },
       tradeStatus() {
         return _.get(this.item, 'advert.tradeStatus', _.get(this.item, 'tradeStatus', 0));
+      },
+      hasMobile() {
+        return _.get(this.item, 'advert.mobile', _.get(this.item, 'mobile', false));
       },
     }
   }

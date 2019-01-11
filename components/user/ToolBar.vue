@@ -102,12 +102,37 @@
           : "ابتدا مشخصات خود را تکمیل کنید"
       }
     },
+    watch: {
+      $route: {
+        handler() {
+          this.loadNotifs();
+        }, deep: true
+      }
+    },
     mounted() {
       this.loadNotifs();
+
+
       this.$store.commit('navigation/setDrawer', !this.isMobile);
     },
     methods: {
       loadNotifs() {
+        const checkLoginPath = '/user/loggedIn'
+        this.$axios
+          .$get(checkLoginPath)
+          .catch
+          (err => {
+            let {status} = _.get(err, 'response', 0);
+            //console.log({err, status})
+            if (status === 404) {
+              this.$store.commit("snackbar/setSnack", 'متاسفانه نشست شما منقضی شده است. لطفا دوباره وارد شوید.')
+              this.$store.dispatch('user/logout')
+              setTimeout(() => {
+                this.$router.push('/user/auth')
+              }, 400)
+            }
+          })
+
         let method = '/user/notifications'
         let query = {orderBy: 'id:desc', number: 20000}
         this.$axios.$get(method, {params: query}).then(res => {

@@ -212,7 +212,7 @@
           if (this.search) {
             //filter = `user.details.firstName=${this.search},user.details.lastName=${this.search},user.mobile=${this.search},id=${this.search},user.email=${this.search},ip=${this.search},resourceName=${this.search},resourceId=${this.search},description=${this.search}`
             let value = this.search;
-            query = {}
+
             _.set(query, 'id', value)
             _.set(query, 'ip', value)
             _.set(query, 'userAgent', value)

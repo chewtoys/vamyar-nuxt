@@ -18,9 +18,9 @@
           :headers="headers"
           :items="data"
           :loading="loading"
-          :search="search"
+          :hide-actions="hideActions"
           :pagination.sync="pagination"
-          :total-items="totalData"
+          :total-items="totalItems"
           :rows-per-page-items="[10,25,100]"
           no-results-text="هیچ موردی ثبت نشده است."
           class="elevation-1"
@@ -97,6 +97,12 @@
       search: '',
     }),
     computed: {
+      totalItems() {
+        return _.get(this, 'paginator.totalCount', 1000000) || 1000000;
+      },
+      hideActions() {
+        return this.totalItems < 1 || this.totalItems >= 1000000;
+      },
       getType(item) {
 
       },

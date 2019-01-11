@@ -139,7 +139,7 @@
         return decodeURI(path || "/user");
       },
       isPremium() {
-        return this.$store.state.user.hasSubscription;
+        return this.$store.state.settings.hasSubscription;
       }
     },
     mounted() {

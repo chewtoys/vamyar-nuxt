@@ -377,7 +377,7 @@
               this.$store.commit("user/updateToken", access_token)
               setTimeout(() => {
                 window.location = this.redirectPath
-                this.$router.push('/user')
+                //this.$router.push('/user')
               }, 500)
               //
               //

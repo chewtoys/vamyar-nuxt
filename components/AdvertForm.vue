@@ -13,7 +13,7 @@
         </v-flex>
       </v-layout>
     </v-card>
-    <v-card v-if="!hasAccess" color="white" raised light class="mt-5 py-5 px-4">
+    <v-card v-if="!hasAccess && isPremium" color="white" raised light class="mt-5 py-5 px-4">
       <v-layout row wrap>
         <v-flex xs12>
           <div>
@@ -31,7 +31,7 @@
         </v-flex>
       </v-layout>
     </v-card>
-    <v-card v-if="hasAccess" color="white" raised light class="mt-5 py-5 px-4">
+    <v-card v-else color="white" raised light class="mt-5 py-5 px-4">
       <v-layout row wrap>
         <v-flex xs12>
           <div>
@@ -273,7 +273,6 @@
     props: ['formType', 'id', 'panel', 'action', 'data'],
     data: () => ({
       slug: '',
-      hasAccess: true,
       // advert
       title: null,
       city: null,
@@ -320,12 +319,18 @@
       submit_loader: false,
     }),
     computed: {
+      hasAccess() {
+        return _.get(this.$store.state, 'user.hasSubscription', false)
+      },
+      isPremium() {
+        return Helper.isPremiumType(this.formType.type)
+      },
       amountHint() {
         return Helper.computeAdvertField('amount', this.amount)
       },
       maxAmountHint() {
         return Helper.computeAdvertField('maxAmount', this.maxAmount)
-      },
+
       financeAmountHint() {
         return Helper.computeAdvertField('maxAmount', this.amount)
       },
@@ -424,7 +429,6 @@
           this.guaranteeTypesName = items || [];
         }
       },
-
       link() {
         if (this.isEdit) return `/${this.panel}/adverts/${this.slug}/${this.action}/${this.id}`
         return `/${this.panel}/adverts/${this.slug}/${this.action}`
@@ -440,11 +444,11 @@
 
       // check if user has no access to create advert
       //let hasAccess = this.$store.state.accesses.loans ;
-      let isPremium = Helper.isPremiumType(this.formType.type);
+
       if (!this.isAdmin && !this.isEdit) {
         _.set(this, 'mobile', mobile);
-        this.hasAccess = _.get(this.$store.state, 'user.hasSubscription', false);
-        if (isPremium && !this.hasAccess) {
+
+        if (this.isPremium && !this.hasAccess) {
           this.$store.commit('snackbar/setSnack', 'متاسفانه شما دسترسی لازم برای ثبت این آگهی را ندارید.', 'warning');
           //this.$router.push(`/user/premium?redirect=${this.link}`);
         }

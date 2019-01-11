@@ -3,19 +3,17 @@
     <no-ssr>
   <span>
     <v-toolbar v-scroll="onScroll" flat :color="menuColor" class="white grey--text" app>
-      <v-btn flat color="transparent" class="pa-1 white--text" to="/">
+      <nuxt-link style="width:80px;height:80%" class="" flat color="transparent" class="pa-1 white--text" to="/">
         <v-icon v-if="!siteLogo" class="deep-purple--text font-16 pl-1">polymer</v-icon>
         <v-img
-          class="pa-2"
+          class="pa-1"
           v-if="siteLogo"
-          width="70px"
+          width="100%"
+          max-height="100%"
           :src="siteLogo"/>
-        <v-toolbar-title>
-          <h1 class="deep-purple--text font-18 text-shadow-3">{{ title }}</h1>
-        </v-toolbar-title>
-      </v-btn>
-      <v-divider vertical/>
-      <v-toolbar-items key="t1" v-if="showQuickAccess">
+      </nuxt-link>
+      <v-divider vertical v-if="!isMobile"/>
+      <v-toolbar-items key="t1" v-if="showQuickAccess && !isMobile">
         <v-btn to="/categories/loans" flat>وام ها</v-btn>
         <v-btn to="/categories/co-signers" flat>ضامن ها</v-btn>
         <v-btn to="/categories/finances" flat>سرمایه گذاری ها</v-btn>
@@ -41,8 +39,8 @@
         <v-btn to="/user/councils/create" flat>مشاوره</v-btn>
         <v-btn to="/user" flat>حساب من</v-btn>
       </v-toolbar-items>
-      <v-spacer key="t5"/>
-        <searchBar key="t6" v-if="showQuickAccess"/>
+      <v-spacer key="t5" v-if="!isMobile"/>
+        <searchBar key="t6" v-if="showQuickAccess && !isMobile"/>
       <v-spacer key="t7"/>
       <v-toolbar-side-icon key="t4" v-if="isMobile" white--text @click.stop="drawer = !drawer"/>
       <v-toolbar-items key="t9" v-if="!showQuickAccess" class="hidden-sm-and-down">
