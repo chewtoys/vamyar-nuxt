@@ -22,17 +22,28 @@
           </v-btn>
         </v-toolbar>
         <v-card-title>
-          جست‌و‌جو
-          <v-spacer></v-spacer>
-
-          <v-text-field
-            v-model="search"
-            append-icon="search"
-            label="جست و جو در عنوان و متن توضیحات"
-            single-line
-            hide-details
-          ></v-text-field>
-
+          <v-subheader>جست و جو</v-subheader>
+          <v-layout class="full">
+            <v-flex xs12 sm6 class="px-1">
+              <v-text-field
+                v-model="search"
+                append-icon="search"
+                label="جست و جو در عنوان و متن توضیحات"
+                single-line
+                hide-details
+              ></v-text-field>
+            </v-flex>
+            <v-flex xs12 sm6 class="px-1">
+              <v-text-field
+                v-model="mobileSearch"
+                append-icon="search"
+                label="جست و جو بر اساس موبایل"
+                single-line
+                hide-details
+              ></v-text-field>
+            </v-flex>
+          </v-layout>
+          <br/>
           <AdvertFilters v-if="isAdmin" :isAdmin="isAdmin" :chooseType="isAdverts" label="فیلتر کنید"
                          v-model="advertFilters"
                          @change="loadAgainCommonAdvertFilter"/>
@@ -432,6 +443,7 @@
       advertFilters: {},
       filter: {},
       search: '',
+      mobileSearch: '',
       submit_loader: false,
       tableLoader: false,
     }),
@@ -490,6 +502,9 @@
       search(val) {
         this.switchPage();
       },
+      mobileSearch(val) {
+        this.switchPage();
+      },
       pagination: {
         handler() {
           //console.log(this.pagination.page)
@@ -534,7 +549,9 @@
         let filter = null, must = null
 
         /* search and filter */
-        if (this.search) {
+        if (this.mobileSearch) {
+          filter = this.isAdverts ? `mboile=${this.mobileSearch},user.mobile=${this.mobileSearch}` : `advert.mobile=${this.mobileSearch},advert.user.mobile=${this.mobileSearch}`
+        } else if (this.search) {
           filter = this.isAdverts ? `title=${this.search},text=${this.search}` : `advert.title=${this.search},advert.text=${this.search}`
         } else if (this.commonComputedFilters || this.computedFilters) {
           let filterArray = [];

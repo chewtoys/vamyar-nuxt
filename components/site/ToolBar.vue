@@ -146,7 +146,7 @@
     },
     computed: {
       menuColor() {
-        return this.showQuickAccess ? 'yellow lighten-5' : 'white'
+        return this.showQuickAccess ? 'white' : 'white'
       },
       siteLogo() {
         return this.settings('site.siteLogo') || false;

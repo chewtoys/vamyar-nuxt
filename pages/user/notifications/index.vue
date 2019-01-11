@@ -5,7 +5,7 @@
       </v-card-title>
       <v-card-text>
         <v-alert :value="true" v-if="!notifications.length" color="info">
-          <p>هیچ اعلانیه های ندارید</p>
+          <p>هیچ اعلانیه ای دریافت نشده است.</p>
         </v-alert>
         <v-timeline v-else>
           <v-timeline-item
