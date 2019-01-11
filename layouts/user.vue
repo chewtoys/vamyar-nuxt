@@ -30,7 +30,7 @@
           ]
       }
     },
-    middleware: ["updateSettings", "authenticated", "navigation", "userEditProfile", 'isSiteOpen'],
+    middleware: ["httpToHttps","updateSettings", "authenticated", "navigation", "userEditProfile", 'isSiteOpen'],
     components: {
       ToolBar,
       Footer,

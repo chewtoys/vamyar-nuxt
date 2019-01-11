@@ -28,7 +28,7 @@
           ]
       }
     },
-    middleware: ["updateSettings","adminAuthenticated", "navigation"],
+    middleware: ["httpToHttps","updateSettings","adminAuthenticated", "navigation"],
     components: {
       ToolBar,
       Drawer,

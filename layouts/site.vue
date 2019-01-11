@@ -37,7 +37,7 @@
           ]
       }
     },
-    middleware: ["updateSettings", "navigation", 'isSiteOpen'],
+    middleware: ["httpToHttps","updateSettings", "navigation", 'isSiteOpen'],
 
     components: {
       Breadcrumb,

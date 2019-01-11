@@ -86,7 +86,6 @@ export default {
     //credentials: false
     // See https://github.com/nuxt-community/axios-module#options
   },
-
   build: {
     //cache: true,
     //parallel: true,

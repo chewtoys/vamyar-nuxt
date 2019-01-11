@@ -1,9 +1,9 @@
 <template>
   <v-card :to="getLink(item)" height="100%" hover raised ripple>
-    <card-action>
+    <v-card-actions>
       <v-spacer></v-spacer>
       <v-chip v-if="which==='adverts'">{{ itemType(item) }}</v-chip>
-    </card-action>
+    </v-card-actions>
     <v-card-text>
       <v-layout row wrap>
         <v-flex v-if="!!settings('adverts.isImageAllowed') && !!item.image" xs12 md3>

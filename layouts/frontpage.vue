@@ -27,6 +27,6 @@
     },
     components: {Toolbar},
     computed: {},
-    middleware: ['isSiteOpen', "updateSettings"]
+    middleware: ["httpToHttps",'isSiteOpen', "updateSettings"]
   }
 </script>

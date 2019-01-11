@@ -26,6 +26,7 @@
         title: ""
       }
     },
+    middleware: ["httpToHttps",],
     computed: {}
   }
 </script>

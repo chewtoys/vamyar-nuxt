@@ -11,7 +11,7 @@
       </v-card-title>
       <div>
         <v-card v-if="!isUserPremium" flat>
-          <v-alert :value="true" type="warning">شما اشتراک فعالی ندارید!</v-alert>
+          <v-alert :value="false" type="warning">شما اشتراک فعالی ندارید!</v-alert>
           <v-alert :value="true" type="info">برای تهیه ی اشتراک از زیر اقدام نمایید.</v-alert>
         </v-card>
         <template v-else flat>
