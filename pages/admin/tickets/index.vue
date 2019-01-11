@@ -73,9 +73,20 @@
             <td class="text-xs-right">
               <nuxt-link :to="uri + '/show/' + props.item.id">{{ props.item.title || '-' }}</nuxt-link>
             </td>
-            <td class="text-xs-right">{{ userName(props) }}</td>
+            <td class="text-xs-right">
+              <p v-html="userName(props)"></p>
+              <p>
+                شناسه:
+                <nuxt-link
+                  target="_blank"
+                  :to="`/admin/users/edit/${getProperty(props.item, 'userId', '')}`">
+                  {{getProperty(props.item, 'userId', '')}}
+                </nuxt-link>
+              </p>
+            </td>
+            <td class="text-xs-right">{{ shorten(props.item.message) }}</td>
             <td class="text-xs-right">{{ priority(props.item.priority) }}</td>
-            <td class="text-xs-right">{{ priority(props.item.jUpdatedAt) }}</td>
+            <td class="text-xs-right">{{ (props.item.jUpdatedAt) }}</td>
             <td class="text-xs-right">{{ category(props.item.categoryId) }}</td>
             <td class="text-xs-right">{{ status(props.item.status) }}</td>
             <td class="text-xs-left">
@@ -114,7 +125,8 @@
     headers = [
       {text: '‌شناسه', value: 'id', align: 'right'},
       {text: 'عنوان', value: 'title', align: 'right'},
-      {text: 'کاربر', value: 'message', align: 'right'},
+      {text: 'کاربر', value: 'userId', align: 'right'},
+      {text: 'پیام', value: 'message', align: 'right'},
       {text: 'اهمیت', value: 'priority', align: 'right'},
       {text: 'آخرین تغیر', value: 'updatedAt', align: 'right'},
       {text: 'دسته بندی', sortable: false, align: 'right'},
@@ -180,7 +192,12 @@
     }
     ,
     methods: {
-
+      getProperty(item, path, def = '') {
+        return _.get(item, path, def)
+      },
+      shorten(text = '') {
+        return Helper.limitStr(text, 25);
+      },
       initPage() {
         this.loading = true;
         let method = indexPath;
@@ -188,6 +205,7 @@
         if (this.search) filter = `id=${this.search},user.mobile=${this.search},userId=${this.search},title=${this.search}`
         let {sortBy, descending, page, rowsPerPage} = this.pagination;
         let query = {
+          include: 'user',
           page,
           orderBy: `${sortBy || 'updatedAt'}:${descending ? 'desc' : 'asc'}`,
           number: rowsPerPage
@@ -214,7 +232,8 @@
       },
       userName(props) {
         //return _.get(props.item, 'user.details.name', props.item.userId)
-        return Helper.computeAdvertField('user', _.get(props.item, 'user.details.name', props.item.userId))
+        if (_.has(props.item, 'user')) return Helper.computeAdvertField('user', _.get(props.item, 'user', props.item.userId))
+        return ''
       },
       category(id) {
         let list = this.$store.state.ticketCategory.data;

@@ -35,8 +35,9 @@ export const actions = {
 
     if (!_.startsWith(route.path, '/admin')) {
       let accessToken = null;
-      if (req.headers.cookie) {
+      if (req.headers.cookie ) {
         let parsed = cookieparser.parse(req.headers.cookie);
+
         if (parsed.auth) {
           accessToken = parsed.auth;
           $axios.setHeader("Authorization", `Bearer ${accessToken}`);

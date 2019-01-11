@@ -6,7 +6,7 @@
           <v-toolbar-title>{{ pageTitle }}</v-toolbar-title>
           <v-spacer/>
           <v-btn
-            v-if="!isAdverts"
+            v-if="true"
             color="red" outline light round class="mb-2"
             @click="deleteItems">
             <v-icon
@@ -79,7 +79,13 @@
           no-results-text="هیچ موردی ثبت نشده است."
         >
           <template slot="items" slot-scope="props">
-
+            <td>
+              <v-checkbox
+                v-model="props.selected"
+                primary
+                hide-details
+              ></v-checkbox>
+            </td>
             <td :class="`text-xs-left ${isDeleted(props.item) ? 'deletedAdvert' :''}`">
               <nuxt-link title="مشاهده"
                          :to="showLink(props)"
@@ -220,7 +226,7 @@
               <v-icon
                 class="mx-1"
                 small
-                @click="deleteItem(props.item.advertableId,getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', ''))"
+                @click="deleteItem(props.item.advertableId,getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'type', ''),props.item)"
               >
                 delete
               </v-icon>
@@ -572,6 +578,17 @@
           filter = this.isAdverts ? `title=${this.search},text=${this.search}` : `advert.title=${this.search},advert.text=${this.search}`
         } else if (this.commonComputedFilters || this.computedFilters) {
 
+
+          if (this.isAdverts && this.advertTypeName) {
+            //console.log(Helper.getAdvertTypeByType(this.advertTypeName), this.advertTypeName);
+            advertableType = _.get(Helper.getAdvertTypeByType(this.advertTypeName), 'advertType', this.advertTypeName.slice(0, -1))
+            if (advertableType !== 'advert') {
+              mustArray.push(`advertableType=${advertableType}`)
+            } else {
+              advertableType = null
+            }
+          }
+
           _.forEach(this.commonComputedFilters, (value, key) => {
             if (value !== null && value !== '' && value !== 'null') {
               if (this.isAdverts) {
@@ -593,15 +610,6 @@
 
         }
 
-        if (this.isAdverts && this.advertTypeName) {
-          //console.log(Helper.getAdvertTypeByType(this.advertTypeName), this.advertTypeName);
-          advertableType = _.get(Helper.getAdvertTypeByType(this.advertTypeName), 'advertType', this.advertTypeName.slice(0, -1))
-          if (advertableType !== 'advert') {
-            mustArray.push(`advertableType=${advertableType}`)
-          } else {
-            advertableType = null
-          }
-        }
         filter = _.join(filterArray, ',')
         must = _.join(mustArray, ',')
 
@@ -783,11 +791,12 @@
           this.tableLoader = true;
           let itemType = Helper.getAdvertType(item, null, true);
           let advertId = id;
+          let indexId = item.id;
           let data = {verified: val === 1}
           let method = `/${this.panel}/${itemType.type}/${advertId}`;
           this.$axios.$put(method, data).then((res) => {
-            let index = _.findIndex(this.list, {id: advertId});
-            console.log(22, id, advertId, index)
+            let index = _.findIndex(this.list, {id: indexId});
+            //console.log({id, indexId, index})
             let path = this.isAdverts ? 'verified' : 'advert.verified'
             _.set(this.list[index], path, val);
             this.tableLoader = false;
@@ -837,26 +846,39 @@
       },
       deleteItems(type = null) {
         if (confirm('آیا مطمئن هستید که می خواهید این موارد را حذف کنید؟')) {
-          _.forEach(this.selected, (obj, key) => {
-            this.deleteById(_.get(obj, 'id', ''), type);
-          })
+          if (!this.isAdverts) {
+            _.forEach(this.selected, (obj, key) => {
+              this.deleteById(_.get(obj, 'id', ''));
+            })
+          } else {
+            _.forEach(this.selected, (obj, key) => {
+              let deleteType = _.get(this.getAdvertType(_.get(obj, 'advertableType', '')), 'type', '');
+              let deleteId = _.get(obj, 'advertableId', '-');
+              this.deleteById(deleteId, deleteType, obj.id);
+            })
+          }
         }
       },
-      deleteItem(id, type = null) {
+      deleteItem(id, type = null, item = null) {
+        let indexId = id;
+        if (item) {
+          indexId = _.get(item, 'id', '-')
+        }
         if (confirm('آیا مطمئن هستید که می خواهید این مورد را حذف کنید؟')) {
-          this.deleteById(id, type)
+          this.deleteById(id, type, indexId)
         }
       },
-      deleteById: function (id, type = null) {
+      deleteById(id, type = null, indexId = null) {
+        indexId = indexId || id
+        let index = _.findIndex(this.list, {id: indexId})
+        console.log({indexId, index})
         let deletePath = `/${this.panel}/${type ? type : this.type.type}/${id}`;
-        _.remove(this.data, function (obj) {
-          return _.get(obj, 'id', '') === id;
-        });
         this.tableLoader = true;
         this.$axios.$delete(deletePath).then(() => {
+          _.remove(this.list, {id: indexId});
           this.$store.commit('snackbar/setSnack', 'با موفقیت حذف شد', 'success')
           this.selected = [];
-          this.initialize()
+          //this.initialize()
           this.tableLoader = false;
         }).catch((err) => {
           this.tableLoader = false;

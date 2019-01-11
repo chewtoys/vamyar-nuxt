@@ -375,8 +375,12 @@
             if (access_token) {
               Cookie.set("auth", access_token)
               this.$store.commit("user/updateToken", access_token)
-              window.location = this.redirectPath
-              //this.$router.push('/user/')
+              setTimeout(() => {
+                window.location = this.redirectPath
+                this.$router.push('/user')
+              }, 500)
+              //
+              //
             } else {
               this.msgError("مشخصات صحیح نمی باشد.")
             }

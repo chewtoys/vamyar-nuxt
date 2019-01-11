@@ -62,7 +62,7 @@
       }
     },
     mounted() {
-      this.$store.commit('navigation/setDrawer', !this.isMobile);
+      this.$store.commit('navigation/setDrawer', false);
     },
     methods: {
       toggleDrawer: function () {

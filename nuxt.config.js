@@ -87,7 +87,7 @@ export default {
     // See https://github.com/nuxt-community/axios-module#options
   },
   build: {
-    cache: false,
+    cache: true,
     parallel: true,
     plugins: [
       new webpack.ProvidePlugin({

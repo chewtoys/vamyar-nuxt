@@ -403,18 +403,19 @@
           this.paybackTimeName = val === 0 ? 'توافقی' : val;
         }
       },
+
       guaranteeTypes: {
-        get: function () {
-          let items = [];
-          let list = this.$store.state.guaranteeType.data;
-          _.forEach(this.guaranteeTypesName, (name) => {
-            let index = _.findIndex(list, {'name': name});
-            let item = list[index];
+        get() {
+          let list = this.guaranteeTypesName;
+          let all = this.$store.state.guaranteeType.data;
+          let items = []
+          _.forEach(list, (val, i) => {
+            let item = _.find(all, {name: val})
             items.push(item.id)
           })
-          return items || 0;
+          return items;
         },
-        set: function (objectArrayList) {
+        set(objectArrayList) {
           let list = this.$store.state.guaranteeType.data;
           let items = [];
           _.forEach(objectArrayList, (obj) => {
@@ -423,6 +424,7 @@
           this.guaranteeTypesName = items || [];
         }
       },
+
       link() {
         if (this.isEdit) return `/${this.panel}/adverts/${this.slug}/${this.action}/${this.id}`
         return `/${this.panel}/adverts/${this.slug}/${this.action}`

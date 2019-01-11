@@ -9,8 +9,9 @@
     :dark="isDark"
     :color="getColor"
     item-text="name"
-    item-value="symbol"
+    item-value="link"
     :label="label"
+    @change="goTo"
     solo
   >
     <template slot="no-data">
@@ -37,10 +38,10 @@
       slot="item"
       slot-scope="{ item, tile }"
     >
-      <v-list-tile flat @click="goTo(item.link)">
+      <v-list-tile flat>
         <v-list-tile-content>
           <v-list-tile-title v-text="item.name"></v-list-tile-title>
-          <v-list-tile-sub-title v-text="item.symbol"></v-list-tile-sub-title>
+          <v-list-tile-sub-title v-text="item.type"></v-list-tile-sub-title>
         </v-list-tile-content>
         <v-list-tile-action>
           <v-icon>mdi-coin</v-icon>
@@ -79,7 +80,11 @@
     watch: {
       search(val) {
 // Items have already been loaded
-        if (this.items.length > 0) return
+        setTimeout(() => {
+          if (val !== this.search) {
+            return null
+          }
+        }, 300)
         this.isLoading = true
 // Lazily load input items
         //adverts?filter=title=exampleTitle,text=exampleTitle
@@ -98,29 +103,47 @@
               if (x < 10) {
                 let type = Helper.getTypeByAdvertType(item.advertableType);
                 let link = `/categories/${type.alias}/show/${item.advertableId}`
-                this.items.push({name: `${item.title} (${type.title})`, id: item.id, link})
+                this.items.push({name: item.title, type: type.title, id: item.id, link})
               }
             })
           })
           .catch(err => {
             //console.log(err)
           })
-          .finally(() => (this.isLoading = false))
+          .finally(() => {
 
-        this.$axios.$get('site/posts', query)
-          .then(res => {
-            //console.log(res.data)
-            _.forEach(res.data, (item, x) => {
-              if (x < 10) {
-                let link = `/posts/show/${item.slug}`
-                this.items.push({name: `${item.title}`, id: item.id, link})
+            let contentQuery = {
+              params: {
+                filter: `title=${val},text=${val}`,
+                include: 'categories'
               }
-            })
+            }
+
+            this.$axios.$get('site/posts', contentQuery)
+              .then(res => {
+                //console.log(res.data)
+                _.forEach(res.data, (item, x) => {
+                  if (x < 10) {
+                    let link = `/posts/show/${item.slug}`
+                    this.items.push({
+                      name: item.title,
+                      type: _.join(_.map(item.categories, 'name') || ['مطالب و محتوا'], ' ,'),
+                      id: item.id,
+                      link
+                    })
+                  }
+                })
+              })
+              .catch(err => {
+                //console.log(err)
+              })
+              .finally(() => {
+                this.isLoading = false;
+                if (this.items.length < 1) {
+                  this.$store.commit('snackbar/setSnack', 'متاسفانه نتیجه ای یافت نشد :(');
+                }
+              })
           })
-          .catch(err => {
-            //console.log(err)
-          })
-          .finally(() => (this.isLoading = false))
       }
 
     },
@@ -130,7 +153,7 @@
         /item/${item.id}`
       },
       goTo(to) {
-        this.$router.push(to);
+        if (to) this.$router.push(to);
       }
     }
   }

@@ -26,11 +26,26 @@
               arrow_left
             </v-icon>
             {{list.jCreatedAt }}
+
+            <v-icon class="mr-1" small>
+              arrow_left
+            </v-icon>
+            درجه اهمیت: {{priority}}
             <br/>
             <v-icon small>
               arrow_left
             </v-icon>
-            درجه اهمیت: {{priority}}
+            شماره تماس: {{getProperty(list, 'user.mobile', '')}}
+
+            <v-icon class="mr-1" small>
+              arrow_left
+            </v-icon>
+            شناسه کاربر:
+            <nuxt-link
+              target="_blank"
+              :to="`/admin/users/edit/${getProperty(list, 'user.id', '')}`">
+              {{getProperty(list, 'user.id', '')}}
+            </nuxt-link>
             <br/>
             <v-icon small>
               arrow_left
@@ -194,6 +209,9 @@
     }
     ,
     methods: {
+      getProperty(item, path, def = '') {
+        return _.get(item, path, def)
+      },
       nl2br(txt) {
         return Helper.nl2br(txt);
       },

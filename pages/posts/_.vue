@@ -1,5 +1,7 @@
 <template>
-  <nuxt-child/>
+  <div>
+    <nuxt/>
+  </div>
 </template>
 <script>
   export default {

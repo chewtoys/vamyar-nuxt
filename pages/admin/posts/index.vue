@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <v-card color="white" raised light class="mt-5 py-5 px-4">
       <div>
         <v-toolbar flat color="white">

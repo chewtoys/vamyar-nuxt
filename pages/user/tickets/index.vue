@@ -96,9 +96,6 @@
               </v-icon>
             </td>
           </template>
-          <v-alert slot="no-results" :value="true" color="error" icon="warning">
-            نتیجه ای برای "{{ search }}" یافت نشد.
-          </v-alert>
         </v-data-table>
         <div class="text-xs-center pt-2">
           <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
@@ -121,7 +118,7 @@
       {text: 'اهمیت', value: 'priority', align: 'right'},
       {text: 'دسته بندی', sortable: false, align: 'right'},
       {text: 'وضعیت', value: 'status', sortable: true, align: 'right'},
-      {text: 'بروزرسانی', value: 'jUpdatedAt', sortable: true, align: 'right'},
+      {text: 'بروزرسانی', value: 'updatedAt', sortable: true, align: 'right'},
       {text: 'عملیات', sortable: false, align: 'left'},
     ]
 
@@ -142,6 +139,12 @@
       search: '',
     }),
     computed: {
+      totalItems() {
+        return _.get(this, 'paginator.totalCount', 1000000) || 1000000;
+      },
+      hideActions() {
+        return this.totalItems < 1 || this.totalItems >= 1000000;
+      },
       pages() {
         return _.get(this.paginator, 'totalPages', 1)
       },
@@ -167,7 +170,7 @@
           let {sortBy, descending, page, rowsPerPage} = this.pagination;
           let query = {
             page,
-            orderBy: `${sortBy || 'id'}:${descending ? 'desc' : 'asc'}`,
+            orderBy: `${sortBy || 'updatedAt'}:${descending ? 'desc' : 'asc'}`,
             number: rowsPerPage
           }
           //console.log({method, query, paginator: this.paginator}, {sortBy, descending, page, rowsPerPage});

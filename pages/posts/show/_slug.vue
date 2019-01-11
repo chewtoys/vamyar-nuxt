@@ -1,26 +1,37 @@
 <template>
   <div>
-    <v-card color="grey lighten-4">
+    <v-card flat color="transparent lighten-4">
       <v-card-text>
         <v-container grid-list-lg>
           <v-layout row wrap>
             <v-flex lg1></v-flex>
-            <v-flex xs12 sm12 lg10 class="full py-5">
+            <v-flex xs12 sm12 lg10 class="full">
               <v-card color="white">
-                <v-img
-                  v-if="src"
-                  :lazy-src="lazy"
-                  :src="src"
-                />
                 <v-card-title>
-                  <v-icon class="pl-1">flag</v-icon>
-                  <h3>{{title}}</h3>
-                  <v-spacer/>
-                  <div>
-                    <small>دسته بندی: {{category}}</small>
-                    <br/>
-                    <small> انتشار: {{date}}</small>
-                  </div>
+                  <v-layout row>
+                    <v-flex xs12 sm8>
+                      <h3>
+                        <v-icon class="pl-1">flag</v-icon>
+                        {{title}}
+                      </h3>
+                      <v-spacer/>
+                      <div>
+                        <small>دسته بندی: {{category}}</small>
+                        <br/>
+                        <small> انتشار: {{date}}</small>
+                      </div>
+                    </v-flex>
+                    <v-flex xs12 sm4>
+                      <v-img
+                        v-if="src"
+                        :lazy-src="lazy"
+                        :src="src"
+                        max-width="100%"
+                        max-height="200px"
+                        :to="src"
+                      />
+                    </v-flex>
+                  </v-layout>
                 </v-card-title>
                 <v-card-text>
                   <div class="postContentScope" v-html="text"></div>
