@@ -105,7 +105,17 @@
                         <div class="pa-2 mx-1" v-if="isAllowed('city')">
                           <v-icon class="pb-1 pl-1">location_on</v-icon>
                           <span><small class="font-14">{{getTitle('city')}}</small>
-                          <b class="left">{{ city }}</b>
+                          <b class="left">{{ showField('city', item.advert.city) }}</b>
+                        </span>
+                        </div>
+                        <v-divider/>
+                      </template>
+
+                      <template v-if="isAllowed('transferable')">
+                        <div class="pa-2 mx-1" v-if="isAllowed('transferable')">
+                          <v-icon class="pb-1 pl-1">location_on</v-icon>
+                          <span><small class="font-14">{{getTitle('transferable')}}</small>
+                          <b class="left">{{ showField('transferable', item.advert.transferable) }}</b>
                         </span>
                         </div>
                         <v-divider/>
@@ -115,27 +125,47 @@
                         <div class="pa-2 mx-1" v-if="isAllowed('job')">
                           <v-icon class="pb-1 pl-1">keyboard_arrow_left</v-icon>
                           <span><small class="font-14">{{getTitle('job')}}</small>
-                          <b class="left">{{ job }}</b>
+                          <b class="left">{{ showField('job', item.job) }}</b>
                         </span>
                         </div>
                         <v-divider/>
                       </template>
 
-                      <template v-if="isAllowed('bank')">
+                      <template v-if="isAllowed('forBank') && item.forBank">
+                        <div class="pa-2 mx-1" v-if="isAllowed('forBank')">
+                          <v-icon class="pb-1 pl-1">keyboard_arrow_left</v-icon>
+                          <span><small class="font-14">{{getTitle('forBank')}}</small>
+                          <b class="left">{{ showField('forBank', item.forBank) }} </b>
+                        </span>
+                        </div>
+                        <v-divider/>
+                      </template>
+
+                      <template v-if="isAllowed('bank') &&  item.forBank">
                         <div class="pa-2 mx-1" v-if="isAllowed('bank')">
                           <v-icon class="pb-1 pl-1">keyboard_arrow_left</v-icon>
                           <span><small class="font-14">{{getTitle('bank')}}</small>
-                          <b class="left">{{ bank }}</b>
+                          <b class="left">{{ showField('bank', item.bank) }}</b>
                         </span>
                         </div>
                         <v-divider/>
                       </template>
 
-                      <template v-if="isAllowed('interestRate')">
+                      <template v-if="isAllowed('interestRate') && item.forBank">
                         <div class="pa-2 mx-1" v-if="isAllowed('interestRate')">
                           <v-icon class="pb-1 pl-1">keyboard_arrow_left</v-icon>
                           <span><small class="font-14">{{getTitle('interestRate')}}</small>
-                          <b class="left">{{ interestRate ? interestRate + 'درصد' : 'توافقی' }} </b>
+                          <b class="left">{{ showField('interestRate', item.interestRate) }} </b>
+                        </span>
+                        </div>
+                        <v-divider/>
+                      </template>
+
+                      <template v-if="isAllowed('forCourt') && item.forCourt">
+                        <div class="pa-2 mx-1" v-if="isAllowed('forCourt')">
+                          <v-icon class="pb-1 pl-1">keyboard_arrow_left</v-icon>
+                          <span><small class="font-14">{{getTitle('forCourt')}}</small>
+                          <b class="left">{{ showField('forCourt', item.forCourt)}} </b>
                         </span>
                         </div>
                         <v-divider/>
@@ -263,22 +293,10 @@
       let slug = params.slug
       let method = `/site/${type.type}/${id}`
       let query = {
-        include: 'advert.user.details,advert.city,loanType,guaranteeType,guaranteeTypes'
+        include: 'advert.user.details,advert.city,loanType,guaranteeTypes'
       }
 
       try {
-// city
-        //let cityData = await $axios.$get(cityMethod);
-        //store.commit('city/setAndProcessData', cityData.data || []);
-
-        // guarantee
-        let guaranteeData = await $axios.$get(guaranteeMethod);
-        store.commit('guaranteeType/setAndProcessData', guaranteeData.data || []);
-
-        // loan types
-        let loanTypeData = await $axios.$get(loanTypeMethod);
-        store.commit('loanType/setAndProcessData', loanTypeData.data || []);
-
         let {data} = await app.$axios.$get(method, {params: query})
         let loading = false
 
@@ -328,10 +346,7 @@
         return _.join(items, ', ')
       },
       getLoanType() {
-        let list = this.$store.state.loanType.data;
-        let index = _.findIndex(list, {'id': this.item.loanTypeId});
-        let item = list[index];
-        return _.get(item, 'name', 0);
+        return _.get(this.item, 'loanType.name',);
       },
       price() {
         return _.get(this, 'item.price',)
@@ -359,16 +374,6 @@
       },
       bank() {
         return _.get(this, 'item.bank', '-');
-      },
-      city() {
-        if (_.has(this.item, 'advert.city.name')) return _.get(this.item, 'advert.city.name', '-');
-        let list = this.$store.state.city.data;
-        let index = _.findIndex(list, {'id': this.item.advert.cityId});
-        let item = [];
-        if (index > 0) {
-          item = list[index];
-        }
-        return _.get(item, 'name', '');
       },
       text() {
         return Helper.nl2br(_.get(this, 'item.advert.text', '-'));

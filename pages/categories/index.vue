@@ -10,8 +10,8 @@
 
   export default {
     meta: {
-      title: 'لیست همه ی آگهی ها',
-      breadcrumb: 'همه ی آگهی ها'
+      title: 'لیست تمام آگهی ها',
+      breadcrumb: 'لیست'
     },
     data() {
       return {

@@ -560,9 +560,10 @@
         this.loading = true;
         let method = `/${this.panel}/${this.type.type}`;
         let advertableType = null;
-        let filter = null, must = null
-        let filterArray = [];
-        let mustArray = [];
+        let filter = null
+          , must = null
+          , filterArray = []
+          , mustArray = [];
 
         /* search and filter */
         if (this.mobileSearch) {

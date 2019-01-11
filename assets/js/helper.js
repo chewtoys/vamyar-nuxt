@@ -354,7 +354,7 @@ const Helper = {
     let prefix = '';
     _.forEach(filter, (val, key) => {
       if (val !== null || _.isNumber(val)) {
-        if (key === 'forBankValue' && key === 'forCourtValue') val = val ? '1' : '0'
+        if (key === 'forBankValue' || key === 'forCourtValue') val = val ? '1' : '0'
         prefix = _.has(maximum, key) ? '<' : (_.has(minimum, key) ? '>' : '');
         // replace keys
         key = key
