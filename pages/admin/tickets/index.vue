@@ -27,6 +27,7 @@
             <v-spacer></v-spacer>
             <v-text-field
               v-model="search"
+              @change="initPage"
               append-icon="search"
               label="چیزی بنویسید"
               single-line
@@ -43,9 +44,9 @@
           :headers="headers"
           :items="data"
           :loading="loading"
-          :search="search"
+          :hide-actions="hideActions"
           :pagination.sync="pagination"
-          :total-items="totalData"
+          :total-items="totalItems"
           :rows-per-page-items="[5,10,25,100]"
           no-results-text="هیچ موردی ثبت نشده است."
           class="elevation-1"
@@ -74,6 +75,7 @@
             </td>
             <td class="text-xs-right">{{ userName(props) }}</td>
             <td class="text-xs-right">{{ priority(props.item.priority) }}</td>
+            <td class="text-xs-right">{{ priority(props.item.jUpdatedAt) }}</td>
             <td class="text-xs-right">{{ category(props.item.categoryId) }}</td>
             <td class="text-xs-right">{{ status(props.item.status) }}</td>
             <td class="text-xs-left">
@@ -93,9 +95,6 @@
               </v-icon>
             </td>
           </template>
-          <v-alert slot="no-results" :value="true" color="error" icon="warning">
-            نتیجه ای برای "{{ search }}" یافت نشد.
-          </v-alert>
         </v-data-table>
         <div class="text-xs-center pt-2">
           <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
@@ -117,6 +116,7 @@
       {text: 'عنوان', value: 'title', align: 'right'},
       {text: 'کاربر', value: 'message', align: 'right'},
       {text: 'اهمیت', value: 'priority', align: 'right'},
+      {text: 'آخرین تغیر', value: 'updatedAt', align: 'right'},
       {text: 'دسته بندی', sortable: false, align: 'right'},
       {text: 'وضعیت', value: 'status', align: 'right'},
       {text: 'عملیات', sortable: false, align: 'left', width: '140px'},
@@ -129,7 +129,6 @@
     },
     data: () => ({
       data: [],
-      totalData: 10,
       loading: true,
       pagination: {page: 1}, //pagination is for vuetify - paginator is for API
       paginator: {totalPages: 1}, //pagination is for vuetify - paginator is for API
@@ -138,6 +137,12 @@
       search: '',
     }),
     computed: {
+      totalItems() {
+        return _.get(this, 'paginator.totalCount', 1000000) || 1000000;
+      },
+      hideActions() {
+        return this.totalItems < 1 || this.totalItems >= 1000000;
+      },
       pages() {
         return _.get(this.paginator, 'totalPages', 1)
       },
@@ -158,30 +163,7 @@
     watch: {
       pagination: {
         handler() {
-          this.loading = true;
-          let method = indexPath;
-          let {sortBy, descending, page, rowsPerPage} = this.pagination;
-          let query = {
-            page,
-            orderBy: `${sortBy || 'id'}:${descending ? 'desc' : 'asc'}`,
-            number: rowsPerPage
-          }
-          //console.log({method, query, paginator: this.paginator}, {sortBy, descending, page, rowsPerPage});
-          this.$axios.$get(method, {
-            params: query
-          }).then((response) => {
-
-            this.paginator = _.get(response, 'paginator', {})
-            this.data = _.get(response, 'data', [])
-            this.totalData = _.get(response, 'paginator.totalCount', 0)
-
-            //  console.log('on response: ', this.totalData, this.paginator, this.data, {response})
-          }).catch((error) => {
-
-            //console.log(error, method, query, this.paginator);
-          }).then(() => {
-            this.loading = false;
-          })
+          this.initPage()
         },
         deep: true
       },
@@ -199,11 +181,40 @@
     ,
     methods: {
 
+      initPage() {
+        this.loading = true;
+        let method = indexPath;
+        let filter;
+        if (this.search) filter = `id=${this.search},user.mobile=${this.search},userId=${this.search},title=${this.search}`
+        let {sortBy, descending, page, rowsPerPage} = this.pagination;
+        let query = {
+          page,
+          orderBy: `${sortBy || 'updatedAt'}:${descending ? 'desc' : 'asc'}`,
+          number: rowsPerPage
+        }
+        //console.log({method, query, paginator: this.paginator}, {sortBy, descending, page, rowsPerPage});
+        this.$axios.$get(method, {
+          params: query
+        }).then((response) => {
+
+          this.paginator = _.get(response, 'paginator', {})
+          this.data = _.get(response, 'data', [])
+          this.totalData = _.get(response, 'paginator.totalCount', 0)
+
+          //  console.log('on response: ', this.totalData, this.paginator, this.data, {response})
+        }).catch((error) => {
+
+          //console.log(error, method, query, this.paginator);
+        }).then(() => {
+          this.loading = false;
+        })
+      },
       priority(id) {
         return _.get(this.$store.state.settings.tickets.prioritiesArray, id, '')
       },
       userName(props) {
-        return _.get(props.item, 'user.details.name', props.item.userId)
+        //return _.get(props.item, 'user.details.name', props.item.userId)
+        return Helper.computeAdvertField('user', _.get(props.item, 'user.details.name', props.item.userId))
       },
       category(id) {
         let list = this.$store.state.ticketCategory.data;

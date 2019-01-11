@@ -26,6 +26,7 @@
             <v-spacer></v-spacer>
             <v-text-field
               v-model="search"
+              @change="initPage"
               append-icon="search"
               label="چیزی بنویسید"
               single-line
@@ -44,7 +45,7 @@
           :hide-actions="hideActions"
           :pagination.sync="pagination"
           :total-items="totalItems"
-          :rows-per-page-items="[5,10,25,100]"
+          :rows-per-page-items="[10,25,100]"
           no-results-text="هیچ موردی ثبت نشده است."
           class="elevation-1"
         >
@@ -158,9 +159,6 @@
       }
     },
     watch: {
-      search(val) {
-        this.initPage()
-      },
       pagination: {
         handler() {
           this.initPage()

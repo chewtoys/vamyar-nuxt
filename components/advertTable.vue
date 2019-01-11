@@ -31,6 +31,7 @@
                 label="جست و جو در عنوان و متن توضیحات"
                 single-line
                 hide-details
+                @change="switchPage"
               ></v-text-field>
             </v-flex>
             <v-flex xs12 sm6 class="px-1">
@@ -39,6 +40,7 @@
                 append-icon="search"
                 label="جست و جو بر اساس موبایل"
                 single-line
+                @change="switchPage"
                 hide-details
               ></v-text-field>
             </v-flex>
@@ -499,12 +501,6 @@
         },
         deep: true
       },
-      search(val) {
-        this.switchPage();
-      },
-      mobileSearch(val) {
-        this.switchPage();
-      },
       pagination: {
         handler() {
           //console.log(this.pagination.page)
@@ -550,7 +546,7 @@
 
         /* search and filter */
         if (this.mobileSearch) {
-          filter = this.isAdverts ? `mboile=${this.mobileSearch},user.mobile=${this.mobileSearch}` : `advert.mobile=${this.mobileSearch},advert.user.mobile=${this.mobileSearch}`
+          filter = this.isAdverts ? `mobile=${this.mobileSearch},user.mobile=${this.mobileSearch}` : `advert.mobile=${this.mobileSearch},advert.user.mobile=${this.mobileSearch}`
         } else if (this.search) {
           filter = this.isAdverts ? `title=${this.search},text=${this.search}` : `advert.title=${this.search},advert.text=${this.search}`
         } else if (this.commonComputedFilters || this.computedFilters) {
@@ -581,7 +577,12 @@
         if (this.isAdverts && this.advertTypeName) {
           //console.log(Helper.getAdvertTypeByType(this.advertTypeName), this.advertTypeName);
           advertableType = _.get(Helper.getAdvertTypeByType(this.advertTypeName), 'advertType', this.advertTypeName.slice(0, -1))
-          if (advertableType !== 'advert') must = `advertableType=${advertableType}`
+          if (advertableType !== 'advert') {
+            must = `advertableType=${advertableType}`
+          } else {
+            must = null
+            advertableType = null
+          }
         }
         //console.log(this.advertTypeName)
 
@@ -773,11 +774,12 @@
       sender(props) {
         let msg;
         if (_.has(props.item, 'advert.userId') || _.has(props.item, 'userId')) {
-          msg = `توسط کاربر` + '\n' + 'موبایل: ' + _.get(props.item, 'user.mobile', _.get(props.item, 'advert.user.mobile', '-'))
+          msg = `توسط کاربر` + '\n' + 'موبایل کاربر: ' + _.get(props.item, 'user.mobile', _.get(props.item, 'advert.user.mobile', '-'))
         } else {
           let id = _.get(props.item, 'advert.adminId', _.get(props.item, 'adminId', 'نامشخص')) || '-';
           msg = `توسط مدیر` + '\n' + 'شناسه: ' + id
         }
+        msg += '\n' + 'موبایل آگهی: ' + _.get(props.item, 'mobile', _.get(props.item, 'advert.mobile', '-'))
         return Helper.nl2br(msg);
       },
       getDate(props) {

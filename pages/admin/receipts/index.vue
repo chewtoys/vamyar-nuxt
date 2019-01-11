@@ -26,6 +26,7 @@
               append-icon="search"
               label="چیزی بنویسید"
               single-line
+              @change="initPage"
               hide-details
             ></v-text-field>
           </div>
@@ -168,9 +169,7 @@
       }
     },
     watch: {
-      search(val) {
-        this.initPage()
-      },
+
       pagination: {
         handler() {
           this.initPage()
