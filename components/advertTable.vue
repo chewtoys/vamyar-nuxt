@@ -80,8 +80,13 @@
         >
           <template slot="items" slot-scope="props">
 
-            <td :class="`text-xs-left ${isDeleted(props.item) ? 'deletedAdvert' :''}`">{{ getProperty(props, 'item.id')
-              }}
+            <td :class="`text-xs-left ${isDeleted(props.item) ? 'deletedAdvert' :''}`">
+              <nuxt-link title="مشاهده"
+                         :to="showLink(props)"
+                         class="mx-1">
+                {{ getProperty(props, 'item.id')
+                }}
+              </nuxt-link>
             </td>
             <td v-if="isAdmin" class="text-xs-left" v-html="sender(props)"></td>
             <td v-if="false && isAdmin" class="text-xs-left">{{ getProperty(props, 'item.description', '') }}</td>
@@ -195,7 +200,7 @@
             </td>
             <td>
               <nuxt-link title="مشاهده"
-                         :to=" `${uri}/${getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', '')}/show/${props.item.advertableId}`"
+                         :to="showLink(props)"
                          class="mx-1">
                 <v-icon
                   small
@@ -204,7 +209,7 @@
                 </v-icon>
               </nuxt-link>
               <nuxt-link title="ویرایش"
-                         :to="`${uri}/${getProperty(getAdvertType(getProperty(props, 'item.advertableType', '')), 'alias', '')}/edit/${props.item.advertableId}`"
+                         :to="editLink(props)"
                          class="mx-1">
                 <v-icon
                   small
@@ -246,8 +251,13 @@
                 hide-details
               ></v-checkbox>
             </td>
-            <td :class="`text-xs-left ${isDeleted(props.item) ? 'deletedAdvert' :''}`">{{ getProperty(props, 'item.id')
-              }}
+            <td :class="`text-xs-left ${isDeleted(props.item) ? 'deletedAdvert' :''}`">
+              <nuxt-link title="مشاهده"
+                         :to="showLink(props)"
+                         class="mx-1">
+                {{ getProperty(props, 'item.id')
+                }}
+              </nuxt-link>
             </td>
             <td v-if="isAdmin" class="text-xs-left" v-html="sender(props)"></td>
             <td v-if="false && isAdmin" class="text-xs-left">{{ getProperty(props, 'item.advert.description', '-') }}
@@ -384,14 +394,14 @@
             </td>
 
             <td>
-              <nuxt-link title="مشاهده" :to=" uri + '/show/' + props.item.id" class="mx-1">
+              <nuxt-link title="مشاهده" :to="showLink(props)" class="mx-1">
                 <v-icon
                   small
                 >
                   pageview
                 </v-icon>
               </nuxt-link>
-              <nuxt-link title="ویرایش" :to=" uri + '/edit/' + props.item.id" class="mx-1">
+              <nuxt-link title="ویرایش" :to="editLink(props)" class="mx-1">
                 <v-icon
                   small
                 >
@@ -510,6 +520,14 @@
       }
     },
     methods: {
+      editLink(props) {
+        if (this.isAdverts) return `${this.uri}/${this.getProperty(this.getAdvertType(this.getProperty(props, 'item.advertableType', '')), 'alias', '')}/edit/${props.item.advertableId}`
+        return this.uri + '/show/' + props.item.id;
+      },
+      showLink(props) {
+        if (this.isAdverts) return `${this.uri}/${this.getProperty(this.getAdvertType(this.getProperty(props, 'item.advertableType', '')), 'alias', '')}/show/${props.item.advertableId}`
+        return this.uri + '/show/' + props.item.id
+      },
       itemType(item) {
         return Helper.getAdvertType(item)
       },
@@ -543,6 +561,8 @@
         let method = `/${this.panel}/${this.type.type}`;
         let advertableType = null;
         let filter = null, must = null
+        let filterArray = [];
+        let mustArray = [];
 
         /* search and filter */
         if (this.mobileSearch) {
@@ -550,27 +570,25 @@
         } else if (this.search) {
           filter = this.isAdverts ? `title=${this.search},text=${this.search}` : `advert.title=${this.search},advert.text=${this.search}`
         } else if (this.commonComputedFilters || this.computedFilters) {
-          let filterArray = [];
+
           _.forEach(this.commonComputedFilters, (value, key) => {
             if (value !== null && value !== '' && value !== 'null') {
               if (this.isAdverts) {
-                filterArray.push(`${key}=${value}`)
+                mustArray.push(`${key}=${value}`)
               } else {
-                filterArray.push(`advert.${key}=${value}`)
+                mustArray.push(`advert.${key}=${value}`)
               }
             }
           })
           _.forEach(this.computedFilters, (value, key) => {
             if (value !== null && value !== '' && value !== 'null') {
               if (this.isAdverts) {
-                filterArray.push(`advertable.${key}=${value}`)
+                mustArray.push(`advertable.${key}=${value}`)
               } else {
-                filterArray.push(`${key}=${value}`)
+                mustArray.push(`${key}=${value}`)
               }
             }
           })
-
-          filter = _.replace(_.replace(_.replace(_.replace(_.replace(_.join(filterArray, ','), '<=', '<'), '>=', '>'), '<=', '<'), '>=', '>'), '__', '.');
 
         }
 
@@ -578,12 +596,18 @@
           //console.log(Helper.getAdvertTypeByType(this.advertTypeName), this.advertTypeName);
           advertableType = _.get(Helper.getAdvertTypeByType(this.advertTypeName), 'advertType', this.advertTypeName.slice(0, -1))
           if (advertableType !== 'advert') {
-            must = `advertableType=${advertableType}`
+            mustArray.push(`advertableType=${advertableType}`)
           } else {
-            must = null
             advertableType = null
           }
         }
+        filter = _.join(filterArray, ',')
+        must = _.join(mustArray, ',')
+
+        filter = _.replace(_.replace(_.replace(_.replace(_.replace(filter, '<=', '<'), '>=', '>'), '<=', '<'), '>=', '>'), '__', '.');
+        must = _.replace(_.replace(_.replace(_.replace(_.replace(must, '<=', '<'), '>=', '>'), '<=', '<'), '>=', '>'), '__', '.');
+
+
         //console.log(this.advertTypeName)
 
         let include = 'advert.user.details,guaranteeTypes,advert.city,loanType';

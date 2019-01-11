@@ -5,7 +5,7 @@
       <v-layout rwo wrap>
         <v-flex xs12 sm4 class="pa-1">
           <div>
-            <v-select
+            <v-autocomplete
               :items="loanTypeList"
               item-text="name"
               item-value="id"
@@ -73,7 +73,7 @@
     props: ['value', 'label'],
     data() {
       return {
-        amount: '',
+        amount: [],
         loading: {
           paybackTime: false,
           loanType: false,
@@ -81,6 +81,7 @@
         },
         filter: {
           paybackTimeValue: null,
+          amountValue: null,
           minAmountValue: null,
           maxAmountValue: null,
           loanType: null,
@@ -122,8 +123,7 @@
 
     },
     methods: {
-      updateAmount() {
-        let value = _.get(this, 'amount', null);
+      updateAmount(value) {
         _.set(this, 'filter.amountValue', null)
         _.set(this, 'filter.minAmountValue', null)
         _.set(this, 'filter.maxAmountValue', null)
@@ -131,20 +131,23 @@
         if (_.has(value, 'min') || _.has(value, 'max')) {
           _.set(this, 'filter.minAmountValue', _.get(value, 'min', null) || null)
           _.set(this, 'filter.maxAmountValue', _.get(value, 'max', null) || null)
-        } else {
-          if (_.isNumber(value)) {
-            _.set(this, 'filter.amountValue', 0)
-          }
+        }
+        if (_.isNumber(value)) {
+          _.set(this, 'filter.amountValue', value)
         }
         this.emitToParent();
       },
       emitToParent() {
         let query = {}
-        _.forEach(this.filter, (val, title) => {
-          if (val || _.isNumber(val)) _.set(query, title, val)
-        })
-        this.$emit("change", query);
-        return this.$emit("input", query);
+
+        setTimeout(() => {
+          _.forEach(this.filter, (val, title) => {
+            if (val || _.isNumber(val)) _.set(query, title, val)
+          })
+          this.$emit("change", query);
+          return this.$emit("input", query);
+        }, 30);
+
       },
     }
   }

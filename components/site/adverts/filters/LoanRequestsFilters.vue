@@ -62,6 +62,7 @@
         },
         filter: {
           paybackTimeValue: null,
+          amountValue: null,
           minAmountValue: null,
           maxAmountValue: null,
           loanTypeIdValue: null,
@@ -104,31 +105,31 @@
       rangeLabels(val) {
         return this.range_labels[val]
       },
-      updateAmount() {
-        let value = _.get(this, 'amount', null);
+      updateAmount(value) {
         _.set(this, 'filter.amountValue', null)
-        if (_.has(value, 'min')) {
+        _.set(this, 'filter.minAmountValue', null)
+        _.set(this, 'filter.maxAmountValue', null)
+
+        if (_.has(value, 'min') || _.has(value, 'max')) {
           _.set(this, 'filter.minAmountValue', _.get(value, 'min', null) || null)
           _.set(this, 'filter.maxAmountValue', _.get(value, 'max', null) || null)
-        } else {
-          if (value === null) {
-            _.set(this, 'filter.minAmountValue', null)
-            _.set(this, 'filter.maxAmountValue', null)
-          } else {
-            _.set(this, 'filter.amountValue', 0)
-            _.set(this, 'filter.minAmountValue', null)
-            _.set(this, 'filter.maxAmountValue', null)
-          }
+        }
+        if (_.isNumber(value)) {
+          _.set(this, 'filter.amountValue', value)
         }
         this.emitToParent();
       },
       emitToParent() {
         let query = {}
+        setTimeout(() => {
         _.forEach(this.filter, (val, title) => {
           if (val || _.isNumber(val)) _.set(query, title, val)
         })
-        this.$emit("change", query);
-        return this.$emit("input", query);
+
+          this.$emit("change", query);
+          return this.$emit("input", query);
+        }, 30);
+
       },
     }
   }

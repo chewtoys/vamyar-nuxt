@@ -102,12 +102,21 @@
       },
     },
     watch: {
+      $route: {
+        handler() {
+          this.initialLoading();
+        },
+        deep: true
+      },
       data: {
         deep: true,
         handler() {
           this.verified
         }
       }
+    },
+    mounted(){
+      this.initialLoading();
     },
     async asyncData({params, store, $axios, error}) {
       let id = params.id;
@@ -143,9 +152,6 @@
         //console.log('error', error)
         return error({statusCode: 404, message: 'آگهی یافت نشد :('})
       }
-    },
-    mounted() {
-      this.initialLoading();
     },
     methods: {
       getProperty(item, path, def = '') {

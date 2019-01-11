@@ -2,24 +2,26 @@
   <v-layout row wrap>
     <v-flex xs12 sm12>
       <v-card color="white">
-        <AdvertFilters :chooseType="isAdverts" label="فیلتر کنید" v-model="advertFilters"
+        <AdvertFilters :chooseType="isAdverts" label="" v-model="advertFilters"
                        @change="loadAgainCommonAdvertFilter"/>
-        <LoansFilters v-if="canShow('loans')" label="فیلتر وام " v-model="filter"
+        <LoansFilters v-if="canShow('loans')" label="در بین آگهی های وام های فروشی و مشارکتی جست و جو کنید "
+                      v-model="filter"
                       @change="loadAgainAdvertFilter"/>
-        <LoanRequestsFilters v-if="canShow('loanRequests')" label="فیلتر در خواست وام " v-model="filter"
+        <LoanRequestsFilters v-if="canShow('loanRequests')" label="در بین در خواست های وام جست و جو کنید"
+                             v-model="filter"
                              @change="loadAgainAdvertFilter"/>
-        <CoSignersFilters v-if="canShow('coSigners')" label="فیلتر ضامن ها" v-model="filter"
+        <CoSignersFilters v-if="canShow('coSigners')" label="در بین ضامن ها جست و جو کنید" v-model="filter"
                           @change="loadAgainAdvertFilter"/>
-        <CoSignerRequestsFilters v-if="canShow('coSignerRequests')" label="فیلتر درخواست ضامن"
+        <CoSignerRequestsFilters v-if="canShow('coSignerRequests')" label="در بینم درخواست های ضمانت جست و جو کنید"
                                  v-model="filter" @change="loadAgainAdvertFilter"/>
-        <FinancesFilters v-if="canShow('finances')" label="فیلتر سرمایه گذاری ها" v-model="filter"
+        <FinancesFilters v-if="canShow('finances')" label="در بین سرمایه گذار ها جست و جو کنید" v-model="filter"
                          @change="loadAgainAdvertFilter"/>
-        <FinanceRequestsFilters v-if="canShow('financeRequests')" label="فیلتر درخواست سرمایه گذاری "
+        <FinanceRequestsFilters v-if="canShow('financeRequests')" label="در بین درخواست سرمایه گذاری جست و جو کنید"
                                 v-model="filter" @change="loadAgainAdvertFilter"/>
 
         <v-flex xs12 sm6 class="py-2">
           <v-subheader>مرتب سازی بر اساس</v-subheader>
-          <v-btn-toggle v-model="sort">
+          <v-btn-toggle v-model="sortBtn">
             <v-btn v-for="item in sortList" :key="item.value" color="info" class="grey--text text--darken-4"
                    @click="sortBy(item.value)"
                    v-if="allowedSort(item)" flat>
@@ -100,9 +102,9 @@
       return {
         advertsSortList: [
           {title: 'جدیدترین', value: 'priority:desc'},
-          {title: 'قدیمی ترین', value: 'priority:asc'},
-          {title: 'کمترین قیمت', value: 'advertable.amount:asc', types: ['loans', 'loanRequests']},
-          {title: 'بیشترین قیمت', value: 'advertable.amount:desc', types: ['loans', 'loanRequests']},
+          {title: 'قدیمی ترین', value: 'id:asc'},
+          {title: 'کمترین مبلغ وام', value: 'advertable.amount:asc', types: ['loans', 'loanRequests']},
+          {title: 'بیشترین مبلغ وام', value: 'advertable.amount:desc', types: ['loans', 'loanRequests']},
           {title: 'بیشترین سرمایه', value: 'advertable.maxAmount:desc', types: ['finances']},
           {title: 'کمترین سرمایه', value: 'advertable.maxAmount:asc', types: ['finances']},
           {title: 'بیشترین نرخ سود', value: 'advertable.interestRate:desc', types: ['coSignerRequest']},
@@ -110,9 +112,9 @@
         ],
         typeSortList: [
           {title: 'جدیدترین', value: 'advert.priority:desc'},
-          {title: 'قدیمی ترین', value: 'advert.priority:asc'},
-          {title: 'کمترین قیمت', value: 'amount:asc', types: ['loans', 'loanRequests']},
-          {title: 'بیشترین قیمت', value: 'amount:desc', types: ['loans', 'loanRequests']},
+          {title: 'قدیمی ترین', value: 'id:asc'},
+          {title: 'کمترین مبلغ وام', value: 'amount:asc', types: ['loans', 'loanRequests']},
+          {title: 'بیشترین مبلغ وام', value: 'amount:desc', types: ['loans', 'loanRequests']},
           {title: 'بیشترین سرمایه', value: 'maxAmount:desc', types: ['finances']},
           {title: 'کمترین سرمایه', value: 'maxAmount:asc', types: ['finances']},
           {title: 'بیشترین نرخ سود', value: 'interestRate:desc', types: ['coSignerRequest']},
@@ -121,6 +123,7 @@
         showPremium: false,
         type: '',
         sort: '',
+        sortBtn: '',
         commonComputedFilters: [],
         computedFilters: [],
         advertTypeName: null,
@@ -205,29 +208,38 @@
       loadAgainCommonAdvertFilter(filter) {
         //console.log(filter);
         let typeName = _.get(filter, 'advertTypeName', 'adverts');
-        _.set(this, 'advertTypeName', typeName);
+        if (this.isAdverts) _.set(this, 'advertTypeName', typeName);
 
         let computedFilter = Helper.getComputedFilter(filter);
         _.set(this, 'commonComputedFilters', computedFilter);
         this.loadAgain();
       },
       loadAgainAdvertFilter(filter) {
-        //console.log(1,{filter});
-        this.filter = ''
+        ////console.log(1,{filter});
+        //this.filter = ''
+        //_.set(this, 'filter', filter);
         let type = _.get(this, 'advertTypeName', this.which);
         let computedFilter = Helper.getComputedFilter(filter, type);
         _.set(this, 'computedFilters', computedFilter);
-        _.set(this, 'filter', filter);
-        //console.log(computedFilter)
+
+        // console.log(JSON.stringify({filter, computedFilter}))
         this.loadAgain();
       },
+
       // reload as filter changed
       loadAgain(filters = {}) {
+        setTimeout(() => {
+          // browser breath!
+          this.loading = true
+        }, 30)
         this.msg = null;
-        this.loading = true
         this.items = []
         let method = `/site/${this.which}`
         let filter = null, include = null, must = null, advertableType = this.advertTypeName
+        let filterArray = [];
+        let filterItems = ['title', 'text'];
+        let mustArray = []; // step1
+
         if (this.isAdverts) {
           include = 'advertable,city,user.details,loanType,guaranteeTypes';
         } else {
@@ -235,37 +247,51 @@
         }
         //console.log(1, this.commonComputedFilters, 2, this.computedFilters);
 
-        let filterArray = [];
-
 
         _.forEach(this.commonComputedFilters, (value, key) => {
           if (value !== null && value !== '' && value !== 'null') {
             if (this.isAdverts) {
-              filterArray.push(`${key}=${value}`)
+              if (_.includes(filterItems, key)) {
+                filterArray.push(`${key}=${value}`)
+              } else {
+                mustArray.push(`${key}=${value}`)
+              }
             } else {
-              filterArray.push(`advert.${key}=${value}`)
+              if (_.includes(filterItems, key)) {
+                filterArray.push(`advert.${key}=${value}`)
+              } else {
+                mustArray.push(`advert.${key}=${value}`)
+              }
             }
           }
         })
+
+        //step 2
+
         _.forEach(this.computedFilters, (value, key) => {
           if (value !== null && value !== '' && value !== 'null') {
             if (this.isAdverts) {
-              filterArray.push(`advertable.${key}=${value}`)
+              mustArray.push(`advertable.${key}=${value}`)
             } else {
-              filterArray.push(`${key}=${value}`)
+              mustArray.push(`${key}=${value}`)
             }
           }
         })
 
+
         if (this.isAdverts && this.advertTypeName) {
           advertableType = _.get(Helper.getAdvertTypeByType(this.advertTypeName), 'advertType', this.advertTypeName.slice(0, -1))
-          if (advertableType !== 'advert') must = `advertableType=${advertableType}`
+          if (advertableType !== 'advert') mustArray.push(`advertableType=${advertableType}`)
         }
 
-        filter = _.replace(_.replace(_.replace(_.replace(_.replace(_.join(filterArray, ','), '<=', '<'), '>=', '>'), '<=', '<'), '>=', '>'), '__', '.');
+        // step3
+        filter = _.join(filterArray, ',')
+        must = _.join(mustArray, ',')
+
+        filter = _.replace(_.replace(_.replace(_.replace(_.replace(filter, '<=', '<'), '>=', '>'), '<=', '<'), '>=', '>'), '__', '.');
+        must = _.replace(_.replace(_.replace(_.replace(_.replace(must, '<=', '<'), '>=', '>'), '<=', '<'), '>=', '>'), '__', '.');
 
         let orderBy = this.sort;
-
         let querySubItems = {
           must,
           orderBy,
@@ -296,9 +322,11 @@
           //  "snackbar/setSnack",
           //  "مشکلی در گرفتن آگهی ها پیش آمد."
           //)
+        }).finally(() => {
+          this.loading = false
         })
         //this.items = data;
-        this.loading = false
+
         return true
       }
     },

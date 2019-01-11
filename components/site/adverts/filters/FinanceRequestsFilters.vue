@@ -89,31 +89,33 @@
     },
     methods: {
 
-      updateMaxAmount() {
-        let value = _.get(this, 'amount', null);
-        _.set(this, 'filter.amountValue', null)
-        if (_.has(value, 'min')) {
-          _.set(this, 'filter.minAmountValue', _.get(value, 'min', null))
-          _.set(this, 'filter.maxAmountValue', _.get(value, 'max', null))
-        } else {
-          if (value === null) {
-            _.set(this, 'filter.minAmountValue', null)
-            _.set(this, 'filter.maxAmountValue', null)
-          } else {
-            _.set(this, 'filter.amountValue', 0)
-            _.set(this, 'filter.minAmountValue', null)
-            _.set(this, 'filter.maxAmountValue', null)
-          }
+      updateMaxAmount(value) {
+
+        _.set(this, 'filter.maxAmountValue', null)
+        _.set(this, 'filter.minMaxAmountValue', null)
+        _.set(this, 'filter.maxMaxAmountValue', null)
+
+        if (_.has(value, 'min') || _.has(value, 'max')) {
+          _.set(this, 'filter.minMaxAmountValue', _.get(value, 'min', null))
+          _.set(this, 'filter.maxMaxAmountValue', _.get(value, 'max', null))
+        }
+        if (_.isNumber(value)) {
+          _.set(this, 'filter.maxAmountValue', value)
         }
         this.emitToParent();
       },
       emitToParent() {
         let query = {}
-        _.forEach(this.filter, (val, title) => {
-          if (val || _.isNumber(val)) _.set(query, title, val)
-        })
-        this.$emit("change", query);
-        return this.$emit("input", query);
+
+        setTimeout(() => {
+          _.forEach(this.filter, (val, title) => {
+            if (val || _.isNumber(val)) _.set(query, title, val)
+          })
+
+          this.$emit("change", query);
+          return this.$emit("input", query);
+        }, 30);
+
       },
     }
   }

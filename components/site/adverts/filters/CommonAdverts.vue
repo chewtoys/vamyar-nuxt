@@ -167,21 +167,12 @@
         _.set(this, 'filter.advertTypeNameValue', val);
         this.emitToParent();
       },
-      updateInstant() {
-        if (_.get(this, 'filter.instant', false)) {
-          _.set(this.filter, 'instantValue', true);
-        }
-        else {
-          _.set(this.filter, 'instantValue', false);
-        }
+      updateInstant(val) {
+        _.set(this.filter, 'instantValue', !!val);
         this.emitToParent();
       },
-      updateTransferable() {
-        if (_.get(this, 'filter.transferable', false)) {
-          _.set(this.filter, 'transferableValue', true);
-        } else {
-          _.set(this.filter, 'transferableValue', false);
-        }
+      updateTransferable(val) {
+        _.set(this.filter, 'transferableValue', !!val);
         this.emitToParent();
       },
       updateCity() {
@@ -189,11 +180,14 @@
       },
       emitToParent() {
         let query = {}
-        _.forEach(this.filter, (val, title) => {
-          if (val || _.isNumber(val)) _.set(query, title, val)
-        })
-        this.$emit("change", query);
-        return this.$emit("input", query);
+        setTimeout(() => {
+          _.forEach(this.filter, (val, title) => {
+            if (val || _.isNumber(val)) _.set(query, title, val)
+          })
+          this.$emit("change", query);
+          return this.$emit("input", query);
+        }, 30);
+
       },
     }
   }

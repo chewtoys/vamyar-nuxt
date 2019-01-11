@@ -109,7 +109,7 @@
     methods: {
       loadNotifs() {
         let method = '/user/notifications'
-        let query = {orderBy: 'id:desc',number:20000}
+        let query = {orderBy: 'id:desc', number: 20000}
         this.$axios.$get(method, {params: query}).then(res => {
           let data = _.get(res, 'data', []);
           let unseen = [];
@@ -119,9 +119,6 @@
           this.$store.commit('notifications/setData', data)
           this.$store.commit('notifications/setUnseen', unseen)
         })
-        setTimeout(() => {
-          this.loadNotifs()
-        }, 30000)
       },
       toggleDrawer: function () {
         this.$store.commit('navigation/setDrawer', !this.drawer);

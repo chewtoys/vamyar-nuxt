@@ -119,11 +119,15 @@
     methods: {
       emitToParent() {
         let query = {}
+        setTimeout(() => {
         _.forEach(this.filter, (val, title) => {
           if (val || _.isNumber(val)) _.set(query, title, val)
         })
-        this.$emit("change", query);
-        return this.$emit("input", query);
+
+          this.$emit("change", query);
+          return this.$emit("input", query);
+        }, 30);
+
       },
 
     }
