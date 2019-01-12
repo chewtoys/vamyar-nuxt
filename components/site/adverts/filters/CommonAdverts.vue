@@ -51,8 +51,8 @@
               append-icon="location_on"
               clearable
               light
-              no-data-text="شهری یافت نشد"
-              label="انتخاب شهر"
+              no-data-text="استانی یافت نشد"
+              label="انتخاب استان"
               flat
               solo-inverted
               @change="updateCity"
@@ -75,7 +75,7 @@
           <v-checkbox
             v-model="filter.transferable"
             :loading="loading.value"
-            label="تمام شهرها"
+            label="تمام استانها"
             light
             flat
             clearable
@@ -132,7 +132,7 @@
         //return list;
         let titles = [];
         _.forEach(list, (item) => {
-          titles.push({title: item.title, type: item.type})
+          titles.push({title: item.filterTitle, type: item.type})
         })
         return titles
       },
@@ -140,12 +140,15 @@
         return _.get(this.$store.state, 'city.data')
       },
     },
-    watch: {},
+    watch: {
+      value() {
+        _.forEach(this.value, (value, key) => {
+          _.set(this, ['filter', key], value);
+        })
+      }
+    },
     mounted() {
       _.set(this.loading, 'city', true)
-      _.forEach(this.value, (value, key) => {
-        _.set(this, ['filter', key], value);
-      })
 
       //load initial data - city
       this.$axios.$get(cityMethod).then(resp => {

@@ -27,34 +27,33 @@
         </v-flex>
         <v-flex :md9="!!settings('adverts.isImageAllowed') && !!item.image"
                 :md12="!settings('adverts.isImageAllowed') || !item.image" xs12>
-          <table class=" text-right full">
+          <table class="oddTable text-right full">
             <tbody>
-
-            <tr class="trrow">
+            <tr>
               <td width="30%">
                 <small>{{getTitle('title')}}</small>
               </td>
               <td><b>{{ show(item, 'title', 'advert.title') }}</b></td>
             </tr>
-            <tr v-if="isAllowed('amount')" class="trrow">
+            <tr v-if="isAllowed('amount')" class="">
               <td width="30%">
                 <small>{{getTitle('amount')}}</small>
               </td>
-              <td><b>{{ price(show(item, 'advertable.amount', 'amount', 'توافقی')) }}</b></td>
+              <td><b>{{ field('amount', show(item, 'advertable.amount', 'amount')) }}</b></td>
             </tr>
-            <tr v-if="isAllowed('maxAmount')" class="trrow">
+            <tr v-if="isAllowed('maxAmount')" class="">
               <td width="30%">
                 <small>{{getTitle('maxAmount')}}</small>
               </td>
-              <td><b>{{ price(show(item, 'advertable.maxAmount', 'maxAmount', 'توافقی')) }}</b></td>
+              <td><b>{{ field('maxAmount', show(item, 'advertable.maxAmount', 'maxAmount')) }}</b></td>
             </tr>
-            <tr v-if="isAllowed('price')" class="trrow">
+            <tr v-if="isAllowed('price')" class="">
               <td width="30%">
                 <small>{{getTitle('price')}}</small>
               </td>
-              <td v-if="false"><b class="">{{ price(show(item, 'advertable.price', 'price', 'ثبت نشده')) }}</b></td>
+              <td><b class="">{{ field('price', show(item, 'advertable.price', 'price')) }}</b></td>
             </tr>
-            <tr class="hide trrow">
+            <tr v-if="false">
               <td>
                 <small>{{getTitle('text')}}</small>
               </td>
@@ -62,7 +61,7 @@
                 <b>{{ limitStr(show(item, 'text', 'advert.text'), 250, ' ...') }}</b>
               </td>
             </tr>
-            <tr v-if="isAllowed('city')" class="trrow">
+            <tr v-if="isAllowed('city')" class="">
               <td>
                 <small>{{getTitle('city')}}</small>
               </td>
@@ -70,7 +69,7 @@
                 <b>{{ show(item, 'city.name', 'advert.city.name') }}</b>
               </td>
             </tr>
-            <tr class="trrow">
+            <tr>
               <td>
                 <small>تاریخ ثبت</small>
               </td>
@@ -145,7 +144,7 @@
       _has(item, path) {
         return _.has(item, path)
       },
-      show(item, path1, path2, def = 'نامشخص') {
+      show(item, path1, path2, def = null) {
         return _.get(item, path1, _.get(item, path2, def));
       },
       getCreatedDate(val) {
@@ -159,13 +158,17 @@
         return Helper.getAdvertLink(_item, this.which === 'adverts' ? null : this.which)
       },
       itemType(_item) {
-        return Helper.getAdvertType(_item, this.which === 'adverts' ? null : this.which)
+        return _.get(Helper.getAdvertType(_item, this.which === 'adverts' ? null : this.which, true), 'cardTitle', '-')
       },
       limitStr(text, limit, end) {
         return Helper.limitStr(text, limit, end)
       },
       price(number) {
         return Helper.priceFormat(number)
+      },
+      field(name, value) {
+        //console.log(name, value, Helper.computeAdvertField(name, value))
+        return Helper.computeAdvertField(name, value)
       }
     },
     computed: {
@@ -188,19 +191,20 @@
       tradeStatus() {
         return _.get(this.item, 'advert.tradeStatus', _.get(this.item, 'tradeStatus', 0));
       },
-      hasMobiadminle() {
+      hasMobile() {
         return _.get(this.item, 'advert.mobile', _.get(this.item, 'mobile', false));
       },
     }
   }
 </script>
 <style>
-  .trrow td {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  .oddTable tr td {
+    font-size: 13px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.03);
     padding: 4px;
   }
 
-  .trrow:nth-child(even) td {
-    background: rgba(0, 0, 0, 0.01);
+  .oddTable tr:nth-child(even) td {
+    background: rgba(0, 0, 0, 0.001);
   }
 </style>

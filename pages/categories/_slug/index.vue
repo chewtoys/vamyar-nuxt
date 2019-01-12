@@ -8,7 +8,7 @@
   import AdvertCategory from "~/components/site/AdvertCategory"
   import Helper from "~/assets/js/helper.js"
 
-  const number = 25,
+  const number = 24,
     cityMethod = '/cities?number=3000',
     guaranteeMethod = '/guaranteeTypes',
     loanTypeMethod = '/loanTypes'
@@ -27,21 +27,29 @@
       }
     },
     // loading the first items from server
-    async asyncData({app, store, params, error, $axios}) {
+    async asyncData({app, store, params, error, route, $axios}) {
       let slug = params.slug;
       let type = Helper.getTypeByAlias(slug);
       let method = `/site/${type.type}`
-      let cursor
-      cursor = 0
-      let include = 'advert.city,advert.user.details,loanType,guaranteeTypes';
-      let query = {
-        orderBy: 'advert.priority:desc',
-        number,
-        include
+      let orderBy = 'advert.priority:desc'
+      let commonComputedFilters = [];
+      let computedFilters = [];
+      let advertTypeName = type.type;
+
+      try {
+        commonComputedFilters = JSON.parse(_.get(route.query, 'commonComputedFilters', '{}'));
+        computedFilters = JSON.parse(_.get(route.query, 'computedFilters', '{}'));
+      } catch (err) {
+        console.log({err})
+        error({statusCode: 503, message: 'مشکل در اعمال فیلتر های صفحه'})
       }
+
+      let query = Helper.getComputedFilters(commonComputedFilters, computedFilters, advertTypeName, false, number, orderBy)
+
       try {
         // city
-        let cityData = await $axios.$get(cityMethod);
+        let cityData = await
+          $axios.$get(cityMethod);
         store.commit('city/setAndProcessData', cityData.data || []);
         let {data, paginator} = await
           app.$axios.$get(method, {
@@ -53,7 +61,8 @@
         console.log(err);
         return {slug, type, items: [], paginator: [], msg: 'مشکلی در گرفتن آگهی ها پیش آمد.', loading: false}
       }
-    },
+    }
+    ,
     components: {
       AdvertCategory
     }

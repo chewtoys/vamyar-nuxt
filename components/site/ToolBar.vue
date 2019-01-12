@@ -2,14 +2,12 @@
   <span>
     <no-ssr>
   <span>
-    <v-toolbar v-scroll="onScroll" flat :color="menuColor" class="white grey--text" app>
-      <nuxt-link style="width:80px;height:80%" class="" flat color="transparent" class="pa-1 white--text" to="/">
+    <v-toolbar dark v-scroll="onScroll" flat ccolor="menuColor" classs="white grey--text" app>
+      <nuxt-link style="width:90px;height:100%" class="" flat color="transparent" class="pt-3 pl-2 pb-1 white--text" to="/">
         <v-icon v-if="!siteLogo" class="deep-purple--text font-16 pl-1">polymer</v-icon>
         <v-img
-          class="pa-1"
           v-if="siteLogo"
-          width="100%"
-          max-height="100%"
+          contain
           :src="siteLogo"/>
       </nuxt-link>
       <v-divider vertical v-if="!isMobile"/>
@@ -21,7 +19,7 @@
       <v-toolbar-items key="t2" v-if="!showQuickAccess && !isMobile">
         <v-menu :nudge-width="100">
           <v-btn slot="activator" flat>
-            <span>دسته بندی ها</span>
+            <span>آگهی ها</span>
             <v-icon dark>arrow_drop_down</v-icon>
           </v-btn>
           <v-list class="farsi">
@@ -40,7 +38,7 @@
         <v-btn to="/user" flat>حساب من</v-btn>
       </v-toolbar-items>
       <v-spacer key="t5" v-if="!isMobile"/>
-        <searchBar key="t6" v-if="showQuickAccess && !isMobile"/>
+        <searchBar :dark="false" key="t6" v-if="showQuickAccess && !isMobile"/>
       <v-spacer key="t7"/>
       <v-toolbar-side-icon key="t4" v-if="isMobile" white--text @click.stop="drawer = !drawer"/>
       <v-toolbar-items key="t9" v-if="!showQuickAccess" class="hidden-sm-and-down">
@@ -77,7 +75,7 @@
             <v-list-tile-action>
               <v-icon v-text="'list'"/>
             </v-list-tile-action>
-            <v-list-tile-title class="text-right rtl" v-text="'دسته بندی ها'"/>
+            <v-list-tile-title class="text-right rtl" v-text="'آگهی ها'"/>
           </v-list-tile>
 
           <v-list-tile

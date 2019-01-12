@@ -66,21 +66,12 @@ const Helper = {
       return types
     }
   }
-  ,
-  getAdvertLink: function (item, whichType = null) {
+  , getAdvertType(item, whichType = null, getType = false) {
     let types = CONSTANTS.advertTypes
-    let advertType = _.get(item, 'advertableType', _.get(item, 'advert.advertableType', ''))
-    let type = whichType ? _.find(types, {'type': whichType}) : _.find(types, {'advertType': advertType})
-    if (type && type.alias) {
-      return "/categories/" + type.alias + "/show/" + _.get(item, 'advertable.id', _.get(item, 'id', 0))
-    } else {
-      return "#type-not-found"
+    if (whichType) {
+      if (!getType) return _.get(_.find(types, {'type': whichType}), 'title', whichType || 'نامشخص');
+      return _.find(types, {'type': whichType}) || [];
     }
-  }
-  ,
-  getAdvertType(item, whichType = null, getType = false) {
-    let types = CONSTANTS.advertTypes
-    if (whichType) return _.get(_.find(types, {'type': whichType}), 'title', whichType || 'نامشخص');
     let advertType = _.get(item, 'advertableType', _.get(item, 'advert.advertableType', ''));
     //console.log({item,advertType})
     if (getType) return _.find(types, {'advertType': advertType})
@@ -324,6 +315,52 @@ const Helper = {
     return all;
   }
   ,
+  reverseFilters(obj, type = null) {
+    let filter = {}, query = {};
+    let maximum = {
+      'maxAmountValue': true,
+      'maxMaxAmountValue': true,
+      'paybackTimeValue': true,
+    };
+    let minimum = {
+      'minAmountValue': true,
+      'minMaxAmountValue': true,
+    };
+    if (type === null) {
+      // common filters
+      filter = _.pick(obj, ['cityId', 'instant', 'transferable', 'title', 'text']);
+    } else if (type === 'loans') {
+      filter = _.pick(obj, ['loanTypeId', 'amount', 'maxAmount', 'minAmount', 'paybackTime']);
+    } else if (type === 'loanRequests') {
+      filter = _.pick(obj, ['loanTypeId', 'amount', 'maxAmount', 'minAmount', 'paybackTime']);
+    } else if (type === 'finances') {
+      filter = _.pick(obj, ['maxAmount', 'maxMaxAmount', 'minMaxAmount']);
+    } else if (type === 'financeRequests') {
+      filter = _.pick(obj, ['job', 'maxAmount', 'minAmount', 'amount']);
+    } else if (type === 'coSigners') {
+      filter = _.pick(obj, ['guaranteeType__id', 'forBank', 'forCourt']);
+    } else if (type === 'coSignerRequests') {
+      filter = _.pick(obj, ['guaranteeType__id', 'forBank', 'forCourt']);
+    }
+    let prefix = '';
+    _.forEach(filter, (val, key) => {
+      if (val !== null || _.isNumber(val)) {
+        if (key === 'forBank' || key === 'forCourt') val = val ? true : false
+        key = _.has(maximum, key) ? key.replace('<', '') : (_.has(minimum, key) ? key.replace('>', '') : '');
+        // replace keys
+        key =
+          key
+            .replace('amount', 'maxAmount')
+            .replace('amount', 'minAmount')
+            .replace('maxAmount', 'minMaxAmount')
+            .replace('maxAmount', 'maxMaxAmount')
+            .replace('', 'Value')
+        _.set(query, key, val)
+      }
+    })
+    //console.log({obj, filter, query});
+    return query;
+  },
   getComputedFilter(obj, type = null) {
     let filter = {}, query = {};
     let maximum = {
@@ -369,6 +406,91 @@ const Helper = {
     //console.log({obj, filter, query});
     return query;
   }
+  ,
+  getAdvertLink: function (item, whichType = null) {
+    let types = CONSTANTS.advertTypes
+    let advertType = _.get(item, 'advertableType', _.get(item, 'advert.advertableType', ''))
+    let type = whichType ? _.find(types, {'type': whichType}) : _.find(types, {'advertType': advertType})
+    if (type && type.alias) {
+      return "/categories/" + type.alias + "/show/" + _.get(item, 'advertable.id', _.get(item, 'id', 0))
+    } else {
+      return "#type-not-found"
+    }
+  }
+  ,
+
+  getComputedFilters(commonComputedFilters = [], computedFilters = [], advertTypeName = null, isAdverts = true, number = 24, orderBy = 'priority:desc') {
+    let filter = null,
+      include = null,
+      must = null,
+      filterArray = [];
+    let filterItems = ['title', 'text'];
+    let mustArray = []; // step1
+    let advertableType = advertTypeName
+
+    _.forEach(commonComputedFilters, (value, key) => {
+      if (value !== null && value !== '' && value !== 'null') {
+        if (isAdverts) {
+          if (_.includes(filterItems, key)) {
+            filterArray.push(`${key}=${value}`)
+          } else {
+            mustArray.push(`${key}=${value}`)
+          }
+        } else {
+          if (_.includes(filterItems, key)) {
+            filterArray.push(`advert.${key}=${value}`)
+          } else {
+            mustArray.push(`advert.${key}=${value}`)
+          }
+        }
+      }
+    })
+
+    //step 2
+
+    _.forEach(computedFilters, (value, key) => {
+      if (value !== null && value !== '' && value !== 'null') {
+        if (isAdverts) {
+          mustArray.push(`advertable.${key}=${value}`)
+        } else {
+          mustArray.push(`${key}=${value}`)
+        }
+      }
+    })
+
+    // step3
+    filter = _.join(filterArray, ',')
+    must = _.join(mustArray, ',')
+
+    filter = _.replace(_.replace(_.replace(_.replace(_.replace(filter, '<=', '<'), '>=', '>'), '<=', '<'), '>=', '>'), '__', '.');
+    must = _.replace(_.replace(_.replace(_.replace(_.replace(must, '<=', '<'), '>=', '>'), '<=', '<'), '>=', '>'), '__', '.');
+
+    if (isAdverts && advertTypeName) {
+      advertableType = _.get(this.getAdvertTypeByType(advertTypeName), 'advertType', advertTypeName.slice(0, -1))
+      if (advertableType !== 'advert') mustArray.push(`advertableType=${advertableType}`)
+    }
+
+    if (isAdverts) {
+      include = 'advertable,city,user.details,loanType,guaranteeTypes';
+    } else {
+      include = 'advert,advert.city,advert.user.details,loanType,guaranteeTypes';
+    }
+
+    let querySubItems = {
+      must,
+      orderBy,
+      include,
+      number,
+      filter,
+    }
+
+    let query = {}
+    _.forEach(querySubItems, (val, title) => {
+      if (val) _.set(query, title, val)
+    })
+
+    return query
+  },
 
 }
 

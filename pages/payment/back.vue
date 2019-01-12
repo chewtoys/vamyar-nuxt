@@ -13,7 +13,7 @@
           icon="new_releases"
         >
           <p>{{message}}</p>
-          <p>کد پیگیری پرداخت: {{trackingCode}}</p>
+          <p v-if="hasTrackingCode">کد پیگیری پرداخت: {{trackingCode}}</p>
           <v-btn :to="redirectPath">
             <v-icon>forward</v-icon>
             ادامه فرایند
@@ -27,7 +27,7 @@
           icon="new_releases"
         >
           <p>{{message}}</p>
-          <p v-if="trackingCode">کد پیگیری پرداخت: {{trackingCode}}</p>
+          <p v-if="hasTrackingCode">کد پیگیری پرداخت: {{trackingCode}}</p>
           <v-btn :to="redirectPath">ادامه</v-btn>
         </v-alert>
       </v-card-text>
@@ -52,7 +52,10 @@
         }
       },
       status() {
-        return _.get(this.getDecodedUri, 'response.statusCode',404) == 201;
+        return _.get(this.getDecodedUri, 'response.statusCode', 404) == 201;
+      },
+      hasTrackingCode() {
+        return _.has(this.getDecodedUri, 'response.data.paymentInfo.trackingCode');
       },
       trackingCode() {
         return _.get(this.getDecodedUri, 'response.data.paymentInfo.trackingCode', 'یافت نشد!');

@@ -18,6 +18,8 @@
           </v-card-title>
           <div>
             <v-divider/>
+
+            <v-chip>{{ itemType }}</v-chip>
             <span v-if="false">
               <v-chip v-if="getProperty(item, 'advert.user.details.lastName', false)" outline label class="black--text">
                 <v-icon right>verified_user</v-icon>
@@ -35,7 +37,8 @@
                 <v-icon left class=" white--text">security</v-icon>
                 <span calss="white--text">بررسی شده</span>
               </v-chip>
-              <v-chip v-if="getProperty(item, 'advert.tradeStatus',0)===1 && getProperty(item, 'advert.mobile',false)" label color="cyan"
+              <v-chip v-if="getProperty(item, 'advert.tradeStatus',0)===1 && getProperty(item, 'advert.mobile',false)"
+                      label color="cyan"
                       text-color="white">
                 <v-icon left class=" white--text">phone_in_talk</v-icon>
                 <span calss="white--text">در حال معامله</span>
@@ -300,7 +303,7 @@
         let {data} = await app.$axios.$get(method, {params: query})
         let loading = false
 
-        const breadcrumb = _.get(data,'title',''),
+        const breadcrumb = _.get(data, 'title', ''),
           page_title = ` ${data.advert.title || 'بدون عنوان'}`;
         store.commit("navigation/pushMeta", {breadcrumb, title: page_title});
         store.commit("navigation/setTitle", page_title);
@@ -316,6 +319,12 @@
     },
     computed: {
       // meta
+
+      itemType() {
+        let _item = this.item
+        console.log(Helper.getAdvertType(_item, this.type.type, true))
+        return _.get(Helper.getAdvertType(_item, this.type.type, true), 'cardTitle', '-')
+      },
       title() {
         return "مشاهده‌ی آگهی" + type.title + " - " + item.title
       },

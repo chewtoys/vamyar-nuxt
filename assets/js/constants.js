@@ -7,7 +7,7 @@ export const
   COMMON_FIELDS = ['title', 'city', 'user', 'adminId', 'text', 'priority', 'jCreatedAt', 'jDeletedAt', 'jUpdatedAt', 'transferable', 'advertType', 'verified', 'tradeStatus', 'mobile', 'instant', 'description'],
   COMMON_FIELD_TITLE = {
     'title': 'عنوان',
-    'city': 'شهر',
+    'city': 'استان',
     'user': 'کاربر',
     'adminId': 'مدیریت',
     'text': 'توضیحات',
@@ -27,7 +27,7 @@ export const
     adverts: [
       {text: "نوع آگهی", align: "right", value: 'advertableType'},
       {text: "عنوان", align: "right", value: 'title'},
-      {text: "شهر", value: "cityId", align: "left"},
+      {text: "استان", value: "cityId", align: "left"},
       {text: "تاریخ", value: 'CreatedAt', align: "right"},
       {text: "فوری", value: 'instant', align: "left", width: '140px'},
       {text: "وضعیت", value: 'tradeStatus', align: "left", width: '140px'},
@@ -157,7 +157,7 @@ export const
           title: 'عنوان'
         }, {
           name: 'city',
-          title: 'شهر'
+          title: 'استان'
         }, {
           name: 'transferable',
           title: 'قابل انتقال'
@@ -198,7 +198,7 @@ export const
           path: 'advert.title'
         }, {
           name: 'city',
-          title: 'شهر',
+          title: 'استان',
           path: 'advert.cityId'
         }, {
           name: 'transferable',
@@ -251,7 +251,7 @@ export const
           title: 'عنوان'
         }, {
           name: 'city',
-          title: 'شهر'
+          title: 'استان'
         }, {
           name: 'transferable',
           title: 'قابل انتقال'
@@ -285,7 +285,7 @@ export const
           path: 'advert.title'
         }, {
           name: 'city',
-          title: 'شهر',
+          title: 'استان',
           path: 'advert.cityId'
         }, {
           name: 'transferable',
@@ -328,7 +328,7 @@ export const
           title: 'عنوان'
         }, {
           name: 'city',
-          title: 'شهر'
+          title: 'استان'
         }, {
           name: 'transferable',
           title: 'قابل انتقال',
@@ -354,7 +354,7 @@ export const
           path: 'advert.title'
         }, {
           name: 'city',
-          title: 'شهر',
+          title: 'استان',
           path: 'advert.cityId'
         }, {
           name: 'transferable',
@@ -387,7 +387,7 @@ export const
           title: 'عنوان'
         }, {
           name: 'city',
-          title: 'شهر'
+          title: 'استان'
         }, {
           name: 'transferable',
           title: 'قابل انتقال'
@@ -416,7 +416,7 @@ export const
           path: 'advert.title'
         }, {
           name: 'city',
-          title: 'شهر',
+          title: 'استان',
           path: 'advert.cityId'
         }, {
           name: 'transferable',
@@ -453,7 +453,7 @@ export const
           title: 'عنوان'
         }, {
           name: 'city',
-          title: 'شهر'
+          title: 'استان'
         }, {
           name: 'transferable',
           title: 'قابل انتقال',
@@ -484,7 +484,7 @@ export const
           path: 'advert.title'
         }, {
           name: 'city',
-          title: 'شهر',
+          title: 'استان',
           path: 'advert.cityId'
         }, {
           name: 'transferable',
@@ -524,7 +524,7 @@ export const
           title: 'عنوان'
         }, {
           name: 'city',
-          title: 'شهر'
+          title: 'استان'
         }, {
           name: 'transferable',
           title: 'قابل انتقال',
@@ -564,7 +564,7 @@ export const
           path: 'advert.title'
         }, {
           name: 'city',
-          title: 'شهر',
+          title: 'استان',
           path: 'advert.cityId'
         }, {
           name: 'transferable',
@@ -611,12 +611,24 @@ export const
       ],
     }
   },
+  /*
+
+  لیست وام های فروشی و مشارکتی
+لیست درخواست های وام
+لیست سرمایه گذار ها
+لیست درخواست های سرمایه
+لیست ضامن ها
+لیست درخواست های ضامن
+
+   */
   advertTypes = {
     loanRequests: {
       type: "loanRequests",
       advertType: "loanRequest",
       alias: "loan-requests",
       title: "درخواست وام",
+      cardTitle: "خریدار وام هستم",
+      filterTitle: "لیست درخواست های وام",
       panelLink: "درخواست وام دارم",
       siteLink: "درخواست های وام",
 
@@ -625,7 +637,9 @@ export const
       type: "loans",
       advertType: "loan",
       alias: "loans",
-      title: "وام",
+      title: "وام فروشی و مشارکتی",
+      cardTitle: "فروشنده‌ی وام هستم",
+      filterTitle: "  لیست وام های فروشی و مشارکتی",
       panelLink: "ثبت وام برای فروش یا مشارکت",
       siteLink: "وام های فروشی و مشارکتی",
     },
@@ -634,6 +648,8 @@ export const
       advertType: "finance",
       alias: "finances",
       title: "سرمایه گذاری",
+      cardTitle: "سرمایه گذار هستم",
+      filterTitle: "لیست سرمایه گذار ها",
       panelLink: "ثبت سرمایه (سرمایه گذار هستم)",
       siteLink: "سرمایه گذارها",
     },
@@ -641,7 +657,9 @@ export const
       type: "financeRequests",
       advertType: "financeRequest",
       alias: "finance-requests",
-      title: "درخواست سرمایه گذاری",
+      title: "درخواست سرمایه",
+      cardTitle: "نیاز به سرمایه گذار دارم",
+      filterTitle: "لیست درخواست های سرمایه",
       panelLink: "درخواست سرمایه دارم",
       siteLink: "درخواست های سرمایه",
     },
@@ -650,6 +668,8 @@ export const
       advertType: "coSigner",
       alias: "co-signers",
       title: "ضامن",
+      cardTitle: "ضامن هستم",
+      filterTitle: "لیست ضامن ها",
       panelLink: "ثبت ضمانت (ضامن هستم)",
       siteLink: "ضامن ها",
     },
@@ -658,6 +678,8 @@ export const
       advertType: "coSignerRequest",
       alias: "co-signer-requests",
       title: "درخواست ضامن",
+      cardTitle: "نیاز به ضامن دارم",
+      filterTitle: "لیست درخواست های ضامن",
       panelLink: "درخواست ضامن دارم",
       siteLink: "درخواست های ضمانت",
     }
@@ -699,7 +721,7 @@ export const
         link: "/admin/settings/pages"
       },
       {
-        title: "لیست شهر ها",
+        title: "لیست استان ها",
         icon: "keyboard_arrow_left",
         link: "/admin/settings/pages"
       },

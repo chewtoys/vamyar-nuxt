@@ -36,7 +36,7 @@
         return this.$store.state.site.users_count || 789
       },
       isMobile() {
-        if (proccess.browser) {
+        if (process.browser) {
           return this.$vuetify.breakpoint.smAndDown
         } else {
           return false
