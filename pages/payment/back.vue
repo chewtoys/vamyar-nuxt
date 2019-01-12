@@ -27,8 +27,8 @@
           icon="new_releases"
         >
           <p>{{message}}</p>
-          <p>کد پیگیری پرداخت: {{trackingCode}}</p>
-          <v-btn :to="redirectPath">بازگشت</v-btn>
+          <p v-if="trackingCode">کد پیگیری پرداخت: {{trackingCode}}</p>
+          <v-btn :to="redirectPath">ادامه</v-btn>
         </v-alert>
       </v-card-text>
     </v-card>
@@ -52,7 +52,7 @@
         }
       },
       status() {
-        return _.has(this.getDecodedUri, 'response.statusCode') === 201;
+        return _.get(this.getDecodedUri, 'response.statusCode',404) == 201;
       },
       trackingCode() {
         return _.get(this.getDecodedUri, 'response.data.paymentInfo.trackingCode', 'یافت نشد!');

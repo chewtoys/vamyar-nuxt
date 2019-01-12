@@ -11,7 +11,7 @@
         {{ (false && error && error.message ) ? error.message : 'آیپی شما مجاز نیست. در صورت استفاده از آیپی ایران با پشتیبانی تماس بگیرید.'}}
       </div>
       <div v-else-if="statusCode === 500" class="title iransans">
-        {{ (false && error && error.message ) ? error.message : 'مشکلی از طرف سرور رخ داد!'}}
+        {{ (false && error && error.message ) ? error.message : 'مشکل در ارتباط با سرور'}}
       </div>
       <div v-else-if="statusCode === 530" class="title iransans">
         {{ (false && error && error.message ) ? error.message : 'سایت بسته است'}}

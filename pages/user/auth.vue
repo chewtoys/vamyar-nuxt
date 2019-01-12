@@ -373,14 +373,12 @@
           .$post(resource, formData, {mode: "no-cors"})
           .then(({access_token}) => {
             if (access_token) {
-              Cookie.set("auth", access_token)
+              Cookie.set("auth", access_token, {expires: 7})
               this.$store.commit("user/updateToken", access_token)
               setTimeout(() => {
                 window.location = this.redirectPath
                 //this.$router.push('/user')
               }, 500)
-              //
-              //
             } else {
               this.msgError("مشخصات صحیح نمی باشد.")
             }

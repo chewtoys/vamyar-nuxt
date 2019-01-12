@@ -214,6 +214,7 @@
             let value = this.search;
 
             _.set(query, 'id', value)
+            _.set(query, 'email', value)
             _.set(query, 'ip', value)
             _.set(query, 'userAgent', value)
             _.set(query, 'mobile', value)

@@ -295,7 +295,7 @@
           .$post(resource, formData, {mode: "no-cors"})
           .then(({access_token}) => {
             if (access_token) {
-              Cookie.set("adminauth", access_token)
+              Cookie.set("adminauth", access_token, {expires: 2})
               this.$store.commit("admin/updateToken", access_token)
               window.location = "/admin"
             } else {

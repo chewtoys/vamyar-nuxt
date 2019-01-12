@@ -19,7 +19,7 @@
           ></v-progress-circular>
         </div>
         <v-layout row wrap fluid>
-          <v-flex v-for="item in data" :key="item.id" sm4 lg3 xs12>
+          <v-flex v-for="item in data" :key="item.id" sm6 lg4 xs12>
             <AdvertCard :item="item"/>
           </v-flex>
         </v-layout>
