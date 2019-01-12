@@ -31,6 +31,7 @@
                 label="جست و جو در عنوان و متن توضیحات"
                 single-line
                 hide-details
+                :disabled="desiableSearch"
                 @change="switchPage"
               ></v-text-field>
             </v-flex>
@@ -40,6 +41,7 @@
                 append-icon="search"
                 label="جست و جو بر اساس موبایل"
                 single-line
+                :disabled="desiableSearch"
                 @change="switchPage"
                 hide-details
               ></v-text-field>
@@ -463,6 +465,7 @@
       search: '',
       mobileSearch: '',
       submit_loader: false,
+      desiableSearch: false,
       tableLoader: false,
     }),
     computed: {
@@ -510,6 +513,20 @@
       }
     },
     watch: {
+      mobileSearch() {
+        this.search = null;
+      },
+      search() {
+        this.mobileSearch = null;
+      },
+      filter() {
+        this.search = null;
+        this.mobileSearch = null;
+      },
+      advertFilters() {
+        this.search = null;
+        this.mobileSearch = null;
+      },
       type: {
         handler() {
           //alert('type change!')
@@ -563,6 +580,8 @@
         return Helper.getTypeByAdvertType(advertType);
       },
       switchPage() {
+
+        this.desiableSearch = false;
         this.loading = true;
         let method = `/${this.panel}/${this.type.type}`;
         let advertableType = null;
@@ -574,10 +593,12 @@
         /* search and filter */
         if (this.mobileSearch) {
           filter = this.isAdverts ? `mobile=${this.mobileSearch},user.mobile=${this.mobileSearch}` : `advert.mobile=${this.mobileSearch},advert.user.mobile=${this.mobileSearch}`
-        } else if (this.search) {
+        }
+        if (this.search) {
           filter = this.isAdverts ? `title=${this.search},text=${this.search}` : `advert.title=${this.search},advert.text=${this.search}`
-        } else if (this.commonComputedFilters || this.computedFilters) {
+        }
 
+        if (this.commonComputedFilters || this.computedFilters) {
 
           if (this.isAdverts && this.advertTypeName) {
             //console.log(Helper.getAdvertTypeByType(this.advertTypeName), this.advertTypeName);
@@ -607,11 +628,12 @@
               }
             }
           })
-
+          if (filterArray.length > 0 || mustArray.length > 0) {
+            filter = _.join(filterArray, ',')
+            must = _.join(mustArray, ',')
+          }
         }
 
-        filter = _.join(filterArray, ',')
-        must = _.join(mustArray, ',')
 
         filter = _.replace(_.replace(_.replace(_.replace(_.replace(filter, '<=', '<'), '>=', '>'), '<=', '<'), '>=', '>'), '__', '.');
         must = _.replace(_.replace(_.replace(_.replace(_.replace(must, '<=', '<'), '>=', '>'), '<=', '<'), '>=', '>'), '__', '.');
@@ -623,6 +645,8 @@
         if (this.isAdverts) include = 'advertable,user.details,guaranteeTypes,city,loanType';
 
         let {sortBy, descending, page, rowsPerPage} = this.pagination;
+
+
         let querySubItems = {
           advertableType,
           must,
@@ -630,9 +654,14 @@
           include,
           filter,
         }
+
         let query = {
           orderBy: `${sortBy || 'id'}:${descending ? 'desc' : 'asc'}`,
           number: rowsPerPage
+        }
+
+        if (filter) {
+          query.orderBy = null
         }
 
         _.forEach(querySubItems, (val, title) => {

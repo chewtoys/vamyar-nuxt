@@ -300,7 +300,7 @@
         let {data} = await app.$axios.$get(method, {params: query})
         let loading = false
 
-        const breadcrumb = 'نمایش آگهی',
+        const breadcrumb = _.get(data,'title',''),
           page_title = ` ${data.advert.title || 'بدون عنوان'}`;
         store.commit("navigation/pushMeta", {breadcrumb, title: page_title});
         store.commit("navigation/setTitle", page_title);

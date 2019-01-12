@@ -7,10 +7,10 @@
     <v-container fill-height>
       <v-layout align-center>
         <v-flex text-xs-center>
-          <h1 class="font-50">{{settings('frontpage.headerText')}}</h1>
+          <h1 class="font-40 pt-5 px-1 ">{{settings('frontpage.headerText')}}</h1>
           <div><h2 class="font-22 pt-2">{{settings('frontpage.subHeaderText')}}</h2></div>
           <div class="mt-5 ">
-            <v-btn large to="/user" color="deep-orange lighten-2">
+            <v-btn large to="/user"  color="success lighten-1">
               <v-icon class="pl-1">label_important</v-icon>
               به ما ملحق شوید
             </v-btn>

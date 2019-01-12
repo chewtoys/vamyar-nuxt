@@ -205,7 +205,7 @@ const Helper = {
     } else if (name === 'advertType') {
       return _.get(this.getAdvertTypeByType(value || ''), 'title', '-')
     } else if (name === 'interestRate') {
-      return value ? (value + 'درصد') : ''
+      return value ? (value + 'درصد') : (value || '-')
     } else if (name === 'tradeStatus') {
       let list = _.get(store, 'state.settings.adverts.tradeStatusList', ['باز', 'درحال معامله', 'بسته شده']);
       return list[value] || 'نا مشخص';

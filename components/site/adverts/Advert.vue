@@ -188,7 +188,7 @@
       tradeStatus() {
         return _.get(this.item, 'advert.tradeStatus', _.get(this.item, 'tradeStatus', 0));
       },
-      hasMobile() {
+      hasMobiadminle() {
         return _.get(this.item, 'advert.mobile', _.get(this.item, 'mobile', false));
       },
     }

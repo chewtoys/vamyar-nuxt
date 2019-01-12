@@ -76,11 +76,10 @@
             <td class="text-xs-right">
               <p v-html="userName(props)"></p>
               <p>
-                شناسه:
                 <nuxt-link
                   target="_blank"
                   :to="`/admin/users/edit/${getProperty(props.item, 'userId', '')}`">
-                  {{getProperty(props.item, 'userId', '')}}
+                  پروفایل
                 </nuxt-link>
               </p>
             </td>
@@ -167,7 +166,7 @@
     },
     mounted() {
       this.pagination = {
-        sortBy: 'id',
+        sortBy: 'updatedAt',
         descending: true,
         rowsPerPage: 25,
       }

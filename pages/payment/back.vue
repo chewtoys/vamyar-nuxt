@@ -52,13 +52,13 @@
         }
       },
       status() {
-        return _.has(this.getDecodedUri, 'response.data.paymentInfo.trackingCode');
+        return _.has(this.getDecodedUri, 'response.statusCode') === 201;
       },
       trackingCode() {
         return _.get(this.getDecodedUri, 'response.data.paymentInfo.trackingCode', 'یافت نشد!');
       },
       message() {
-        return _.get(this.getDecodedUri, 'response.message', 'بدون پیام!');
+        return _.get(this.getDecodedUri, 'response.message', 'پرداخت با شکست مواجه شد.');
       },
       redirectPath() {
         return _.get(this.getDecodedUri, 'data.redirect', '/user');
