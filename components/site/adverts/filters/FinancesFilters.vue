@@ -60,10 +60,19 @@
         return data;
       },
     },
+
+    watch: {
+      value(val) {
+        _.forEach(val, (value, key) => {
+          console.log(7, value, key)
+          _.set(this, ['filter', key.replace('Value', '')], value);
+          _.set(this, ['filter', key], value);
+          _.set(this, key.replace('Value', ''), value);
+          _.set(this, key, value);
+        })
+      }
+    },
     mounted() {
-      _.forEach(this.value, (value, key) => {
-        _.set(this, ['filter', key], value);
-      })
       //load initial data - loanTypes
       this.$axios.$get(loanTypeMethod).then((resp) => {
         this.$store.commit('loanType/setAndProcessData', resp.data || []);

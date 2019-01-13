@@ -316,16 +316,18 @@ const Helper = {
   }
   ,
   reverseFilters(obj, type = null) {
+    console.log(3, obj, 4, type)
     let filter = {}, query = {};
     let maximum = {
-      'maxAmountValue': true,
-      'maxMaxAmountValue': true,
-      'paybackTimeValue': true,
+      'maxAmount': true,
+      'maxMaxAmount': true,
+      'paybackTime': true,
     };
     let minimum = {
-      'minAmountValue': true,
-      'minMaxAmountValue': true,
+      'minAmount': true,
+      'minMaxAmount': true,
     };
+    let nonValues = ['instant', 'transferable']
     if (type === null) {
       // common filters
       filter = _.pick(obj, ['cityId', 'instant', 'transferable', 'title', 'text']);
@@ -342,23 +344,26 @@ const Helper = {
     } else if (type === 'coSignerRequests') {
       filter = _.pick(obj, ['guaranteeType__id', 'forBank', 'forCourt']);
     }
-    let prefix = '';
+    console.log(8, {filter})
+    let prefix = 'Value';
     _.forEach(filter, (val, key) => {
-      if (val !== null || _.isNumber(val)) {
-        if (key === 'forBank' || key === 'forCourt') val = val ? true : false
-        key = _.has(maximum, key) ? key.replace('<', '') : (_.has(minimum, key) ? key.replace('>', '') : '');
-        // replace keys
-        key =
-          key
-            .replace('amount', 'maxAmount')
-            .replace('amount', 'minAmount')
-            .replace('maxAmount', 'minMaxAmount')
-            .replace('maxAmount', 'maxMaxAmount')
-            .replace('', 'Value')
-        _.set(query, key, val)
+      if (key === 'forBank' || key === 'forCourt') {
+        val = val ? true : false
       }
+
+      key =
+        key
+          .replace('<', '')
+          .replace('>', '')
+          .replace('amount', 'maxAmount')
+          .replace('amount', 'minAmount')
+          .replace('maxAmount', 'minMaxAmount')
+          .replace('maxAmount', 'maxMaxAmount');
+      if (_.includes(nonValues, key)) _.set(query, key, val)
+      _.set(query, key + 'Value', val)
     })
     //console.log({obj, filter, query});
+    console.log(9, {query})
     return query;
   },
   getComputedFilter(obj, type = null) {

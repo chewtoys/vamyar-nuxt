@@ -28,7 +28,7 @@
         <v-flex v-if="!isAdmin" xs12 sm3 class="pa-1 ">
           <div>
             <v-text-field
-              v-model="search"
+              v-model="filter.text"
               :loading="loading.search"
               solo-inverted
               label="جست و جو"
@@ -111,6 +111,7 @@
           advertTypeValue: null,
           cityIdValue: null,
           instant: false,
+          text: '',
           instantValue: false,
           transferableValue: false,
           transferable: false,
@@ -141,9 +142,13 @@
       },
     },
     watch: {
-      value() {
-        _.forEach(this.value, (value, key) => {
+      value(val) {
+        _.forEach(val, (value, key) => {
+          console.log(7, value, key)
+          _.set(this, ['filter', key.replace('Value', '')], value);
           _.set(this, ['filter', key], value);
+          _.set(this, key.replace('Value', ''), value);
+          _.set(this, key, value);
         })
       }
     },

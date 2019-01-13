@@ -55,9 +55,6 @@
             نتیجه ای برای "{{ search }}" یافت نشد.
           </v-alert>
         </v-data-table>
-        <div class="text-xs-center pt-2">
-          <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
-        </div>
       </div>
     </v-card>
   </div>

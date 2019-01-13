@@ -322,7 +322,7 @@
 
       itemType() {
         let _item = this.item
-        console.log(Helper.getAdvertType(_item, this.type.type, true))
+        //console.log(Helper.getAdvertType(_item, this.type.type, true))
         return _.get(Helper.getAdvertType(_item, this.type.type, true), 'cardTitle', '-')
       },
       title() {

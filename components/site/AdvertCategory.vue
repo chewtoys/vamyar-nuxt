@@ -145,8 +145,8 @@
       }
     },
     mounted() {
-      this.replaceValues();
       this.advertTypeName = this.which;
+      this.replaceValues();
       this.sort = this.isAdverts ? 'priority:desc' : 'advert.priority:desc'
       this.items = this.initialItems;
       this.paginator = this.initialPaginator;
@@ -173,9 +173,10 @@
       replaceValues() {
         let commonComputedFilters = this.decodedCommonComputedFilters
         let computedFilters = this.decodedComputedFilters
-        let advertTypeName = this.decodedAdvertTypeName
-        this.filters = Helper.reverseFilters(computedFilters,advertTypeName);
-        this.advertFilters = Helper.reverseFilters(commonComputedFilters)
+        let advertTypeName = this.decodedAdvertTypeName || this.advertTypeName
+        this.filter = Helper.reverseFilters(computedFilters, advertTypeName);
+        this.advertFilters = Helper.reverseFilters(commonComputedFilters);
+        console.log(1, this.filter, 2, this.advertFilters)
       },
       canShow(type) {
         return _.get(this, 'advertTypeName', '') === type;
@@ -227,7 +228,11 @@
         _.set(this, 'commonComputedFilters', computedFilter);
         this.$router.push({
           path: this.$route.path,
-          query: {advertTypeName: typeName, commonComputedFilters: JSON.stringify(computedFilter)}
+          query: {
+            advertTypeName: typeName,
+            commonComputedFilters: JSON.stringify(computedFilter),
+            computedFilters: JSON.stringify(this.decodedComputedFilters)
+          }
         })
         //this.loadAgain();
       },
@@ -238,7 +243,14 @@
         let type = _.get(this, 'advertTypeName', this.which);
         let computedFilter = Helper.getComputedFilter(filter, type);
         _.set(this, 'computedFilters', computedFilter);
-        this.$router.push({path: this.$route.path, query: {computedFilters: JSON.stringify(computedFilter)}})
+        this.$router.push({
+          path: this.$route.path,
+          query: {
+            advertTypeName: JSON.stringify(this.decodedAdvertTypeName),
+            computedFilters: JSON.stringify(computedFilter),
+            commonComputedFilters: JSON.stringify(this.decodedCommonComputedFilters)
+          }
+        })
         // console.log(JSON.stringify({filter, computedFilter}))
         //this.loadAgain();
       },
