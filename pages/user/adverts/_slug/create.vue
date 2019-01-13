@@ -6,7 +6,7 @@
   import Helper from '~/assets/js/helper'
   import AdvertForm from '~/components/AdvertForm'
 
-  const provinceMethod = '/cities?number=3000',
+  const provinceMethod = '/provinces?number=3000',
     guaranteeMethod = '/guaranteeTypes',
     loanTypeMethod = '/loanTypes'
   export default {

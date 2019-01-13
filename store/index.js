@@ -3,7 +3,7 @@ import cookieparser from "cookieparser"
 
 const guaranteeMethod = '/guaranteeTypes',
   loanTypeMethod = '/loanTypes',
-  provinceMethod = '/cities?number=3000',
+  provinceMethod = '/provinces?number=3000',
   settingsMethod = '/settings',
   contactUsMethod = '/site/contact-us',
   aboutUsMethod = '/site/about-us'

@@ -60,7 +60,7 @@
               box
               label="استان"
               data-vv-name="province"
-              :items="cities"
+              :items="provinces"
               item-value="id"
               item-text="name"
               persistent-hint
@@ -91,7 +91,7 @@
     indexPath = '/user/councils',
     createPath = '/user/councils/paymentLink',
     councilRequestTypes = '/site/councilRequestTypes',
-    provinceMethod = '/cities?number=3000'
+    provinceMethod = '/provinces?number=3000'
 
   export default {
     $_veeValidate: {
@@ -134,7 +134,7 @@
         createPath: function () {
           return createPath;
         },
-        cities() {
+        provinces() {
           return _.get(this.$store.state, 'province.data', [])
         },
         requestTypeList() {

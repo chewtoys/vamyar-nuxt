@@ -6,7 +6,7 @@
   import Helper from '~/assets/js/helper'
   import AdvertForm from '~/components/AdvertForm'
 
-  const provinceMethod = '/cities?number=3000',
+  const provinceMethod = '/provinces?number=3000',
     guaranteeMethod = '/guaranteeTypes',
     loanTypeMethod = '/loanTypes'
 
@@ -42,7 +42,7 @@
         // get advert data
         let getPath = `/admin/${formType.type}/${id}`;
         let query = {
-          include: 'guaranteeTypes,advertable,cities,loanTypes,advert'
+          include: 'guaranteeTypes,advertable,provinces,loanTypes,advert'
         }
         let {data} = await $axios.$get(getPath, {params: query});
         //console.log('get:', getPath, {params: query}, data)

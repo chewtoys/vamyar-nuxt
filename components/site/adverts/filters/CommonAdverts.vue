@@ -91,7 +91,7 @@
 <script>
   import Helper from '~/assets/js/helper'
 
-  const provinceMethod = '/cities?number=3000'
+  const provinceMethod = '/provinces?number=3000'
 
   export default {
     props: ['value', 'label', 'isAdmin', 'chooseType'],

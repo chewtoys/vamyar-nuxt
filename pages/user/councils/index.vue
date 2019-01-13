@@ -67,7 +67,7 @@
     indexPath = '/user/councils',
     createPath = '/user/councils/create',
     councilRequestTypes = '/councilRequestTypes',
-    provinceMethod = '/cities?number=3000',
+    provinceMethod = '/provinces?number=3000',
     headers = [
       {text: 'لینک', value: 'link', align: 'center'},
       {text: 'عنوان', value: 'title', align: 'right'},

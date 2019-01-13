@@ -9,7 +9,7 @@
   import Helper from "~/assets/js/helper.js"
 
   const number = 24,
-    provinceMethod = '/cities?number=3000',
+    provinceMethod = '/provinces?number=3000',
     guaranteeMethod = '/guaranteeTypes',
     loanTypeMethod = '/loanTypes'
 

@@ -37,7 +37,7 @@
 <script>
   import Helper from '~/assets/js/helper'
 
-  const SAVE_PATH = '/cities'
+  const SAVE_PATH = '/provinces'
   export default {
     meta: {
       breadcrumb: 'تنظیمات عمومی',

@@ -320,7 +320,7 @@
   import Helper from '~/assets/js/helper'
 
   const path = "/admin/adverts",
-    provinceMethod = '/cities?number=3000',
+    provinceMethod = '/provinces?number=3000',
     guaranteeMethod = '/guaranteeTypes',
     loanTypeMethod = '/loanTypes',
     ticketCategoriesMethod = '/ticketCategories',

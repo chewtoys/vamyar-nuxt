@@ -60,9 +60,9 @@
 
   const list = "/admin/adverts",
     //guaranteeTypeListPath = "/admin/guaranteeTypes",
-    //provincePath = "/admin/cities",
+    //provincePath = "/admin/provinces",
 
-    provinceMethod = '/cities?number=3000',
+    provinceMethod = '/provinces?number=3000',
     guaranteeMethod = '/guaranteeTypes',
     loanTypeMethod = '/loanTypes'
 

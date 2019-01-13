@@ -271,7 +271,7 @@
 
   const path = "/site/adverts",
     breadcrumb = "مشاهده‌‌ی آگهی",
-    provinceMethod = '/cities?number=3000',
+    provinceMethod = '/provinces?number=3000',
     guaranteeMethod = '/guaranteeTypes',
     loanTypeMethod = '/loanTypes'
 

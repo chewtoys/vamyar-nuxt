@@ -100,7 +100,7 @@
 
   const page_title = 'لیست درخواست مشاوره ها',
     fetchMethod = '/admin/councils',
-    provinceMethod = '/cities?number=3000',
+    provinceMethod = '/provinces?number=3000',
     breadcrumb = 'مشاوره ها',
     indexPath = '/admin/councils',
     headers = [

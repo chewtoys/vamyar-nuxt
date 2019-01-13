@@ -76,7 +76,7 @@
               box
               :label="getTitle('province')"
               data-vv-name="province"
-              :items="cities"
+              :items="provinces"
               persistent-hint
             >
             </v-autocomplete>
@@ -367,7 +367,7 @@
       sendPath: function () {
         return this.isEdit ? this.editPath : this.createPath;
       },
-      cities() {
+      provinces() {
         return _.get(this.$store.state, 'province.data', []);
       },
       guaranteeTypesList() {

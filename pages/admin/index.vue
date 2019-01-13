@@ -7,7 +7,7 @@
   import Dashboard from "~/components/admin/dashboard/dashboard.vue"
 
   const
-    provinceIdprovinceMethod = '/cities?number=3000',
+    provinceIdprovinceMethod = '/provinces?number=3000',
     guaranteeMethod = '/guaranteeTypes',
     loanTypeMethod = '/loanTypes'
 

@@ -50,7 +50,7 @@
       },
       province: {
         get() {
-          if (this.allCities) return 0;
+          if (this.allprovinces) return 0;
           let list = _.get(this.$store.state, 'province.data', []);
           let index = _.findIndex(list, {'name': this.provinceName}) || 0;
           if (index > 0) {
