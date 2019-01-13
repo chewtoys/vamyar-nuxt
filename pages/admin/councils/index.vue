@@ -108,7 +108,7 @@
       {text: 'عنوان', value: 'title', align: 'right'},
       {text: 'کاربر', value: 'userId', align: 'right'},
       {text: 'شغل', value: 'job', align: 'right'},
-      {text: 'شهر', value: 'province', align: 'right'},
+      {text: 'استان', value: 'province', align: 'right'},
       {text: 'نوع درخواست', value: 'requestType', align: 'right'},
       {text: 'متن درخواست', value: 'requestText', align: 'right'},
       {text: 'عملیات', sortable: false, align: 'left', width: '140px'},

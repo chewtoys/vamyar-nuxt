@@ -84,7 +84,7 @@
               v-if="isAllowed('transferable')"
               v-model="transferable"
               box
-              label="قابل انتقال به سایر شهر ها می باشد."
+              label="قابل انتقال به سایر استان ها می باشد."
             />
             <v-text-field
               v-if="isAllowed('mobile')"
@@ -299,7 +299,7 @@
       dictionary: {
         attributes: {
           title: "عنوان آگهی",
-          province: "شهر",
+          province: "استان",
           job: "شغل",
           interestRate: "درصد سود",
           bank: "بانک",

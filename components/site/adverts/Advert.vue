@@ -101,7 +101,7 @@
         <v-btn v-if="isTransferable" slot="activator" class="mx-1" icon round color="yellow" text-color="white">
           <v-icon class="white--text">location_on</v-icon>
         </v-btn>
-        <span>قابل انتقال به سایر شهرها</span>
+        <span>قابل انتقال به سایر استانها</span>
       </v-tooltip>
       <v-tooltip top>
         <v-btn v-if="hasMobile && tradeStatus===1" slot="activator" class="mx-1" icon round

@@ -58,7 +58,7 @@
               v-model="province"
               :error-messages="errors.collect('province')"
               box
-              label="شهر"
+              label="استان"
               data-vv-name="province"
               :items="cities"
               item-value="id"
@@ -118,7 +118,7 @@
         attributes: {
           title: "عنوان",
           job: "شغل",
-          province: "شهر",
+          province: "استان",
           requestText: "متن درخواست",
           requestType: 'نوع مشاوره '
           // custom attributes

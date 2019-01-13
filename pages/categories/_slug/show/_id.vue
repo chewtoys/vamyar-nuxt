@@ -45,7 +45,7 @@
               </v-chip>
               <v-chip v-if="getProperty(item, 'advert.transferable',0)===1" label color="yellow" text-color="white">
                 <v-icon left class=" white--text">location_on</v-icon>
-                <span calss="white--text">قابل انتقال به سایر شهرها</span>
+                <span calss="white--text">قابل انتقال به سایر استانها</span>
               </v-chip>
             </span>
           </div>

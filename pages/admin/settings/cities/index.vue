@@ -2,7 +2,7 @@
   <v-container>
     <v-card>
       <v-card-title>
-        <h3>لیست شهر ها</h3>
+        <h3>لیست استان ها</h3>
         <v-spacer/>
         <v-btn outline color="green" round @click="save" :loading="saveLoading" :pending="savePending">
           ذخیره سازی

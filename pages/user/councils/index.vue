@@ -72,7 +72,7 @@
       {text: 'لینک', value: 'link', align: 'center'},
       {text: 'عنوان', value: 'title', align: 'right'},
       {text: 'متن درخواست', value: 'requestText', sortable: true, align: 'right'},
-      {text: 'شهر', value: 'province', align: 'right'},
+      {text: 'استان', value: 'province', align: 'right'},
       {text: 'شغل', value: 'job', align: 'right'},
       {text: 'نوع', sortable: false, type: 'requestType', align: 'right'},
       {text: 'تاریخ ثبت', value: 'jUpdatedAt', sortable: true, align: 'right'},
