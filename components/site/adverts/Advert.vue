@@ -61,12 +61,12 @@
                 <b>{{ limitStr(show(item, 'text', 'advert.text'), 250, ' ...') }}</b>
               </td>
             </tr>
-            <tr v-if="isAllowed('city')" class="">
+            <tr v-if="isAllowed('province')" class="">
               <td>
-                <small>{{getTitle('city')}}</small>
+                <small>{{getTitle('province')}}</small>
               </td>
               <td>
-                <b>{{ show(item, 'city.name', 'advert.city.name') }}</b>
+                <b>{{ show(item, 'province.name', 'advert.province.name') }}</b>
               </td>
             </tr>
             <tr>

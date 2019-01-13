@@ -7,7 +7,7 @@
   import Dashboard from "~/components/admin/dashboard/dashboard.vue"
 
   const
-    cityMethod = '/cities?number=3000',
+    provinceIdprovinceMethod = '/cities?number=3000',
     guaranteeMethod = '/guaranteeTypes',
     loanTypeMethod = '/loanTypes'
 
@@ -18,9 +18,9 @@
     },
     async asyncData({params, store, $axios, error}) {
       try {
-        // city
-        let cityData = await $axios.$get(cityMethod);
-        store.commit('city/setAndProcessData', cityData.data || []);
+        // province
+        let provinceData = await $axios.$get(provinceMethod);
+        store.commit('province/setAndProcessData', provinceData.data || []);
 
         // guarantee
         let guaranteeData = await $axios.$get(guaranteeMethod);

@@ -42,7 +42,7 @@
     },
     mounted() {
       this.$axios.$get(path, {
-        params: {include: "advertable,city,user.details", number: 12}
+        params: {include: "advertable,province,user.details", number: 12}
       }).then(res => {
         this.data = _.get(res, 'data', [])
       }).catch((err) => {

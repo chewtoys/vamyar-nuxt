@@ -104,11 +104,11 @@
                         <v-divider/>
                       </template>
 
-                      <template v-if="isAllowed('city')">
-                        <div class="pa-2 mx-1" v-if="isAllowed('city')">
+                      <template v-if="isAllowed('province')">
+                        <div class="pa-2 mx-1" v-if="isAllowed('province')">
                           <v-icon class="pb-1 pl-1">location_on</v-icon>
-                          <span><small class="font-14">{{getTitle('city')}}</small>
-                          <b class="left">{{ showField('city', item.advert.city) }}</b>
+                          <span><small class="font-14">{{getTitle('province')}}</small>
+                          <b class="left">{{ showField('province', item.advert.province) }}</b>
                         </span>
                         </div>
                         <v-divider/>
@@ -271,7 +271,7 @@
 
   const path = "/site/adverts",
     breadcrumb = "مشاهده‌‌ی آگهی",
-    cityMethod = '/cities?number=3000',
+    provinceMethod = '/cities?number=3000',
     guaranteeMethod = '/guaranteeTypes',
     loanTypeMethod = '/loanTypes'
 
@@ -296,7 +296,7 @@
       let slug = params.slug
       let method = `/site/${type.type}/${id}`
       let query = {
-        include: 'advert.user.details,advert.city,loanType,guaranteeTypes'
+        include: 'advert.user.details,advert.province,loanType,guaranteeTypes'
       }
 
       try {

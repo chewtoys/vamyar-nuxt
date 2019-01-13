@@ -43,7 +43,7 @@
             <td class="text-xs-right">
               <div v-html="nl2br(props.item.requestText)"></div>
             </td>
-            <td class="text-xs-right">{{ getCity(props.item) }}</td>
+            <td class="text-xs-right">{{ getprovince(props.item) }}</td>
             <td class="text-xs-right">{{ props.item.job }}</td>
 
             <td class="text-xs-right">{{ (props.item.requestType.title) }}</td>
@@ -67,12 +67,12 @@
     indexPath = '/user/councils',
     createPath = '/user/councils/create',
     councilRequestTypes = '/councilRequestTypes',
-    cityMethod = '/cities?number=3000',
+    provinceMethod = '/cities?number=3000',
     headers = [
       {text: 'لینک', value: 'link', align: 'center'},
       {text: 'عنوان', value: 'title', align: 'right'},
       {text: 'متن درخواست', value: 'requestText', sortable: true, align: 'right'},
-      {text: 'شهر', value: 'city', align: 'right'},
+      {text: 'شهر', value: 'province', align: 'right'},
       {text: 'شغل', value: 'job', align: 'right'},
       {text: 'نوع', sortable: false, type: 'requestType', align: 'right'},
       {text: 'تاریخ ثبت', value: 'jUpdatedAt', sortable: true, align: 'right'},
@@ -130,7 +130,7 @@
             page,
             orderBy: `${sortBy || 'id'}:${descending ? 'desc' : 'asc'}`,
             number: rowsPerPage,
-            include: 'city,requestType'
+            include: 'province,requestType'
           }
           //console.log({method, query, paginator: this.paginator}, {sortBy, descending, page, rowsPerPage});
           this.$axios.$get(method, {
@@ -154,9 +154,9 @@
     },
     async asyncData({params, store, $axios}) {
       try {
-        // city
-        let cityData = await $axios.$get(cityMethod);
-        store.commit('city/setAndProcessData', cityData.data || []);
+        // province
+        let provinceData = await $axios.$get(provinceMethod);
+        store.commit('province/setAndProcessData', provinceData.data || []);
 
         // loan types
         // let councilTypes = await
@@ -170,8 +170,8 @@
       nl2br(val) {
         return Helper.nl2br(val)
       },
-      getCity(item) {
-        return _.get(item, 'city.name', _.get(_.find(_.get(this.$store.state.city, 'data', []), {id: item.cityId}), 'name', item.cityId));
+      getprovince(item) {
+        return _.get(item, 'provinceprovince.name', _.get(_.find(_.get(this.$store.state.province, 'data', []), {id: item.provinceId}), 'name', item.provinceId));
       },
       requestType(id) {
         let list = this.$store.state.councilTypes.data;

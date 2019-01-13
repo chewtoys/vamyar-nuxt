@@ -4,10 +4,10 @@ export const
     create: ['coSignerRequests', 'loanRequests', 'financeRequests'],
     show: ['coSigners', 'loans', 'finances'],
   },
-  COMMON_FIELDS = ['title', 'city', 'user', 'adminId', 'text', 'priority', 'jCreatedAt', 'jDeletedAt', 'jUpdatedAt', 'transferable', 'advertType', 'verified', 'tradeStatus', 'mobile', 'instant', 'description'],
+  COMMON_FIELDS = ['title', 'province', 'user', 'adminId', 'text', 'priority', 'jCreatedAt', 'jDeletedAt', 'jUpdatedAt', 'transferable', 'advertType', 'verified', 'tradeStatus', 'mobile', 'instant', 'description'],
   COMMON_FIELD_TITLE = {
     'title': 'عنوان',
-    'city': 'استان',
+    'province': 'استان',
     'user': 'کاربر',
     'adminId': 'مدیریت',
     'text': 'توضیحات',
@@ -27,7 +27,7 @@ export const
     adverts: [
       {text: "نوع آگهی", align: "right", value: 'advertableType'},
       {text: "عنوان", align: "right", value: 'title'},
-      {text: "استان", value: "cityId", align: "left"},
+      {text: "استان", value: "provinceId", align: "left"},
       {text: "تاریخ", value: 'CreatedAt', align: "right"},
       {text: "فوری", value: 'instant', align: "left", width: '140px'},
       {text: "وضعیت", value: 'tradeStatus', align: "left", width: '140px'},
@@ -129,13 +129,13 @@ export const
   filtersByField = {
     loans: {
       amount: [0, 100000, 100000000, 500000000],
-      city: true,
+      province: true,
       loanTypes: true,
       guaranteeTypes: true,
       paybackTime: [1, 4, 12, 24, 36, 48],
     }, loanRequests: {
       amount: [0, 100000, 100000000, 500000000],
-      city: true,
+      province: true,
       paybackTime: [1, 4, 12, 24, 36, 48],
       guaranteeTypes: true,
     }, coSigners: {
@@ -156,7 +156,7 @@ export const
           name: 'title',
           title: 'عنوان'
         }, {
-          name: 'city',
+          name: 'province',
           title: 'استان'
         }, {
           name: 'transferable',
@@ -197,9 +197,9 @@ export const
           title: 'عنوان',
           path: 'advert.title'
         }, {
-          name: 'city',
+          name: 'province',
           title: 'استان',
-          path: 'advert.cityId'
+          path: 'advert.provinceId'
         }, {
           name: 'transferable',
           title: 'قابل انتقال',
@@ -250,7 +250,7 @@ export const
           name: 'title',
           title: 'عنوان'
         }, {
-          name: 'city',
+          name: 'province',
           title: 'استان'
         }, {
           name: 'transferable',
@@ -284,9 +284,9 @@ export const
           title: 'عنوان',
           path: 'advert.title'
         }, {
-          name: 'city',
+          name: 'province',
           title: 'استان',
-          path: 'advert.cityId'
+          path: 'advert.provinceId'
         }, {
           name: 'transferable',
           title: 'قابل انتقال',
@@ -327,7 +327,7 @@ export const
           name: 'title',
           title: 'عنوان'
         }, {
-          name: 'city',
+          name: 'province',
           title: 'استان'
         }, {
           name: 'transferable',
@@ -353,9 +353,9 @@ export const
           title: 'عنوان',
           path: 'advert.title'
         }, {
-          name: 'city',
+          name: 'province',
           title: 'استان',
-          path: 'advert.cityId'
+          path: 'advert.provinceId'
         }, {
           name: 'transferable',
           title: 'قابل انتقال',
@@ -386,7 +386,7 @@ export const
           name: 'title',
           title: 'عنوان'
         }, {
-          name: 'city',
+          name: 'province',
           title: 'استان'
         }, {
           name: 'transferable',
@@ -415,9 +415,9 @@ export const
           title: 'عنوان',
           path: 'advert.title'
         }, {
-          name: 'city',
+          name: 'province',
           title: 'استان',
-          path: 'advert.cityId'
+          path: 'advert.provinceId'
         }, {
           name: 'transferable',
           title: 'قابل انتقال',
@@ -452,7 +452,7 @@ export const
           name: 'title',
           title: 'عنوان'
         }, {
-          name: 'city',
+          name: 'province',
           title: 'استان'
         }, {
           name: 'transferable',
@@ -483,9 +483,9 @@ export const
           title: 'عنوان',
           path: 'advert.title'
         }, {
-          name: 'city',
+          name: 'province',
           title: 'استان',
-          path: 'advert.cityId'
+          path: 'advert.provinceId'
         }, {
           name: 'transferable',
           title: 'قابل انتقال',
@@ -523,7 +523,7 @@ export const
           name: 'title',
           title: 'عنوان'
         }, {
-          name: 'city',
+          name: 'province',
           title: 'استان'
         }, {
           name: 'transferable',
@@ -563,9 +563,9 @@ export const
           title: 'عنوان',
           path: 'advert.title'
         }, {
-          name: 'city',
+          name: 'province',
           title: 'استان',
-          path: 'advert.cityId'
+          path: 'advert.provinceId'
         }, {
           name: 'transferable',
           title: 'قابل انتقال',

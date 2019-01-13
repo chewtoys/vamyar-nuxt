@@ -18,7 +18,7 @@
             </div>
             <div>
               <v-icon class="font-14 pb-1 pl-1">location_on</v-icon>
-              <span>{{ item.city }}</span>
+              <span>{{ item.province }}</span>
             </div>
           </div>
         </v-flex>

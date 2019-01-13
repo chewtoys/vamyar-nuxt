@@ -37,9 +37,9 @@
         ],
         category_search: null,
 
-        city_loading: false,
-        city_search: null,
-        city_select: null,
+        province_loading: false,
+        province_search: null,
+        province_select: null,
         title_loading: false,
         title_search: null,
       }
@@ -48,11 +48,11 @@
       getLabel() {
         return _.get(this, 'label', 'فیلترها');
       },
-      city: {
+      province: {
         get() {
           if (this.allCities) return 0;
-          let list = _.get(this.$store.state, 'city.data', []);
-          let index = _.findIndex(list, {'name': this.cityName}) || 0;
+          let list = _.get(this.$store.state, 'province.data', []);
+          let index = _.findIndex(list, {'name': this.provinceName}) || 0;
           if (index > 0) {
             let item = list[index];
             return _.get(item, 'id', 0);
@@ -69,7 +69,7 @@
         return this.advertType === type;
       },
       chargeValue() {
-        let filedList = ['title', 'city'];
+        let filedList = ['title', 'province'];
         let filterList = {}
         _.forEach(filedList, (key) => {
           _.set(filterList, key, _.get(this, key))

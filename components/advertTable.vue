@@ -100,7 +100,7 @@
             <td v-if="false && isAdmin" class="text-xs-left">{{ getProperty(props, 'item.description', '') }}</td>
             <td class="text-xs-left">{{itemType(props.item)}}</td>
             <td class="text-xs-right">{{ getProperty(props, 'item.title', '-') }}</td>
-            <td class="text-xs-left">{{ getProperty(props, 'item.city.name', '') }}</td>
+            <td class="text-xs-left">{{ getProperty(props, 'item.province.name', '') }}</td>
             <td class="text-xs-left" v-html="getDate(props)"></td>
 
             <td class="text-xs-right">
@@ -641,8 +641,8 @@
 
         //console.log(this.advertTypeName)
 
-        let include = 'advert.user.details,guaranteeTypes,advert.city,loanType';
-        if (this.isAdverts) include = 'advertable,user.details,guaranteeTypes,city,loanType';
+        let include = 'advert.user.details,guaranteeTypes,advert.province,loanType';
+        if (this.isAdverts) include = 'advertable,user.details,guaranteeTypes,province,loanType';
 
         let {sortBy, descending, page, rowsPerPage} = this.pagination;
 

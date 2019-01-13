@@ -258,7 +258,7 @@
 
 
       this.$axios
-        .$get(path, {params: {include: 'advertable,city,user.details', number: 5, orderBy: 'priority:desc'}})
+        .$get(path, {params: {include: 'advertable,province,user.details', number: 5, orderBy: 'priority:desc'}})
         .then(response => {
           this.rawData = response.data;
           this.loader = false

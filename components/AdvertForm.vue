@@ -67,15 +67,15 @@
               :label="getTitle('title')"
             />
             <v-autocomplete
-              v-if="isAllowed('city') "
+              v-if="isAllowed('province') "
               v-validate="'required'"
-              v-model="city"
+              v-model="province"
               item-text="name"
               item-value="id"
-              :error-messages="errors.collect('city')"
+              :error-messages="errors.collect('province')"
               box
-              :label="getTitle('city')"
-              data-vv-name="city"
+              :label="getTitle('province')"
+              data-vv-name="province"
               :items="cities"
               persistent-hint
             >
@@ -275,7 +275,7 @@
       slug: '',
       // advert
       title: null,
-      city: null,
+      province: null,
       transferable: false,
       description: "",
       text: "",
@@ -299,7 +299,7 @@
       dictionary: {
         attributes: {
           title: "عنوان آگهی",
-          city: "شهر",
+          province: "شهر",
           job: "شغل",
           interestRate: "درصد سود",
           bank: "بانک",
@@ -368,7 +368,7 @@
         return this.isEdit ? this.editPath : this.createPath;
       },
       cities() {
-        return _.get(this.$store.state, 'city.data', []);
+        return _.get(this.$store.state, 'province.data', []);
       },
       guaranteeTypesList() {
         return _.get(this.$store.state, 'guaranteeType.arrayList', []);

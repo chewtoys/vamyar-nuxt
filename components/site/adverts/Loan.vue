@@ -21,7 +21,7 @@
                   </div>
                   <div>
                     <v-icon class="font-14 pb-1 pl-1">location_on</v-icon>
-                    <span>{{ item.cityId }}</span>
+                    <span>{{ item.provinceId }}</span>
                   </div>
                 </div>
               </v-flex>

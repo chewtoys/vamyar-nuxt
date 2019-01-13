@@ -76,7 +76,7 @@
       this.$axios.$get(this.getPath, {
         params: {
           orderBy: 'advert.priority:desc',
-          include: "advert,advert.city,advert.user.details",
+          include: "advert,advert.province,advert.user.details",
           number: this.getNumber
         }
       }).then(res => {

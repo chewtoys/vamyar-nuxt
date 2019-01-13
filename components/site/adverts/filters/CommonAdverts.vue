@@ -43,11 +43,11 @@
         <v-flex xs12 sm2 class="pa-1">
           <div>
             <v-autocomplete
-              :loading="loading.city"
-              :items="city_items"
+              :loading="loading.province"
+              :items="province_items"
               item-text="name"
               item-value="id"
-              v-model="filter.cityIdValue"
+              v-model="filter.provinceIdValue"
               append-icon="location_on"
               clearable
               light
@@ -55,7 +55,7 @@
               label="انتخاب استان"
               flat
               solo-inverted
-              @change="updateCity"
+              @change="updateprovince"
             />
           </div>
         </v-flex>
@@ -91,7 +91,7 @@
 <script>
   import Helper from '~/assets/js/helper'
 
-  const cityMethod = '/cities?number=3000'
+  const provinceMethod = '/cities?number=3000'
 
   export default {
     props: ['value', 'label', 'isAdmin', 'chooseType'],
@@ -104,12 +104,12 @@
           title: false,
           instant: false,
           transferable: false,
-          city: true,
+          province: true,
         },
         filter: {
           advertTypeName: null,
           advertTypeValue: null,
-          cityIdValue: null,
+          provinceIdValue: null,
           instant: false,
           text: '',
           instantValue: false,
@@ -118,7 +118,7 @@
           titleValue: null,
           textValue: null,
         },
-        city_search: null,
+        province_search: null,
       }
     },
     computed: {
@@ -137,8 +137,8 @@
         })
         return titles
       },
-      city_items() {
-        return _.get(this.$store.state, 'city.data')
+      province_items() {
+        return _.get(this.$store.state, 'province.data')
       },
     },
     watch: {
@@ -153,12 +153,12 @@
       }
     },
     mounted() {
-      _.set(this.loading, 'city', true)
+      _.set(this.loading, 'province', true)
 
-      //load initial data - city
-      this.$axios.$get(cityMethod).then(resp => {
-        this.$store.commit('city/setAndProcessData', resp.data || []);
-        _.set(this.loading, 'city', false)
+      //load initial data - province
+      this.$axios.$get(provinceMethod).then(resp => {
+        this.$store.commit('province/setAndProcessData', resp.data || []);
+        _.set(this.loading, 'province', false)
       }).catch(err => {
         console.log(err)
       })
@@ -183,7 +183,7 @@
         _.set(this.filter, 'transferableValue', !!val);
         this.emitToParent();
       },
-      updateCity() {
+      updateprovince() {
         this.emitToParent();
       },
       emitToParent() {

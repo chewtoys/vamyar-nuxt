@@ -73,7 +73,7 @@
               <p>موبایل: {{props.item.user.mobile}}</p>
             </td>
             <td class="text-xs-right">{{ props.item.job }}</td>
-            <td class="text-xs-right">{{ getCity(props.item) }}</td>
+            <td class="text-xs-right">{{ getprovince(props.item) }}</td>
             <td class="text-xs-right">{{ requestType(props.item.requestType) }}</td>
             <td class="text-xs-right" v-html="nl2br(props.item.requestText)"></td>
 
@@ -100,7 +100,7 @@
 
   const page_title = 'لیست درخواست مشاوره ها',
     fetchMethod = '/admin/councils',
-    cityMethod = '/cities?number=3000',
+    provinceMethod = '/cities?number=3000',
     breadcrumb = 'مشاوره ها',
     indexPath = '/admin/councils',
     headers = [
@@ -108,7 +108,7 @@
       {text: 'عنوان', value: 'title', align: 'right'},
       {text: 'کاربر', value: 'userId', align: 'right'},
       {text: 'شغل', value: 'job', align: 'right'},
-      {text: 'شهر', value: 'city', align: 'right'},
+      {text: 'شهر', value: 'province', align: 'right'},
       {text: 'نوع درخواست', value: 'requestType', align: 'right'},
       {text: 'متن درخواست', value: 'requestText', align: 'right'},
       {text: 'عملیات', sortable: false, align: 'left', width: '140px'},
@@ -163,7 +163,7 @@
             page,
             orderBy: `${sortBy || 'id'}:${descending ? 'desc' : 'asc'}`,
             number: rowsPerPage,
-            include: 'city,user,requestType',
+            include: 'province,user,requestType',
           }
           //console.log({method, query, paginator: this.paginator}, {sortBy, descending, page, rowsPerPage});
           this.$axios.$get(method, {
@@ -184,9 +184,9 @@
     },
     async asyncData({params, store, $axios}) {
       try {
-        // city
-        let cityData = await $axios.$get(cityMethod);
-        store.commit('city/setAndProcessData', cityData.data || []);
+        // province
+        let provinceData = await $axios.$get(provinceMethod);
+        store.commit('province/setAndProcessData', provinceData.data || []);
 
         // loan types
         // let councilTypes = await
@@ -197,8 +197,8 @@
       }
     },
     methods: {
-      getCity(item) {
-        return _.get(item, 'city.name', _.get(_.find(_.get(this.$store.state.city, 'data', []), {id: item.cityId}), 'name', item.cityId));
+      getprovince(item) {
+        return _.get(item, 'province.name', _.get(_.find(_.get(this.$store.state.province, 'data', []), {id: item.provinceId}), 'name', item.provinceId));
       },
       requestType(req) {
         //let list = this.$store.state.councilTypes.data;

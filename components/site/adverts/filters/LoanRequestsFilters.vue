@@ -67,8 +67,8 @@
           maxAmountValue: null,
           loanTypeIdValue: null,
         },
-        city_search: null,
-        city_items: [],
+        province_search: null,
+        province_items: [],
 
       }
     },

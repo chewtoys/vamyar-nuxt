@@ -55,11 +55,11 @@
               persistent-hint
             ></v-autocomplete>
             <v-autocomplete
-              v-model="city"
-              :error-messages="errors.collect('city')"
+              v-model="province"
+              :error-messages="errors.collect('province')"
               box
               label="شهر"
-              data-vv-name="city"
+              data-vv-name="province"
               :items="cities"
               item-value="id"
               item-text="name"
@@ -91,7 +91,7 @@
     indexPath = '/user/councils',
     createPath = '/user/councils/paymentLink',
     councilRequestTypes = '/site/councilRequestTypes',
-    cityMethod = '/cities?number=3000'
+    provinceMethod = '/cities?number=3000'
 
   export default {
     $_veeValidate: {
@@ -105,7 +105,7 @@
     }
     ,
     data: () => ({
-      city: '',
+      province: '',
       page_title,
       // ticket
       title: null,
@@ -118,7 +118,7 @@
         attributes: {
           title: "عنوان",
           job: "شغل",
-          city: "شهر",
+          province: "شهر",
           requestText: "متن درخواست",
           requestType: 'نوع مشاوره '
           // custom attributes
@@ -135,7 +135,7 @@
           return createPath;
         },
         cities() {
-          return _.get(this.$store.state, 'city.data', [])
+          return _.get(this.$store.state, 'province.data', [])
         },
         requestTypeList() {
           return _.get(this.$store.state, 'councilTypes.data', [])
@@ -144,9 +144,9 @@
     ,
     async asyncData({params, store, $axios}) {
       try {
-        // city
-        let cityData = await $axios.$get(cityMethod);
-        store.commit('city/setAndProcessData', cityData.data || []);
+        // province
+        let provinceData = await $axios.$get(provinceMethod);
+        store.commit('province/setAndProcessData', provinceData.data || []);
         // loan types
         let councilTypes = await
           $axios.$get(councilRequestTypes);
@@ -171,7 +171,7 @@
         let data = {
           title: this.title,
           job: this.job,
-          city: this.city,
+          province: this.province,
           requestText: this.requestText,
           requestType: this.requestType,
           port: 'zarinpal',

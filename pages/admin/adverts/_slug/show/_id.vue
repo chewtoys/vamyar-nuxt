@@ -60,9 +60,9 @@
 
   const list = "/admin/adverts",
     //guaranteeTypeListPath = "/admin/guaranteeTypes",
-    //cityPath = "/admin/cities",
+    //provincePath = "/admin/cities",
 
-    cityMethod = '/cities?number=3000',
+    provinceMethod = '/cities?number=3000',
     guaranteeMethod = '/guaranteeTypes',
     loanTypeMethod = '/loanTypes'
 
@@ -129,9 +129,9 @@
 
       try {
 
-        // city
-        let cityData = await $axios.$get(cityMethod);
-        store.commit('city/setAndProcessData', cityData.data || []);
+        // province
+        let provinceData = await $axios.$get(provinceMethod);
+        store.commit('province/setAndProcessData', provinceData.data || []);
 
         // guarantee
         let guaranteeData = await $axios.$get(guaranteeMethod);
@@ -160,7 +160,7 @@
       initialLoading() {
         let getPath = `/admin/${this.formType.type}/${this.id}`;
         let query = {
-          include: 'advert.user.details,guaranteeTypes,guaranteeType,advert.city,loanType,loanTypes'
+          include: 'advert.user.details,guaranteeTypes,guaranteeType,advert.province,loanType,loanTypes'
         }
         this.$axios.$get(getPath, {params: query}).then(result => {
           _.set(this, 'data', _.get(result, 'data', []))

@@ -59,9 +59,9 @@
 
   const list = "/user/adverts",
     //guaranteeTypeListPath = "/admin/guaranteeTypes",
-    //cityPath = "/admin/cities",
+    //provincePath = "/admin/cities",
 
-    cityMethod = '/cities?number=3000',
+    provinceMethod = '/cities?number=3000',
     guaranteeMethod = '/guaranteeTypes',
     loanTypeMethod = '/loanTypes'
 
@@ -139,7 +139,7 @@
       initialLoading() {
         let getPath = `/user/${this.formType.type}/${this.id}`;
         let query = {
-          include: 'advert.user.details,guaranteeTypes,advert.city,loanType'
+          include: 'advert.user.details,guaranteeTypes,advert.province,loanType'
         }
         this.$axios.$get(getPath, {params: query}).then(result => {
           _.set(this, 'data', _.get(result, 'data', []))

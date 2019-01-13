@@ -6,7 +6,7 @@
   import Helper from '~/assets/js/helper'
   import AdvertForm from '~/components/AdvertForm'
 
-  const cityMethod = '/cities?number=3000',
+  const provinceMethod = '/cities?number=3000',
     guaranteeMethod = '/guaranteeTypes',
     loanTypeMethod = '/loanTypes'
   export default {
@@ -24,9 +24,9 @@
       store.commit("navigation/setTitle", page_title);
 
       try {
-        // city
-        let cityData = await $axios.$get(cityMethod);
-        store.commit('city/setAndProcessData', cityData.data || []);
+        // province
+        let provinceData = await $axios.$get(provinceMethod);
+        store.commit('province/setAndProcessData', provinceData.data || []);
 
         // guarantee
         let guaranteeData = await $axios.$get(guaranteeMethod);

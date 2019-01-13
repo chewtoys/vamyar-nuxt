@@ -223,12 +223,12 @@ const Helper = {
         items.push(item.name)
       })
       return _.join(items, ', ')
-    } else if (name === 'city') {
+    } else if (name === 'province') {
       if (!_.isNumber(value)) {
         //console.log({value})
         return _.get(value, 'name', value);
       }
-      let list = _.get(store, 'state.city.data', []);
+      let list = _.get(store, 'state.province.data', []);
       let index = _.findIndex(list, {'id': value});
       let item = _.get(list, [index], {});
       //console.log({list, value})
@@ -329,7 +329,7 @@ const Helper = {
     let nonValues = ['instant', 'transferable']
     if (type === null) {
       // common filters
-      filter = _.pick(obj, ['cityId', 'instant', 'transferable', 'title', 'text']);
+      filter = _.pick(obj, ['provinceId', 'instant', 'transferable', 'title', 'text']);
     } else {
       filter = obj;
     }
@@ -376,7 +376,7 @@ const Helper = {
     };
     if (type === null) {
       // common filters
-      filter = _.pick(obj, ['cityIdValue', 'instantValue', 'transferableValue', 'titleValue', 'textValue']);
+      filter = _.pick(obj, ['provinceIdValue', 'instantValue', 'transferableValue', 'titleValue', 'textValue']);
     } else if (type === 'loans') {
       filter = _.pick(obj, ['loanTypeIdValue', 'amountValue', 'maxAmountValue', 'minAmountValue', 'paybackTimeValue']);
     } else if (type === 'loanRequests') {
@@ -473,9 +473,9 @@ const Helper = {
     }
 
     if (isAdverts) {
-      include = 'advertable,city,user.details,loanType,guaranteeTypes';
+      include = 'advertable,province,user.details,loanType,guaranteeTypes';
     } else {
-      include = 'advert,advert.city,advert.user.details,loanType,guaranteeTypes';
+      include = 'advert,advert.province,advert.user.details,loanType,guaranteeTypes';
     }
 
     let querySubItems = {

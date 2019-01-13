@@ -320,7 +320,7 @@
   import Helper from '~/assets/js/helper'
 
   const path = "/admin/adverts",
-    cityMethod = '/cities?number=3000',
+    provinceMethod = '/cities?number=3000',
     guaranteeMethod = '/guaranteeTypes',
     loanTypeMethod = '/loanTypes',
     ticketCategoriesMethod = '/ticketCategories',
@@ -404,9 +404,9 @@
       }
 
       try {
-        // city
-        let cityData = await $axios.$get(cityMethod);
-        store.commit('city/setAndProcessData', cityData.data || []);
+        // province
+        let provinceData = await $axios.$get(provinceMethod);
+        store.commit('province/setAndProcessData', provinceData.data || []);
 
         // guarantee
         let guaranteeData = await $axios.$get(guaranteeMethod);
@@ -459,7 +459,7 @@
     mounted() {
       this.loader = true
       this.$axios
-        .$get(path, {params: {include: 'advertable,city,user.details', number: 5, orderBy: 'id:desc'}})
+        .$get(path, {params: {include: 'advertable,province,user.details', number: 5, orderBy: 'id:desc'}})
         .then(response => {
           this.rawData = response.data;
           this.loader = false

@@ -9,7 +9,7 @@
   import Helper from "~/assets/js/helper.js"
 
   const number = 24,
-    cityMethod = '/cities?number=3000',
+    provinceMethod = '/cities?number=3000',
     guaranteeMethod = '/guaranteeTypes',
     loanTypeMethod = '/loanTypes'
 
@@ -47,10 +47,10 @@
       let query = Helper.getComputedFilters(commonComputedFilters, computedFilters, advertTypeName, false, number, orderBy)
 
       try {
-        // city
-        let cityData = await
-          $axios.$get(cityMethod);
-        store.commit('city/setAndProcessData', cityData.data || []);
+        // province
+        let provinceData = await
+          $axios.$get(provinceMethod);
+        store.commit('province/setAndProcessData', provinceData.data || []);
         let {data, paginator} = await
           app.$axios.$get(method, {
             params: query

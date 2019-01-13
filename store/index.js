@@ -3,7 +3,7 @@ import cookieparser from "cookieparser"
 
 const guaranteeMethod = '/guaranteeTypes',
   loanTypeMethod = '/loanTypes',
-  cityMethod = '/cities?number=3000',
+  provinceMethod = '/cities?number=3000',
   settingsMethod = '/settings',
   contactUsMethod = '/site/contact-us',
   aboutUsMethod = '/site/about-us'
@@ -72,13 +72,13 @@ export const actions = {
       }
     }
 
-    // city resource
+    // province resource
     /*
     // used in advert creation
     try {
-      let cityData = await this.$axios.$get(cityMethod);
-      commit('city/setAndProcessData', cityData.data || []);
-      //dispatch('city/makeArrayList');
+      let provinceData = await this.$axios.$get(provinceMethod);
+      commit('province/setAndProcessData', provinceData.data || []);
+      //dispatch('province/makeArrayList');
     } catch (error) {
       //console.log(error)
     }
