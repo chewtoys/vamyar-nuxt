@@ -330,7 +330,7 @@
       },
       maxAmountHint() {
         return Helper.computeAdvertField('maxAmount', this.maxAmount)
-
+      },
       financeAmountHint() {
         return Helper.computeAdvertField('maxAmount', this.amount)
       },
