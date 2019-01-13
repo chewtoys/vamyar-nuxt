@@ -19,18 +19,18 @@
         paginator: [],
       }
     },
-    watch: {},
-    // loading the first items from server
-    async asyncData({app, store, params, error, $axios}) {
+//    watchQuery: ['advertTypeName', 'commonComputedFilters', 'computedFilters'],
+    // loading the first items from server,
+    async asyncData({app, store, params, route, error, $axios}) {
       let method = `/site/adverts`
       let commonComputedFilters = [];
       let computedFilters = [];
       let advertTypeName;
       let orderBy = 'priority:desc'
       try {
-        commonComputedFilters = JSON.parse(_.get($route.query, 'commonComputedFilters', '{}'));
-        computedFilters = JSON.parse(_.get($route.query, 'computedFilters', '{}'));
-        advertTypeName = _.get($route.query, 'advertTypeName', 'adverts');
+        commonComputedFilters = JSON.parse(_.get(route.query, 'commonComputedFilters', '{}'));
+        computedFilters = JSON.parse(_.get(route.query, 'computedFilters', '{}'));
+        advertTypeName = _.get(route.query, 'advertTypeName', 'adverts');
       } catch (err) {
         console.log({err})
         error({statusCode: 503, message: 'مشکل در اعمال فیلتر های صفحه'})

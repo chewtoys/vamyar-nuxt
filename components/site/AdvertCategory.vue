@@ -174,9 +174,16 @@
         let commonComputedFilters = this.decodedCommonComputedFilters
         let computedFilters = this.decodedComputedFilters
         let advertTypeName = this.decodedAdvertTypeName || this.advertTypeName
-        this.filter = Helper.reverseFilters(computedFilters, advertTypeName);
+        this.advertTypeName = advertTypeName;
+        // common adverts
         this.advertFilters = Helper.reverseFilters(commonComputedFilters);
-        console.log(1, this.filter, 2, this.advertFilters)
+        this.advertFilters.advertTypeName = advertTypeName;
+        //console.log(1, this.filter, 2, this.advertFilters)
+        setTimeout(() => {
+          this.filter = Helper.reverseFilters(computedFilters, advertTypeName);
+        }, 800);
+        //console.log(5, JSON.stringify(this.filter))
+
       },
       canShow(type) {
         return _.get(this, 'advertTypeName', '') === type;
@@ -237,7 +244,7 @@
         //this.loadAgain();
       },
       loadAgainAdvertFilter(filter) {
-        ////console.log(1,{filter});
+        //console.log(1,{filter});
         //this.filter = ''
         //_.set(this, 'filter', filter);
         let type = _.get(this, 'advertTypeName', this.which);
@@ -246,7 +253,7 @@
         this.$router.push({
           path: this.$route.path,
           query: {
-            advertTypeName: JSON.stringify(this.decodedAdvertTypeName),
+            advertTypeName: this.decodedAdvertTypeName,
             computedFilters: JSON.stringify(computedFilter),
             commonComputedFilters: JSON.stringify(this.decodedCommonComputedFilters)
           }
@@ -274,7 +281,7 @@
           computedFilters = this.decodedComputedFilters
           advertTypeName = this.decodedAdvertTypeName || this.advertTypeName
         } catch (err) {
-          console.log({err})
+          // console.log({err})
           commonComputedFilters = this.commonComputedFilters
           computedFilters = this.computedFilters
         }

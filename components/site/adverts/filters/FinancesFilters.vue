@@ -62,13 +62,13 @@
     },
 
     watch: {
-      value(val) {
-        _.forEach(val, (value, key) => {
-          console.log(7, value, key)
-          _.set(this, ['filter', key.replace('Value', '')], value);
-          _.set(this, ['filter', key], value);
-          _.set(this, key.replace('Value', ''), value);
-          _.set(this, key, value);
+      value(filters) {
+        //console.log('start filter')
+        _.forEach(filters, (val, key) => {
+          // console.log('filter - watch) ', val, key)
+          if (key === 'amount') {
+            _.set(this, 'amount', val)
+          }
         })
       }
     },
@@ -97,11 +97,10 @@
       },
       emitToParent() {
         let query = {}
-        _.forEach(this.filter, (val, title) => {
-          if (val || _.isNumber(val)) _.set(query, title, val)
-        })
-
         setTimeout(() => {
+          _.forEach(this.filter, (val, title) => {
+            if (val || _.isNumber(val)) _.set(query, title, val)
+          })
           this.$emit("change", query);
           return this.$emit("input", query);
         }, 30);

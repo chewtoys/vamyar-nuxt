@@ -313,10 +313,9 @@ const Helper = {
       _.set(all, 'description', _.get(that, 'description', ''))
     }
     return all;
-  }
-  ,
+  },
   reverseFilters(obj, type = null) {
-    console.log(3, obj, 4, type)
+    // console.log('helper- begining ) ', obj, type)
     let filter = {}, query = {};
     let maximum = {
       'maxAmount': true,
@@ -331,39 +330,37 @@ const Helper = {
     if (type === null) {
       // common filters
       filter = _.pick(obj, ['cityId', 'instant', 'transferable', 'title', 'text']);
-    } else if (type === 'loans') {
-      filter = _.pick(obj, ['loanTypeId', 'amount', 'maxAmount', 'minAmount', 'paybackTime']);
-    } else if (type === 'loanRequests') {
-      filter = _.pick(obj, ['loanTypeId', 'amount', 'maxAmount', 'minAmount', 'paybackTime']);
-    } else if (type === 'finances') {
-      filter = _.pick(obj, ['maxAmount', 'maxMaxAmount', 'minMaxAmount']);
-    } else if (type === 'financeRequests') {
-      filter = _.pick(obj, ['job', 'maxAmount', 'minAmount', 'amount']);
-    } else if (type === 'coSigners') {
-      filter = _.pick(obj, ['guaranteeType__id', 'forBank', 'forCourt']);
-    } else if (type === 'coSignerRequests') {
-      filter = _.pick(obj, ['guaranteeType__id', 'forBank', 'forCourt']);
+    } else {
+      filter = obj;
     }
-    console.log(8, {filter})
+    //console.log(8, {filter})
     let prefix = 'Value';
+
     _.forEach(filter, (val, key) => {
+
+
       if (key === 'forBank' || key === 'forCourt') {
-        val = val ? true : false
+        val = !!val
+      } else if (_.includes(key, '<')) {
+        key = key.replace('<', '')
+        _.set(query, [key, 'max'], val)
+        //if (!_.has(query, [key, 'max'])) _.set(query, [key, 'max'], 0)
+      } else if (_.includes(key, '>')) {
+        key = key.replace('>', '')
+        _.set(query, [key, 'min'], val)
+        //if (!_.has(query, [key, 'min'])) _.set(query, [key, 'min'], 0)
       }
 
-      key =
-        key
-          .replace('<', '')
-          .replace('>', '')
-          .replace('amount', 'maxAmount')
-          .replace('amount', 'minAmount')
-          .replace('maxAmount', 'minMaxAmount')
-          .replace('maxAmount', 'maxMaxAmount');
-      if (_.includes(nonValues, key)) _.set(query, key, val)
-      _.set(query, key + 'Value', val)
+      if (_.includes(nonValues, key)) {
+        _.set(query, key, val)
+      } else if (!_.includes(key, '<') && !_.includes(key, '>')) {
+        _.set(query, key + 'Value', val)
+      }
+
+      // console.log('foreach value - helper) ', (val), key)
     })
     //console.log({obj, filter, query});
-    console.log(9, {query})
+    //console.log('end helper) ', JSON.stringify({query}))
     return query;
   },
   getComputedFilter(obj, type = null) {
@@ -387,7 +384,7 @@ const Helper = {
     } else if (type === 'finances') {
       filter = _.pick(obj, ['maxAmountValue', 'maxMaxAmountValue', 'minMaxAmountValue']);
     } else if (type === 'financeRequests') {
-      filter = _.pick(obj, ['jobValue', 'maxAmountValue', 'minAmountValue', 'amountValue']);
+      filter = _.pick(obj, ['jobValue', 'maxMaxAmountValue', 'minMaxAmountValue', 'amountValue']);
     } else if (type === 'coSigners') {
       filter = _.pick(obj, ['guaranteeType__idValue', 'forBankValue', 'forCourtValue']);
     } else if (type === 'coSignerRequests') {

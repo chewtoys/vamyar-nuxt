@@ -3,7 +3,7 @@
     <v-subheader>{{getLabel}}</v-subheader>
     <v-card class="elevation-0 pa-2" flat color="transparent" light>
       <v-layout rwo wrap>
-        <v-flex xs12  v-if="false"  sm4 class="pr-1 pt-1 pb-1 pl-0">
+        <v-flex xs12 v-if="false" sm4 class="pr-1 pt-1 pb-1 pl-0">
           <div>
             <v-select
               :items="guaranteeTypesList"
@@ -84,13 +84,15 @@
     },
 
     watch: {
-      value(val) {
-        _.forEach(val, (value, key) => {
-          console.log(7, value, key)
-          _.set(this, ['filter', key.replace('Value', '')], value);
-          _.set(this, ['filter', key], value);
-          _.set(this, key.replace('Value', ''), value);
-          _.set(this, key, value);
+      value(filters) {
+        //console.log('start filter')
+        _.forEach(filters, (val, key) => {
+          //console.log('filter - watch) ', val, key)
+          if (key === 'forCourtValue') {
+            _.set(this, 'filter.forCourtValue', val)
+          } else if (key === 'forBankValue') {
+            _.set(this, 'filter.forBankValue', val)
+          }
         })
       }
     },
@@ -107,9 +109,9 @@
       emitToParent() {
         let query = {}
         setTimeout(() => {
-        _.forEach(this.filter, (val, title) => {
-          if (val || _.isNumber(val)) _.set(query, title, val)
-        })
+          _.forEach(this.filter, (val, title) => {
+            if (val || _.isNumber(val)) _.set(query, title, val)
+          })
 
           this.$emit("change", query);
           return this.$emit("input", query);

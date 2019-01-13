@@ -78,13 +78,12 @@
     },
 
     watch: {
-      value(val) {
-        _.forEach(val, (value, key) => {
-          console.log(7, value, key)
-          _.set(this, ['filter', key.replace('Value', '')], value);
-          _.set(this, ['filter', key], value);
-          _.set(this, key.replace('Value', ''), value);
-          _.set(this, key, value);
+      value(filters) {
+        _.forEach(filters, (val, key) => {
+          //console.log('filter - watch) ', val, key)
+          if (key === 'maxAmount') {
+            _.set(this, 'amount', val)
+          }
         })
       }
     },
@@ -97,9 +96,7 @@
       })
     },
     methods: {
-
       updateMaxAmount(value) {
-
         _.set(this, 'filter.maxAmountValue', null)
         _.set(this, 'filter.minMaxAmountValue', null)
         _.set(this, 'filter.maxMaxAmountValue', null)

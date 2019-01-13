@@ -144,7 +144,7 @@
     watch: {
       value(val) {
         _.forEach(val, (value, key) => {
-          console.log(7, value, key)
+          //console.log(7, value, key)
           _.set(this, ['filter', key.replace('Value', '')], value);
           _.set(this, ['filter', key], value);
           _.set(this, key.replace('Value', ''), value);

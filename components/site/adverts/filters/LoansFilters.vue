@@ -112,13 +112,19 @@
     },
 
     watch: {
-      value(val) {
-        _.forEach(val, (value, key) => {
-          console.log(7, value, key)
-          _.set(this, ['filter', key.replace('Value', '')], value);
-          _.set(this, ['filter', key], value);
-          _.set(this, key.replace('Value', ''), value);
-          _.set(this, key, value);
+      value(filters) {
+        //console.log('start filter')
+        _.forEach(filters, (val, key) => {
+         // console.log('filter - watch) ', val, key)
+          if (key === 'paybackTimeValue') {
+            _.set(this, 'filter.paybackTimeValue', val)
+          }else if (key === 'loanTypeIdValue') {
+            _.set(this, 'filter.loanTypeIdValue', val)
+          }else if (key === 'amount') {
+            _.set(this, 'amount', val)
+          } else {
+            _.set(this, key, val);
+          }
         })
       }
     },

@@ -63,6 +63,7 @@
       }
     }
     ,
+    //watchQuery: ['advertTypeName', 'commonComputedFilters', 'computedFilters'],
     components: {
       AdvertCategory
     }
